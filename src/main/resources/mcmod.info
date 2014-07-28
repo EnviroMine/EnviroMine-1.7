@@ -1,0 +1,14 @@
+[{
+    "modid": "EnviroMine",
+    "name": "EnviroMine",
+    "description": "Adds a little bit more realism to minecraft with environmental effects and physics.",
+    "version": "FWG_EM_VER",
+    "mcversion": "1.6.4",
+    "url": "",
+    "updateUrl": "",
+    "authors": ["Funwayguy", "TimbuckTato", "GenDeathrow"],
+    "credits": "Big thanks to the IronArmy and EpicNation for all the hard work debugging this mod.",
+    "logoFile": "title.png",
+    "screenshots": [],
+    "dependencies": ["mod_MinecraftForge"]
+}]

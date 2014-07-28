@@ -85,7 +85,7 @@ public class EnviroDataTracker
 		{
 			if(trackedEntity instanceof EntityPlayer)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(((EntityPlayer)trackedEntity).username);
+				EntityPlayer player = EM_StatusManager.findPlayer(((EntityPlayer)trackedEntity).getUniqueID());
 				
 				if(player == null)
 				{
@@ -265,11 +265,11 @@ public class EnviroDataTracker
 		}
 		
 		// Camel Pack Stuff
-		ItemStack plate = trackedEntity.getCurrentItemOrArmor(3);
+		ItemStack plate = trackedEntity.getEquipmentInSlot(3);
 		
 		if(plate != null)
 		{
-			if(plate.itemID == EnviroMine.camelPack.itemID)
+			if(plate.getItem() == EnviroMine.camelPack)
 			{
 				if(plate.getItemDamage() < plate.getMaxDamage() && hydration <= 99F - EM_Settings.hydrationMult)
 				{

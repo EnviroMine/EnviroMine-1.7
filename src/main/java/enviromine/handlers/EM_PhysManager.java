@@ -3,7 +3,7 @@ package enviromine.handlers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
+import org.apache.logging.log4j.Level;
 import com.google.common.base.Stopwatch;
 import enviromine.EntityPhysicsBlock;
 import enviromine.core.EM_Settings;
@@ -499,7 +499,7 @@ public class EM_PhysManager
 							
 							if((mat.blocksMovement() || mat.isLiquid()) && !world.provider.isHellWorld)
 							{
-								world.setBlock(x, y, z, Blocks.water);
+								world.setBlock(x, y, z, Blocks.flowing_water);
 							} else
 							{
 								world.setBlock(x, y, z, Blocks.air);
@@ -1013,7 +1013,7 @@ public class EM_PhysManager
 		
 		if(physSchedule.size() >= 4096 && EM_Settings.updateCap <= -1)
 		{
-			EnviroMine.logger.log(Level.SEVERE, "Physics updates exeeded 4096! Dumping update schedule");
+			EnviroMine.logger.log(Level.ERROR, "Physics updates exeeded 4096! Dumping update schedule");
 			physSchedule.clear();
 			return;
 		}
@@ -1075,7 +1075,7 @@ public class EM_PhysManager
 				
 				if(timer.elapsed(TimeUnit.SECONDS) > 2)
 				{
-					EnviroMine.logger.log(Level.SEVERE, "Physics updates are taking too long! Dumping schedule!");
+					EnviroMine.logger.log(Level.ERROR, "Physics updates are taking too long! Dumping schedule!");
 					physSchedule.clear();
 					physSchedule = new ArrayList<Object[]>();
 					canClear = false;

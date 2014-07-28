@@ -3,7 +3,7 @@ package enviromine;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
+import org.apache.logging.log4j.Level;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
@@ -48,14 +48,14 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 			{
 				if(EM_Settings.entityFailsafe == 1)
 				{
-					EnviroMine.logger.log(Level.WARNING, "Entity fail safe activated: Level 1");
-					EnviroMine.logger.log(Level.WARNING, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.WARN, "Entity fail safe activated: Level 1");
+					EnviroMine.logger.log(Level.WARN, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
 					this.setDead();
 					return;
 				} else if(EM_Settings.entityFailsafe >= 2)
 				{
-					EnviroMine.logger.log(Level.SEVERE, "Entity fail safe activated: Level 2");
-					EnviroMine.logger.log(Level.SEVERE, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated: Level 2");
+					EnviroMine.logger.log(Level.ERROR, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
 					Iterator<EntityPhysicsBlock> iterator = entityList.iterator();
 					
 					while(iterator.hasNext())
@@ -90,14 +90,14 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 			{
 				if(EM_Settings.entityFailsafe == 1)
 				{
-					EnviroMine.logger.log(Level.WARNING, "Entity fail safe activated: Level 1");
-					EnviroMine.logger.log(Level.WARNING, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.WARN, "Entity fail safe activated: Level 1");
+					EnviroMine.logger.log(Level.WARN, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
 					this.setDead();
 					return;
 				} else if(EM_Settings.entityFailsafe >= 2)
 				{
-					EnviroMine.logger.log(Level.SEVERE, "Entity fail safe activated: Level 2");
-					EnviroMine.logger.log(Level.SEVERE, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated: Level 2");
+					EnviroMine.logger.log(Level.ERROR, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
 					Iterator<EntityPhysicsBlock> iterator = entityList.iterator();
 					
 					while(iterator.hasNext())

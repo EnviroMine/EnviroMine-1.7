@@ -48,11 +48,6 @@ public class EM_Settings
 	public static boolean ShowText;
 	public static boolean ShowDebug;
 	
-	public static int dirtBottleID = 5001;
-	public static int saltBottleID = 5002;
-	public static int coldBottleID = 5003;
-	public static int camelPackID = 5004;
-	
 	public static int hypothermiaPotionID = 27;
 	public static int heatstrokePotionID = 28;
 	public static int frostBitePotionID = 29;

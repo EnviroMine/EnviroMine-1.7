@@ -115,7 +115,8 @@ public class EM_StatusManager
 			outputStream.writeBytes(dataString);
 			
 			S3FPacketCustomPayload packet = new S3FPacketCustomPayload(EM_Settings.Channel, bos.toByteArray());
-			PacketDispatcher.sendPacketToAllPlayers(packet); // Needs rewriting for netty
+			MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(packet);
+			//PacketDispatcher.sendPacketToAllPlayers(packet); // Needs rewriting for netty
 			
 			outputStream.close();
 			bos.close();
@@ -150,9 +151,9 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EnviroDataTracker lookupTrackerFromUsername(String username)
+	public static EnviroDataTracker lookupTrackerFromUUID(UUID id)
 	{
-		return trackerList.get(username);
+		return trackerList.get(id.toString());
 	}
 	
 	private static Stopwatch timer = Stopwatch.createUnstarted();
@@ -841,8 +842,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.tagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.tagAt(index)).getShort("lvl");
+						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
+						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
 						
 						if(enID == Enchantment.respiration.effectId)
 						{
@@ -900,8 +901,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.tagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.tagAt(index)).getShort("lvl");
+						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
+						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
 						
 						if(enID == Enchantment.fireProtection.effectId)
 						{
@@ -953,8 +954,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.tagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.tagAt(index)).getShort("lvl");
+						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
+						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
 						
 						if(enID == Enchantment.fireProtection.effectId)
 						{
@@ -1006,8 +1007,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.tagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.tagAt(index)).getShort("lvl");
+						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
+						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
 						
 						if(enID == Enchantment.fireProtection.effectId)
 						{

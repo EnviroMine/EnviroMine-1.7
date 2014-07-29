@@ -3,9 +3,9 @@ package enviromine.handlers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -42,7 +42,7 @@ public class CamelPackRefillHandler implements IRecipe
 			if(item == null)
 			{
 				continue;
-			} else if(item.itemID == EnviroMine.camelPack.itemID)
+			} else if(item.getItem() == EnviroMine.camelPack)
 			{
 				if(hasPack)
 				{
@@ -53,11 +53,11 @@ public class CamelPackRefillHandler implements IRecipe
 					packDamage = item.getItemDamage();
 					hasPack = true;
 				}
-			} else if(item.itemID == Item.potion.itemID && item.getItemDamage() == 0)
+			} else if(item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
 				fillBottle = false;
 				bottles.add(item);
-			} else if(item.itemID == Item.glassBottle.itemID && bottles.size() == 0)
+			} else if(item.getItem() == Items.glass_bottle && bottles.size() == 0)
 			{
 				fillBottle = true;
 				bottles.add(item);
@@ -104,13 +104,13 @@ public class CamelPackRefillHandler implements IRecipe
 			while(iterator.hasNext())
 			{
 				ItemStack bottle = iterator.next();
-				bottle.getItem().setContainerItem(Item.glassBottle);
+				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
 		}
 		
 		if(fillBottle)
 		{
-			ItemStack newItem = new ItemStack(Item.potion);
+			ItemStack newItem = new ItemStack(Items.potionitem);
 			newItem.setItemDamage(0);
 			return newItem;
 		} else

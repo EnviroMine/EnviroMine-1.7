@@ -1,15 +1,10 @@
-package enviromine.gui;
+package main.java.enviromine.gui;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.trackers.EnviroDataTracker;
+import main.java.enviromine.core.EM_Settings;
+import main.java.enviromine.core.EnviroMine;
+import main.java.enviromine.handlers.EM_StatusManager;
+import main.java.enviromine.trackers.EnviroDataTracker;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -17,6 +12,15 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
 {

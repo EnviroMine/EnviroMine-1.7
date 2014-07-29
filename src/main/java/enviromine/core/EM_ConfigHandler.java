@@ -1,4 +1,21 @@
-package enviromine.core;
+package main.java.enviromine.core;
+
+import main.java.enviromine.handlers.keybinds.AddRemoveCustom;
+import main.java.enviromine.trackers.ArmorProperties;
+import main.java.enviromine.trackers.BlockProperties;
+import main.java.enviromine.trackers.EntityProperties;
+import main.java.enviromine.trackers.ItemProperties;
+import main.java.enviromine.trackers.StabilityType;
+
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.potion.Potion;
+import net.minecraftforge.common.config.Configuration;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,22 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.logging.log4j.Level;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityList;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.potion.Potion;
-import net.minecraftforge.common.config.Configuration;
-import enviromine.handlers.keybinds.AddRemoveCustom;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.ItemProperties;
-import enviromine.trackers.StabilityType;
 
 public class EM_ConfigHandler
 {

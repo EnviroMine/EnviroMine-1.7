@@ -1,4 +1,4 @@
-package enviromine;
+package main.java.enviromine;
 
 import java.util.List;
 import java.util.Random;

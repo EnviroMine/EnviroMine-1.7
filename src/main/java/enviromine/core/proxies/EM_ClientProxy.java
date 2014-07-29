@@ -1,12 +1,14 @@
-package enviromine.core.proxies;
+package main.java.enviromine.core.proxies;
+
+import main.java.enviromine.gui.EM_GuiEnviroMeters;
+import main.java.enviromine.handlers.keybinds.EnviroKeybinds;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import enviromine.gui.EM_GuiEnviroMeters;
-import enviromine.handlers.keybinds.EnviroKeybinds;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {

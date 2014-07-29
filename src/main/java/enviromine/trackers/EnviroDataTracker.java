@@ -1,12 +1,11 @@
-package enviromine.trackers;
+package main.java.enviromine.trackers;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_StatusManager;
+import main.java.enviromine.EnviroDamageSource;
+import main.java.enviromine.EnviroPotion;
+import main.java.enviromine.core.EM_Settings;
+import main.java.enviromine.core.EnviroMine;
+import main.java.enviromine.handlers.EM_StatusManager;
+
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -20,6 +19,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class EnviroDataTracker
 {

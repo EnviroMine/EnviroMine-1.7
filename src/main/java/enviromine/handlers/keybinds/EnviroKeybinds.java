@@ -1,9 +1,12 @@
 package main.java.enviromine.handlers.keybinds;
 
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.settings.KeyBinding;
+
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
-import net.minecraft.client.settings.KeyBinding;
+
+import org.lwjgl.input.Keyboard;
 
 public class EnviroKeybinds
 {
@@ -14,6 +17,9 @@ public class EnviroKeybinds
 	{
 		reloadConfig = new KeyBinding("key.enviromine.reload", Keyboard.KEY_L, "key.categories.enviromine");
 		addRemove = new KeyBinding("key.enviromine.addremove", Keyboard.KEY_L, "key.categories.enviromine");
+		
+		ClientRegistry.registerKeyBinding(reloadConfig);
+		ClientRegistry.registerKeyBinding(addRemove);
 	}
 	
 	@SubscribeEvent

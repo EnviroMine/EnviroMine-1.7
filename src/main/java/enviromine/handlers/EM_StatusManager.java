@@ -7,18 +7,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.logging.log4j.Level;
+
 import com.google.common.base.Stopwatch;
+
 import cpw.mods.fml.common.registry.EntityRegistry;
+
 import enviromine.EnviroPotion;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.core.PacketEnviroMine;
 import enviromine.gui.EM_GuiEnviroMeters;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BlockProperties;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.ItemProperties;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -107,25 +113,7 @@ public class EM_StatusManager
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
 		}
 		
-		try
-		{
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			DataOutputStream outputStream = new DataOutputStream(bos);
-			
-			outputStream.writeBytes(dataString);
-			
-			S3FPacketCustomPayload packet = new S3FPacketCustomPayload(EM_Settings.Channel, bos.toByteArray());
-			MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(packet);
-			//PacketDispatcher.sendPacketToAllPlayers(packet); // Needs rewriting for netty
-			
-			outputStream.close();
-			bos.close();
-		} catch (IOException e)
-		{
-			EnviroMine.logger.log(Level.ERROR, "EnviroMine failed to build tracker sync packet!", e);
-		}
-		
-		
+		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));
 	}
 	
 	public static EnviroDataTracker lookupTracker(EntityLivingBase entity)

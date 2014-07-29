@@ -6,18 +6,23 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.core.PacketEnviroMine;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
@@ -292,22 +297,7 @@ public class EM_EventManager
 			}
 		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null && EnviroMine.proxy.isClient())
 		{
-			try
-			{
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				DataOutputStream dos = new DataOutputStream(bos);
-				
-				dos.writeBytes("ID:1," + event.entityPlayer.getUniqueID().toString());
-				
-				S3FPacketCustomPayload packet = new S3FPacketCustomPayload(EM_Settings.Channel, bos.toByteArray());
-				Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(packet);
-				
-				dos.close();
-				bos.close();
-			} catch (IOException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "EnviroMine failed to build right-click packet!", e);
-			}
+			EnviroMine.instance.network.sendTo(new PacketEnviroMine("ID:1," + event.entityPlayer.getUniqueID().toString()), (EntityPlayerMP)event.entityPlayer);
 		}
 	}
 	

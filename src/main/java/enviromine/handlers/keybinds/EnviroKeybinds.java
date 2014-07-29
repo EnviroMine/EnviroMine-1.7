@@ -27,13 +27,11 @@ public class EnviroKeybinds
 	{
 		if(reloadConfig.getIsKeyPressed())
 		{
-			System.out.println("Pressed reload");
 			ReloadCustomObjects.doReloadConfig();
 		}
 		
 		if(addRemove.getIsKeyPressed())
 		{
-			System.out.println("Pressed addremove");
 			AddRemoveCustom.doAddRemove();
 		}
 	}

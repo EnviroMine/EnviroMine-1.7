@@ -55,16 +55,14 @@ public class AddRemoveCustom
 						
 						Item item = mc.thePlayer.getHeldItem().getItem();
 						int itemMeta = mc.thePlayer.getHeldItem().getItemDamage();
-						String unlocolizedName = mc.thePlayer.getHeldItem().getItem().getUnlocalizedName();
+						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem().getUnlocalizedName());
 						String name = mc.thePlayer.getHeldItem().getDisplayName();
 						
-						unlocolizedName = replaceULN(unlocolizedName);
+						idName = replaceULN(idName);
 						name = replaceULN(name);
-
 						
-						dataToCustom[0] = item;
+						dataToCustom[0] = idName;
 						dataToCustom[1] = itemMeta;
-						dataToCustom[2] = unlocolizedName;
 
 						if(item instanceof ItemArmor)
 						{

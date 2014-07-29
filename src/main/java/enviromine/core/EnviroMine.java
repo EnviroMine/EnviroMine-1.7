@@ -3,23 +3,21 @@ package enviromine.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteOrder;
-import net.minecraft.block.Block;
-import net.minecraft.client.settings.KeyBinding;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.util.EnumHelper;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
-import cpw.mods.fml.common.FMLLog;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,16 +25,15 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EM_VillageMineshaft;
 import enviromine.EnviroPotion;
 import enviromine.core.proxies.EM_CommonProxy;
-import enviromine.gui.UpdateNotification;
-import enviromine.handlers.EnviroPacketHandler;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.items.EnviroArmor;
 import enviromine.items.EnviroItemBadWaterBottle;
@@ -54,6 +51,8 @@ public class EnviroMine
 	public static ArmorMaterial camelPackMaterial;
 	public static ItemArmor camelPack;
 	
+	public SimpleNetworkWrapper network;
+	
 	@Instance(EM_Settings.ID)
 	public static EnviroMine instance;
 	
@@ -61,7 +60,7 @@ public class EnviroMine
 	public static EM_CommonProxy proxy;
 	
 	@EventHandler
-	public static void preInit(FMLPreInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
 		
@@ -84,10 +83,13 @@ public class EnviroMine
 			VillagerRegistry.instance().registerVillageCreationHandler(new EnviroShaftCreationHandler());
 			MapGenStructureIO.func_143031_a(EM_VillageMineshaft.class, "ViMS");
 		}
+		
+		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
+		this.network.registerMessage(PacketEnviroMine.Handler.class, PacketEnviroMine.class, 0, Side.CLIENT);
 	}
 	
 	@EventHandler
-	public static void init(FMLInitializationEvent event)
+	public void init(FMLInitializationEvent event)
 	{
 		proxy.init(event);
 		
@@ -127,7 +129,7 @@ public class EnviroMine
 	}
 	
 	@EventHandler
-	public static void postInit(FMLPostInitializationEvent event)
+	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit(event);
 		

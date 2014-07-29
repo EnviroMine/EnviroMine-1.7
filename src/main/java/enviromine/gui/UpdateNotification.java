@@ -1,17 +1,20 @@
-package enviromine.gui;
+package main.java.enviromine.gui;
+
+import main.java.enviromine.core.EM_Settings;
+import main.java.enviromine.core.EnviroMine;
+
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import org.apache.logging.log4j.Level;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 
 public class UpdateNotification
 {

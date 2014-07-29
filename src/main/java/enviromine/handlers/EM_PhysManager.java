@@ -1,16 +1,12 @@
-package enviromine.handlers;
+package main.java.enviromine.handlers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-import org.apache.logging.log4j.Level;
-import com.google.common.base.Stopwatch;
-import enviromine.EntityPhysicsBlock;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gui.EM_GuiEnviroMeters;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.StabilityType;
+import main.java.enviromine.EntityPhysicsBlock;
+import main.java.enviromine.core.EM_Settings;
+import main.java.enviromine.core.EnviroMine;
+import main.java.enviromine.gui.EM_GuiEnviroMeters;
+import main.java.enviromine.trackers.BlockProperties;
+import main.java.enviromine.trackers.StabilityType;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockBed;
@@ -23,11 +19,11 @@ import net.minecraft.block.BlockGravel;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.BlockMobSpawner;
+import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockSign;
 import net.minecraft.block.BlockWeb;
-import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -41,6 +37,14 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.logging.log4j.Level;
+
+import com.google.common.base.Stopwatch;
 
 public class EM_PhysManager
 {

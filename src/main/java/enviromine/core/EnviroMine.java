@@ -1,8 +1,14 @@
-package enviromine.core;
+package main.java.enviromine.core;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.nio.ByteOrder;
+import main.java.enviromine.EM_VillageMineshaft;
+import main.java.enviromine.EnviroPotion;
+import main.java.enviromine.core.proxies.EM_CommonProxy;
+import main.java.enviromine.handlers.EnviroShaftCreationHandler;
+import main.java.enviromine.items.EnviroArmor;
+import main.java.enviromine.items.EnviroItemBadWaterBottle;
+import main.java.enviromine.items.EnviroItemColdWaterBottle;
+import main.java.enviromine.items.EnviroItemSaltWaterBottle;
+import main.java.enviromine.network.packet.PacketEnviroMine;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -14,9 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.util.EnumHelper;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -31,14 +34,13 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
-import enviromine.EM_VillageMineshaft;
-import enviromine.EnviroPotion;
-import enviromine.core.proxies.EM_CommonProxy;
-import enviromine.handlers.EnviroShaftCreationHandler;
-import enviromine.items.EnviroArmor;
-import enviromine.items.EnviroItemBadWaterBottle;
-import enviromine.items.EnviroItemColdWaterBottle;
-import enviromine.items.EnviroItemSaltWaterBottle;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.nio.ByteOrder;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = EM_Settings.ID, name = EM_Settings.Name, version = EM_Settings.Version)
 public class EnviroMine

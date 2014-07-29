@@ -1,8 +1,9 @@
-package enviromine.handlers;
+package main.java.enviromine.handlers;
+
+import main.java.enviromine.core.EM_Settings;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import enviromine.core.EM_Settings;
 
 public class EM_ServerScheduledTickHandler
 {

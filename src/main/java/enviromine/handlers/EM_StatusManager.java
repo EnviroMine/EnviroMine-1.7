@@ -1,29 +1,15 @@
-package enviromine.handlers;
+package main.java.enviromine.handlers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.logging.log4j.Level;
-
-import com.google.common.base.Stopwatch;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-
-import enviromine.EnviroPotion;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.core.PacketEnviroMine;
-import enviromine.gui.EM_GuiEnviroMeters;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.ItemProperties;
+import main.java.enviromine.EnviroPotion;
+import main.java.enviromine.core.EM_Settings;
+import main.java.enviromine.core.EnviroMine;
+import main.java.enviromine.gui.EM_GuiEnviroMeters;
+import main.java.enviromine.network.packet.PacketEnviroMine;
+import main.java.enviromine.trackers.ArmorProperties;
+import main.java.enviromine.trackers.BlockProperties;
+import main.java.enviromine.trackers.EntityProperties;
+import main.java.enviromine.trackers.EnviroDataTracker;
+import main.java.enviromine.trackers.ItemProperties;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
@@ -45,7 +31,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
@@ -57,6 +42,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import com.google.common.base.Stopwatch;
 
 public class EM_StatusManager
 {

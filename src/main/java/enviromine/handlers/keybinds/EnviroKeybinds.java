@@ -1,4 +1,4 @@
-package enviromine.handlers.keybinds;
+package main.java.enviromine.handlers.keybinds;
 
 import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

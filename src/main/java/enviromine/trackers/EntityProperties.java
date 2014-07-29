@@ -1,4 +1,4 @@
-package enviromine.trackers;
+package main.java.enviromine.trackers;
 
 public class EntityProperties
 {

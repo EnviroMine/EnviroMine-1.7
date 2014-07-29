@@ -1,8 +1,9 @@
 package enviromine;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IChatComponent;
 
 public class EnviroDamageSource extends DamageSource
 {
@@ -20,32 +21,32 @@ public class EnviroDamageSource extends DamageSource
 	}
 	
 	@Override
-	public ChatMessageComponent getDeathMessage(EntityLivingBase par1EntityLivingBase)
+	public IChatComponent func_151519_b(EntityLivingBase par1EntityLivingBase)
 	{
 		if(this.damageType == "suffocate")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" suffocated to death").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" suffocated to death").toString());
 		} else if(this.damageType == "frostbite")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" froze to death").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" froze to death").toString());
 		} else if(this.damageType == "dehydrate")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" died of thirst").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died of thirst").toString());
 		} else if(this.damageType == "landslide")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" was crushed in a landslide").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" was crushed in a landslide").toString());
 		} else if(this.damageType == "organfailure")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" died of organ failure").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died of organ failure").toString());
 		} else if(this.damageType == "heatstroke")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append("'s brain was cooked by heatstroke").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append("'s brain was cooked by heatstroke").toString());
 		} else if(this.damageType == "bleedout")
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" blead out").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" blead out").toString());
 		} else
 		{
-			return ChatMessageComponent.createFromText(new StringBuilder().append(par1EntityLivingBase.getTranslatedEntityName()).append(" died from enviromental causes").toString());
+			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died from enviromental causes").toString());
 		}
 	}
 }

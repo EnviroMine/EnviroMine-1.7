@@ -3,6 +3,7 @@ package enviromine.gui;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.lwjgl.opengl.GL11;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_Settings;
@@ -16,7 +17,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.event.ForgeSubscribe;
 
 public class EM_GuiEnviroMeters extends Gui
 {
@@ -40,7 +40,7 @@ public class EM_GuiEnviroMeters extends Gui
 		this.mc = mc;
 	}
 	
-	@ForgeSubscribe
+	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent event)
 	{
@@ -83,7 +83,7 @@ public class EM_GuiEnviroMeters extends Gui
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
 				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
-				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.username);
+				tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
 			}
 		} else if(tracker.isDisabled)
 		{

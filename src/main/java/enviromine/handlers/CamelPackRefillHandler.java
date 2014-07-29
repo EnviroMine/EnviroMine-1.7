@@ -3,17 +3,17 @@ package enviromine.handlers;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import cpw.mods.fml.common.ICraftingHandler;
-import enviromine.core.EnviroMine;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import enviromine.core.EnviroMine;
 
-public class CamelPackRefillHandler implements IRecipe, ICraftingHandler
+public class CamelPackRefillHandler implements IRecipe
 {
 	public boolean fillBottle;
 	public int packDamage;
@@ -27,7 +27,7 @@ public class CamelPackRefillHandler implements IRecipe, ICraftingHandler
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
-		if(!inv.getInvName().equals("container.crafting"))
+		if(!inv.getInventoryName().equals("container.crafting"))
 		{
 			return false;
 		}
@@ -127,14 +127,14 @@ public class CamelPackRefillHandler implements IRecipe, ICraftingHandler
 		}
 	}
 	
-	@Override
-	public void onCrafting(EntityPlayer player, ItemStack item, IInventory craftMatrix)
+	@SubscribeEvent
+	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
-		if(!craftMatrix.getInvName().equals("container.crafting"))
+		IInventory craftMatrix = event.craftMatrix;
+		if(!craftMatrix.getInventoryName().equals("container.crafting"))
 		{
 			return;
-		} else if(item.itemID == Item.potion.itemID && item.getItemDamage() == 0)
-		{
+		} else {
 			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 			{
 				ItemStack slot = craftMatrix.getStackInSlot(i);
@@ -142,7 +142,7 @@ public class CamelPackRefillHandler implements IRecipe, ICraftingHandler
 				if(slot == null)
 				{
 					continue;
-				} else if(slot.itemID == EnviroMine.camelPack.itemID)
+				} else if(slot.getItem() == EnviroMine.camelPack)
 				{
 					slot.stackSize += 1;
 					slot.setItemDamage(slot.getItemDamage() + 25);
@@ -153,10 +153,5 @@ public class CamelPackRefillHandler implements IRecipe, ICraftingHandler
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void onSmelting(EntityPlayer player, ItemStack item)
-	{
 	}
 }

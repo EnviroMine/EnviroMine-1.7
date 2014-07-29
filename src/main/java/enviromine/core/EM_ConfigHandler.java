@@ -755,7 +755,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameULCat, name);
-				config.get(nameULCat, BPName[0], (Integer)data[0]).getInt(0);
+				config.get(nameULCat, BPName[0], (String)data[0]).getString();
 				config.get(nameULCat, BPName[1], (Integer)data[1]).getInt(0);
 				config.get(nameULCat, BPName[2], (Integer)data[0]).getInt(0);
 				config.get(nameULCat, BPName[3], (Integer)data[1]).getInt(0);
@@ -811,7 +811,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameItemCat, name);
-				config.get(nameItemCat, IPName[0], (Integer)data[0]).getInt(0);
+				config.get(nameItemCat, IPName[0], (String)data[0]).getString();
 				config.get(nameItemCat, IPName[1], (Integer)data[1]).getInt(0);
 				config.get(nameItemCat, IPName[2], false).getBoolean(false);
 				config.get(nameItemCat, IPName[3], 0.00).getDouble(0.00);
@@ -836,7 +836,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameArmorCat, name);
-				config.get(nameArmorCat, APName[0], (Integer)data[0]).getInt(0);
+				config.get(nameArmorCat, APName[0], (String)data[0]).getString();
 				config.get(nameArmorCat, APName[1], 0.00).getDouble(0.00);
 				config.get(nameArmorCat, APName[2], 0.00).getDouble(0.00);
 				config.get(nameArmorCat, APName[3], 0.00).getDouble(0.00);

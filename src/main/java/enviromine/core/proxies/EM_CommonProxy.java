@@ -6,6 +6,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import enviromine.gui.UpdateNotification;
 import enviromine.handlers.CamelPackRefillHandler;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_ServerScheduledTickHandler;
@@ -30,6 +31,7 @@ public class EM_CommonProxy
 	public void registerEventHandlers()
 	{
 		MinecraftForge.EVENT_BUS.register(new EM_EventManager());
+		MinecraftForge.EVENT_BUS.register(new UpdateNotification());
 		
 		CamelPackRefillHandler tmp = new CamelPackRefillHandler();
 		CraftingManager.getInstance().getRecipeList().add(tmp);

@@ -122,8 +122,6 @@ public class EnviroMine
 		
 		GameRegistry.addRecipe(new ItemStack(camelPack, 1, camelPack.getMaxDamage()), "xxx", "xyx", "xxx", 'x', new ItemStack(Items.leather), 'y', new ItemStack(Items.glass_bottle));
 		
-		GameRegistry.registerPlayerTracker(new UpdateNotification());
-		
 		proxy.registerTickHandlers();
 		proxy.registerEventHandlers();
 	}
@@ -142,21 +140,6 @@ public class EnviroMine
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.blockProperties.size() + " block properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.livingProperties.size() + " entity properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.itemProperties.size() + " item properties");
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static void registerKeyBindings(FMLInitializationEvent event)
-	{
-		// Add remove Keybind
-		KeyBinding[] key = {new KeyBinding("EnviroMine Add/Remove Custom Object", Keyboard.KEY_J)};
-		boolean[] repeat = {false};
-		KeyBindingRegistry.registerKeyBinding(new enviromine.handlers.keybinds.AddRemoveCustom(key, repeat));
-		
-		// Reload Custom Objects Files
-		KeyBinding[] key1 = {new KeyBinding("EnviroMine Reload All Custom Object", Keyboard.KEY_K)};
-		boolean[] repeat1 = {false};
-		KeyBindingRegistry.registerKeyBinding(new enviromine.handlers.keybinds.ReloadCustomObjects(key1, repeat1));
-	
 	}
 	
 	public static int getColorFromRGBA_F(float par1, float par2, float par3, float par4)

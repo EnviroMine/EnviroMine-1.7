@@ -71,7 +71,7 @@ public class EM_GuiEnviroMeters extends Gui
 		
 		int xPos = 4;
 		int yPos = 4;
-		ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft().gameSettings, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 		int width = scaleRes.getScaledWidth();
 		int height = scaleRes.getScaledHeight();
 		

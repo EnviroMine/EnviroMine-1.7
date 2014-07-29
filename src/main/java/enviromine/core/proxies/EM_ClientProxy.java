@@ -5,8 +5,8 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import enviromine.core.EnviroMine;
 import enviromine.gui.EM_GuiEnviroMeters;
+import enviromine.handlers.keybinds.EnviroKeybinds;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
@@ -51,7 +51,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
-		EnviroMine.registerKeyBindings(event);
+		EnviroKeybinds.Init();
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)

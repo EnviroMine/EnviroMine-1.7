@@ -43,6 +43,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft()));
+		MinecraftForge.EVENT_BUS.register(new EnviroKeybinds());
 	}
 	
 	public void preInit(FMLPreInitializationEvent event)

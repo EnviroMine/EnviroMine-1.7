@@ -16,7 +16,7 @@ public class EnviroKeybinds
 	public static void Init()
 	{
 		reloadConfig = new KeyBinding("key.enviromine.reload", Keyboard.KEY_L, "key.categories.enviromine");
-		addRemove = new KeyBinding("key.enviromine.addremove", Keyboard.KEY_L, "key.categories.enviromine");
+		addRemove = new KeyBinding("key.enviromine.addremove", Keyboard.KEY_K, "key.categories.enviromine");
 		
 		ClientRegistry.registerKeyBinding(reloadConfig);
 		ClientRegistry.registerKeyBinding(addRemove);
@@ -27,11 +27,13 @@ public class EnviroKeybinds
 	{
 		if(reloadConfig.getIsKeyPressed())
 		{
+			System.out.println("Pressed reload");
 			ReloadCustomObjects.doReloadConfig();
 		}
 		
 		if(addRemove.getIsKeyPressed())
 		{
+			System.out.println("Pressed addremove");
 			AddRemoveCustom.doAddRemove();
 		}
 	}

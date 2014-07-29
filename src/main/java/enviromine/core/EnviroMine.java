@@ -80,6 +80,11 @@ public class EnviroMine
 		
 		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("camelPack").setCreativeTab(CreativeTabs.tabTools);
 		
+		GameRegistry.registerItem(badWaterBottle, "dirty_water_bottle");
+		GameRegistry.registerItem(saltWaterBottle, "salt_water_bottle");
+		GameRegistry.registerItem(coldWaterBottle, "cold_water_bottle");
+		GameRegistry.registerItem(camelPack, "camel_pack");
+		
 		if(EM_Settings.shaftGen == true)
 		{
 			VillagerRegistry.instance().registerVillageCreationHandler(new EnviroShaftCreationHandler());

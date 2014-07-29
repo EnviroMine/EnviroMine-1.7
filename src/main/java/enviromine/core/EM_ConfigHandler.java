@@ -1,11 +1,11 @@
-package main.java.enviromine.core;
+package enviromine.core;
 
-import main.java.enviromine.handlers.keybinds.AddRemoveCustom;
-import main.java.enviromine.trackers.ArmorProperties;
-import main.java.enviromine.trackers.BlockProperties;
-import main.java.enviromine.trackers.EntityProperties;
-import main.java.enviromine.trackers.ItemProperties;
-import main.java.enviromine.trackers.StabilityType;
+import enviromine.handlers.keybinds.AddRemoveCustom;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.ItemProperties;
+import enviromine.trackers.StabilityType;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

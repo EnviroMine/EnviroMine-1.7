@@ -1,6 +1,6 @@
-package main.java.enviromine.handlers;
+package enviromine.handlers;
 
-import main.java.enviromine.core.EnviroMine;
+import enviromine.core.EnviroMine;
 
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;

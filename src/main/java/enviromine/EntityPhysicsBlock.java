@@ -1,8 +1,8 @@
-package main.java.enviromine;
+package enviromine;
 
-import main.java.enviromine.core.EM_Settings;
-import main.java.enviromine.core.EnviroMine;
-import main.java.enviromine.handlers.EM_PhysManager;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_PhysManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;

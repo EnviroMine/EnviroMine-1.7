@@ -1,7 +1,7 @@
-package main.java.enviromine.core.proxies;
+package enviromine.core.proxies;
 
-import main.java.enviromine.gui.EM_GuiEnviroMeters;
-import main.java.enviromine.handlers.keybinds.EnviroKeybinds;
+import enviromine.gui.EM_GuiEnviroMeters;
+import enviromine.handlers.keybinds.EnviroKeybinds;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;

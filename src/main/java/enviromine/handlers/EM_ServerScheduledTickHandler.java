@@ -1,6 +1,6 @@
-package main.java.enviromine.handlers;
+package enviromine.handlers;
 
-import main.java.enviromine.core.EM_Settings;
+import enviromine.core.EM_Settings;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;

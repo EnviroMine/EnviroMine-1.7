@@ -1,8 +1,8 @@
-package main.java.enviromine.network.packet;
+package enviromine.network.packet;
 
-import main.java.enviromine.handlers.EM_EventManager;
-import main.java.enviromine.handlers.EM_StatusManager;
-import main.java.enviromine.trackers.EnviroDataTracker;
+import enviromine.handlers.EM_EventManager;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
 
 import net.minecraft.entity.player.EntityPlayer;
 

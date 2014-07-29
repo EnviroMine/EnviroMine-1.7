@@ -1,7 +1,7 @@
-package main.java.enviromine.gui;
+package enviromine.gui;
 
-import main.java.enviromine.core.EM_Settings;
-import main.java.enviromine.core.EnviroMine;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;

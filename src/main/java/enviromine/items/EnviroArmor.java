@@ -1,6 +1,6 @@
-package main.java.enviromine.items;
+package enviromine.items;
 
-import main.java.enviromine.core.EnviroMine;
+import enviromine.core.EnviroMine;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;

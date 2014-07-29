@@ -1,6 +1,6 @@
-package main.java.enviromine.handlers;
+package enviromine.handlers;
 
-import main.java.enviromine.EM_VillageMineshaft;
+import enviromine.EM_VillageMineshaft;
 
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 

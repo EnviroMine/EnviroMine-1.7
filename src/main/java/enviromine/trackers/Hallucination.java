@@ -1,4 +1,4 @@
-package main.java.enviromine.trackers;
+package enviromine.trackers;
 
 import java.util.ArrayList;
 import java.util.Random;

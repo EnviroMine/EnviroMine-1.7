@@ -1,10 +1,10 @@
-package main.java.enviromine.trackers;
+package enviromine.trackers;
 
-import main.java.enviromine.EnviroDamageSource;
-import main.java.enviromine.EnviroPotion;
-import main.java.enviromine.core.EM_Settings;
-import main.java.enviromine.core.EnviroMine;
-import main.java.enviromine.handlers.EM_StatusManager;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_StatusManager;
 
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;

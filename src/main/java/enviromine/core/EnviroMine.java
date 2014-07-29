@@ -1,14 +1,14 @@
-package main.java.enviromine.core;
+package enviromine.core;
 
-import main.java.enviromine.EM_VillageMineshaft;
-import main.java.enviromine.EnviroPotion;
-import main.java.enviromine.core.proxies.EM_CommonProxy;
-import main.java.enviromine.handlers.EnviroShaftCreationHandler;
-import main.java.enviromine.items.EnviroArmor;
-import main.java.enviromine.items.EnviroItemBadWaterBottle;
-import main.java.enviromine.items.EnviroItemColdWaterBottle;
-import main.java.enviromine.items.EnviroItemSaltWaterBottle;
-import main.java.enviromine.network.packet.PacketEnviroMine;
+import enviromine.EM_VillageMineshaft;
+import enviromine.EnviroPotion;
+import enviromine.core.proxies.EM_CommonProxy;
+import enviromine.handlers.EnviroShaftCreationHandler;
+import enviromine.items.EnviroArmor;
+import enviromine.items.EnviroItemBadWaterBottle;
+import enviromine.items.EnviroItemColdWaterBottle;
+import enviromine.items.EnviroItemSaltWaterBottle;
+import enviromine.network.packet.PacketEnviroMine;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;

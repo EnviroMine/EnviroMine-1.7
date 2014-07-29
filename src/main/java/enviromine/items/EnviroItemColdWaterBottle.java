@@ -1,7 +1,7 @@
-package main.java.enviromine.items;
+package enviromine.items;
 
-import main.java.enviromine.handlers.EM_StatusManager;
-import main.java.enviromine.trackers.EnviroDataTracker;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;

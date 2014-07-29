@@ -1,9 +1,9 @@
-package main.java.enviromine.core.proxies;
+package enviromine.core.proxies;
 
-import main.java.enviromine.gui.UpdateNotification;
-import main.java.enviromine.handlers.CamelPackRefillHandler;
-import main.java.enviromine.handlers.EM_EventManager;
-import main.java.enviromine.handlers.EM_ServerScheduledTickHandler;
+import enviromine.gui.UpdateNotification;
+import enviromine.handlers.CamelPackRefillHandler;
+import enviromine.handlers.EM_EventManager;
+import enviromine.handlers.EM_ServerScheduledTickHandler;
 
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.MinecraftForge;

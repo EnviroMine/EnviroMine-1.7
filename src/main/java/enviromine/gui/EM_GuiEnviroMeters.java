@@ -1,9 +1,9 @@
-package main.java.enviromine.gui;
+package enviromine.gui;
 
-import main.java.enviromine.core.EM_Settings;
-import main.java.enviromine.core.EnviroMine;
-import main.java.enviromine.handlers.EM_StatusManager;
-import main.java.enviromine.trackers.EnviroDataTracker;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

@@ -1,4 +1,4 @@
-package main.java.enviromine.trackers;
+package enviromine.trackers;
 
 public class BlockProperties
 {

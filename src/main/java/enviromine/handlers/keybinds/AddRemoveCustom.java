@@ -1,7 +1,7 @@
-package main.java.enviromine.handlers.keybinds;
+package enviromine.handlers.keybinds;
 
-import main.java.enviromine.core.EM_ConfigHandler;
-import main.java.enviromine.core.EnviroMine;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EnviroMine;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

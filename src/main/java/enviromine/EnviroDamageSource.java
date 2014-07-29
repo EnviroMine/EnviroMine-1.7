@@ -1,4 +1,4 @@
-package main.java.enviromine;
+package enviromine;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ChatComponentText;

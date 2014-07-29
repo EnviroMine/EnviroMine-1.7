@@ -1,4 +1,4 @@
-package main.java.enviromine.handlers.keybinds;
+package enviromine.handlers.keybinds;
 
 import net.minecraft.client.settings.KeyBinding;
 

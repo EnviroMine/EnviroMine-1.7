@@ -1,10 +1,10 @@
-package main.java.enviromine.core;
+package enviromine.core;
 
-import main.java.enviromine.trackers.ArmorProperties;
-import main.java.enviromine.trackers.BlockProperties;
-import main.java.enviromine.trackers.EntityProperties;
-import main.java.enviromine.trackers.ItemProperties;
-import main.java.enviromine.trackers.StabilityType;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.ItemProperties;
+import enviromine.trackers.StabilityType;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class EM_Settings
 	public static final String ID = "enviromine";
 	public static final String Channel = "EM_CH";
 	public static final String Name = "EnviroMine";
-	public static final String Proxy = "main.java.enviromine.core.proxies";
+	public static final String Proxy = "enviromine.core.proxies";
 	
 	public static boolean enablePhysics = true;
 	public static boolean enableLandslide = true;

@@ -1,16 +1,16 @@
-package main.java.enviromine.handlers;
+package enviromine.handlers;
 
-import main.java.enviromine.EntityPhysicsBlock;
-import main.java.enviromine.EnviroPotion;
-import main.java.enviromine.core.EM_Settings;
-import main.java.enviromine.core.EnviroMine;
-import main.java.enviromine.handlers.EM_PhysManager;
-import main.java.enviromine.handlers.EM_StatusManager;
-import main.java.enviromine.network.packet.PacketEnviroMine;
-import main.java.enviromine.trackers.EntityProperties;
-import main.java.enviromine.trackers.EnviroDataTracker;
-import main.java.enviromine.trackers.Hallucination;
-import main.java.enviromine.trackers.ItemProperties;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroPotion;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_PhysManager;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.ItemProperties;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;

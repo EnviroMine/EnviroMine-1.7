@@ -1,15 +1,15 @@
-package main.java.enviromine.handlers;
+package enviromine.handlers;
 
-import main.java.enviromine.EnviroPotion;
-import main.java.enviromine.core.EM_Settings;
-import main.java.enviromine.core.EnviroMine;
-import main.java.enviromine.gui.EM_GuiEnviroMeters;
-import main.java.enviromine.network.packet.PacketEnviroMine;
-import main.java.enviromine.trackers.ArmorProperties;
-import main.java.enviromine.trackers.BlockProperties;
-import main.java.enviromine.trackers.EntityProperties;
-import main.java.enviromine.trackers.EnviroDataTracker;
-import main.java.enviromine.trackers.ItemProperties;
+import enviromine.EnviroPotion;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gui.EM_GuiEnviroMeters;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.ItemProperties;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;

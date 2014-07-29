@@ -1,41 +1,17 @@
 package enviromine.handlers;
 
-import java.util.EnumSet;
-import net.minecraft.world.World;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import enviromine.core.EM_Settings;
 
-public class EM_ServerScheduledTickHandler implements ITickHandler
+public class EM_ServerScheduledTickHandler
 {
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData)
+	@SubscribeEvent
+	public void tickEnd(TickEvent tick)
 	{
-	}
-	
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData)
-	{
-		if(((World)tickData[0]).isRemote)
-		{
-			return;
-		}
-		
-		if(EM_Settings.enablePhysics)
+		if(tick.side.isClient() && EM_Settings.enablePhysics)
 		{
 			EM_PhysManager.updateSchedule();
 		}
-	}
-	
-	@Override
-	public EnumSet<TickType> ticks()
-	{
-		return EnumSet.of(TickType.WORLD);
-	}
-	
-	@Override
-	public String getLabel()
-	{
-		return null;
 	}
 }

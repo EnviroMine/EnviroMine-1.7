@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 import enviromine.handlers.keybinds.AddRemoveCustom;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BlockProperties;
@@ -91,9 +93,9 @@ public class EM_ConfigHandler
 		APName[8] = "09.Air";
 		
 		BPName = new String[12];
-		BPName[0] = "01.ID";
+		BPName[0] = "01.Name";
 		BPName[1] = "02.MetaID";
-		BPName[2] = "03.DropID";
+		BPName[2] = "03.DropName";
 		BPName[3] = "04.DropMetaID";
 		BPName[4] = "05.DropNumber";
 		BPName[5] = "06.Enable Temperature";
@@ -122,7 +124,7 @@ public class EM_ConfigHandler
 		EPName[14] = "15.Hit Hydration";
 		
 		IPName = new String[11];
-		IPName[0] = "01.ID";
+		IPName[0] = "01.Name";
 		IPName[1] = "02.Damage";
 		IPName[2] = "03.Enable Ambient Temperature";
 		IPName[3] = "04.Ambient Temperature";
@@ -152,12 +154,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		}
 		
@@ -207,10 +209,11 @@ public class EM_ConfigHandler
 		EM_Settings.ShowGuiIcons = config.get(GuiSetCat, "Show Gui Icons", true).getBoolean(true);
 		
 		// Config Item ID's
-		EM_Settings.dirtBottleID = config.get(Configuration.CATEGORY_ITEM, "Dirty Water Bottle", 5001).getInt(5001);
-		EM_Settings.saltBottleID = config.get(Configuration.CATEGORY_ITEM, "Salt Water Bottle", 5002).getInt(5002);
-		EM_Settings.coldBottleID = config.get(Configuration.CATEGORY_ITEM, "Cold Water Bottle", 5003).getInt(5003);
-		EM_Settings.camelPackID = config.get(Configuration.CATEGORY_ITEM, "Camel Pack", 5004).getInt(5004);
+		/*String ItemSetCat = "item";
+		EM_Settings.dirtBottleID = config.get(ItemSetCat, "Dirty Water Bottle", 5001).getInt(5001);
+		EM_Settings.saltBottleID = config.get(ItemSetCat, "Salt Water Bottle", 5002).getInt(5002);
+		EM_Settings.coldBottleID = config.get(ItemSetCat, "Cold Water Bottle", 5003).getInt(5003);
+		EM_Settings.camelPackID = config.get(ItemSetCat, "Camel Pack", 5004).getInt(5004);*/
 		
 		// Potion ID's
 		EM_Settings.hypothermiaPotionID = -1;
@@ -311,12 +314,12 @@ public class EM_ConfigHandler
 			dirFlag = Dir.mkdirs();
 		} catch(SecurityException Se)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Error while creating config directory:\n" + Se);
+			EnviroMine.logger.log(Level.WARN, "Error while creating config directory:\n" + Se);
 		}
 		
 		if(!dirFlag)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Failed to create config directory!");
+			EnviroMine.logger.log(Level.WARN, "Failed to create config directory!");
 		}
 	}
 	
@@ -342,12 +345,12 @@ public class EM_ConfigHandler
 			} catch(NullPointerException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
 				return;
 			} catch(StringIndexOutOfBoundsException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
 				return;
 			}
 			
@@ -394,7 +397,7 @@ public class EM_ConfigHandler
 						LoadLivingProperty(config, catagory.get(x));
 					} else
 					{
-						EnviroMine.logger.log(Level.WARNING, "Failed to load object " + CurCat);
+						EnviroMine.logger.log(Level.WARN, "Failed to load object " + CurCat);
 					}
 					
 				}
@@ -435,9 +438,9 @@ public class EM_ConfigHandler
 	{
 		config.addCustomCategoryComment(category, "");
 		
-		int id = 					config.get(category, BPName[0], 0).getInt(0);
+		String name = 				config.get(category, BPName[0], "").getString();
 		int metaData = 				config.get(category, BPName[1], 0).getInt(0);
-		int dropID = 				config.get(category, BPName[2], 0).getInt(0);
+		String dropName = 			config.get(category, BPName[2], "").getString();
 		int dropMeta = 				config.get(category, BPName[3], 0).getInt(0);
 		int dropNum = 				config.get(category, BPName[4], 0).getInt(0);
 		boolean enableTemp = 		config.get(category, BPName[5], false).getBoolean(false);
@@ -468,7 +471,7 @@ public class EM_ConfigHandler
 			canHang = stabType.canHang;
 		} else
 		{
-			EnviroMine.logger.log(Level.WARNING,"Stability type '" + stability + "' not found.");
+			EnviroMine.logger.log(Level.WARN,"Stability type '" + stability + "' not found.");
 			minFall = 99;
 			maxFall = 99;
 			supportDist = 9;
@@ -477,14 +480,14 @@ public class EM_ConfigHandler
 			canHang = true;
 		}
 		
-		BlockProperties entry = new BlockProperties(id, metaData, hasPhys, minFall, maxFall, supportDist, dropID, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
+		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropName, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
 		
 		if(metaData < 0)
 		{
-			EM_Settings.blockProperties.put("" + id, entry);
+			EM_Settings.blockProperties.put("" + name, entry);
 		} else
 		{
-			EM_Settings.blockProperties.put("" + id + "," + metaData, entry);
+			EM_Settings.blockProperties.put("" + name + "," + metaData, entry);
 		}
 	}
 	
@@ -542,13 +545,13 @@ public class EM_ConfigHandler
 		catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD DEFAULTS!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD DEFAULTS!");
 			return;
 		} 
 		catch(StringIndexOutOfBoundsException e)	
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD DEFAULTS!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD DEFAULTS!");
 			return;
 		}
 		EnviroMine.logger.log(Level.INFO, "Loading Default Config: " + customFile.getAbsolutePath());
@@ -561,44 +564,44 @@ public class EM_ConfigHandler
 		custom.addCustomCategoryComment(entityCat, "Custom entity properties");
 		custom.addCustomCategoryComment(itemsCat, "Custom item properties");
 		
-		ArmorDefaultSave(custom, armorCat + ".helmetLeather", 	ItemArmor.helmetLeather.itemID, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateLeather", 	ItemArmor.plateLeather.itemID, 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsLeather", 	ItemArmor.legsLeather.itemID, 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsLeather", 	ItemArmor.bootsLeather.itemID, 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".helmetLeather", 	Item.itemRegistry.getNameForObject(Items.leather_helmet), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".plateLeather", 	Item.itemRegistry.getNameForObject(Items.leather_chestplate), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".legsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_leggings), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".bootsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_boots), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
 		
-		ArmorDefaultSave(custom, armorCat + ".helmetIron", 		ItemArmor.helmetIron.itemID, 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateIron", 		ItemArmor.plateIron.itemID, 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsIron", 		ItemArmor.legsIron.itemID, 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsIron", 		ItemArmor.bootsIron.itemID, 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".helmetIron", 		Item.itemRegistry.getNameForObject(Items.iron_helmet), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".plateIron", 		Item.itemRegistry.getNameForObject(Items.iron_chestplate), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".legsIron", 		Item.itemRegistry.getNameForObject(Items.iron_leggings), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".bootsIron", 		Item.itemRegistry.getNameForObject(Items.iron_boots), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
 		
-		ArmorDefaultSave(custom, armorCat + ".helmetGold", 		ItemArmor.helmetGold.itemID, 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateGold", 		ItemArmor.plateGold.itemID, 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsGold", 		ItemArmor.legsGold.itemID, 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsGold", 		ItemArmor.bootsGold.itemID, 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".helmetGold", 		Item.itemRegistry.getNameForObject(Items.golden_helmet), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".plateGold", 		Item.itemRegistry.getNameForObject(Items.golden_chestplate), 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".legsGold", 		Item.itemRegistry.getNameForObject(Items.golden_leggings), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".bootsGold", 		Item.itemRegistry.getNameForObject(Items.golden_boots), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
 		
-		ArmorDefaultSave(custom, armorCat + ".helmetDiamond", 	ItemArmor.helmetDiamond.itemID, 0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateDiamond", 	ItemArmor.plateDiamond.itemID, 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsDiamond", 	ItemArmor.legsDiamond.itemID, 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsDiamond", 	ItemArmor.bootsDiamond.itemID, 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".helmetDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_helmet), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".plateDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_chestplate), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".legsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_leggings), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".bootsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_boots), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
 		
-		ItemDefaultSave(custom, itemsCat + ".potions", 		Item.potion.itemID, 		-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
-		ItemDefaultSave(custom, itemsCat + ".melon", 		Item.melon.itemID, 			-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		ItemDefaultSave(custom, itemsCat + ".carrot", 		Item.carrot.itemID, 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		ItemDefaultSave(custom, itemsCat + ".goldCarrot", 	Item.goldenCarrot.itemID, 	-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		ItemDefaultSave(custom, itemsCat + ".redApple", 	Item.appleRed.itemID, 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		ItemDefaultSave(custom, itemsCat + ".potions", 		Item.itemRegistry.getNameForObject(Items.potionitem), 	-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
+		ItemDefaultSave(custom, itemsCat + ".melon", 		Item.itemRegistry.getNameForObject(Items.melon), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		ItemDefaultSave(custom, itemsCat + ".carrot", 		Item.itemRegistry.getNameForObject(Items.carrot), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		ItemDefaultSave(custom, itemsCat + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_apple), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		ItemDefaultSave(custom, itemsCat + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
 		
-		ItemDefaultSave(custom, itemsCat + ".bucketLava", 	Item.bucketLava.itemID, 	-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".redFlower", 	Block.plantRed.blockID, 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".yellowFlower", Block.plantYellow.blockID, 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".leaves", 		Block.leaves.blockID, 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".snowBlock", 	Block.blockSnow.blockID, 	-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".ice", 			Block.ice.blockID, 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".snowLayer",	Block.snow.blockID, 		-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".netherrack", 	Block.netherrack.blockID, 	-1, true, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".soulSand", 	Block.slowSand.blockID, 	-1, false, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".skull", 		Item.skull.itemID, 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".web", 			Block.web.blockID, 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".11", 			Item.record11.itemID, 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".yellowFlower", Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".snowBlock", 	Block.blockRegistry.getNameForObject(Blocks.snow), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".ice", 			Block.blockRegistry.getNameForObject(Blocks.ice), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".snowLayer",	Block.blockRegistry.getNameForObject(Blocks.snow_layer), 	-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".netherrack", 	Block.blockRegistry.getNameForObject(Blocks.netherrack), 	-1, true, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".soulSand", 	Block.blockRegistry.getNameForObject(Blocks.soul_sand), 	-1, false, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".skull", 		Item.itemRegistry.getNameForObject(Items.skull), 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".web", 			Block.blockRegistry.getNameForObject(Blocks.web), 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".11", 			Item.itemRegistry.getNameForObject(Items.record_11), 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
 		
 		EntityDefaultSave(custom, entityCat + ".blaze",		61, false, false, false, false, true, true, -0.01, 0.0, 75.0, 0.1, -0.05, 0.0, -0.01, -0.01);
 		EntityDefaultSave(custom, entityCat + ".wither", 	64,	false, false, false, false, true, true, -0.1, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -625,9 +628,9 @@ public class EM_ConfigHandler
 		config.get(catName, EPName[14], hHyd).getDouble(hHyd);
 	}
 	
-	private static void ArmorDefaultSave(Configuration config, String catName, int id, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
+	private static void ArmorDefaultSave(Configuration config, String catName, String name, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
 	{
-		config.get(catName, APName[0], id).getInt(id);
+		config.get(catName, APName[0], name).getString();
 		config.get(catName, APName[1], nightTemp).getDouble(nightTemp);
 		config.get(catName, APName[2], shadeTemp).getDouble(shadeTemp);
 		config.get(catName, APName[3], sunTemp).getDouble(sunTemp);
@@ -642,11 +645,15 @@ public class EM_ConfigHandler
 	{
 		EnviroMine.logger.log(Level.INFO, "Searcing for mod armors...");
 		int armorCount = 0;
-		for(int i = 420; i < Item.itemsList.length; i++)
+		
+		Iterator<Item> iterator = Item.itemRegistry.iterator();
+		
+		while(iterator.hasNext())
 		{
-			if(Item.itemsList[i] instanceof ItemArmor)
+			Item item = iterator.next();
+			if(item instanceof ItemArmor)
 			{
-				DetectedArmorGen((ItemArmor)Item.itemsList[i]);
+				DetectedArmorGen((ItemArmor)item);
 				armorCount += 1;
 			}
 		}
@@ -674,7 +681,7 @@ public class EM_ConfigHandler
 		String catName = armorCat + "." + AddRemoveCustom.replaceULN(armor.getUnlocalizedName());
 		
 		config.addCustomCategoryComment(catName, "");
-		config.get(catName, APName[0], armor.itemID).getInt(armor.itemID);
+		config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();
 		config.get(catName, APName[1], 0.0D).getDouble(0.0D);
 		config.get(catName, APName[2], 0.0D).getDouble(0.0D);
 		config.get(catName, APName[3], 0.0D).getDouble(0.0D);
@@ -687,9 +694,9 @@ public class EM_ConfigHandler
 		config.save();
 	}
 	
-	private static void ItemDefaultSave(Configuration config, String catName, int id, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
+	private static void ItemDefaultSave(Configuration config, String catName, String name, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
 	{
-		config.get(catName, IPName[0], id).getInt(id);
+		config.get(catName, IPName[0], name).getString();
 		config.get(catName, IPName[1], meta).getInt(meta);
 		config.get(catName, IPName[2], enableAmbTemp).getBoolean(enableAmbTemp);
 		config.get(catName, IPName[3], ambTemp).getDouble(ambTemp);
@@ -720,12 +727,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
 			return "Failed to Open MyCustom.cfg";
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
 			return "Failed to Open MyCustom.cfg";
 		}
 		
@@ -856,12 +863,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		}
 		

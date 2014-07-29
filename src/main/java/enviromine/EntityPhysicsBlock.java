@@ -81,6 +81,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 	public EntityPhysicsBlock(World world, double x, double y, double z, Block block, int meta, boolean update)
 	{
 		super(world, x, y, z, block, meta);
+		this.block = block;
 		this.isAnvil2 = true;
 		this.fallHurtMax2 = 40;
 		this.fallHurtAmount2 = 2.0F;

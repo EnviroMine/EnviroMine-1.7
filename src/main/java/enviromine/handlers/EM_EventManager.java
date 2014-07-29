@@ -126,16 +126,13 @@ public class EM_EventManager
 		} else if(event.entity instanceof EntityFallingBlock && !(event.entity instanceof EntityPhysicsBlock) && !event.world.isRemote && event.world.getTotalWorldTime() > EM_PhysManager.worldStartTime + EM_Settings.worldDelay && chunkPhys)
 		{
 			EntityFallingBlock oldSand = (EntityFallingBlock)event.entity;
-			
-			if(oldSand.blockID == 0)
-			{
-				return;
-			}
-			
 			NBTTagCompound oldTags = new NBTTagCompound();
 			oldSand.writeToNBT(oldTags);
 			
-			EntityPhysicsBlock newSand = new EntityPhysicsBlock(oldSand.worldObj, oldSand.prevPosX, oldSand.prevPosY, oldSand.prevPosZ, oldSand.blockID, oldSand.metadata, true);
+			Block sandBlock = Block.getBlockById(oldTags.getInteger("TileID"));
+			int sandMeta = oldTags.getByte("Data") & 255;
+			
+			EntityPhysicsBlock newSand = new EntityPhysicsBlock(oldSand.worldObj, oldSand.prevPosX, oldSand.prevPosY, oldSand.prevPosZ, sandBlock, sandMeta, true);
 			newSand.readFromNBT(oldTags);
 			event.world.spawnEntityInWorld(newSand);
 			event.setCanceled(true);
@@ -1074,7 +1071,7 @@ public class EM_EventManager
         }
         double d0 = 8.0D;
         double d1 = 5.0D;
-        List list = event.entityPlayer.worldObj.getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getAABBPool().getAABB((double)event.x - d0, (double)event.y - d1, (double)event.z - d0, (double)event.x + d0, (double)event.y + d1, (double)event.z + d0));
+        List list = event.entityPlayer.worldObj.getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getBoundingBox((double)event.x - d0, (double)event.y - d1, (double)event.z - d0, (double)event.x + d0, (double)event.y + d1, (double)event.z + d0));
         
         if (!list.isEmpty())
         {
@@ -1169,7 +1166,7 @@ public class EM_EventManager
 		double d0 = par2EntityPlayer.prevPosX + (par2EntityPlayer.posX - par2EntityPlayer.prevPosX) * (double)f;
 		double d1 = par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + (double)(par1World.isRemote ? par2EntityPlayer.getEyeHeight() - par2EntityPlayer.getDefaultEyeHeight() : par2EntityPlayer.getEyeHeight()); // isRemote check to revert changes to ray trace position due to adding the eye height clientside and player yOffset differences
 		double d2 = par2EntityPlayer.prevPosZ + (par2EntityPlayer.posZ - par2EntityPlayer.prevPosZ) * (double)f;
-		Vec3 vec3 = par1World.getWorldVec3Pool().getVecFromPool(d0, d1, d2);
+		Vec3 vec3 = Vec3.createVectorHelper(d0, d1, d2);
 		float f3 = MathHelper.cos(-f2 * 0.017453292F - (float)Math.PI);
 		float f4 = MathHelper.sin(-f2 * 0.017453292F - (float)Math.PI);
 		float f5 = -MathHelper.cos(-f1 * 0.017453292F);
@@ -1182,6 +1179,6 @@ public class EM_EventManager
 			d3 = ((EntityPlayerMP)par2EntityPlayer).theItemInWorldManager.getBlockReachDistance();
 		}
 		Vec3 vec31 = vec3.addVector((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
-		return par1World.rayTraceBlocks_do_do(vec3, vec31, par3, !par3);
+		return par1World.func_147447_a(vec3, vec31, par3, !par3, false);
 	}
 }

@@ -82,6 +82,11 @@ public class EM_GuiEnviroMeters extends Gui
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
+		if(tracker.isDisabled)
+		{
+			tracker = null;
+		}
+		
 		if(tracker == null)
 		{
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
@@ -89,9 +94,6 @@ public class EM_GuiEnviroMeters extends Gui
 				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
 			}
-		} else if(tracker.isDisabled)
-		{
-			tracker = null;
 		} else
 		{
 			int waterBar = MathHelper.ceiling_float_int((tracker.hydration / 100) * barWidth);

@@ -11,11 +11,11 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -63,15 +63,12 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import java.awt.Color;
 import java.util.List;
 import java.util.UUID;
-
 import org.apache.logging.log4j.Level;
 
 public class EM_EventManager
@@ -294,7 +291,8 @@ public class EM_EventManager
 			}
 		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null && EnviroMine.proxy.isClient())
 		{
-			EnviroMine.instance.network.sendTo(new PacketEnviroMine("ID:1," + event.entityPlayer.getUniqueID().toString()), (EntityPlayerMP)event.entityPlayer);
+			EnviroMine.instance.network.sendToServer(new PacketEnviroMine("ID:1," + event.entityPlayer.getUniqueID().toString()));
+			System.out.println("Sending packet to server...");
 		}
 	}
 	

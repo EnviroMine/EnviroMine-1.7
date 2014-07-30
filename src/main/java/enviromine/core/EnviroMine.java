@@ -92,7 +92,8 @@ public class EnviroMine
 		}
 		
 		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
-		this.network.registerMessage(PacketEnviroMine.Handler.class, PacketEnviroMine.class, 0, Side.CLIENT);
+		this.network.registerMessage(PacketEnviroMine.HandlerServer.class, PacketEnviroMine.class, 0, Side.SERVER);
+		this.network.registerMessage(PacketEnviroMine.HandlerClient.class, PacketEnviroMine.class, 1, Side.CLIENT);
 	}
 	
 	@EventHandler

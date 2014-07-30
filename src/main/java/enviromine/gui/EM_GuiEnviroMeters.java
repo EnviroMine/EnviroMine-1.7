@@ -82,8 +82,7 @@ public class EM_GuiEnviroMeters extends Gui
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
-		if(tracker.isDisabled)
-		{
+		if(tracker !=null && tracker.isDisabled) {
 			tracker = null;
 		}
 		

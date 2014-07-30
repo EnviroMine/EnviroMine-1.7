@@ -82,6 +82,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 	{
 		super(world, x, y, z, block, meta);
 		this.block = block;
+		this.metadata = meta;
 		this.isAnvil2 = true;
 		this.fallHurtMax2 = 40;
 		this.fallHurtAmount2 = 2.0F;

@@ -48,11 +48,9 @@ public class AddRemoveCustom
 			{
 				try
 				{
-					
 					String returnValue = "";
 					if(mc.thePlayer.getHeldItem() != null)
 					{
-						
 						Item item = mc.thePlayer.getHeldItem().getItem();
 						int itemMeta = mc.thePlayer.getHeldItem().getItemDamage();
 						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem().getUnlocalizedName());
@@ -75,7 +73,6 @@ public class AddRemoveCustom
 						}
 						
 						return;
-						
 					}
 					
 					MovingObjectType type = Minecraft.getMinecraft().objectMouseOver.typeOfHit;

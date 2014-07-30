@@ -137,7 +137,7 @@ public class EM_PhysManager
 					{
 						if(updateSelf)
 						{
-							callPhysUpdate(world, x, y, z, type);
+							callPhysUpdate(world, x + i, y + j, k + z, type);
 						} else
 						{
 							excluded.put(position, type);
@@ -552,11 +552,9 @@ public class EM_PhysManager
 					if(isCustom && dropMeta > -1)
 					{
 						entityphysblock = new EntityPhysicsBlock(world, (float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, (Block)dropBlock, dropMeta, true);
-						schedulePhysUpdate(world, x, y+1, z, true, type);
 					} else
 					{
 						entityphysblock = new EntityPhysicsBlock(world, (float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, (Block)dropBlock, world.getBlockMetadata(x, y, z), true);
-						schedulePhysUpdate(world, x, y+1, z, true, type);
 					}
 					
 					if(tile != null)

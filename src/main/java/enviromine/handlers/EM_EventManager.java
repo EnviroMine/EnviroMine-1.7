@@ -359,25 +359,12 @@ public class EM_EventManager
 				
 				boolean isValidCauldron = (player.worldObj.getBlock(i, j, k) == Blocks.cauldron && player.worldObj.getBlockMetadata(i, j, k) > 0);
 				
-				if(!world.canMineBlock(player, i, j, k))
+				if(!world.canMineBlock(player, i, j, k) || !player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, item))
 				{
 					return;
 				}
 				
-				if(!player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, item))
-				{
-					return;
-				}
-				
-				boolean isWater;
-				
-				if(world.getBlock(i, j, k) == Blocks.water || world.getBlock(i, j, k) == Blocks.flowing_water)
-				{
-					isWater = true;
-				} else
-				{
-					isWater = false;
-				}
+				boolean isWater = (world.getBlock(i, j, k) == Blocks.water || world.getBlock(i, j, k) == Blocks.flowing_water);
 				
 				if(isWater || isValidCauldron)
 				{

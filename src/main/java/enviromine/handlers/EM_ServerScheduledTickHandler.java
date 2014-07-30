@@ -10,8 +10,7 @@ public class EM_ServerScheduledTickHandler
 	@SubscribeEvent
 	public void tickEnd(TickEvent tick)
 	{
-		if(tick.side.isClient() && EM_Settings.enablePhysics)
-		{
+		if(tick.side.isServer() && EM_Settings.enablePhysics) {
 			EM_PhysManager.updateSchedule();
 		}
 	}

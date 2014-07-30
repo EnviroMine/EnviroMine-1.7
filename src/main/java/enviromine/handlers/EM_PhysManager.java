@@ -140,7 +140,9 @@ public class EM_PhysManager
 					{
 						if(updateSelf)
 						{
-							System.out.println("\nDebug 1");
+							if (MinecraftServer.getServer().getEntityWorld().getBlock(x, y, z) == Blocks.log) {
+								System.out.println("\nDebug 1");
+							}
 							callPhysUpdate(world, x, y, z, type);
 						} else
 						{
@@ -149,7 +151,9 @@ public class EM_PhysManager
 						}
 					} else
 					{
-						System.out.println("\nDebug 2");
+						if (MinecraftServer.getServer().getEntityWorld().getBlock(x+i, y+j, z+k) == Blocks.log) {
+							System.out.println("\nDebug 2");
+						}
 						callPhysUpdate(world, x + i, y + j, k + z, type);
 					}
 				}
@@ -559,9 +563,11 @@ public class EM_PhysManager
 					if(isCustom && dropMeta > -1)
 					{
 						entityphysblock = new EntityPhysicsBlock(world, (float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, (Block)dropBlock, dropMeta, true);
+						schedulePhysUpdate(world, x, y+1, z, true, type);
 					} else
 					{
 						entityphysblock = new EntityPhysicsBlock(world, (float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, (Block)dropBlock, world.getBlockMetadata(x, y, z), true);
+						schedulePhysUpdate(world, x, y+1, z, true, type);
 					}
 					
 					if(tile != null)

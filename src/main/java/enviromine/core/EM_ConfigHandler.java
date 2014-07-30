@@ -187,16 +187,10 @@ public class EM_ConfigHandler
 		
 		// Physics Settings
 		String PhySetCat = "Physics";
+		int minPhysInterval = 5;
 		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
 		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128 , "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
-		int minPhysInterval = 6;
-		Property physInterval = config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)");
-		if (physInterval.getInt(minPhysInterval) >= minPhysInterval) {
-			EM_Settings.physInterval = physInterval.getInt(minPhysInterval);
-		} else {
-			EM_Settings.physInterval = minPhysInterval;
-			physInterval.set(minPhysInterval);
-		}
+		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)"), minPhysInterval);
 		EM_Settings.stoneCracks = config.get(PhySetCat, "Stone Cracks Before Falling", true).getBoolean(true);
 		EM_Settings.defaultStability = config.get(PhySetCat, "Default Stability Type (BlockIDs > 175)", "loose").getString();
 		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
@@ -255,6 +249,16 @@ public class EM_ConfigHandler
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		
 		config.save();
+	}
+	
+	private static int getConfigIntWithMinInt(Property prop, int min)
+	{
+		if (prop.getInt(min) >= min) {
+			return prop.getInt(min);
+		} else {
+			prop.set(min);
+			return min;
+		}
 	}
 	
 	static int nextAvailPotion(int startID)

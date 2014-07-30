@@ -2,7 +2,7 @@ package enviromine.trackers;
 
 public class ItemProperties
 {
-	public int id;
+	public String name;
 	public int meta;
 	
 	public boolean enableTemp;
@@ -18,9 +18,9 @@ public class ItemProperties
 	
 	public float effTempCap;
 	
-	public ItemProperties(int id, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap)
+	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap)
 	{
-		this.id = id;
+		this.name = name;
 		this.meta = meta;
 		this.enableTemp = enableTemp;
 		

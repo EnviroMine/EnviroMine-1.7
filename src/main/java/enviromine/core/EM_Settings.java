@@ -59,7 +59,7 @@ public class EM_Settings
 	public static boolean shaftGen;
 	
 	//Properties
-	public static HashMap<Integer,ArmorProperties> armorProperties = new HashMap<Integer,ArmorProperties>();
+	public static HashMap<String,ArmorProperties> armorProperties = new HashMap<String,ArmorProperties>();
 	public static HashMap<String,BlockProperties> blockProperties = new HashMap<String,BlockProperties>();
 	public static HashMap<Integer,EntityProperties> livingProperties = new HashMap<Integer,EntityProperties>();
 	public static HashMap<String,ItemProperties> itemProperties = new HashMap<String,ItemProperties>();

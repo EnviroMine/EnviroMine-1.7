@@ -425,7 +425,7 @@ public class EM_ConfigHandler
 	{
 		
 		config.addCustomCategoryComment(category, "");
-		int id = 					config.get(category, IPName[0], 0).getInt(0);
+		String name =				config.get(category, IPName[0], "").getString();
 		int meta = 					config.get(category, IPName[1], 0).getInt(0);
 		boolean enableTemp = 		config.get(category, IPName[2], false).getBoolean(false);
 		float ambTemp = (float)		config.get(category, IPName[3], 0.00).getDouble(0.00);
@@ -437,14 +437,14 @@ public class EM_ConfigHandler
 		float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
 		float effTempCap = (float)	config.get(category, IPName[10], 37.00).getDouble(37.00);
 		
-		ItemProperties entry = new ItemProperties(id, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
+		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
 		
 		if(meta < 0)
 		{
-			EM_Settings.itemProperties.put("" + id, entry);
+			EM_Settings.itemProperties.put("" + name, entry);
 		} else
 		{
-			EM_Settings.itemProperties.put("" + id + "," + meta, entry);
+			EM_Settings.itemProperties.put("" + name + "," + meta, entry);
 		}
 	}
 	
@@ -508,7 +508,7 @@ public class EM_ConfigHandler
 	private static void LoadArmorProperty(Configuration config, String catagory)
 	{
 		config.addCustomCategoryComment(catagory, "");
-		int id = 					config.get(catagory, APName[0], 0).getInt(0);
+		String name = 				config.get(catagory, APName[0], "").getString();
 		float nightTemp = (float)	config.get(catagory, APName[1], 0.00).getDouble(0.00);
 		float shadeTemp = (float)	config.get(catagory, APName[2], 0.00).getDouble(0.00);
 		float sunTemp = (float)		config.get(catagory, APName[3], 0.00).getDouble(0.00);
@@ -518,8 +518,8 @@ public class EM_ConfigHandler
 		float sanity = (float)		config.get(catagory, APName[7], 0.00).getDouble(0.00);
 		float air = (float)			config.get(catagory, APName[8], 0.00).getDouble(0.00);
 		
-		ArmorProperties entry = new ArmorProperties(id, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air);
-		EM_Settings.armorProperties.put(id, entry);
+		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air);
+		EM_Settings.armorProperties.put(name, entry);
 	}
 	
 	private static void LoadLivingProperty(Configuration config, String catagory)

@@ -1236,7 +1236,7 @@ public class EM_StatusManager
 				tracker.isDisabled = true;
 				if(tracker.trackedEntity instanceof EntityPlayer)
 				{
-					trackerList.remove(tracker.trackedEntity.getUniqueID());
+					trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
 				} else
 				{
 					trackerList.remove("" + tracker.trackedEntity.getEntityId());

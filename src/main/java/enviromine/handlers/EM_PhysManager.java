@@ -83,9 +83,6 @@ public class EM_PhysManager
 		entry[5] = type;
 		
 		physSchedule.add(entry);
-		if (MinecraftServer.getServer().getEntityWorld().getBlock(x, y, z) == Blocks.log) {
-			System.out.println("Scheduled update at: ("+x+", "+y+", "+z+")");
-		}
 	}
 	
 	public static void scheduleSlideUpdate(World world, int x, int y, int z)
@@ -140,9 +137,6 @@ public class EM_PhysManager
 					{
 						if(updateSelf)
 						{
-							if (MinecraftServer.getServer().getEntityWorld().getBlock(x, y, z) == Blocks.log) {
-								System.out.println("\nDebug 1");
-							}
 							callPhysUpdate(world, x, y, z, type);
 						} else
 						{
@@ -151,9 +145,6 @@ public class EM_PhysManager
 						}
 					} else
 					{
-						if (MinecraftServer.getServer().getEntityWorld().getBlock(x+i, y+j, z+k) == Blocks.log) {
-							System.out.println("\nDebug 2");
-						}
 						callPhysUpdate(world, x + i, y + j, k + z, type);
 					}
 				}
@@ -174,9 +165,7 @@ public class EM_PhysManager
 	public static void callPhysUpdate(World world, int x, int y, int z, Block block, int meta, String type)
 	{
 		String position = (new StringBuilder()).append(x).append(",").append(y).append(",").append(z).toString();
-		if (MinecraftServer.getServer().getEntityWorld().getBlock(x, y, z) == Blocks.log) {
-			System.out.println("Updating physics at: ("+x+", "+y+", "+z+")");
-		}
+		
 		if(excluded.containsKey(position))
 		{
 			if(!excluded.get(position).equals("Collapse") && type.equals("Collapse"))
@@ -1120,7 +1109,6 @@ public class EM_PhysManager
 						if(!excluded.containsKey(position))
 						{
 							excluded.put(position, (String)entry[5]);
-							System.out.println("\nDebug 3");
 							callPhysUpdate((World)entry[0], (Integer)entry[1], (Integer)entry[2], (Integer)entry[3], (String)entry[5]);
 						}
 					} else

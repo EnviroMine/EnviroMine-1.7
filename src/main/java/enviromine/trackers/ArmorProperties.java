@@ -2,7 +2,7 @@ package enviromine.trackers;
 
 public class ArmorProperties
 {
-	public int id;
+	public String name;
 	public float nightTemp;
 	public float shadeTemp;
 	public float sunTemp;
@@ -12,9 +12,9 @@ public class ArmorProperties
 	public float sanity;
 	public float air;
 	
-	public ArmorProperties(int id, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air)
+	public ArmorProperties(String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air)
 	{
-		this.id = id;
+		this.name = name;
 		this.nightTemp = nightTemp;
 		this.shadeTemp = shadeTemp;
 		this.sunTemp = sunTemp;

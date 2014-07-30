@@ -137,7 +137,7 @@ public class EM_PhysManager
 					{
 						if(updateSelf)
 						{
-							callPhysUpdate(world, x + i, y + j, k + z, type);
+							callPhysUpdate(world, x, y, z, type);
 						} else
 						{
 							excluded.put(position, type);

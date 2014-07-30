@@ -474,8 +474,6 @@ public class EnviroDataTracker
 			return false;
 		} else
 		{
-			return true;
-			/*
 			if(entity instanceof EntityPlayer)
 			{
 				EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entity);
@@ -491,7 +489,6 @@ public class EnviroDataTracker
 			{
 				return true;
 			}
-			*/
 		}
 	}
 	

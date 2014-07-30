@@ -1,3 +1,6 @@
+/**
+ * @author thislooksfun
+ */
 package enviromine.network.packet;
 
 import enviromine.core.EnviroMine;
@@ -17,12 +20,8 @@ public class PacketEnviroMine implements IMessage
 {
 	private String message;
 	
-	public PacketEnviroMine()
-	{
-	}
-	
-	public PacketEnviroMine(String message)
-	{
+	public PacketEnviroMine() {}
+	public PacketEnviroMine(String message) {
 		this.message = message;
 	}
 	
@@ -44,7 +43,6 @@ public class PacketEnviroMine implements IMessage
 		public IMessage onMessage(PacketEnviroMine packet, MessageContext ctx)
 		{
 			String[] data = packet.message.split(",");
-			System.out.println("Handling packet!");
 			if(data[0].equalsIgnoreCase("ID:1"))
 			{
 				this.emptyRightClick(data);
@@ -72,7 +70,6 @@ public class PacketEnviroMine implements IMessage
 		public IMessage onMessage(PacketEnviroMine packet, MessageContext ctx)
 		{
 			String[] data = packet.message.split(",");
-			System.out.println("Handling packet!");
 			if(data[0].equalsIgnoreCase("ID:0"))
 			{
 				this.trackerSync(data);

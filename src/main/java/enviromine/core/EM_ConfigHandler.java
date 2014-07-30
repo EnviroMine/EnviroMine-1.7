@@ -1,12 +1,5 @@
 package enviromine.core;
 
-import enviromine.handlers.keybinds.AddRemoveCustom;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.ItemProperties;
-import enviromine.trackers.StabilityType;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -14,8 +7,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
+
+import enviromine.handlers.keybinds.AddRemoveCustom;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.ItemProperties;
+import enviromine.trackers.StabilityType;
 
 import java.io.File;
 import java.io.IOException;
@@ -188,12 +189,18 @@ public class EM_ConfigHandler
 		String PhySetCat = "Physics";
 		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
 		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128 , "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
-		EM_Settings.physInterval = config.get(PhySetCat, "Physics Interval", 2 , "The number of ticks between physics update passes (must be 2 or more)").getInt(2);
+		int minPhysInterval = 6;
+		Property physInterval = config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)");
+		if (physInterval.getInt(minPhysInterval) >= minPhysInterval) {
+			EM_Settings.physInterval = physInterval.getInt(minPhysInterval);
+		} else {
+			EM_Settings.physInterval = minPhysInterval;
+			physInterval.set(minPhysInterval);
+		}
 		EM_Settings.stoneCracks = config.get(PhySetCat, "Stone Cracks Before Falling", true).getBoolean(true);
 		EM_Settings.defaultStability = config.get(PhySetCat, "Default Stability Type (BlockIDs > 175)", "loose").getString();
 		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
 		EM_Settings.chunkDelay = config.get(PhySetCat, "Chunk Physics Delay", 500, "How long until individual chunk's physics starts after loading (DO NOT SET TOO LOW)").getInt(500);
-		EM_Settings.physInterval = EM_Settings.physInterval >= 2? EM_Settings.physInterval : 2;
 		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
 		
 		// Gui settings

@@ -1,11 +1,11 @@
 package enviromine.items;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
-
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
@@ -13,24 +13,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EnviroItemBadWaterBottle extends Item
 {
 	@SideOnly(Side.CLIENT)
-	private IIcon field_94591_c;
+	private Icon field_94591_c;
 	@SideOnly(Side.CLIENT)
-	private IIcon field_94590_d;
+	private Icon field_94590_d;
 	@SideOnly(Side.CLIENT)
-	private IIcon field_94592_ct;
+	private Icon field_94592_ct;
 	
-	public EnviroItemBadWaterBottle()
+	public EnviroItemBadWaterBottle(int id)
 	{
-		super();
+		super(id);
 		setTextureName("potion");
 	}
 	
@@ -68,10 +65,10 @@ public class EnviroItemBadWaterBottle extends Item
 		{
 			if(par1ItemStack.stackSize <= 0)
 			{
-				return new ItemStack(Items.glass_bottle);
+				return new ItemStack(Item.glassBottle);
 			}
 			
-			par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+			par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
 		}
 		
 		return par1ItemStack;
@@ -115,7 +112,7 @@ public class EnviroItemBadWaterBottle extends Item
 	/**
 	 * Gets an icon index based on an item's damage value
 	 */
-	public IIcon getIconFromDamage(int par1)
+	public Icon getIconFromDamage(int par1)
 	{
 		return this.field_94590_d;
 	}
@@ -139,7 +136,7 @@ public class EnviroItemBadWaterBottle extends Item
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
+	public void registerIcons(IconRegister par1IconRegister)
 	{
 		this.field_94590_d = par1IconRegister.registerIcon(this.getIconString() + "_" + "bottle_drinkable");
 		this.field_94591_c = par1IconRegister.registerIcon(this.getIconString() + "_" + "bottle_splash");
@@ -150,13 +147,13 @@ public class EnviroItemBadWaterBottle extends Item
 	/**
 	 * Gets an icon index based on an item's damage value and the given render pass
 	 */
-	public IIcon getIconFromDamageForRenderPass(int par1, int par2)
+	public Icon getIconFromDamageForRenderPass(int par1, int par2)
 	{
 		return par2 == 0 ? this.field_94592_ct : super.getIconFromDamageForRenderPass(par1, par2);
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static IIcon func_94589_d(String par0Str)
+	public static Icon func_94589_d(String par0Str)
 	{
 		return ItemPotion.func_94589_d(par0Str);
 	}

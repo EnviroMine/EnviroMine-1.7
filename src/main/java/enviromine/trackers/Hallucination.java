@@ -12,7 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.SpawnListEntry;
 
 public class Hallucination
 {
@@ -164,7 +164,7 @@ public class Hallucination
 	
 	public static boolean isAtValidSpawn(EntityLivingBase creature)
 	{
-		return creature.worldObj.isBlockNormalCubeDefault(MathHelper.floor_double(creature.posX), MathHelper.floor_double(creature.posY - 1), MathHelper.floor_double(creature.posZ), false) && creature.worldObj.checkNoEntityCollision(creature.boundingBox) && creature.worldObj.getCollidingBoundingBoxes(creature, creature.boundingBox).isEmpty() && !creature.worldObj.isAnyLiquid(creature.boundingBox) && isValidLightLevel(creature);
+		return creature.worldObj.isBlockNormalCube(MathHelper.floor_double(creature.posX), MathHelper.floor_double(creature.posY - 1), MathHelper.floor_double(creature.posZ)) && creature.worldObj.checkNoEntityCollision(creature.boundingBox) && creature.worldObj.getCollidingBoundingBoxes(creature, creature.boundingBox).isEmpty() && !creature.worldObj.isAnyLiquid(creature.boundingBox) && isValidLightLevel(creature);
 	}
 	
 	/**

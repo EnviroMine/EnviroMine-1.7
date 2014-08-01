@@ -1,55 +1,94 @@
 package enviromine.handlers.keybinds;
 
+import java.util.EnumSet;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import org.lwjgl.input.Keyboard;
+import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
+import cpw.mods.fml.common.TickType;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
+public class ReloadCustomObjects extends KeyHandler{
 
-import org.lwjgl.input.Keyboard;
-
-public class ReloadCustomObjects
-{
-	public static void doReloadConfig()
+	public ReloadCustomObjects(KeyBinding[] keyBindings, boolean[] repeatings)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
-		if((!(Minecraft.getMinecraft().isSingleplayer()) || !EnviroMine.proxy.isClient()) && Minecraft.getMinecraft().thePlayer != null)
+		super(keyBindings, repeatings);
+	}
+	private EnumSet<TickType> tickTypes = EnumSet.of(TickType.CLIENT);
+	
+	
+
+	@Override
+	public String getLabel() 
+	{
+		return "Reload Custom";
+	}
+
+	@Override
+	public void keyDown(EnumSet<TickType> types, KeyBinding kb,	boolean tickEnd, boolean isRepeat) 
+	{
+
+		
+	}
+
+	@Override
+	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) 
+	{
+		if(tickEnd)
 		{
-			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+			Minecraft mc = Minecraft.getMinecraft();
+			if((!(Minecraft.getMinecraft().isSingleplayer()) || !EnviroMine.proxy.isClient()) && Minecraft.getMinecraft().thePlayer != null)
 			{
-				mc.thePlayer.addChatMessage(new ChatComponentText("Single player only function."));
-			}
-			return;
-		}
-		// prevents key press firing while gui screen or chat open, if that's what you want
-		// if you want your key to be able to close the gui screen, handle it outside this if statement
-		if(mc.currentScreen == null)
-		{
-			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-			{
-				try
+				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 				{
-					mc.thePlayer.addChatMessage(new ChatComponentText("Reloading Configs..."));
-					EM_Settings.armorProperties.clear();
-					EM_Settings.blockProperties.clear();
-					EM_Settings.itemProperties.clear();
-					EM_Settings.livingProperties.clear();
-					EM_Settings.stabilityTypes.clear();
-					int Total = EM_ConfigHandler.initConfig();
-					mc.thePlayer.addChatMessage(new ChatComponentText("Loaded " + Total +" objects and " + EM_Settings.stabilityTypes.size() + " stability types"));
-					
-				} //try
-				catch(NullPointerException e)
-				{
-					mc.thePlayer.addChatMessage(new ChatComponentText("Failed to Load Custom Objects Files."));
+					mc.thePlayer.addChatMessage("Single player only function.");
 				}
+				return;
 			}
-			else
+			// prevents key press firing while gui screen or chat open, if that's what you want
+			// if you want your key to be able to close the gui screen, handle it outside this if statement
+			if(mc.currentScreen == null)
 			{
+				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+				{
+					try
+					{
+						//Temp To Open Gui Screen
+						//mc.displayGuiScreen(new enviromine.gui.EM_GuiMenu());
+						
+						
+						mc.thePlayer.addChatMessage("Reloading Configs...");
+						EM_Settings.armorProperties.clear();
+						EM_Settings.blockProperties.clear();
+						EM_Settings.itemProperties.clear();
+						EM_Settings.livingProperties.clear();
+						EM_Settings.stabilityTypes.clear();
+						int Total = EM_ConfigHandler.initConfig();
+						mc.thePlayer.addChatMessage("Loaded " + Total +" objects and " + EM_Settings.stabilityTypes.size() + " stability types");
+						
+					} //try
+					catch(NullPointerException e)
+					{
+						mc.thePlayer.addChatMessage("Failed to Load Custom Objects Files.");
+					}
+				}
+				else
+				{
+					
+					mc.thePlayer.addChatMessage("Must hold left shift to reload Custom Objects");
+				}
 				
-				mc.thePlayer.addChatMessage(new ChatComponentText("Must hold left shift to reload Custom Objects"));
+				
 			}
 		}
 	}
+
+	@Override
+	public EnumSet<TickType> ticks() 
+	{
+		return tickTypes;
+	}
+
 }

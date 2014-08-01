@@ -1,13 +1,16 @@
 package enviromine.core;
 
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.ItemProperties;
-import enviromine.trackers.StabilityType;
-
+import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BiomeProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.DimensionProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.ItemProperties;
+import enviromine.trackers.RotProperties;
+import enviromine.trackers.StabilityType;
 
 public class EM_Settings
 {
@@ -17,9 +20,11 @@ public class EM_Settings
 	public static final UUID HEAT1_UUID = UUID.fromString("CA6E2CFA-4C53-4CD2-AAD3-3D6177A4F126");
 	public static final UUID DEHY1_UUID = UUID.fromString("38909A39-E1A1-4E93-9016-B2CCBE83D13D");
 	
+	public static File worldDir = null;
+	
 	//Mod Data
 	public static final String Version = "FWG_EM_VER";
-	public static final String ID = "enviromine";
+	public static final String ID = "EnviroMine";
 	public static final String Channel = "EM_CH";
 	public static final String Name = "EnviroMine";
 	public static final String Proxy = "enviromine.core.proxies";
@@ -30,9 +35,11 @@ public class EM_Settings
 	public static boolean enableHydrate = true;
 	public static boolean enableSanity = true;
 	public static boolean enableBodyTemp = true;
-	public static boolean trackNonPlayer;
+	public static boolean trackNonPlayer = false;
 	
 	public static boolean ShowGuiIcons;
+	
+	public static float guiScale = 1f;
 	
 	public static boolean spreadIce = false;
 	
@@ -49,22 +56,53 @@ public class EM_Settings
 	public static boolean ShowText;
 	public static boolean ShowDebug;
 	
+	public static boolean breathSound;
+	public static int breathPause;
+	public static float breathVolume;
+	
+	public static int dirtBottleID = 5001;
+	public static int saltBottleID = 5002;
+	public static int coldBottleID = 5003;
+	public static int camelPackID = 5004;
+
+
+	public static int gasMaskID = 5005;
+	public static int airFilterID = 5006;
+	public static int hardHatID = 5007;
+	public static int rottenFoodID = 5008;
+	
+	public static int blockElevatorTopID = 501;
+	public static int blockElevatorBottomID = 502;
+	public static int gasBlockID = 503;
+	public static int fireGasBlockID = 504;
+	
 	public static int hypothermiaPotionID = 27;
 	public static int heatstrokePotionID = 28;
 	public static int frostBitePotionID = 29;
 	public static int dehydratePotionID = 30;
 	public static int insanityPotionID = 31;
 	
+	//Gases
+	public static boolean renderGases = false;
+	public static int gasTickRate = 32; //GasFires are 4x faster than this
+	
 	//World Gen
-	public static boolean shaftGen;
+	public static boolean shaftGen = true;
+	public static boolean gasGen = true;
+	public static boolean oldMineGen = true;
 	
 	//Properties
-	public static HashMap<String,ArmorProperties> armorProperties = new HashMap<String,ArmorProperties>();
+	public static HashMap<Integer,ArmorProperties> armorProperties = new HashMap<Integer,ArmorProperties>();
 	public static HashMap<String,BlockProperties> blockProperties = new HashMap<String,BlockProperties>();
 	public static HashMap<Integer,EntityProperties> livingProperties = new HashMap<Integer,EntityProperties>();
 	public static HashMap<String,ItemProperties> itemProperties = new HashMap<String,ItemProperties>();
+	public static HashMap<String,BiomeProperties> biomeProperties = new HashMap<String,BiomeProperties>();
+	public static HashMap<String,DimensionProperties> dimensionProperties = new HashMap<String,DimensionProperties>();
 	
 	public static HashMap<String,StabilityType> stabilityTypes = new HashMap<String,StabilityType>();
+	
+	public static HashMap<String,RotProperties> rotProperties = new HashMap<String,RotProperties>();
+	
 	public static int updateCap;
 	public static boolean stoneCracks;
 	public static String defaultStability;
@@ -84,6 +122,12 @@ public class EM_Settings
 	public static int entityFailsafe;
 	public static boolean villageAssist;
 	public static boolean minimalHud;
+	
+	public static int caveDimID = -3;
+	public static int caveBiomeID = 23;
+	
+	public static boolean foodSpoiling = true;
+	public static double foodRotTime = 10.0D;
 	
 	public static float convertToFarenheit(float num)
 	{

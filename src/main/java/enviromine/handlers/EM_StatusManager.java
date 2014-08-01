@@ -392,10 +392,10 @@ public class EM_StatusManager
 						animalHostility = -1;
 					} else if(block == Blocks.snow_layer)
 					{
-						cooling += getTempFalloff(0.01F, dist, range);
+						cooling += getTempFalloff(0.025F, dist, range);
 					} else if(block == Blocks.snow || block == Blocks.ice)
 					{
-						cooling += getTempFalloff(0.015F, dist, range);
+						cooling += getTempFalloff(0.25F, dist, range);
 					} else if(block == Blocks.flower_pot && (meta == 1 || meta == 2))
 					{
 						if(meta == 1 || meta == 2)

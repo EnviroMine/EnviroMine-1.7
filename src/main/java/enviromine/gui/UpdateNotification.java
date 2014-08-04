@@ -1,23 +1,24 @@
 package enviromine.gui;
 
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.logging.Level;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
-import cpw.mods.fml.common.IPlayerTracker;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
+import org.apache.logging.log4j.Level;
 
-public class UpdateNotification implements IPlayerTracker
+public class UpdateNotification
 {
 	boolean hasChecked = false;
 	
 	@SuppressWarnings("unused")
-	@Override
-	public void onPlayerLogin(EntityPlayer player)
+	@SubscribeEvent
+	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
 	{
 		if(!EnviroMine.proxy.isClient() || hasChecked)
 		{
@@ -28,7 +29,7 @@ public class UpdateNotification implements IPlayerTracker
 		
 		if(EM_Settings.Version == "FWG" + "_EM" + "_VER")
 		{
-			player.addChatMessage(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!");
+			event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!"));
 			return;
 		}
 		
@@ -36,7 +37,7 @@ public class UpdateNotification implements IPlayerTracker
 		
 		try
 		{
-			String[] data = getNotification("http://bit.ly/1r4JJt3", true);
+			String[] data = getNotification("http://bit.ly/1pwDr2o", true);
 			
 			if(!EM_Settings.updateCheck)
 			{
@@ -45,7 +46,7 @@ public class UpdateNotification implements IPlayerTracker
 			
 			for(int i = 0; i < data.length; i++)
 			{
-				player.addChatMessage(EnumChatFormatting.RESET + "" + data[i].trim());
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
 			}
 			
 			String version = data[0].trim();
@@ -55,64 +56,38 @@ public class UpdateNotification implements IPlayerTracker
 			
 			if(verStat == -1)
 			{
-				player.addChatMessage(EnumChatFormatting.RED + "Update " + version + " of EnviroMine is available");
-				player.addChatMessage(EnumChatFormatting.RESET + "Download:\n" + EnumChatFormatting.BLUE + EnumChatFormatting.UNDERLINE + http);
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Update " + version + " of EnviroMine is available"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "Download & Changelog:"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + EnumChatFormatting.BLUE + EnumChatFormatting.UNDERLINE + "https://github.com/Funwayguy/EnviroMine/wiki/Downloads"));
 				for(int i = 2; i < data.length; i++)
 				{
 					if(i > 5)
 					{
-						player.addChatMessage("" + (data.length - 6) + " more...");
-						player.addChatMessage("Full Changelog:\n"+ EnumChatFormatting.BLUE + EnumChatFormatting.UNDERLINE + "https://drone.io/github.com/Funwayguy/EnviroMine/files/build/libs/version.txt");
+						event.player.addChatMessage(new ChatComponentText("" + (data.length - 6) + " more..."));
 						break;
 					} else
 					{
-						player.addChatMessage(EnumChatFormatting.RESET + "" + data[i].trim());
-					}
-					
-					if(i == data.length - 1)
-					{
-						player.addChatMessage("Full Changelog:\n"+ EnumChatFormatting.BLUE + EnumChatFormatting.UNDERLINE + "https://drone.io/github.com/Funwayguy/EnviroMine/files/build/libs/version.txt");
+						event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
 					}
 				}
 			} else if(verStat == 0)
 			{
-				player.addChatMessage(EnumChatFormatting.YELLOW + "EnviroMine " + EM_Settings.Version + " is up to date");
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "EnviroMine " + EM_Settings.Version + " is up to date"));
 			} else if(verStat == 1)
 			{
-				player.addChatMessage(EnumChatFormatting.RED + "EnviroMine " + EM_Settings.Version + " is a debug version");
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "EnviroMine " + EM_Settings.Version + " is a debug version"));
 			} else if(verStat == -2)
 			{
-				player.addChatMessage(EnumChatFormatting.RED + "An error occured while parsing EnviroMine's version file!");
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error occured while parsing EnviroMine's version file!"));
 			}
 			
 		} catch(IOException e)
 		{
 			if(EM_Settings.updateCheck)
 			{
-				EnviroMine.logger.log(Level.WARNING, "Failed to get versions file!");
+				EnviroMine.logger.log(Level.WARN, "Failed to get versions file!");
 			}
 		}
-		
-	}
-	
-	@Override
-	public void onPlayerLogout(EntityPlayer player)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void onPlayerChangedDimension(EntityPlayer player)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void onPlayerRespawn(EntityPlayer player)
-	{
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -132,7 +107,7 @@ public class UpdateNotification implements IPlayerTracker
 		int responseCode = con.getResponseCode();
 		if(responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_MOVED_PERM)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Update request returned response code: " + responseCode + " " + con.getResponseMessage());
+			EnviroMine.logger.log(Level.WARN, "Update request returned response code: " + responseCode + " " + con.getResponseMessage());
 		} else if(responseCode == HttpURLConnection.HTTP_MOVED_PERM)
 		{
 			if(doRedirect)
@@ -181,11 +156,11 @@ public class UpdateNotification implements IPlayerTracker
 			newNum = new int[]{Integer.valueOf(newNumStr[0]),Integer.valueOf(newNumStr[1]),Integer.valueOf(newNumStr[2])};
 		} catch(IndexOutOfBoundsException e)
 		{
-			EnviroMine.logger.log(Level.WARNING, "An IndexOutOfBoundsException occured while checking version!", e);
+			EnviroMine.logger.log(Level.WARN, "An IndexOutOfBoundsException occured while checking version!", e);
 			return -2;
 		} catch(NumberFormatException e)
 		{
-			EnviroMine.logger.log(Level.WARNING, "A NumberFormatException occured while checking version!\n", e);
+			EnviroMine.logger.log(Level.WARN, "A NumberFormatException occured while checking version!\n", e);
 			return -2;
 		}
 		

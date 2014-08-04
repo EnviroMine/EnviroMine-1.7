@@ -57,7 +57,13 @@ public class EM_StatusManager
 	
 	public static void addToManager(EnviroDataTracker tracker)
 	{
-		trackerList.put("" + tracker.trackedEntity.getUniqueID().toString(), tracker);
+		if(tracker.trackedEntity instanceof EntityPlayer)
+		{
+			trackerList.put(tracker.trackedEntity.getUniqueID().toString(), tracker);
+		} else
+		{
+			trackerList.put(""+tracker.trackedEntity.getEntityId(), tracker);
+		}
 	}
 	
 	public static void updateTracker(EnviroDataTracker tracker)
@@ -105,7 +111,13 @@ public class EM_StatusManager
 	
 	public static EnviroDataTracker lookupTracker(EntityLivingBase entity)
 	{
-		return trackerList.get(entity.getUniqueID().toString());
+		if(entity instanceof EntityPlayer)
+		{
+			return trackerList.get(entity.getUniqueID().toString());
+		} else
+		{
+			return trackerList.get(entity.getEntityId());
+		}
 	}
 	
 	public static EnviroDataTracker lookupTrackerFromUsername(String username)
@@ -1120,7 +1132,13 @@ public class EM_StatusManager
 		if(trackerList.containsValue(tracker))
 		{
 			tracker.isDisabled = true;
-			trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+			if(tracker.trackedEntity instanceof EntityPlayer)
+			{
+				trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+			} else
+			{
+				trackerList.remove("" + tracker.trackedEntity.getEntityId());
+			}
 		}
 	}
 	
@@ -1135,7 +1153,13 @@ public class EM_StatusManager
 			tags.setFloat("ENVIRO_TMP", tracker.bodyTemp);
 			tags.setFloat("ENVIRO_SAN", tracker.sanity);
 			
-			trackerList.remove(tracker.trackedEntity.getUniqueID());
+			if(tracker.trackedEntity instanceof EntityPlayer)
+			{
+				trackerList.remove(tracker.trackedEntity.getUniqueID());
+			} else
+			{
+				trackerList.remove("" + tracker.trackedEntity.getEntityId());
+			}
 		}
 	}
 	
@@ -1192,7 +1216,13 @@ public class EM_StatusManager
 				tags.setFloat("ENVIRO_SAN", tracker.sanity);
 				tracker.isDisabled = true;
 				
-				trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+				if(tracker.trackedEntity instanceof EntityPlayer)
+				{
+					trackerList.remove(tracker.trackedEntity.getUniqueID());
+				} else
+				{
+					trackerList.remove("" + tracker.trackedEntity.getEntityId());
+				}
 			}
 		}
 	}

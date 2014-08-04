@@ -5,6 +5,7 @@ import enviromine.core.EM_Settings;
 import enviromine.handlers.EM_PhysManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -81,9 +82,9 @@ public class Earthquake
 				
 				for(int yy = y; yy >= 1; yy--)
 				{
-					if((world.getBlockMaterial(x, yy, z) == Material.lava && yy >= 8) || world.getBlockMaterial(x, yy, z) == Material.water || world.getBlockMaterial(x, yy, z) == Material.rock || world.getBlockMaterial(x, yy, z) == Material.clay || world.getBlockMaterial(x, yy, z) == Material.sand || world.getBlockMaterial(x, yy, z) == Material.ground || world.getBlockMaterial(x, yy, z) == Material.grass || (yy < 8 && world.getBlockMaterial(x, yy, z) == Material.air))
+					if((world.getBlock(x, yy, z).getMaterial() == Material.lava && yy >= 8) || world.getBlock(x, yy, z).getMaterial() == Material.water || world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.clay || world.getBlock(x, yy, z).getMaterial() == Material.sand || world.getBlock(x, yy, z).getMaterial() == Material.ground || world.getBlock(x, yy, z).getMaterial() == Material.grass || (yy < 8 && world.getBlock(x, yy, z).getMaterial() == Material.air))
 					{
-						world.setBlock(x, y, z, Block.lavaMoving.blockID);
+						world.setBlock(x, y, z, Blocks.flowing_lava);
 						
 						if(EM_Settings.enablePhysics)
 						{
@@ -96,7 +97,7 @@ public class Earthquake
 						
 						if(yy < 8)
 						{
-							world.setBlock(x, yy, z, Block.lavaMoving.blockID);
+							world.setBlock(x, yy, z, Blocks.flowing_lava);
 							//System.out.println("Placed lava at (" + x + "," + yy + "," + z + ")");
 							
 							if(EM_Settings.enablePhysics)
@@ -154,11 +155,11 @@ public class Earthquake
 				int x = pos[0];
 				int z = pos[2];
 				
-				if((world.getBlockMaterial(x, y, z) == Material.lava && y >= 8) || world.getBlockMaterial(x, y, z) == Material.water || world.getBlockMaterial(x, y, z) == Material.rock || world.getBlockMaterial(x, y, z) == Material.clay || world.getBlockMaterial(x, y, z) == Material.sand || world.getBlockMaterial(x, y, z) == Material.ground || world.getBlockMaterial(x, y, z) == Material.grass || (y < 8 && world.getBlockMaterial(x, y, z) == Material.air))
+				if((world.getBlock(x, y, z).getMaterial() == Material.lava && y >= 8) || world.getBlock(x, y, z).getMaterial() == Material.water || world.getBlock(x, y, z).getMaterial() == Material.rock || world.getBlock(x, y, z).getMaterial() == Material.clay || world.getBlock(x, y, z).getMaterial() == Material.sand || world.getBlock(x, y, z).getMaterial() == Material.ground || world.getBlock(x, y, z).getMaterial() == Material.grass || (y < 8 && world.getBlock(x, y, z).getMaterial() == Material.air))
 				{
 					if(y < 8)
 					{
-						world.setBlock(x, y, z, Block.lavaMoving.blockID);
+						world.setBlock(x, y, z, Blocks.flowing_lava);
 						
 						if(EM_Settings.enablePhysics)
 						{

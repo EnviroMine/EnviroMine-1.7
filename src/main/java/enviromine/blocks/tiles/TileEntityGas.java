@@ -1,24 +1,24 @@
 package enviromine.blocks.tiles;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import enviromine.EnviroUtils;
-import enviromine.blocks.BlockGas;
-import enviromine.gases.EnviroGas;
-import enviromine.gases.EnviroGasDictionary;
-import enviromine.handlers.ObjectHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+
+import enviromine.EnviroUtils;
+import enviromine.blocks.BlockGas;
+import enviromine.gases.EnviroGas;
+import enviromine.gases.EnviroGasDictionary;
+import enviromine.handlers.ObjectHandler;
+
+import java.awt.Color;
+import java.util.ArrayList;
 
 public class TileEntityGas extends TileEntity
 {
@@ -111,12 +111,12 @@ public class TileEntityGas extends TileEntity
 		
 		if(this.worldObj != null)
 		{
-			TileEntity tile1 = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
-			TileEntity tile2 = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-			TileEntity tile3 = this.worldObj.getBlockTileEntity(this.xCoord + 1, this.yCoord, this.zCoord);
-			TileEntity tile4 = this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
-			TileEntity tile5 = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord + 1);
-			TileEntity tile6 = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
+			TileEntity tile1 = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+			TileEntity tile2 = this.worldObj.getTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
+			TileEntity tile3 = this.worldObj.getTileEntity(this.xCoord + 1, this.yCoord, this.zCoord);
+			TileEntity tile4 = this.worldObj.getTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
+			TileEntity tile5 = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord + 1);
+			TileEntity tile6 = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
 			
 			if(tile1 != null && tile1 instanceof TileEntityGas)
 			{
@@ -234,8 +234,8 @@ public class TileEntityGas extends TileEntity
 		
 		if(this.worldObj != null)
 		{
-			TileEntity tile1 = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
-			TileEntity tile2 = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
+			TileEntity tile1 = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+			TileEntity tile2 = this.worldObj.getTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
 			
 			if(tile1 != null && tile1 instanceof TileEntityGas)
 			{
@@ -525,7 +525,7 @@ public class TileEntityGas extends TileEntity
 				continue;
 			}
 			
-			TileEntity tile = this.worldObj.getBlockTileEntity(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]);
+			TileEntity tile = this.worldObj.getTileEntity(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]);
 			
 			if((tile != null && tile instanceof TileEntityGas) || this.worldObj.getBlockId(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]) == 0)
 			{
@@ -535,7 +535,7 @@ public class TileEntityGas extends TileEntity
 				}
 			}
 			
-			tile = this.worldObj.getBlockTileEntity(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]);
+			tile = this.worldObj.getTileEntity(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]);
 			
 			if(tile != null && tile instanceof TileEntityGas)
 			{
@@ -569,14 +569,14 @@ public class TileEntityGas extends TileEntity
 		
 		int vDir = j - this.yCoord;
 		
-		TileEntity tile = this.worldObj.getBlockTileEntity(i, j, k);
+		TileEntity tile = this.worldObj.getTileEntity(i, j, k);
 		if(tile == null)
 		{
 			if(this.worldObj.getBlockId(i, j, k) == 0 && this.getBlockType().blockID != 0)
 			{
 				this.worldObj.setBlock(i, j, k, this.getBlockType().blockID);
 				
-				if(this.worldObj.getBlockTileEntity(i, j, k) == null)
+				if(this.worldObj.getTileEntity(i, j, k) == null)
 				{
 					return false;
 				} else
@@ -777,7 +777,7 @@ public class TileEntityGas extends TileEntity
 		}
 		
 		int fireAmount = this.getGasQuantity(0);
-		TileEntity tile = this.worldObj.getBlockTileEntity(i, j, k);
+		TileEntity tile = this.worldObj.getTileEntity(i, j, k);
 		
 		if(tile != null && tile instanceof TileEntityGas)
 		{
@@ -805,7 +805,7 @@ public class TileEntityGas extends TileEntity
 			{
 				return gasSpace;
 			}
-		} else if(this.worldObj.getBlockId(i, j, k) == 0)
+		} else if(this.worldObj.getBlock(i, j, k) == Blocks.air)
 		{
 			return 10;
 		}

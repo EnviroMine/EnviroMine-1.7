@@ -15,7 +15,7 @@ public class TileEntityElevatorBottomRenderer extends TileEntitySpecialRenderer
 	
 	public TileEntityElevatorBottomRenderer()
 	{
-		model = AdvancedModelLoader.loadModel("/assets/enviromine/models/bottomblockelevator.obj");
+		model = AdvancedModelLoader.loadModel(new ResourceLocation("/assets/enviromine/models/bottomblockelevator.obj"));
 		texture = new ResourceLocation("enviromine", "textures/blocks/elevator_model.png");
 	}
 	

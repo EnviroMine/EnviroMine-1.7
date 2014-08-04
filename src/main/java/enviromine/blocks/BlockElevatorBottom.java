@@ -1,25 +1,26 @@
 package enviromine.blocks;
 
-import enviromine.blocks.tiles.TileEntityElevatorBottom;
-import enviromine.handlers.ObjectHandler;
-import enviromine.handlers.TeleportHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+
+import enviromine.blocks.tiles.TileEntityElevatorBottom;
+import enviromine.handlers.ObjectHandler;
+import enviromine.handlers.TeleportHandler;
 
 public class BlockElevatorBottom extends Block implements ITileEntityProvider
 {
-	public BlockElevatorBottom(int par1, Material par2Material)
+	public BlockElevatorBottom(Material par2Material)
 	{
-		super(par1, par2Material);
+		super(par2Material);
 		this.setHardness(5.0F);
-		this.setStepSound(Block.soundMetalFootstep);
+		this.setStepSound(Block.soundTypeMetal);
 	}
 	
 	/**
@@ -42,21 +43,21 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		if(world.getBlockId(i, j + 1, k) != ObjectHandler.elevatorTop.blockID)
+		if(world.getBlock(i, j + 1, k) != ObjectHandler.elevatorTop)
 		{
-			player.sendChatToPlayer(ChatMessageComponent.createFromText("Elevator is incomplete!"));
+			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
 			return true;
 		}
 		
 		if(j > 9 && player.dimension == 0)
 		{
-			player.sendChatToPlayer(ChatMessageComponent.createFromText("Elevator must be built near bedrock."));
+			player.addChatMessage(new ChatComponentText("Elevator must be built near bedrock."));
 			return true;
 		}
 		
 		if(player.timeUntilPortal > 0)
 		{
-			player.sendChatToPlayer(ChatMessageComponent.createFromText("Please wait before attempting to teleport again."));
+			player.addChatMessage(new ChatComponentText("Please wait before attempting to teleport again."));
 			return true;
 		} else
 		{
@@ -77,14 +78,14 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 			world.setBlockToAir(i, j + 1, k);
 		} else
 		{
-			player.sendChatToPlayer(ChatMessageComponent.createFromText("You cannot use the elevator from here!"));
+			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));
 		}
 		return true;
 	}
 	
 	//Make sure you set this as your TileEntity class relevant for the block!
 	@Override
-	public TileEntity createNewTileEntity(World world)
+	public TileEntity createNewTileEntity(World world, int i)
 	{
 		return new TileEntityElevatorBottom();
 	}
@@ -110,8 +111,8 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	}
 	
 	//This is the icon to use for showing the block in your hand.
-	public void registerIcons(IconRegister icon)
+	public void registerIcons(IIconRegister register)
 	{
-		this.blockIcon = icon.registerIcon("enviromine:elevator_bottom_icon");
+		this.blockIcon = register.registerIcon("enviromine:elevator_bottom_icon");
 	}
 }

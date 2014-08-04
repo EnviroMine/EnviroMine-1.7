@@ -6,7 +6,7 @@ public class BlockProperties
 {
 	public boolean hasPhys;
 	
-	public Block block;
+	public String name;
 	public int meta;
 	
 	public int minFall;
@@ -28,9 +28,9 @@ public class BlockProperties
 	public boolean canHang;
 	public boolean wetSlide;
 	
-	public BlockProperties(Block block, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, int dropID, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
+	public BlockProperties(String name, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, int dropID, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
 	{
-		this.block = block;
+		this.name = name;
 		this.meta = meta;
 		this.hasPhys = hasPhys;
 		this.minFall = minFall;

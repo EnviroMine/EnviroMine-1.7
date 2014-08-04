@@ -512,161 +512,123 @@ public class EM_ConfigHandler
 	private static void LoadRotProperty(Configuration config, String category)
 	{
 		config.addCustomCategoryComment(category, "");
-		int id = config.get(category, RPName[0], 0).getInt(0);
+		String name = config.get(category, RPName[0], "").getString();
 		int meta = config.get(category, RPName[1], -1).getInt(-1);
 		int rotID = config.get(category, RPName[2], 0).getInt(0);
 		int rotMeta = config.get(category, RPName[3], 0).getInt(0);
 		double DTR = config.get(category, RPName[4], 0.00).getDouble(0.00);
 		
-		RotProperties entry = new RotProperties(id, meta, rotID, rotMeta, DTR);
+		RotProperties entry = new RotProperties(name, meta, rotID, rotMeta, DTR);
 		
 		if(meta < 0)
 		{
-			EM_Settings.rotProperties.put("" + id, entry);
+			EM_Settings.rotProperties.put("" + name, entry);
 		} else
 		{
-			EM_Settings.rotProperties.put("" + id + "," + meta, entry);
+			EM_Settings.rotProperties.put("" + name + "," + meta, entry);
 		}
 	}
 	
 	private static void LoadItemProperty(Configuration config, String category)
 	{
 		config.addCustomCategoryComment(category, "");
-		//  
-		String idString = config.get(category, IPName[0], "0").getString();
 		
-		List<Integer> ids = getIDS(idString);
+		String name = config.get(category, IPName[0], "").getString();
+		int meta = config.get(category, IPName[1], 0).getInt(0);
+		boolean enableTemp = config.get(category, IPName[2], false).getBoolean(false);
+		float ambTemp = (float)config.get(category, IPName[3], 0.00).getDouble(0.00);
+		float ambAir = (float)config.get(category, IPName[4], 0.00).getDouble(0.00);
+		float ambSanity = (float)config.get(category, IPName[5], 0.00).getDouble(0.00);
+		float effTemp = (float)config.get(category, IPName[6], 0.00).getDouble(0.00);
+		float effAir = (float)config.get(category, IPName[7], 0.00).getDouble(0.00);
+		float effSanity = (float)config.get(category, IPName[8], 0.00).getDouble(0.00);
+		float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
+		float effTempCap = (float)config.get(category, IPName[10], 37.00).getDouble(37.00);
 		
-		Iterator<Integer> iterator = ids.iterator();
+		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
 		
-		while(iterator.hasNext())
+		if(meta < 0)
 		{
-			int id = iterator.next();
-			
-			//int id = 					config.get(category, IPName[0], 0).getInt(0);
-			int meta = config.get(category, IPName[1], 0).getInt(0);
-			boolean enableTemp = config.get(category, IPName[2], false).getBoolean(false);
-			float ambTemp = (float)config.get(category, IPName[3], 0.00).getDouble(0.00);
-			float ambAir = (float)config.get(category, IPName[4], 0.00).getDouble(0.00);
-			float ambSanity = (float)config.get(category, IPName[5], 0.00).getDouble(0.00);
-			float effTemp = (float)config.get(category, IPName[6], 0.00).getDouble(0.00);
-			float effAir = (float)config.get(category, IPName[7], 0.00).getDouble(0.00);
-			float effSanity = (float)config.get(category, IPName[8], 0.00).getDouble(0.00);
-			float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
-			float effTempCap = (float)config.get(category, IPName[10], 37.00).getDouble(37.00);
-			
-			ItemProperties entry = new ItemProperties(id, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
-			
-			if(meta < 0)
-			{
-				EM_Settings.itemProperties.put("" + id, entry);
-			} else
-			{
-				EM_Settings.itemProperties.put("" + id + "," + meta, entry);
-			}
+			EM_Settings.itemProperties.put("" + name, entry);
+		} else
+		{
+			EM_Settings.itemProperties.put("" + name + "," + meta, entry);
 		}
 	}
 	
 	private static void LoadBlockProperty(Configuration config, String category)
 	{
 		config.addCustomCategoryComment(category, "");
-		//  
-		String idString = config.get(category, BPName[0], "0").getString();
 		
-		List<Integer> ids = getIDS(idString);
+		String name = config.get(category, BPName[0], "").getString();
+		int metaData = config.get(category, BPName[1], 0).getInt(0);
+		int dropID = config.get(category, BPName[2], 0).getInt(0);
+		int dropMeta = config.get(category, BPName[3], 0).getInt(0);
+		int dropNum = config.get(category, BPName[4], 0).getInt(0);
+		boolean enableTemp = config.get(category, BPName[5], false).getBoolean(false);
+		float temperature = (float)config.get(category, BPName[6], 0.00).getDouble(0.00);
+		float airQuality = (float)config.get(category, BPName[7], 0.00).getDouble(0.00);
+		float sanity = (float)config.get(category, BPName[8], 0.00).getDouble(0.00);
+		String stability = config.get(category, BPName[9], "loose").getString();
+		boolean slides = config.get(category, BPName[10], false).getBoolean(false);
+		boolean wetSlides = config.get(category, BPName[11], false).getBoolean(false);
 		
-		Iterator<Integer> iterator = ids.iterator();
+		// 	Get Stability Options
+		int minFall = 99;
+		int maxFall = 99;
+		int supportDist = 5;
+		boolean holdOther = false;
+		boolean canHang = true;
+		boolean hasPhys = false;
 		
-		while(iterator.hasNext())
+		if(EM_Settings.stabilityTypes.containsKey(stability))
 		{
-			int id = iterator.next();
+			StabilityType stabType = EM_Settings.stabilityTypes.get(stability);
 			
-			//	int id = 					config.get(category, BPName[0], 0).getInt(0);
-			int metaData = config.get(category, BPName[1], 0).getInt(0);
-			int dropID = config.get(category, BPName[2], 0).getInt(0);
-			int dropMeta = config.get(category, BPName[3], 0).getInt(0);
-			int dropNum = config.get(category, BPName[4], 0).getInt(0);
-			boolean enableTemp = config.get(category, BPName[5], false).getBoolean(false);
-			float temperature = (float)config.get(category, BPName[6], 0.00).getDouble(0.00);
-			float airQuality = (float)config.get(category, BPName[7], 0.00).getDouble(0.00);
-			float sanity = (float)config.get(category, BPName[8], 0.00).getDouble(0.00);
-			String stability = config.get(category, BPName[9], "loose").getString();
-			boolean slides = config.get(category, BPName[10], false).getBoolean(false);
-			boolean wetSlides = config.get(category, BPName[11], false).getBoolean(false);
-			
-			// 	Get Stability Options
-			int minFall = 99;
-			int maxFall = 99;
-			int supportDist = 5;
-			boolean holdOther = false;
-			boolean canHang = true;
-			boolean hasPhys = false;
-			
-			if(EM_Settings.stabilityTypes.containsKey(stability))
-			{
-				StabilityType stabType = EM_Settings.stabilityTypes.get(stability);
-				
-				minFall = stabType.minFall;
-				maxFall = stabType.maxFall;
-				supportDist = stabType.supportDist;
-				hasPhys = stabType.enablePhysics;
-				holdOther = stabType.holdOther;
-				canHang = stabType.canHang;
-			} else
-			{
-				EnviroMine.logger.log(Level.WARN, "Stability type '" + stability + "' not found.");
-				minFall = 99;
-				maxFall = 99;
-				supportDist = 9;
-				hasPhys = false;
-				holdOther = false;
-				canHang = true;
-			}
-			
-			BlockProperties entry = new BlockProperties(id, metaData, hasPhys, minFall, maxFall, supportDist, dropID, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
-			
-			if(metaData < 0)
-			{
-				EM_Settings.blockProperties.put("" + id, entry);
-			} else
-			{
-				EM_Settings.blockProperties.put("" + id + "," + metaData, entry);
-			}
-			
-			//EnviroMine.logger.log(Level.INFO, "Loaded Custom Block: " + id + ":" + metaData);
-			
-		}//While iterator
+			minFall = stabType.minFall;
+			maxFall = stabType.maxFall;
+			supportDist = stabType.supportDist;
+			hasPhys = stabType.enablePhysics;
+			holdOther = stabType.holdOther;
+			canHang = stabType.canHang;
+		} else
+		{
+			EnviroMine.logger.log(Level.WARN, "Stability type '" + stability + "' not found.");
+			minFall = 99;
+			maxFall = 99;
+			supportDist = 9;
+			hasPhys = false;
+			holdOther = false;
+			canHang = true;
+		}
 		
+		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropID, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
+		
+		if(metaData < 0)
+		{
+			EM_Settings.blockProperties.put("" + name, entry);
+		} else
+		{
+			EM_Settings.blockProperties.put("" + name + "," + metaData, entry);
+		}
 	}
 	
 	private static void LoadArmorProperty(Configuration config, String catagory)
 	{
 		config.addCustomCategoryComment(catagory, "");
-		
-		String idString = config.get(catagory, APName[0], "0").getString();
-		
-		List<Integer> ids = getIDS(idString);
-		
-		Iterator<Integer> iterator = ids.iterator();
-		
-		while(iterator.hasNext())
-		{
-			int id = iterator.next();
 			
-			//int id = 					config.get(catagory, APName[0], 0).getInt(0);
-			float nightTemp = (float)config.get(catagory, APName[1], 0.00).getDouble(0.00);
-			float shadeTemp = (float)config.get(catagory, APName[2], 0.00).getDouble(0.00);
-			float sunTemp = (float)config.get(catagory, APName[3], 0.00).getDouble(0.00);
-			float nightMult = (float)config.get(catagory, APName[4], 1.00).getDouble(1.00);
-			float shadeMult = (float)config.get(catagory, APName[5], 1.00).getDouble(1.00);
-			float sunMult = (float)config.get(catagory, APName[6], 1.00).getDouble(1.00);
-			float sanity = (float)config.get(catagory, APName[7], 0.00).getDouble(0.00);
-			float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
-			
-			ArmorProperties entry = new ArmorProperties(id, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air);
-			EM_Settings.armorProperties.put(id, entry);
-		}
+		String name = config.get(catagory, APName[0], "").getString();
+		float nightTemp = (float)config.get(catagory, APName[1], 0.00).getDouble(0.00);
+		float shadeTemp = (float)config.get(catagory, APName[2], 0.00).getDouble(0.00);
+		float sunTemp = (float)config.get(catagory, APName[3], 0.00).getDouble(0.00);
+		float nightMult = (float)config.get(catagory, APName[4], 1.00).getDouble(1.00);
+		float shadeMult = (float)config.get(catagory, APName[5], 1.00).getDouble(1.00);
+		float sunMult = (float)config.get(catagory, APName[6], 1.00).getDouble(1.00);
+		float sanity = (float)config.get(catagory, APName[7], 0.00).getDouble(0.00);
+		float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
 		
+		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air);
+		EM_Settings.armorProperties.put(name, entry);
 	}
 	
 	private static void LoadLivingProperty(Configuration config, String catagory)
@@ -835,7 +797,7 @@ public class EM_ConfigHandler
 		config.get(catName, EPName[14], hHyd).getDouble(hHyd);
 	}
 	
-	private static void ArmorDefaultSave(Configuration config, String catName, int id, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
+	private static void ArmorDefaultSave(Configuration config, String catName, String name, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
 	{
 		//config.get(catName, APName[0], id).getInt(id);
 		config.get(catName, APName[0], id).getString();
@@ -885,7 +847,7 @@ public class EM_ConfigHandler
 		String catName = armorCat + "." + AddRemoveCustom.replaceULN(armor.getUnlocalizedName());
 		
 		config.addCustomCategoryComment(catName, "");
-		config.get(catName, APName[0], armor.itemID).getInt(armor.itemID);
+		config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();
 		config.get(catName, APName[1], 0.0D).getDouble(0.0D);
 		config.get(catName, APName[2], 0.0D).getDouble(0.0D);
 		config.get(catName, APName[3], 0.0D).getDouble(0.0D);
@@ -1152,9 +1114,9 @@ public class EM_ConfigHandler
 		}
 	}
 	
-	private static void ItemDefaultSave(Configuration config, String catName, int id, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
+	private static void ItemDefaultSave(Configuration config, String catName, String name, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
 	{
-		config.get(catName, IPName[0], id).getInt(id);
+		config.get(catName, IPName[0], name).getString();
 		config.get(catName, IPName[1], meta).getInt(meta);
 		config.get(catName, IPName[2], enableAmbTemp).getBoolean(enableAmbTemp);
 		config.get(catName, IPName[3], ambTemp).getDouble(ambTemp);
@@ -1213,9 +1175,9 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameULCat, name);
-				config.get(nameULCat, BPName[0], (Integer)data[0]).getInt(0);
+				config.get(nameULCat, BPName[0], (String)data[0]).getString();
 				config.get(nameULCat, BPName[1], (Integer)data[1]).getInt(0);
-				config.get(nameULCat, BPName[2], (Integer)data[0]).getInt(0);
+				config.get(nameULCat, BPName[2], (String)data[0]).getString();
 				config.get(nameULCat, BPName[3], (Integer)data[1]).getInt(0);
 				config.get(nameULCat, BPName[4], 0).getInt(0);
 				config.get(nameULCat, BPName[5], false).getBoolean(false);
@@ -1269,7 +1231,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameItemCat, name);
-				config.get(nameItemCat, IPName[0], (Integer)data[0]).getInt(0);
+				config.get(nameItemCat, IPName[0], (String)data[0]).getString();
 				config.get(nameItemCat, IPName[1], (Integer)data[1]).getInt(0);
 				config.get(nameItemCat, IPName[2], false).getBoolean(false);
 				config.get(nameItemCat, IPName[3], 0.00).getDouble(0.00);
@@ -1294,7 +1256,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameArmorCat, name);
-				config.get(nameArmorCat, APName[0], (Integer)data[0]).getInt(0);
+				config.get(nameArmorCat, APName[0], (String)data[0]).getString();
 				config.get(nameArmorCat, APName[1], 0.00).getDouble(0.00);
 				config.get(nameArmorCat, APName[2], 0.00).getDouble(0.00);
 				config.get(nameArmorCat, APName[3], 0.00).getDouble(0.00);

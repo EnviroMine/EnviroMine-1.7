@@ -120,9 +120,9 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EnviroDataTracker lookupTrackerFromUsername(String username)
+	public static EnviroDataTracker lookupTrackerFromUUID(UUID id)
 	{
-		return trackerList.get(username);
+		return trackerList.get(id.toString());
 	}
 	
 	private static Stopwatch timer = Stopwatch.createUnstarted();

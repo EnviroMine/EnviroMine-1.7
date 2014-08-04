@@ -3,17 +3,22 @@
  */
 package enviromine.network.packet;
 
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_EventManager;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.trackers.EnviroDataTracker;
 import net.minecraft.entity.player.EntityPlayer;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_EventManager;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
+
 import io.netty.buffer.ByteBuf;
+
 import java.util.UUID;
+
 import org.apache.logging.log4j.Level;
 
 public class PacketEnviroMine implements IMessage

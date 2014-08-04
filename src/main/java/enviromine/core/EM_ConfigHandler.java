@@ -1,24 +1,16 @@
 package enviromine.core;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
-import org.apache.commons.lang3.ArrayUtils;
+import net.minecraftforge.common.config.Configuration;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+
 import enviromine.handlers.keybinds.AddRemoveCustom;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
@@ -28,6 +20,18 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.ItemProperties;
 import enviromine.trackers.RotProperties;
 import enviromine.trackers.StabilityType;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.Level;
 
 public class EM_ConfigHandler
 {
@@ -45,13 +49,21 @@ public class EM_ConfigHandler
 	static String biomeCat = "biomes";
 	
 	// Arrays for property names
+	/** Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air */
 	static String[] APName;
+	/** Block properties:<br>00 ({@link String}) Name<br>01 ({@link Int}) MetaID<br>02 ({@link String}) DropName<br>03 ({@link Int}) DropMetaID<br>04 ({@link Int}) DropNumber<br>05 ({@link Boolean}) EnableTemprature<br>06 ({@link Double}) Temprature<br>07 ({@link Double}) AirQuality<br>08 ({@link Double}) Sanity<br>09 ({@link String}) Stability<br>10 ({@link Boolean}) Slides<br>11 ({@link Boolean}) Slides when wet */ //Stablility slides slides when wet
 	static String[] BPName;
+	/** Entity properties:<br>00 ({@link Int}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
 	static String[] EPName;
+	/** Item properties:<br>00 ({@link String}) Name <br>01 ({@link Int}) Damage <br>02 ({@link Boolean}) Enable Ambient Temperature <br>03 ({@link Double}) Ambient Temperature <br>04 ({@link Double}) Ambient Air Quality <br>05 ({@link Double}) Ambient Santity <br>06 ({@link Double}) Effect Temperature <br>07 ({@link Double}) Effect Air Quality <br>08 ({@link Double}) Effect Sanity <br>09 ({@link Double}) Effect Hydration <br>10 ({@link Double}) Effect Temperature Cap */
 	static String[] IPName;
+	/** Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
 	static String[] SPName;
+	/** ?? */
 	static String[] RPName;
+	/** ?? */
 	static String[] DMName;
+	/** ?? */
 	static String[] BOName;
 	
 	public static int initConfig()
@@ -103,9 +115,9 @@ public class EM_ConfigHandler
 		APName[8] = "09.Air";
 		
 		BPName = new String[12];
-		BPName[0] = "01.ID";
+		BPName[0] = "01.Name";
 		BPName[1] = "02.MetaID";
-		BPName[2] = "03.DropID";
+		BPName[2] = "03.DropName";
 		BPName[3] = "04.DropMetaID";
 		BPName[4] = "05.DropNumber";
 		BPName[5] = "06.Enable Temperature";
@@ -134,7 +146,7 @@ public class EM_ConfigHandler
 		EPName[14] = "15.Hit Hydration";
 		
 		IPName = new String[11];
-		IPName[0] = "01.ID";
+		IPName[0] = "01.Name";
 		IPName[1] = "02.Damage";
 		IPName[2] = "03.Enable Ambient Temperature";
 		IPName[3] = "04.Ambient Temperature";
@@ -154,6 +166,7 @@ public class EM_ConfigHandler
 		SPName[4] = "05.Can Hang";
 		SPName[5] = "06.Holds Others Up";
 		
+		//TODO edit these:
 		RPName = new String[5];
 		RPName[0] = "01.ID";
 		RPName[1] = "02.Damage";
@@ -197,12 +210,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		}
 		
@@ -249,7 +262,7 @@ public class EM_ConfigHandler
 		EM_Settings.waterBarPos = config.get(GuiSetCat, "Position Thirst Bar", "Bottom_Left").getString();
 		EM_Settings.sanityBarPos = config.get(GuiSetCat, "Position Sanity Bar", "Bottom_Right").getString();
 		EM_Settings.oxygenBarPos = config.get(GuiSetCat, "Position Air Quality Bar", "Bottom_Right", "Change position of Enviro Bars. Options: Bottom_Left, Bottom_Right, Bottom_Center_Left, Bottom_Center_Right, Top_Left, Top_Right, Top_Center, Middle_Left, Middle_Right, Custom_#,# (Custom_X(0-100),Y(0-100))").getString();
-		EM_Settings.minimalHud = config.get(GuiSetCat, "Minimalistic Bars", false, "WARNING: This option will hide the ambient air temperature! It will also override icons and text to true.").getBoolean(false);
+		EM_Settings.minimalHud = config.get(GuiSetCat, "Minimalistic Bars", false, "WARN: This option will hide the ambient air temperature! It will also override icons and text to true.").getBoolean(false);
 		
 		EM_Settings.guiScale = (float)config.get(GuiSetCat, "Gui Bar Scale", 1.0, "Scale Enviromine Bars, Enter 0.1(10%) to 1.0(100%)").getDouble(1.0);
 		
@@ -258,16 +271,18 @@ public class EM_ConfigHandler
 		EM_Settings.ShowGuiIcons = config.get(GuiSetCat, "Show Gui Icons", true).getBoolean(true);
 		
 		// Config Item ID's
-		EM_Settings.dirtBottleID = config.get(Configuration.CATEGORY_ITEM, "Dirty Water Bottle", 5001).getInt(5001);
-		EM_Settings.saltBottleID = config.get(Configuration.CATEGORY_ITEM, "Salt Water Bottle", 5002).getInt(5002);
-		EM_Settings.coldBottleID = config.get(Configuration.CATEGORY_ITEM, "Cold Water Bottle", 5003).getInt(5003);
-		EM_Settings.camelPackID = config.get(Configuration.CATEGORY_ITEM, "Camel Pack", 5004).getInt(5004);
+		String itemCatagory = "items";
+		EM_Settings.dirtBottleID = config.get(itemCatagory, "Dirty Water Bottle", 5001).getInt(5001);
+		EM_Settings.saltBottleID = config.get(itemCatagory, "Salt Water Bottle", 5002).getInt(5002);
+		EM_Settings.coldBottleID = config.get(itemCatagory, "Cold Water Bottle", 5003).getInt(5003);
+		EM_Settings.camelPackID = config.get(itemCatagory, "Camel Pack", 5004).getInt(5004);
 		
 		// Config Block ID's
-		EM_Settings.blockElevatorTopID = config.get(Configuration.CATEGORY_BLOCK, "Elevator Top ID", 501).getInt(501);
-		EM_Settings.blockElevatorBottomID = config.get(Configuration.CATEGORY_BLOCK, "Elevator Bottom ID", 502).getInt(502);
-		EM_Settings.gasBlockID = config.get(Configuration.CATEGORY_BLOCK, "Normal Gas ID", 503).getInt(503);
-		EM_Settings.fireGasBlockID = config.get(Configuration.CATEGORY_BLOCK, "Gas Fire ID", 504).getInt(504);
+		String blockCatagory = "blocks";
+		EM_Settings.blockElevatorTopID = config.get(blockCatagory, "Elevator Top ID", 501).getInt(501);
+		EM_Settings.blockElevatorBottomID = config.get(blockCatagory, "Elevator Bottom ID", 502).getInt(502);
+		EM_Settings.gasBlockID = config.get(blockCatagory, "Normal Gas ID", 503).getInt(503);
+		EM_Settings.fireGasBlockID = config.get(blockCatagory, "Gas Fire ID", 504).getInt(504);
 		
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
@@ -389,12 +404,12 @@ public class EM_ConfigHandler
 			dirFlag = Dir.mkdirs();
 		} catch(SecurityException Se)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Error while creating config directory:\n" + Se);
+			EnviroMine.logger.log(Level.WARN, "Error while creating config directory:\n" + Se);
 		}
 		
 		if(!dirFlag)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Failed to create config directory!");
+			EnviroMine.logger.log(Level.WARN, "Failed to create config directory!");
 		}
 	}
 	
@@ -420,12 +435,12 @@ public class EM_ConfigHandler
 			} catch(NullPointerException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
 				return;
 			} catch(StringIndexOutOfBoundsException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
 				return;
 			}
 			
@@ -484,7 +499,7 @@ public class EM_ConfigHandler
 						LoadBiomeProperty(config, catagory.get(x));
 					} else
 					{
-						EnviroMine.logger.log(Level.WARNING, "Failed to load object " + CurCat);
+						EnviroMine.logger.log(Level.WARN, "Failed to load object " + CurCat);
 					}
 					
 				}
@@ -599,7 +614,7 @@ public class EM_ConfigHandler
 				canHang = stabType.canHang;
 			} else
 			{
-				EnviroMine.logger.log(Level.WARNING, "Stability type '" + stability + "' not found.");
+				EnviroMine.logger.log(Level.WARN, "Stability type '" + stability + "' not found.");
 				minFall = 99;
 				maxFall = 99;
 				supportDist = 9;
@@ -738,12 +753,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD DEFAULTS!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD DEFAULTS!");
 			return;
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD DEFAULTS!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD DEFAULTS!");
 			return;
 		}
 		EnviroMine.logger.log(Level.INFO, "Loading Default Config: " + customFile.getAbsolutePath());
@@ -756,15 +771,15 @@ public class EM_ConfigHandler
 		custom.addCustomCategoryComment(entityCat, "Custom entity properties");
 		custom.addCustomCategoryComment(itemsCat, "Custom item properties");
 		
-		ArmorDefaultSave(custom, armorCat + ".helmetLeather", ItemArmor.helmetLeather.itemID, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateLeather", ItemArmor.plateLeather.itemID, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsLeather", ItemArmor.legsLeather.itemID, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsLeather", ItemArmor.bootsLeather.itemID, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".helmetLeather", ItemArmor.helmetLeather, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".plateLeather", ItemArmor.plateLeather, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".legsLeather", ItemArmor.legsLeather, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".bootsLeather", ItemArmor.bootsLeather, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
 		
-		ArmorDefaultSave(custom, armorCat + ".helmetIron", ItemArmor.helmetIron.itemID, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateIron", ItemArmor.plateIron.itemID, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsIron", ItemArmor.legsIron.itemID, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsIron", ItemArmor.bootsIron.itemID, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".helmetIron", ItemArmor.helmetIron, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".plateIron", ItemArmor.plateIron, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".legsIron", ItemArmor.legsIron, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		ArmorDefaultSave(custom, armorCat + ".bootsIron", ItemArmor.bootsIron, -0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
 		
 		ArmorDefaultSave(custom, armorCat + ".helmetGold", ItemArmor.helmetGold.itemID, 0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
 		ArmorDefaultSave(custom, armorCat + ".plateGold", ItemArmor.plateGold.itemID, 0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
@@ -1170,12 +1185,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
 			return "Failed to Open MyCustom.cfg";
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO SAVE NEW OBJECT TO MYCUSTOM.CFG");
 			return "Failed to Open MyCustom.cfg";
 		}
 		
@@ -1306,12 +1321,12 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
 			return;
 		}
 		
@@ -1458,15 +1473,15 @@ public class EM_ConfigHandler
 			} catch(NullPointerException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM ID: " + idString);
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM ID: " + idString);
 			} catch(StringIndexOutOfBoundsException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM ID: " + idString);
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM ID: " + idString);
 			} catch(NumberFormatException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM ID: " + idString);
+				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM ID: " + idString);
 			}
 		}
 		
@@ -1498,15 +1513,15 @@ public class EM_ConfigHandler
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM IDs: \"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM IDs: \"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
 		} catch(StringIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM IDs: \"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM IDs: \"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
 		} catch(NumberFormatException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARNING, "FAILED TO LOAD CUSTOM IDs:\"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
+			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM IDs:\"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
 		}
 		return ids;
 	}

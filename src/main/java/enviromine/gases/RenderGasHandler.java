@@ -1,18 +1,21 @@
 package enviromine.gases;
 
-import org.lwjgl.opengl.GL11;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+
 import enviromine.blocks.BlockGas;
 import enviromine.handlers.ObjectHandler;
 
+import org.lwjgl.opengl.GL11;
+
 public class RenderGasHandler implements ISimpleBlockRenderingHandler
 {
-	private Icon icon;
+	private IIcon icon;
 	private Tessellator tessellator;
 	
 	@Override
@@ -74,7 +77,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		BlockGas block = (BlockGas)oBlock;
 		
 		int metadata = blockAccess.getBlockMetadata(i, j, k);
-		int sideBlockID;
+		Block sideBlock;
 		int sideBlockMetadata;
 		
 		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : renderer.getBlockIcon(block);
@@ -110,12 +113,12 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		tessellator.setColorRGBA_F(red * 0.9F, green * 0.9F, blue * 0.9F, alpha * 0.9F);
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 2))
 		{
-			sideBlockID = blockAccess.getBlockId(i, j, k - 1);
-			if(sideBlockID == ObjectHandler.gasBlock.blockID || sideBlockID == ObjectHandler.fireGasBlock.blockID)
+			sideBlock = blockAccess.getBlock(i, j, k - 1);
+			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
 			{
 				sideBlockMetadata = blockAccess.getBlockMetadata(i, j, k - 1);
-				sideMinY = ((BlockGas)Block.blocksList[sideBlockID]).getMinY(blockAccess, i, j, k - 1);
-				sideMaxY = ((BlockGas)Block.blocksList[sideBlockID]).getMaxY(blockAccess, i, j, k - 1);
+				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i, j, k - 1);
+				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i, j, k - 1);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -153,12 +156,12 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 3))
 		{
-			sideBlockID = blockAccess.getBlockId(i, j, k + 1);
-			if(sideBlockID == ObjectHandler.gasBlock.blockID || sideBlockID == ObjectHandler.fireGasBlock.blockID)
+			sideBlock = blockAccess.getBlock(i, j, k + 1);
+			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
 			{
 				sideBlockMetadata = blockAccess.getBlockMetadata(i, j, k + 1);
-				sideMinY = ((BlockGas)Block.blocksList[sideBlockID]).getMinY(blockAccess, i, j, k + 1);
-				sideMaxY = ((BlockGas)Block.blocksList[sideBlockID]).getMaxY(blockAccess, i, j, k + 1);
+				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i, j, k + 1);
+				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i, j, k + 1);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -195,12 +198,12 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 4))
 		{
-			sideBlockID = blockAccess.getBlockId(i - 1, j, k);
-			if(sideBlockID == ObjectHandler.gasBlock.blockID || sideBlockID == ObjectHandler.fireGasBlock.blockID)
+			sideBlock = blockAccess.getBlock(i - 1, j, k);
+			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
 			{
 				sideBlockMetadata = blockAccess.getBlockMetadata(i - 1, j, k);
-				sideMinY = ((BlockGas)Block.blocksList[sideBlockID]).getMinY(blockAccess, i - 1, j, k);
-				sideMaxY = ((BlockGas)Block.blocksList[sideBlockID]).getMaxY(blockAccess, i - 1, j, k);
+				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i - 1, j, k);
+				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i - 1, j, k);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -237,12 +240,12 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 5))
 		{
-			sideBlockID = blockAccess.getBlockId(i + 1, j, k);
-			if(sideBlockID == ObjectHandler.gasBlock.blockID || sideBlockID == ObjectHandler.fireGasBlock.blockID)
+			sideBlock = blockAccess.getBlock(i + 1, j, k);
+			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
 			{
 				sideBlockMetadata = blockAccess.getBlockMetadata(i + 1, j, k);
-				sideMinY = ((BlockGas)Block.blocksList[sideBlockID]).getMinY(blockAccess, i + 1, j, k);
-				sideMaxY = ((BlockGas)Block.blocksList[sideBlockID]).getMaxY(blockAccess, i + 1, j, k);
+				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i + 1, j, k);
+				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i + 1, j, k);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -302,11 +305,11 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 	
 	private void vertexAutoMap(double x, double y, double z, double u, double v)
 	{
-		tessellator.addVertexWithUV(x, y, z, icon.getInterpolatedU(u * 16.0D), icon.getInterpolatedV(v * 16.0D));
+		//tessellator.addVertexWithUV(x, y, z, icon.getInterpolatedU(u * 16.0D), icon.getInterpolatedV(v * 16.0D)); //TODO
 	}
 	
 	@Override
-	public boolean shouldRender3DInInventory()
+	public boolean shouldRender3DInInventory(int i)
 	{
 		return true;
 	}

@@ -1,15 +1,7 @@
 package enviromine.gui;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EnviroUtils;
-import enviromine.core.EM_Settings;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.trackers.EnviroDataTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -19,8 +11,21 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.event.ForgeSubscribe;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import enviromine.EnviroUtils;
+import enviromine.core.EM_Settings;
+import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
+import enviromine.trackers.EnviroDataTracker;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
 {
@@ -51,7 +56,7 @@ public class EM_GuiEnviroMeters extends Gui
 		this.mc = mc;
 	}
 	
-	@ForgeSubscribe
+	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent.Post event)
 	{
@@ -94,7 +99,7 @@ public class EM_GuiEnviroMeters extends Gui
 		int xPos = 4;
 		int yPos = 4;
 		
-		ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft().gameSettings, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 		int scaledwidth = scaleRes.getScaledWidth();
 		int scaledheight = scaleRes.getScaledHeight();
 		
@@ -124,7 +129,7 @@ public class EM_GuiEnviroMeters extends Gui
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
 				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
-				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.username);
+				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
 			}
 		} else if(tracker.isDisabled)
 		{
@@ -703,7 +708,7 @@ public class EM_GuiEnviroMeters extends Gui
 		
 		if(itemstack != null && itemstack.getItem() != null)
 		{
-			if(itemstack.itemID == ObjectHandler.gasMask.itemID)
+			if(itemstack.getItem() == ObjectHandler.gasMask)
 			{
 				
 				Renderbreath(width, height, itemstack);
@@ -790,7 +795,8 @@ public class EM_GuiEnviroMeters extends Gui
 					if(EM_Settings.breathSound == true)
 					{
 						EntityPlayer player = mc.thePlayer;
-						mc.sndManager.playSound("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F);
+						ISound sound = null; //TODO ("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F)
+						mc.getSoundHandler().playSound(sound);
 					}
 				}
 				return;

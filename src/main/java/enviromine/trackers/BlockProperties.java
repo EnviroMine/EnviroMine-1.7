@@ -1,10 +1,12 @@
 package enviromine.trackers;
 
+import net.minecraft.block.Block;
+
 public class BlockProperties
 {
 	public boolean hasPhys;
 	
-	public int id;
+	public Block block;
 	public int meta;
 	
 	public int minFall;
@@ -26,9 +28,9 @@ public class BlockProperties
 	public boolean canHang;
 	public boolean wetSlide;
 	
-	public BlockProperties(int id, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, int dropID, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
+	public BlockProperties(Block block, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, int dropID, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
 	{
-		this.id = id;
+		this.block = block;
 		this.meta = meta;
 		this.hasPhys = hasPhys;
 		this.minFall = minFall;

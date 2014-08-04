@@ -22,7 +22,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
 	{
 	    this.buttonList.add(new GuiButton(150, this.width / 4 - 152, this.height / 6 + 96 - 6, 150, 20, "Enviromine Bars"));
         this.buttonList.add(new GuiButton(152, this.width / 4 + 2, this.height / 6 + 96 - 6, 150, 20, "Mask Overlay"));
-        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, I18n.getString("gui.back")));
+        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, "gui.back"));
    
 	}
 	
@@ -46,7 +46,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
     public void drawScreen(int par1, int par2, float par3)
     {
     	this.drawDefaultBackground();
-    	this.drawCenteredString(this.fontRenderer,"Enviromine Gui Settings", this.width / 2, 15, 16777215);
+    	this.drawCenteredString(this.fontRendererObj, "Enviromine Gui Settings", this.width / 2, 15, 16777215);
     	super.drawScreen(par1, par2, par3);
     }
 }

@@ -1,13 +1,15 @@
 package enviromine.core.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.trackers.EnviroDataTracker;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnviroCommand extends CommandBase
 {
@@ -119,12 +121,12 @@ public class EnviroCommand extends CommandBase
 	
 	public void ShowUsage(ICommandSender sender)
 	{
-		sender.sendChatToPlayer(ChatMessageComponent.createFromText(getCommandUsage(sender)));
+		sender.addChatMessage(new ChatComponentText(getCommandUsage(sender)));
 	}
 	
 	public void ShowNoTracker(ICommandSender sender)
 	{
-		sender.sendChatToPlayer(ChatMessageComponent.createFromText("Target not found or has no enviro tracker!"));
+		sender.addChatMessage(new ChatComponentText("Target not found or has no enviro tracker!"));
 	}
 
     /**

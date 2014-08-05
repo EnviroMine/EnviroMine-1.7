@@ -95,7 +95,7 @@ public class EnviroDataTracker
 		{
 			if(trackedEntity instanceof EntityPlayer)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(((EntityPlayer)trackedEntity).username);
+				EntityPlayer player = EM_StatusManager.findPlayer(trackedEntity.getCommandSenderName());
 				
 				if(player == null)
 				{
@@ -145,10 +145,10 @@ public class EnviroDataTracker
 		// Air checks
 		enviroData[0] += gasAirDiff;
 		gasAirDiff = 0F;
-		ItemStack helmet = trackedEntity.getCurrentItemOrArmor(4);
+		ItemStack helmet = trackedEntity.getEquipmentInSlot(4);
 		if(helmet != null && !isCreative)
 		{
-			if(helmet.itemID == ObjectHandler.gasMask.itemID)
+			if(helmet.getItem() == ObjectHandler.gasMask)
 			{
 				if(helmet.getItemDamage() < helmet.getMaxDamage() && airQuality <= 99F)
 				{
@@ -309,11 +309,11 @@ public class EnviroDataTracker
 		}
 		
 		// Camel Pack Stuff
-		ItemStack plate = trackedEntity.getCurrentItemOrArmor(3);
+		ItemStack plate = trackedEntity.getEquipmentInSlot(3);
 		
 		if(plate != null && !isCreative)
 		{
-			if(plate.itemID == ObjectHandler.camelPack.itemID)
+			if(plate.getItem() == ObjectHandler.camelPack)
 			{
 				if(plate.getItemDamage() < plate.getMaxDamage() && hydration <= 99F - EM_Settings.hydrationMult)
 				{

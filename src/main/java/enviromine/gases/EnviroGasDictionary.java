@@ -1,6 +1,5 @@
 package enviromine.gases;
 
-import java.util.logging.Level;
 import enviromine.core.EnviroMine;
 import enviromine.gases.types.GasCarbonDioxide;
 import enviromine.gases.types.GasCarbonMonoxide;
@@ -8,6 +7,8 @@ import enviromine.gases.types.GasFire;
 import enviromine.gases.types.GasHydrogenSulfide;
 import enviromine.gases.types.GasMethane;
 import enviromine.gases.types.GasNUKE;
+
+import org.apache.logging.log4j.Level;
 
 public class EnviroGasDictionary
 {
@@ -32,11 +33,11 @@ public class EnviroGasDictionary
 				EnviroMine.logger.log(Level.INFO, "Registered gas " + newGas.name);
 			} else
 			{
-				EnviroMine.logger.log(Level.WARNING, "Unable to add gas " + newGas.name + " to dictionary: ID " + id + " is used!");
+				EnviroMine.logger.log(Level.WARN, "Unable to add gas " + newGas.name + " to dictionary: ID " + id + " is used!");
 			}
 		} else
 		{
-			EnviroMine.logger.log(Level.WARNING, "Unable to add gas " + newGas.name + " to dictionary: ID out of bounds!");
+			EnviroMine.logger.log(Level.WARN, "Unable to add gas " + newGas.name + " to dictionary: ID out of bounds!");
 		}
 	}
 }

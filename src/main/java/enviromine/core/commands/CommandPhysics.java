@@ -1,9 +1,10 @@
 package enviromine.core.commands;
 
-import enviromine.core.EM_Settings;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+
+import enviromine.core.EM_Settings;
 
 public class CommandPhysics extends CommandBase
 {
@@ -60,7 +61,7 @@ public class CommandPhysics extends CommandBase
 				{
 					Status = "Off";
 				}
-				sender.sendChatToPlayer(ChatMessageComponent.createFromText("Enviromine Physics Status: " + Status));
+				sender.addChatMessage(new ChatComponentText("Enviromine Physics Status: " + Status));
 			}
 			else
 			{
@@ -78,7 +79,7 @@ public class CommandPhysics extends CommandBase
 	
 	public void ShowUsage(ICommandSender sender)
 	{
-		sender.sendChatToPlayer(ChatMessageComponent.createFromText(getCommandUsage(sender)));
+		sender.addChatMessage(new ChatComponentText(getCommandUsage(sender)));
 	}
 	
 	public void togglePhy( ICommandSender sender)
@@ -88,11 +89,11 @@ public class CommandPhysics extends CommandBase
 		
 		if(EM_Settings.enablePhysics)
 		{
-			sender.sendChatToPlayer(ChatMessageComponent.createFromText("Enviromine Physics On"));
+			sender.addChatMessage(new ChatComponentText("Enviromine Physics On"));
 		}
 		else
 		{
-			sender.sendChatToPlayer(ChatMessageComponent.createFromText("Enviromine Physics Off"));
+			sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
 		}
 	}
 
@@ -102,11 +103,11 @@ public class CommandPhysics extends CommandBase
 			
 			if(what)
 			{
-				sender.sendChatToPlayer(ChatMessageComponent.createFromText("Enviromine Physics On"));
+				sender.addChatMessage(new ChatComponentText("Enviromine Physics On"));
 			}
 			else
 			{
-				sender.sendChatToPlayer(ChatMessageComponent.createFromText("Enviromine Physics Off"));
+				sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
 			}
 	}
 }

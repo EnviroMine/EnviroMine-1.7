@@ -3,22 +3,21 @@ package enviromine.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.handlers.ObjectHandler;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 
 public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmorTextureProvider
 {
-	public Icon cpIcon;
-	public Icon gmIcon;
-	public Icon hhIcon;
+	public IIcon cpIcon;
+	public IIcon gmIcon;
+	public IIcon hhIcon;
 	
-	public EnviroArmor(int par1, EnumArmorMaterial par2EnumArmorMaterial, int par3, int par4)
+	public EnviroArmor(ArmorMaterial par2EnumArmorMaterial, int par3, int par4)
 	{
-		super(par1, par2EnumArmorMaterial, par3, par4);
+		super(par2EnumArmorMaterial, par3, par4);
 		this.setMaxDamage(100);
 		//this.setTextureName("enviromine:camel_pack");
 		this.setNoRepair();
@@ -26,13 +25,13 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
 	{
-		if(itemID == ObjectHandler.camelPack.itemID)
+		if(stack.getItem() == ObjectHandler.camelPack)
 		{
 			return "enviroMine:textures/models/armor/camelpack_layer_1.png";
-		} else if(itemID == ObjectHandler.gasMask.itemID)
+		} else if(stack.getItem() == ObjectHandler.gasMask)
 		{
 			return "enviroMine:textures/models/armor/gasmask_layer_1.png";
-		} else if(itemID == ObjectHandler.hardHat.itemID)
+		} else if(stack.getItem() == ObjectHandler.hardHat)
 		{
 			return "enviroMine:textures/models/armor/hardhat_layer_1.png";
 		} else
@@ -43,7 +42,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		this.cpIcon = par1IconRegister.registerIcon("enviromine:camel_pack");
 		this.gmIcon = par1IconRegister.registerIcon("enviromine:gas_mask");
@@ -54,15 +53,15 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	/**
 	 * Gets an icon index based on an item's damage value
 	 */
-	public Icon getIconFromDamage(int par1)
+	public IIcon getIconFromDamage(int par1)
 	{
-		if(this.itemID == ObjectHandler.camelPack.itemID && cpIcon != null)
+		if(this == ObjectHandler.camelPack && cpIcon != null)
 		{
 			return this.cpIcon;
-		} else if(this.itemID == ObjectHandler.gasMask.itemID && gmIcon != null)
+		} else if(this == ObjectHandler.gasMask && gmIcon != null)
 		{
 			return this.gmIcon;
-		} else if(this.itemID == ObjectHandler.hardHat.itemID && hhIcon != null)
+		} else if(this == ObjectHandler.hardHat && hhIcon != null)
 		{
 			return this.hhIcon;
 		}
@@ -77,7 +76,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	 */
 	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
 	{
-		if(par1ItemStack.itemID == ObjectHandler.hardHat.itemID && par2ItemStack.itemID == ObjectHandler.hardHat.itemID)
+		if(par1ItemStack.getItem() == ObjectHandler.hardHat && par2ItemStack.getItem() == ObjectHandler.hardHat)
 		{
 			return true;
 		} else

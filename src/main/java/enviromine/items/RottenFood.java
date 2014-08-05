@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 
 public class RottenFood extends ItemFood
 {
-	public RottenFood(int par1, int par2)
+	public RottenFood(int par2)
 	{
-		super(par1, par2, 0.1F, false);
+		super(par2, 0.1F, false);
 	}
 
     /**

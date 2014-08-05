@@ -35,7 +35,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public void registerEventHandlers()
 	{
 		super.registerEventHandlers();
-		MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft()));
+		MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()));
 		MinecraftForge.EVENT_BUS.register(new ObjectHandler());
 	}
 	

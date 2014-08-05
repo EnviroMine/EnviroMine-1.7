@@ -2,6 +2,7 @@ package enviromine.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.resources.IResourceManager;
 
 public class RenderCameraShake extends EntityRenderer
 {
@@ -10,9 +11,9 @@ public class RenderCameraShake extends EntityRenderer
 	private float offsetY = 0.25F; // just for testing, should be based on actual render size
 	private double shakeSpeed = 10D;
 	
-	public RenderCameraShake(Minecraft mc)
+	public RenderCameraShake(Minecraft mc, IResourceManager resourceManager)
 	{
-		super(mc); //, mc.getResourceManager());
+		super(mc, resourceManager); //, mc.getResourceManager());
 		this.mc = mc;
 	}
 	

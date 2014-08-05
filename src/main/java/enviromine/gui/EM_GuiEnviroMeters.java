@@ -5,31 +5,29 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EnviroUtils;
 import enviromine.core.EM_Settings;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
 {
 	public Minecraft mc;
+	public IResourceManager resourceManager;
 	
 	public static final String guiResource = "textures/gui/status_Gui.png";
 	public static final ResourceLocation gasMaskResource = new ResourceLocation("enviromine", "textures/misc/maskblur2.png");
@@ -51,9 +49,10 @@ public class EM_GuiEnviroMeters extends Gui
 	
 	public static EnviroDataTracker tracker = null;
 	
-	public EM_GuiEnviroMeters(Minecraft mc)
+	public EM_GuiEnviroMeters(Minecraft mc, IResourceManager resManager)
 	{
 		this.mc = mc;
+		this.resourceManager = resManager;
 	}
 	
 	@SubscribeEvent
@@ -62,7 +61,7 @@ public class EM_GuiEnviroMeters extends Gui
 	{
 		if(this.camShake == null)
 		{
-			this.camShake = new RenderCameraShake(this.mc);
+			this.camShake = new RenderCameraShake(this.mc, this.resourceManager);
 		}
 		
 		if(this.mc.entityRenderer != camShake)

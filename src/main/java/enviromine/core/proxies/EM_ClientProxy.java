@@ -20,13 +20,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		if(Minecraft.getMinecraft().isIntegratedServerRunning())
 		{
-			if(Minecraft.getMinecraft().getIntegratedServer().getPublic())
-			{
-				return true;
-			} else
-			{
-				return false;
-			}
+			return Minecraft.getMinecraft().getIntegratedServer().getPublic();
 		} else
 		{
 			return false;
@@ -53,7 +47,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
-		EnviroMine.registerKeyBindings(event);
+		EnviroMine.instance.registerKeyBindings(event);
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)

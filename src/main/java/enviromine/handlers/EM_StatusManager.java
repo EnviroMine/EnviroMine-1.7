@@ -1,23 +1,5 @@
 package enviromine.handlers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import com.google.common.base.Stopwatch;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.EnviroPotion;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gui.EM_GuiEnviroMeters;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.ItemProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -33,7 +15,6 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,6 +31,26 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+
+import enviromine.EnviroPotion;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gui.EM_GuiEnviroMeters;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.ItemProperties;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import com.google.common.base.Stopwatch;
+
 public class EM_StatusManager
 {
 	public static HashMap<String,EnviroDataTracker> trackerList = new HashMap<String,EnviroDataTracker>();
@@ -58,10 +59,10 @@ public class EM_StatusManager
 	{
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
-			trackerList.put("" + tracker.trackedEntity.getUniqueID().toString(), tracker);
+			trackerList.put(tracker.trackedEntity.getUniqueID().toString(), tracker);
 		} else
 		{
-			trackerList.put("" + tracker.trackedEntity.getEntityId(), tracker);
+			trackerList.put(""+tracker.trackedEntity.getEntityId(), tracker);
 		}
 	}
 	
@@ -105,62 +106,30 @@ public class EM_StatusManager
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
 		}
 		
-		try
-		{
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			DataOutputStream outputStream = new DataOutputStream(bos);
-			
-			outputStream.writeBytes(dataString);
-			
-			Packet250CustomPayload packet = new Packet250CustomPayload();
-			packet.channel = EM_Settings.Channel;
-			packet.data = bos.toByteArray();
-			packet.length = bos.size();
-			PacketDispatcher.sendPacketToAllPlayers(packet);
-			
-			outputStream.close();
-			bos.close();
-		} catch (IOException e)
-		{
-			EnviroMine.logger.log(Level.SEVERE, "EnviroMine failed to build tracker sync packet!", e);
-		}
-		
-		
+		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));
 	}
 	
 	public static EnviroDataTracker lookupTracker(EntityLivingBase entity)
 	{
 		if(entity instanceof EntityPlayer)
 		{
-			if(trackerList.containsKey("" + entity.getUniqueID().toString()))
-			{
-				return trackerList.get("" + entity.getUniqueID().toString());
-			} else
-			{
-				return null;
-			}
+			return trackerList.get(entity.getUniqueID().toString());
 		} else
 		{
-			if(trackerList.containsKey("" + entity.getEntityId()))
-			{
-				return trackerList.get("" + entity.getEntityId());
-			} else
-			{
-				return null;
-			}
+			return trackerList.get(entity.getEntityId());
 		}
 	}
 	
-	public static EnviroDataTracker lookupTrackerFromUsername(String username)
+	public static EnviroDataTracker lookupTrackerFromUUID(UUID id)
 	{
-		return trackerList.get(username);
+		return trackerList.get(id.toString());
 	}
 	
 	private static Stopwatch timer = Stopwatch.createUnstarted();
 	
 	public static float[] getSurroundingData(EntityLivingBase entityLiving, int range)
 	{
-		if(EnviroMine.proxy.isClient() && entityLiving.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()) && !timer.isRunning())
+		if(EnviroMine.proxy.isClient() && entityLiving.getCommandSenderName().equals(Minecraft.getMinecraft().thePlayer.getCommandSenderName()) && !timer.isRunning())
 		{
 			timer.start();
 		}
@@ -265,37 +234,34 @@ public class EM_StatusManager
 					}
 					
 					dist = (float)entityLiving.getDistance(i + x, j + y, k + z);
-						
-					Block block = Blocks.air;
+					
+					
 					int meta = 0;
 					
 					// These need to be here to reset
 					boolean isCustom = false;
 					BlockProperties blockProps = null;
 					
-					block = entityLiving.worldObj.getBlock(i + x, j + y, k + z);
+					Block block = entityLiving.worldObj.getBlock(i + x, j + y, k + z);
 					
 					if(block != Blocks.air)
 					{
 						meta = entityLiving.worldObj.getBlockMetadata(i + x, j + y, k + z);
 					}
 					
-					if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta) || EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block)))
+					String name = Block.blockRegistry.getNameForObject(block);if(EM_Settings.blockProperties.containsKey(name + "," + meta))
 					{
-						if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
-						{
-							blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block) + "," + meta);
-						} else
-						{
-							blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block));
-						}
-						
-						if(blockProps.meta == meta || blockProps.meta == -1)
-						{
-							isCustom = true;
-						}
-						
+						blockProps = EM_Settings.blockProperties.get(name + "," + meta);
+					} else
+					{
+						blockProps = EM_Settings.blockProperties.get(name);
 					}
+					
+					if(blockProps.meta == meta || blockProps.meta == -1)
+					{
+						isCustom = true;
+					}
+					
 					
 					if(isCustom && blockProps != null)
 					{
@@ -321,7 +287,7 @@ public class EM_StatusManager
 							sanityRate = blockProps.sanity;
 						} else if(sanityRate <= blockProps.sanity && blockProps.sanity > 0F)
 						{
-							if(block instanceof BlockFlower)
+							if(blockProps.block instanceof BlockFlower)
 							{
 								if(isDay)
 								{
@@ -339,7 +305,7 @@ public class EM_StatusManager
 							}
 						}
 						
-					} else if(block == Blocks.flowing_lava || block == Blocks.lava)
+					} else if((block == Blocks.flowing_lava || block == Blocks.lava))
 					{
 						if(quality > -1)
 						{
@@ -359,10 +325,10 @@ public class EM_StatusManager
 						if(temp < getTempFalloff(100, dist, range))
 						{
 							temp = getTempFalloff(100, dist, range);
-
-
+							
+							
 						}
-					} else if((block == Blocks.torch || block == Blocks.lit_furnace))
+					} else if(block == Blocks.torch || block == Blocks.lit_furnace)
 					{
 						if(quality > -0.25F)
 						{
@@ -371,7 +337,7 @@ public class EM_StatusManager
 						if(temp < getTempFalloff(75, dist, range))
 						{
 							temp = getTempFalloff(75, dist, range);
-
+							
 						}
 					} else if(block instanceof BlockLeavesBase || block instanceof BlockFlower || block == Blocks.waterlily || block == Blocks.grass)
 					{
@@ -403,12 +369,12 @@ public class EM_StatusManager
 						if(temp < getTempFalloff(50, dist, range))
 						{
 							temp = getTempFalloff(50, dist, range);
-
+							
 						}
 					} else if(block == Blocks.flowing_water || block == Blocks.water || (block == Blocks.cauldron && meta > 0))
 					{
 						animalHostility = -1;
-					} else if(block == Blocks.snow_layer)
+					} else if(block == Blocks.snow)
 					{
 						cooling += getTempFalloff(0.01F, dist, range);
 					} else if(block == Blocks.snow || block == Blocks.ice)
@@ -455,11 +421,6 @@ public class EM_StatusManager
 							sBoost = 1F;
 						}
 					}
-					
-					if(block == Blocks.flowing_lava || block == Blocks.lava)
-					{
-						nearLava = true;
-					}
 				}
 			}
 		}
@@ -484,16 +445,16 @@ public class EM_StatusManager
 					stackMult = (stack.stackSize-1F)/63F + 1F;
 				}
 				
-				if(EM_Settings.itemProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage()) || EM_Settings.itemProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem())))
+				if(EM_Settings.itemProperties.containsKey("" + stack + "," + stack.getItemDamage()) || EM_Settings.itemProperties.containsKey("" + stack))
 				{
 					ItemProperties itemProps;
 					
-					if(EM_Settings.itemProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage()))
+					if(EM_Settings.itemProperties.containsKey("" + stack + "," + stack.getItemDamage()))
 					{
-						itemProps = EM_Settings.itemProperties.get("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage());
+						itemProps = EM_Settings.itemProperties.get("" + stack + "," + stack.getItemDamage());
 					} else
 					{
-						itemProps = EM_Settings.itemProperties.get("" + Item.itemRegistry.getNameForObject(stack.getItem()));
+						itemProps = EM_Settings.itemProperties.get("" + stack);
 					}
 					
 					if(itemProps.ambAir > 0F)
@@ -855,9 +816,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(helmet)))
+				if(EM_Settings.armorProperties.containsKey(helmet))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(helmet));
+					ArmorProperties props = EM_Settings.armorProperties.get(helmet);
 					
 					if(isDay)
 					{
@@ -911,9 +872,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(plate)))
+				if(EM_Settings.armorProperties.containsKey(plate))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(plate));
+					ArmorProperties props = EM_Settings.armorProperties.get(plate);
 					
 					if(isDay)
 					{
@@ -964,9 +925,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(legs)))
+				if(EM_Settings.armorProperties.containsKey(legs))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(legs));
+					ArmorProperties props = EM_Settings.armorProperties.get(legs);
 					
 					if(isDay)
 					{
@@ -1017,9 +978,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(boots)))
+				if(EM_Settings.armorProperties.containsKey(boots))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(boots));
+					ArmorProperties props = EM_Settings.armorProperties.get(boots);
 					
 					if(isDay)
 					{
@@ -1148,7 +1109,7 @@ public class EM_StatusManager
 		data[6] = animalHostility;
 		data[7] = sanityRate * (float)EM_Settings.sanityMult;
 		
-		if(EnviroMine.proxy.isClient() && entityLiving.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()) && timer.isRunning())
+		if(EnviroMine.proxy.isClient() && entityLiving.getCommandSenderName().equals(Minecraft.getMinecraft().thePlayer.getCommandSenderName()) && timer.isRunning())
 		{
 			timer.stop();
 			EM_GuiEnviroMeters.DB_timer = timer.toString();
@@ -1161,7 +1122,7 @@ public class EM_StatusManager
 	{
 		float temp= 0F;
 		
-
+		
 		return temp;
 		
 	}
@@ -1191,9 +1152,10 @@ public class EM_StatusManager
 			tags.setFloat("ENVIRO_HYD", tracker.hydration);
 			tags.setFloat("ENVIRO_TMP", tracker.bodyTemp);
 			tags.setFloat("ENVIRO_SAN", tracker.sanity);
+			
 			if(tracker.trackedEntity instanceof EntityPlayer)
 			{
-				trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+				trackerList.remove(tracker.trackedEntity.getUniqueID());
 			} else
 			{
 				trackerList.remove("" + tracker.trackedEntity.getEntityId());
@@ -1253,9 +1215,10 @@ public class EM_StatusManager
 				tags.setFloat("ENVIRO_TMP", tracker.bodyTemp);
 				tags.setFloat("ENVIRO_SAN", tracker.sanity);
 				tracker.isDisabled = true;
+				
 				if(tracker.trackedEntity instanceof EntityPlayer)
 				{
-					trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+					trackerList.remove(tracker.trackedEntity.getUniqueID());
 				} else
 				{
 					trackerList.remove("" + tracker.trackedEntity.getEntityId());
@@ -1283,7 +1246,7 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EntityPlayer findPlayer(String username)
+	public static EntityPlayer findPlayer(UUID uuid)
 	{
 		World[] worlds = new World[1];
 		
@@ -1307,7 +1270,7 @@ public class EM_StatusManager
 			{
 				continue;
 			}
-			EntityPlayer player = worlds[i].getPlayerEntityByName(username);
+			EntityPlayer player = worlds[i].func_152378_a(uuid);
 			
 			if(player != null)
 			{

@@ -20,6 +20,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
@@ -56,8 +58,10 @@ public class EnviroMine
 	@SidedProxy(clientSide = EM_Settings.Proxy + ".EM_ClientProxy", serverSide = EM_Settings.Proxy + ".EM_CommonProxy")
 	public static EM_CommonProxy proxy;
 	
+	public SimpleNetworkWrapper network;
+	
 	@EventHandler
-	public static void preInit(FMLPreInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
 		
@@ -79,11 +83,12 @@ public class EnviroMine
 			MapGenStructureIO.func_143031_a(EM_VillageMineshaft.class, "ViMS");
 		}
 		
+		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
 		GameRegistry.registerWorldGenerator(new WorldFeatureGenerator(), 20);
 	}
 	
 	@EventHandler
-	public static void init(FMLInitializationEvent event)
+	public void init(FMLInitializationEvent event)
 	{
 		proxy.init(event);
 		
@@ -110,7 +115,7 @@ public class EnviroMine
 	}
 	
 	@EventHandler
-	public static void postInit(FMLPostInitializationEvent event)
+	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit(event);
 		
@@ -131,7 +136,7 @@ public class EnviroMine
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void registerKeyBindings(FMLInitializationEvent event)
+	public void registerKeyBindings(FMLInitializationEvent event)
 	{
 		// Add remove Keybind
 		KeyBinding key = new KeyBinding("EnviroMine Add/Remove Custom Object", Keyboard.KEY_J, "enviromine.keycatagory");

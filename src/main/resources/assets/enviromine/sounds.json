@@ -1,0 +1,22 @@
+{
+   "gasmask": {"category": "master", "sounds": [{"name": "gasmask","stream": false}]},
+   
+   "thingdistant": {"category": "master","sounds": [{"name": "thingdistant","stream": false}]},
+   "thingkill": {"category": "master","sounds": [{"name": "thingkill","stream": false}]},
+   
+   "CaveIn": {"category": "master","sounds": [{"name": "CaveIn","stream": false}]},
+   
+   "sizzle": {"category": "player","sounds": [{"name": "sizzle","stream": false}]},
+   
+   "chill": {"category": "player","sounds": [{"name": "chill","stream": false}]},
+   
+   "gag": {"category": "player",
+   "sounds": [
+		"gag1",
+		"gag2",
+		"gag3"
+	]
+   }
+   
+}
+

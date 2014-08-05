@@ -444,7 +444,9 @@ public class EnviroDataTracker
 				
 				if ((mc.getSystemTime() - chillPrevTime) > 17000)
 				{
-					mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
+					mc.thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
+					//TODO OLD
+					//mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
 					chillPrevTime = mc.getSystemTime();
 				}
 			}
@@ -471,7 +473,9 @@ public class EnviroDataTracker
 				
 				if ((mc.getSystemTime() - chillPrevTime) > 1700)
 				{
-					mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
+					mc.thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
+					//TODO OLD
+					//mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
 					chillPrevTime = mc.getSystemTime();
 				}
 			}

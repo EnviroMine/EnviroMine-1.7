@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -69,20 +70,20 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		int rY = 1 + random.nextInt(32);
 		int rZ = (chunkZ * 16) + random.nextInt(16);
 		
-		while(world.getBlockId(rX, rY - 1, rZ) == 0 && rY > 1)
+		while(world.getBlock(rX, rY - 1, rZ) == Blocks.air && rY > 1)
 		{
 			rY -= 1;
 		}
 		
-		if(world.getBlockId(rX, rY, rZ) == 0)
+		if(world.getBlock(rX, rY, rZ) == Blocks.air)
 		{
-			Block bBlock = Block.blocksList[world.getBlockId(rX, rY - 1, rZ)];
+			Block bBlock = world.getBlock(rX, rY - 1, rZ);
 			if(rY < 16 && rY > 0)
 			{
-				if(bBlock != null && bBlock.blockMaterial == Material.water)
+				if(bBlock.getMaterial() == Material.water)
 				{
-					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock.blockID, 0, 2);
-					TileEntity tile = world.getBlockTileEntity(rX, rY, rZ);
+					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock, 0, 2);
+					TileEntity tile = world.getTileEntity(rX, rY, rZ);
 					
 					if(tile instanceof TileEntityGas)
 					{
@@ -90,10 +91,10 @@ public class WorldFeatureGenerator implements IWorldGenerator
 						gasTile.addGas(EnviroGasDictionary.hydrogenSulfide.gasID, 10);
 						//EnviroMine.logger.log(Level.INFO, "Generating hydrogen sulfide at (" + rX + "," + rY + "," + rZ + ")");
 					}
-				} else if(bBlock != null && (bBlock.blockMaterial == Material.lava || bBlock.blockMaterial == Material.fire))
+				} else if(bBlock.getMaterial() == Material.lava || bBlock.getMaterial() == Material.fire)
 				{
-					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock.blockID, 0, 2);
-					TileEntity tile = world.getBlockTileEntity(rX, rY, rZ);
+					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock, 0, 2);
+					TileEntity tile = world.getTileEntity(rX, rY, rZ);
 					
 					if(tile instanceof TileEntityGas)
 					{
@@ -104,8 +105,8 @@ public class WorldFeatureGenerator implements IWorldGenerator
 					}
 				} else
 				{
-					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock.blockID, 0, 2);
-					TileEntity tile = world.getBlockTileEntity(rX, rY, rZ);
+					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock, 0, 2);
+					TileEntity tile = world.getTileEntity(rX, rY, rZ);
 					
 					if(tile instanceof TileEntityGas)
 					{
@@ -117,8 +118,8 @@ public class WorldFeatureGenerator implements IWorldGenerator
 				}
 			} else
 			{
-				world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock.blockID, 0, 2);
-				TileEntity tile = world.getBlockTileEntity(rX, rY, rZ);
+				world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock, 0, 2);
+				TileEntity tile = world.getTileEntity(rX, rY, rZ);
 				
 				if(tile instanceof TileEntityGas)
 				{

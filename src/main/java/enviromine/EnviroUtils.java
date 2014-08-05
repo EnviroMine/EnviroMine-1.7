@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteOrder;
-import java.util.logging.Level;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -163,7 +163,7 @@ public class EnviroUtils
 				}
 			} catch(Exception e)
 			{
-				EnviroMine.logger.log(Level.SEVERE, "Failed to extend potion list for EnviroMine!", e);
+				EnviroMine.logger.log(Level.ERROR, "Failed to extend potion list for EnviroMine!", e);
 			}
 		}
 	}

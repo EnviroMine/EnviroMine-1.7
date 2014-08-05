@@ -12,7 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.packet.Packet62LevelSound;
+import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -34,11 +34,11 @@ public class EnviroPotion extends Potion
 	
 	public static void RegisterPotions()
 	{
-		EnviroPotion.frostbite = (EnviroPotion)new EnviroPotion(EM_Settings.frostBitePotionID, true, 8171462).setPotionName("potion.frostbite").setIconIndex(0, 0);
-		EnviroPotion.dehydration = (EnviroPotion)new EnviroPotion(EM_Settings.dehydratePotionID, true, 3035801).setPotionName("potion.dehydration").setIconIndex(1, 0);
-		EnviroPotion.insanity = (EnviroPotion)new EnviroPotion(EM_Settings.insanityPotionID, true, 5578058).setPotionName("potion.insanity").setIconIndex(2, 0);
-		EnviroPotion.heatstroke = (EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, EnviroUtils.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.heatstroke").setIconIndex(3, 0);
-		EnviroPotion.hypothermia = (EnviroPotion)new EnviroPotion(EM_Settings.hypothermiaPotionID, true, 8171462).setPotionName("potion.hypothermia").setIconIndex(4, 0);
+		EnviroPotion.frostbite = ((EnviroPotion)new EnviroPotion(EM_Settings.frostBitePotionID, true, 8171462).setPotionName("potion.frostbite")).setIconIndex(0, 0);
+		EnviroPotion.dehydration = ((EnviroPotion)new EnviroPotion(EM_Settings.dehydratePotionID, true, 3035801).setPotionName("potion.dehydration")).setIconIndex(1, 0);
+		EnviroPotion.insanity = ((EnviroPotion)new EnviroPotion(EM_Settings.insanityPotionID, true, 5578058).setPotionName("potion.insanity")).setIconIndex(2, 0);
+		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, EnviroUtils.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.heatstroke")).setIconIndex(3, 0);
+		EnviroPotion.hypothermia = ((EnviroPotion)new EnviroPotion(EM_Settings.hypothermiaPotionID, true, 8171462).setPotionName("potion.hypothermia")).setIconIndex(4, 0);
 		
 		LanguageRegistry.instance().addStringLocalization("potion.hypothermia", "Hypothermia");
 		LanguageRegistry.instance().addStringLocalization("potion.heatstroke", "Heat Stroke");
@@ -58,7 +58,7 @@ public class EnviroPotion extends Potion
 		
 		if(entityLiving.isPotionActive(heatstroke))
 		{
-			if(entityLiving.getActivePotionEffect(heatstroke).duration == 0)
+			if(entityLiving.getActivePotionEffect(heatstroke).getDuration() == 0)
 			{
 				entityLiving.removePotionEffect(heatstroke.id);
 			}
@@ -85,7 +85,7 @@ public class EnviroPotion extends Potion
 		
 		if(entityLiving.isPotionActive(hypothermia))
 		{
-			if(entityLiving.getActivePotionEffect(hypothermia).duration == 0)
+			if(entityLiving.getActivePotionEffect(hypothermia).getDuration() == 0)
 			{
 				entityLiving.removePotionEffect(hypothermia.id);
 			}
@@ -105,7 +105,7 @@ public class EnviroPotion extends Potion
 		}
 		if(entityLiving.isPotionActive(frostbite))
 		{
-			if(entityLiving.getActivePotionEffect(frostbite).duration == 0)
+			if(entityLiving.getActivePotionEffect(frostbite).getDuration() == 0)
 			{
 				entityLiving.removePotionEffect(frostbite.id);
 			}
@@ -130,7 +130,7 @@ public class EnviroPotion extends Potion
 		}
 		if(entityLiving.isPotionActive(dehydration.id))
 		{
-			if(entityLiving.getActivePotionEffect(dehydration).duration == 0)
+			if(entityLiving.getActivePotionEffect(dehydration).getDuration() == 0)
 			{
 				entityLiving.removePotionEffect(dehydration.id);
 			}
@@ -143,7 +143,7 @@ public class EnviroPotion extends Potion
 		if(entityLiving.isPotionActive(insanity.id))
 		{
 			PotionEffect effect = entityLiving.getActivePotionEffect(insanity);
-			if(effect.duration == 0)
+			if(effect.getDuration() == 0)
 			{
 				entityLiving.removePotionEffect(insanity.id);
 			}
@@ -251,7 +251,7 @@ public class EnviroPotion extends Potion
 				float rndY = (player.getRNG().nextInt(6) - 3) * player.getRNG().nextFloat();
 				float rndZ = (player.getRNG().nextInt(6) - 3) * player.getRNG().nextFloat();
 				
-				Packet62LevelSound packet = new Packet62LevelSound(sound, entityLiving.posX + rndX, entityLiving.posY + rndY, entityLiving.posZ + rndZ, 1.0F, player.getRNG().nextBoolean()? 0.2F : (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F + 1.0F);
+				S29PacketSoundEffect packet = new S29PacketSoundEffect(sound, entityLiving.posX + rndX, entityLiving.posY + rndY, entityLiving.posZ + rndZ, 1.0F, player.getRNG().nextBoolean()? 0.2F : (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F + 1.0F);
 				
 				if(!EnviroMine.proxy.isClient() && player instanceof EntityPlayerMP)
 				{
@@ -284,4 +284,12 @@ public class EnviroPotion extends Potion
 	{
 		return true;
 	}
+
+    /**
+     * Sets the index for the icon displayed in the player's inventory when the status is active.
+     */
+    public EnviroPotion setIconIndex(int p_76399_1_, int p_76399_2_)
+    {
+        return (EnviroPotion)super.setIconIndex(p_76399_1_, p_76399_2_);
+    }
 }

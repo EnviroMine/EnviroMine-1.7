@@ -148,7 +148,7 @@ public class ObjectHandler
 		LanguageRegistry.addName(rottenFood, "Rotten Food");
 	}
 	
-	//TODO Should Probably be be Removed
+	//TODO Should Probably be be Removed Sounds.Json now controls this
 	//@ForgeSubscribe
 	public void RegisterSounds(SoundLoadEvent event)
 	{

@@ -23,7 +23,6 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -69,8 +68,6 @@ public class EnviroMine
 		
 		// Load Configuration files And Custom files
 		EM_ConfigHandler.initConfig();
-		
-		LanguageRegistry.instance().addStringLocalization("itemGroup.EnviroMine", "en_US", "EnviroMine");
 		
 		ObjectHandler.RegisterItems();
 		ObjectHandler.RegisterBlocks();
@@ -144,7 +141,7 @@ public class EnviroMine
 		
 		// Reload Custom Objects Files
 		KeyBinding key1 = new KeyBinding("EnviroMine Reload All Custom Object", Keyboard.KEY_K, "enviromine.keycatagory");
-		ClientRegistry.registerKeyBinding(key);
+		ClientRegistry.registerKeyBinding(key1);
 		
 	}
 	

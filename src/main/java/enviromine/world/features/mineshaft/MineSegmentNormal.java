@@ -1,6 +1,6 @@
 package enviromine.world.features.mineshaft;
 
-import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class MineSegmentNormal extends MineSegment
@@ -20,95 +20,95 @@ public class MineSegmentNormal extends MineSegment
 	{
 		boolean containsLoot = false;
 		
-		if(getBlockID(2, 0, 2) == Block.chest.blockID)
+		if(getBlock(2, 0, 2) == Blocks.chest)
 		{
 			containsLoot = true;
 		}
 		
 		if(!containsLoot)
 		{
-			this.fillArea(1, 0, 1, 3, 2, 3, 0, 0);
+			this.fillArea(1, 0, 1, 3, 2, 3, Blocks.air, 0);
 		} else
 		{
-			this.fillArea(1, 1, 1, 3, 2, 3, 0, 0);
+			this.fillArea(1, 1, 1, 3, 2, 3, Blocks.air, 0);
 			
-			this.fillArea(1, 0, 1, 3, 0, 1, 0, 0);
-			this.fillArea(1, 0, 1, 1, 0, 3, 0, 0);
-			this.fillArea(3, 0, 3, 3, 0, 1, 0, 0);
-			this.fillArea(3, 0, 3, 1, 0, 3, 0, 0);
+			this.fillArea(1, 0, 1, 3, 0, 1, Blocks.air, 0);
+			this.fillArea(1, 0, 1, 1, 0, 3, Blocks.air, 0);
+			this.fillArea(3, 0, 3, 3, 0, 1, Blocks.air, 0);
+			this.fillArea(3, 0, 3, 1, 0, 3, Blocks.air, 0);
 		}
 		
-		if((getBlockID(2, 1, 0) == Block.fence.blockID && getBlockID(2, 1, -1) == 0) || getBlockID(2, 1, -1) == 0)
+		if((getBlock(2, 1, 0) == Blocks.fence && getBlock(2, 1, -1) == Blocks.air) || getBlock(2, 1, -1) == Blocks.air)
 		{
-			this.fillArea(1, 0, 0, 3, 2, 0, 0, 0);
-			
-			for(int i = 1; i <= 3; i++)
-			{
-				if(!Block.isNormalCube(getBlockID(i, -1, -1)) && !Block.isNormalCube(getBlockID(i, 0, -1)))
-				{
-					setBlock(i, 0, 0, Block.fence.blockID, 0);
-				}
-			}
-		} else if(getBlockID(2, 1, -1) != Block.ladder.blockID)
-		{
-			this.fillArea(1, 0, 0, 3, 2, 0, Block.fence.blockID, 0);
-		}
-		
-		if((getBlockID(0, 1, 2) == Block.fence.blockID && getBlockID(-1, 1, 2) == 0) || getBlockID(-1, 1, 2) == 0)
-		{
-			this.fillArea(0, 0, 1, 0, 2, 3, 0, 0);
+			this.fillArea(1, 0, 0, 3, 2, 0, Blocks.air, 0);
 			
 			for(int i = 1; i <= 3; i++)
 			{
-				if(!Block.isNormalCube(getBlockID(-1, -1, i)) && !Block.isNormalCube(getBlockID(-1, 0, i)))
+				if(!getBlock(i, -1, -1).isNormalCube() && !getBlock(i, 0, -1).isNormalCube())
 				{
-					setBlock(0, 0, i, Block.fence.blockID, 0);
+					setBlock(i, 0, 0, Blocks.fence, 0);
 				}
 			}
-		} else if(getBlockID(-1, 1, 2) != Block.ladder.blockID)
+		} else if(getBlock(2, 1, -1) != Blocks.ladder)
 		{
-			this.fillArea(0, 0, 1, 0, 2, 3, Block.fence.blockID, 0);
+			this.fillArea(1, 0, 0, 3, 2, 0, Blocks.fence, 0);
 		}
 		
-		if((getBlockID(2, 1, 4) == Block.fence.blockID && getBlockID(2, 1, 5) == 0) || getBlockID(2, 1, 5) == 0)
+		if((getBlock(0, 1, 2) == Blocks.fence && getBlock(-1, 1, 2) == Blocks.air) || getBlock(-1, 1, 2) == Blocks.air)
 		{
-			this.fillArea(1, 0, 4, 3, 2, 4, 0, 0);
+			this.fillArea(0, 0, 1, 0, 2, 3, Blocks.air, 0);
 			
 			for(int i = 1; i <= 3; i++)
 			{
-				if(!Block.isNormalCube(getBlockID(i, -1, 5)) && !Block.isNormalCube(getBlockID(i, 0, 5)))
+				if(!getBlock(-1, -1, i).isNormalCube() && !getBlock(-1, 0, i).isNormalCube())
 				{
-					setBlock(i, 0, 4, Block.fence.blockID, 0);
+					setBlock(0, 0, i, Blocks.fence, 0);
 				}
 			}
-		} else if(getBlockID(2, 1, 5) != Block.ladder.blockID)
+		} else if(getBlock(-1, 1, 2) != Blocks.ladder)
 		{
-			this.fillArea(1, 0, 4, 3, 2, 4, Block.fence.blockID, 0);
+			this.fillArea(0, 0, 1, 0, 2, 3, Blocks.fence, 0);
 		}
 		
-		if((getBlockID(4, 1, 2) == Block.fence.blockID && getBlockID(5, 1, 2) == 0) || getBlockID(5, 1, 2) == 0)
+		if((getBlock(2, 1, 4) == Blocks.fence && getBlock(2, 1, 5) == Blocks.air) || getBlock(2, 1, 5) == Blocks.air)
 		{
-			this.fillArea(4, 0, 1, 4, 2, 3, 0, 0);
+			this.fillArea(1, 0, 4, 3, 2, 4, Blocks.air, 0);
 			
 			for(int i = 1; i <= 3; i++)
 			{
-				if(!Block.isNormalCube(getBlockID(5, -1, i)) && !Block.isNormalCube(getBlockID(5, 0, i)))
+				if(!getBlock(i, -1, 5).isNormalCube() && !getBlock(i, 0, 5).isNormalCube())
 				{
-					setBlock(4, 0, i, Block.fence.blockID, 0);
+					setBlock(i, 0, 4, Blocks.fence, 0);
 				}
 			}
-		} else if(getBlockID(5, 1, 2) != Block.ladder.blockID)
+		} else if(getBlock(2, 1, 5) != Blocks.ladder)
 		{
-			this.fillArea(4, 0, 1, 4, 2, 3, Block.fence.blockID, 0);
+			this.fillArea(1, 0, 4, 3, 2, 4, Blocks.fence, 0);
 		}
 		
-		this.fillArea(0, 3, 0, 4, 3, 4, Block.planks.blockID, 0);
-		this.fillArea(1, 3, 1, 3, 3, 3, 0, 0);
+		if((getBlock(4, 1, 2) == Blocks.fence && getBlock(5, 1, 2) == Blocks.air) || getBlock(5, 1, 2) == Blocks.air)
+		{
+			this.fillArea(4, 0, 1, 4, 2, 3, Blocks.air, 0);
+			
+			for(int i = 1; i <= 3; i++)
+			{
+				if(!getBlock(5, -1, i).isNormalCube() && !getBlock(5, 0, i).isNormalCube())
+				{
+					setBlock(4, 0, i, Blocks.fence, 0);
+				}
+			}
+		} else if(getBlock(5, 1, 2) != Blocks.ladder)
+		{
+			this.fillArea(4, 0, 1, 4, 2, 3, Blocks.fence, 0);
+		}
 		
-		this.fillArea(0, 0, 0, 0, 3, 0, Block.wood.blockID, 0);
-		this.fillArea(4, 0, 0, 4, 3, 0, Block.wood.blockID, 0);
-		this.fillArea(0, 0, 4, 0, 3, 4, Block.wood.blockID, 0);
-		this.fillArea(4, 0, 4, 4, 3, 4, Block.wood.blockID, 0);
+		this.fillArea(0, 3, 0, 4, 3, 4, Blocks.planks, 0);
+		this.fillArea(1, 3, 1, 3, 3, 3, Blocks.air, 0);
+		
+		this.fillArea(0, 0, 0, 0, 3, 0, Blocks.log, 0);
+		this.fillArea(4, 0, 0, 4, 3, 0, Blocks.log, 0);
+		this.fillArea(0, 0, 4, 0, 3, 4, Blocks.log, 0);
+		this.fillArea(4, 0, 4, 4, 3, 4, Blocks.log, 0);
 		
 		if(this.hasFloor)
 		{
@@ -116,11 +116,9 @@ public class MineSegmentNormal extends MineSegment
 			{
 				for(int k = 0; k <= 4; k++)
 				{
-					int id = this.getBlockID(i, -1, k);
-					
-					if(!Block.isNormalCube(id))
+					if(!this.getBlock(i, -1, k).isNormalCube())
 					{
-						this.setBlock(i, -1, k, Block.planks.blockID, 0);
+						this.setBlock(i, -1, k, Blocks.planks, 0);
 					}
 				}
 			}
@@ -137,7 +135,7 @@ public class MineSegmentNormal extends MineSegment
 	@Override
 	public boolean canBuild()
 	{
-		if(this.getBlockID(2, 0, 1) == Block.ladder.blockID || this.getBlockID(1, 0, 2) == Block.ladder.blockID || this.getBlockID(2, 0, 3) == Block.ladder.blockID || this.getBlockID(3, 0, 2) == Block.ladder.blockID)
+		if(this.getBlock(2, 0, 1) == Blocks.ladder || this.getBlock(1, 0, 2) == Blocks.ladder || this.getBlock(2, 0, 3) == Blocks.ladder || this.getBlock(3, 0, 2) == Blocks.ladder)
 		{
 			return false;
 		} else

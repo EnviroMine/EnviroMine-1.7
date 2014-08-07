@@ -1,5 +1,15 @@
 package enviromine.world.features.mineshaft;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.world.World;
+
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.world.features.WorldFeatureGenerator;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,14 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.logging.Level;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.world.features.WorldFeatureGenerator;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
 
 public class MineshaftBuilder
 {
@@ -91,21 +95,21 @@ public class MineshaftBuilder
 	{
 		ArrayList<WeightedRandomChestContent> initLoot = new ArrayList<WeightedRandomChestContent>();
 		
-		initLoot.add(new WeightedRandomChestContent(Item.ingotIron.itemID, 0, 1, 5, 5));
-		initLoot.add(new WeightedRandomChestContent(Item.ingotGold.itemID, 0, 1, 3, 5));
-		initLoot.add(new WeightedRandomChestContent(Item.redstone.itemID, 0, 4, 9, 5));
-		initLoot.add(new WeightedRandomChestContent(Item.diamond.itemID, 0, 2, 3, 3));
-		initLoot.add(new WeightedRandomChestContent(Item.coal.itemID, 0, 3, 8, 10));
+		initLoot.add(new WeightedRandomChestContent(Items.iron_ingot, 0, 1, 5, 5));
+		initLoot.add(new WeightedRandomChestContent(Items.gold_ingot, 0, 1, 3, 5));
+		initLoot.add(new WeightedRandomChestContent(Items.redstone, 0, 4, 9, 5));
+		initLoot.add(new WeightedRandomChestContent(Items.diamond, 0, 2, 3, 3));
+		initLoot.add(new WeightedRandomChestContent(Items.coal, 0, 3, 8, 10));
 
-		initLoot.add(new WeightedRandomChestContent(Block.oreIron.blockID, 0, 1, 5, 5));
-		initLoot.add(new WeightedRandomChestContent(Block.oreGold.blockID, 0, 1, 3, 5));
+		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.iron_ore, 1), 1, 5, 5));
+		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.gold_ore, 1), 1, 3, 5));
 		
-		initLoot.add(new WeightedRandomChestContent(Item.pickaxeIron.itemID, 0, 1, 1, 1));
-		initLoot.add(new WeightedRandomChestContent(Item.shovelIron.itemID, 0, 1, 1, 1));
+		initLoot.add(new WeightedRandomChestContent(Items.iron_pickaxe, 0, 1, 1, 1));
+		initLoot.add(new WeightedRandomChestContent(Items.iron_shovel, 0, 1, 1, 1));
 		
-		initLoot.add(new WeightedRandomChestContent(Block.wood.blockID, 0, 2, 4, 3));
-		initLoot.add(new WeightedRandomChestContent(Block.planks.blockID, 0, 2, 4, 3));
-		initLoot.add(new WeightedRandomChestContent(Block.fence.blockID, 0, 2, 2, 3));
+		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.log, 1), 2, 4, 3));
+		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.planks, 1), 2, 4, 3));
+		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.fence, 1), 2, 2, 3));
 		
 		this.loot = initLoot.toArray(new WeightedRandomChestContent[initLoot.size()]);
 	}
@@ -212,7 +216,7 @@ public class MineshaftBuilder
 		//DO NOT call .build() in this function, it may cause additional chunks to be force loaded.
 		//Any segment that already has all chunks loaded should not be added to the segment map.
 		
-		if(!this.world.isBlockNormalCube(origX, origY - 1, origX) || origY < 48)
+		if(!this.world.getBlock(origX, origY - 1, origX).isNormalCube() || origY < 48)
 		{
 			return false;
 		}
@@ -503,11 +507,11 @@ public class MineshaftBuilder
 			fos.close();
 		} catch(FileNotFoundException e)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Failed to save Mineshaft Builders: FileNotFoundException");
+			EnviroMine.logger.log(Level.WARN, "Failed to save Mineshaft Builders: FileNotFoundException");
 			e.printStackTrace();
 		} catch(IOException e)
 		{
-			EnviroMine.logger.log(Level.WARNING, "Failed to save Mineshaft Builders: IOException!");
+			EnviroMine.logger.log(Level.WARN, "Failed to save Mineshaft Builders: IOException!");
 			e.printStackTrace();
 		}
 	}
@@ -547,19 +551,19 @@ public class MineshaftBuilder
 				fis.close();
 			} catch(FileNotFoundException e)
 			{
-				EnviroMine.logger.log(Level.WARNING, "Failed to load Mineshaft Builders: FileNotFoundException");
+				EnviroMine.logger.log(Level.WARN, "Failed to load Mineshaft Builders: FileNotFoundException");
 				e.printStackTrace();
 			} catch(IOException e)
 			{
-				EnviroMine.logger.log(Level.WARNING, "Failed to load Mineshaft Builders: IOException!");
+				EnviroMine.logger.log(Level.WARN, "Failed to load Mineshaft Builders: IOException!");
 				e.printStackTrace();
 			} catch(ClassCastException e)
 			{
-				EnviroMine.logger.log(Level.WARNING, "Failed to load Mineshaft Builders: ClassCastException! (file format error)");
+				EnviroMine.logger.log(Level.WARN, "Failed to load Mineshaft Builders: ClassCastException! (file format error)");
 				e.printStackTrace();
 			} catch(ClassNotFoundException e)
 			{
-				EnviroMine.logger.log(Level.WARNING, "Failed to load Mineshaft Builders: ClassNotFoundException! (file format error)");
+				EnviroMine.logger.log(Level.WARN, "Failed to load Mineshaft Builders: ClassNotFoundException! (file format error)");
 				e.printStackTrace();
 			}
 		}

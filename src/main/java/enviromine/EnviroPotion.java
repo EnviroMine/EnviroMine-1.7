@@ -3,10 +3,12 @@ package enviromine;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -288,6 +290,7 @@ public class EnviroPotion extends Potion
     /**
      * Sets the index for the icon displayed in the player's inventory when the status is active.
      */
+	@Override
     public EnviroPotion setIconIndex(int p_76399_1_, int p_76399_2_)
     {
         return (EnviroPotion)super.setIconIndex(p_76399_1_, p_76399_2_);

@@ -8,24 +8,25 @@ import enviromine.core.EM_Settings;
 
 public class CommandPhysics extends CommandBase
 {
-
+	
 	@Override
 	public String getCommandName() 
 	{
 		return "envirophysic";
 	}
-
-    public int getRequiredPermissionLevel()
-    {
-        return 2;
-    }
-    
+	
+	@Override
+	public int getRequiredPermissionLevel()
+	{
+		return 2;
+	}
+	
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) 
 	{
 		return "/envirophysic <on, off, toggle, status>";
 	}
-
+	
 	@Override
 	public void processCommand(ICommandSender sender, String[] astring) 
 	{
@@ -37,7 +38,7 @@ public class CommandPhysics extends CommandBase
 		}
 		try
 		{
-		
+			
 			if(astring[0].equalsIgnoreCase("toggle"))
 			{
 				this.togglePhy(sender);
@@ -68,14 +69,14 @@ public class CommandPhysics extends CommandBase
 				this.ShowUsage(sender);
 				return;
 			}
-
+			
 		} catch(Exception e)
 		{
 			this.ShowUsage(sender);
 			return;
 		}
 	}
-
+	
 	
 	public void ShowUsage(ICommandSender sender)
 	{
@@ -84,7 +85,7 @@ public class CommandPhysics extends CommandBase
 	
 	public void togglePhy( ICommandSender sender)
 	{
-
+		
 		EM_Settings.enablePhysics = !EM_Settings.enablePhysics;
 		
 		if(EM_Settings.enablePhysics)
@@ -96,18 +97,18 @@ public class CommandPhysics extends CommandBase
 			sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
 		}
 	}
-
+	
 	public void doPhy(boolean what, ICommandSender sender)
 	{
-			EM_Settings.enablePhysics = what;
-			
-			if(what)
-			{
-				sender.addChatMessage(new ChatComponentText("Enviromine Physics On"));
-			}
-			else
-			{
-				sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
-			}
+		EM_Settings.enablePhysics = what;
+		
+		if(what)
+		{
+			sender.addChatMessage(new ChatComponentText("Enviromine Physics On"));
+		}
+		else
+		{
+			sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
+		}
 	}
 }

@@ -1,7 +1,9 @@
 package enviromine.gases.types;
 
 import java.awt.Color;
+
 import net.minecraft.entity.EntityLivingBase;
+
 import enviromine.gases.EnviroGas;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
@@ -16,6 +18,7 @@ public class GasCarbonDioxide extends EnviroGas
 		this.setDecayRates(1, 0, 0, 100, 1, 1);
 	}
 	
+	@Override
 	public void applyEffects(EntityLivingBase entityLiving, int amplifier)
 	{
 		if(entityLiving.worldObj.isRemote)

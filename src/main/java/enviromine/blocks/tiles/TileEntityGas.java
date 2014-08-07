@@ -59,7 +59,7 @@ public class TileEntityGas extends TileEntity
 			EnviroGasDictionary.gasList[gasArray[0]].applyEffects(entityLiving, gasArray[1]);
 		}
 	}
-
+	
 	public void updateColor()
 	{
 		if(gases.size() <= 0)
@@ -87,7 +87,7 @@ public class TileEntityGas extends TileEntity
 		
 		this.color = fCol;
 	}
-
+	
 	public void updateOpacity()
 	{
 		if(gases.size() <= 0 || this.amount == 0)
@@ -261,6 +261,7 @@ public class TileEntityGas extends TileEntity
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
@@ -278,6 +279,7 @@ public class TileEntityGas extends TileEntity
 		}
 	}
 	
+	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.writeToNBT(par1NBTTagCompound);
@@ -347,10 +349,10 @@ public class TileEntityGas extends TileEntity
 		}
 	}
 	
-    public void checkNeedsReRender()
+	public void checkNeedsReRender()
 	{
-    	boolean shouldRender = false;
-    	
+		boolean shouldRender = false;
+		
 		for(int i = 0; i < 6; i++)
 		{
 			if(((BlockGas)this.getBlockType()).shouldSideBeRendered(this.worldObj, this.xCoord, this.yCoord, this.zCoord, i))
@@ -362,13 +364,14 @@ public class TileEntityGas extends TileEntity
 		preReqRender = curReqRender;
 		curReqRender = shouldRender;
 	}
-
+	
+	@Override
 	public Packet getDescriptionPacket()
-    {
-        NBTTagCompound nbttagcompound = new NBTTagCompound();
-        this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbttagcompound);
-    }
+	{
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
+		this.writeToNBT(nbttagcompound);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbttagcompound);
+	}
 	
 	public void addGas(int id, int addNum)
 	{
@@ -398,7 +401,7 @@ public class TileEntityGas extends TileEntity
 		this.updateSize();
 		this.sortGasesByDensity();
 	}
-
+	
 	public void subtractGas(int id, int takeNum)
 	{
 		if(takeNum <= 0)
@@ -563,7 +566,7 @@ public class TileEntityGas extends TileEntity
 		}
 		return changed;
 	}
-
+	
 	public boolean offLoadGas(int i, int j, int k, int offLoadNum)
 	{
 		if(gases.size() <= 0 || this.amount <= 0 || j < 0 || j > 255 || offLoadNum <= 0)
@@ -721,7 +724,7 @@ public class TileEntityGas extends TileEntity
 	public int[] getGasDistribution()
 	{
 		int[] dArray = new int[]{0,0,0,0,0,0};
-
+		
 		ArrayList<int[]> gDir = new ArrayList<int[]>();
 		
 		gDir.add(new int[]{-1,0,0});

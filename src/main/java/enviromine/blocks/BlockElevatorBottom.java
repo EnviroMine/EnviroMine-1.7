@@ -26,6 +26,7 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	/**
 	 * Called upon block activation (right click on the block.)
 	 */
+	@Override
 	public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
 		if(player.isSneaking())
@@ -105,6 +106,7 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	}
 	
 	//It's not a normal block, so you need this too.
+	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;

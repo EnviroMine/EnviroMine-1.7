@@ -1,9 +1,11 @@
 package enviromine.gases.types;
 
 import java.awt.Color;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+
 import enviromine.gases.EnviroGas;
 
 public class GasHydrogenSulfide extends EnviroGas
@@ -16,6 +18,7 @@ public class GasHydrogenSulfide extends EnviroGas
 		this.setVolitility(100F);
 	}
 	
+	@Override
 	public void applyEffects(EntityLivingBase entityLiving, int amplifier)
 	{
 		if(entityLiving.worldObj.isRemote)

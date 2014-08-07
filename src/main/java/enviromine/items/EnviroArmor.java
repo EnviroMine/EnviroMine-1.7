@@ -2,7 +2,9 @@ package enviromine.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
@@ -23,6 +25,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 		this.setNoRepair();
 	}
 	
+	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
 	{
 		if(stack.getItem() == ObjectHandler.camelPack)
@@ -53,6 +56,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	/**
 	 * Gets an icon index based on an item's damage value
 	 */
+	@Override
 	public IIcon getIconFromDamage(int par1)
 	{
 		if(this == ObjectHandler.camelPack && cpIcon != null)

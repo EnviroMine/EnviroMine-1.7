@@ -146,6 +146,7 @@ public class MineSegmentNormal extends MineSegment
 		}
 	}
 	
+	@Override
 	public int[] getExitPoint(int rotation)
 	{
 		int[] exitPoint = new int[3];

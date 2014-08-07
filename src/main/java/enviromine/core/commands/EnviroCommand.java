@@ -29,6 +29,7 @@ public class EnviroCommand extends CommandBase
 		return "/envirostat <playername, me> <add, set> <temp, sanity, water, air> <float>";
 	}
 	
+	@Override
     public int getRequiredPermissionLevel()
     {
         return 2;
@@ -132,6 +133,7 @@ public class EnviroCommand extends CommandBase
     /**
      * Adds the strings available in this command to the given list of tab completion options.
      */
+	@Override
     public List addTabCompletionOptions(ICommandSender sender, String[] strings)
     {
         if(strings.length == 1)

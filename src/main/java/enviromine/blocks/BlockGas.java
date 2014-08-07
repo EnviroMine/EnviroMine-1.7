@@ -45,11 +45,13 @@ public class BlockGas extends Block implements ITileEntityProvider
 		igniteList.add("" + Blocks.fire);
 	}
 	
+	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
 	
+	@Override
 	public void onBlockAdded(World world, int i, int j, int k)
 	{
 		super.onBlockAdded(world, i, j, k);
@@ -71,6 +73,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		}
 	}
 	
+	@Override
 	public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityLiving, ItemStack itemStack)
 	{
 		TileEntity tile = world.getTileEntity(i, j, k);
@@ -156,6 +159,7 @@ public class BlockGas extends Block implements ITileEntityProvider
         }
 	}
 	
+	@Override
 	public int tickRate(World world)
 	{
 		if(this  == ObjectHandler.fireGasBlock)
@@ -173,21 +177,25 @@ public class BlockGas extends Block implements ITileEntityProvider
 		return 16777215;
 	}
 	
+	@Override
 	public int getRenderType()
 	{
 		return ObjectHandler.renderGasID;
 	}
 	
+	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
 	}
 	
+	@Override
 	public boolean canCollideCheck(int par1, boolean par2)
 	{
 		return false;
 	}
 	
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
 	{
 		return null;
@@ -266,17 +274,20 @@ public class BlockGas extends Block implements ITileEntityProvider
 		}
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBlockColor()
 	{
 		return 0;
 	}
 	
+	@Override
 	public int getRenderBlockPass()
 	{
 		return 1;
 	}
 	
+	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		if(world.isRemote)
@@ -446,6 +457,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		return tile;
 	}
 	
+	@Override
 	public IIcon getIcon(int par1, int par2)
 	{
 		return gasIcon;
@@ -459,6 +471,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 	/**
 	 * Return whether this block can drop from an explosion.
 	 */
+	@Override
 	public boolean canDropFromExplosion(Explosion par1Explosion)
 	{
 		return false;
@@ -469,11 +482,13 @@ public class BlockGas extends Block implements ITileEntityProvider
         return 0;
     }
     
+    @Override
     public int quantityDropped(Random par1Random)
     {
         return 0;
     }
     
+    @Override
     public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion)
     {
     	if(world.isBlockNormalCubeDefault(x, y - 1, z, false) && this == ObjectHandler.fireGasBlock)

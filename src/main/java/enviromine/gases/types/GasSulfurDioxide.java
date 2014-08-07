@@ -1,9 +1,11 @@
 package enviromine.gases.types;
 
 import java.awt.Color;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+
 import enviromine.gases.EnviroGas;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
@@ -17,6 +19,7 @@ public class GasSulfurDioxide extends EnviroGas
 		this.setDensity(3F);
 	}
 	
+	@Override
 	public void applyEffects(EntityLivingBase entityLiving, int amplifier)
 	{
 		if(entityLiving.worldObj.isRemote)

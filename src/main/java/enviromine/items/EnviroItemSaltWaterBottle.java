@@ -2,9 +2,11 @@ package enviromine.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EnviroPotion;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -32,6 +34,7 @@ public class EnviroItemSaltWaterBottle extends Item
 		setTextureName("potion");
 	}
 	
+	@Override
 	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
 		if(!par3EntityPlayer.capabilities.isCreativeMode)
@@ -82,15 +85,17 @@ public class EnviroItemSaltWaterBottle extends Item
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
 	 */
+	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
 	{
 		return false;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	/**
 	 * Gets an icon index based on an item's damage value
 	 */
+	@Override
+	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int par1)
 	{
 		return this.field_94590_d;
@@ -102,6 +107,7 @@ public class EnviroItemSaltWaterBottle extends Item
 		return PotionHelper.func_77915_a(par1, false);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
 	{
@@ -111,6 +117,7 @@ public class EnviroItemSaltWaterBottle extends Item
 	/**
 	 * returns the action that specifies what animation to play when the items is being used
 	 */
+	@Override
 	public EnumAction getItemUseAction(ItemStack par1ItemStack)
 	{
 		return EnumAction.drink;
@@ -119,11 +126,13 @@ public class EnviroItemSaltWaterBottle extends Item
 	/**
 	 * How long it takes to use or consume an item
 	 */
+	@Override
 	public int getMaxItemUseDuration(ItemStack par1ItemStack)
 	{
 		return 32;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean requiresMultipleRenderPasses()
 	{
@@ -133,12 +142,14 @@ public class EnviroItemSaltWaterBottle extends Item
 	/**
 	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
 	 */
+	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
 		par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
 		return par1ItemStack;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister)
 	{
@@ -147,10 +158,11 @@ public class EnviroItemSaltWaterBottle extends Item
 		this.field_94592_ct = par1IconRegister.registerIcon(this.getIconString() + "_" + "overlay");
 	}
 	
-	@SideOnly(Side.CLIENT)
 	/**
 	 * Gets an icon index based on an item's damage value and the given render pass
 	 */
+	@Override
+	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int par1, int par2)
 	{
 		return par2 == 0 ? this.field_94592_ct : super.getIconFromDamageForRenderPass(par1, par2);

@@ -564,7 +564,7 @@ public class EM_ConfigHandler
 		
 		String name = config.get(category, BPName[0], "").getString();
 		int metaData = config.get(category, BPName[1], 0).getInt(0);
-		int dropID = config.get(category, BPName[2], 0).getInt(0);
+		String dropName = config.get(category, BPName[2], 0).getString();
 		int dropMeta = config.get(category, BPName[3], 0).getInt(0);
 		int dropNum = config.get(category, BPName[4], 0).getInt(0);
 		boolean enableTemp = config.get(category, BPName[5], false).getBoolean(false);
@@ -604,7 +604,7 @@ public class EM_ConfigHandler
 			canHang = true;
 		}
 		
-		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropID, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
+		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropName, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
 		
 		if(metaData < 0)
 		{

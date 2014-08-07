@@ -138,6 +138,12 @@ public class EM_StatusManager
 		return trackerList.get(uuid);
 	}
 	
+	public static EnviroDataTracker lookupTrackerFromUsername(String username)
+	{
+		EntityLivingBase entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
+		return lookupTracker(entity);
+	}
+	
 	private static Stopwatch timer = Stopwatch.createUnstarted();
 	
 	public static float[] getSurroundingData(EntityLivingBase entityLiving, int range)

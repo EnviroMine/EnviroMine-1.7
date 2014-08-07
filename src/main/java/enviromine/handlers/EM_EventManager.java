@@ -274,7 +274,9 @@ public class EM_EventManager
 	{
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
-			Minecraft.getMinecraft().sndManager.playSound(event.name, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ, 1.0F, 1.0F);
+			Minecraft.getMinecraft().thePlayer.playSound(event.name, event.volume, event.pitch);
+			//TODO Old 1.64 version
+			//Minecraft.getMinecraft().sndManager.playSound(event.name, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ, 1.0F, 1.0F);
 			event.setCanceled(true);
 		}
 	}

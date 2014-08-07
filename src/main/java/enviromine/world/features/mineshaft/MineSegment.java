@@ -1,13 +1,17 @@
 package enviromine.world.features.mineshaft;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-import enviromine.core.EnviroMine;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
+
+import enviromine.core.EnviroMine;
+
+import java.util.ArrayList;
+
+import org.apache.logging.log4j.Level;
 
 public abstract class MineSegment
 {
@@ -134,7 +138,7 @@ public abstract class MineSegment
 		
 		if(chunks.size() <= 0)
 		{
-			EnviroMine.logger.log(Level.WARNING, "ERROR: MineSegment is registering 0 chunks! It will not generate!");
+			EnviroMine.logger.log(Level.WARN, "ERROR: MineSegment is registering 0 chunks! It will not generate!");
 		}
 		
 		for(int i = 0; i < chunks.size(); i++)
@@ -188,7 +192,7 @@ public abstract class MineSegment
 		return true;
 	}
 	
-	public void fillArea(int i1, int j1, int k1, int i2, int j2, int k2, int id, int meta)
+	public void fillArea(int i1, int j1, int k1, int i2, int j2, int k2, Block block, int meta)
 	{
 		for(int i = i1; i <= i2; i++)
 		{
@@ -196,33 +200,33 @@ public abstract class MineSegment
 			{
 				for(int k = k1; k <= k2; k++)
 				{
-					this.setBlock(i, j, k, id, meta);
+					this.setBlock(i, j, k, block, meta);
 				}
 			}
 		}
 	}
 	
-	public void fillAndRotate(int i1, int j1, int k1, int i2, int j2, int k2, int id, int meta)
+	public void fillAndRotate(int i1, int j1, int k1, int i2, int j2, int k2, Block block, int meta)
 	{
-		this.fillArea(i1, j1, k1, i2, j2, k2, id, this.rotateMeta(meta));
+		this.fillArea(i1, j1, k1, i2, j2, k2, block, this.rotateMeta(meta));
 	}
 	
-	public void setBlock(int x, int y, int z, int id, int meta)
+	public void setBlock(int x, int y, int z, Block block, int meta)
 	{
 		if(x > maxX || x < minX || y > maxY || y < minY || z > maxZ || z < minZ)
 		{
-			EnviroMine.logger.log(Level.WARNING, this.getClass().getSimpleName() + " tried to place block out of bounds!");
+			EnviroMine.logger.log(Level.WARN, this.getClass().getSimpleName() + " tried to place block out of bounds!");
 			return;
 		}
 		
 		if(decay == 0 || builder.rand.nextInt(50) > decay)
 		{
-			this.world.setBlock(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z), id, meta, 2);
+			this.world.setBlock(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z), block, meta, 2);
 		} else
 		{
-			if(id != 0 && Block.blocksList[id].blockMaterial == Material.wood && builder.rand.nextBoolean())
+			if(block != Blocks.air && block.getMaterial() == Material.wood && builder.rand.nextBoolean())
 			{
-				this.world.setBlock(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z), Block.vine.blockID, 0, 2);
+				this.world.setBlock(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z), Blocks.vine, 0, 2);
 			} else
 			{
 				this.world.setBlockToAir(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z));
@@ -230,14 +234,14 @@ public abstract class MineSegment
 		}
 	}
 	
-	public void setBlockAndRotate(int x, int y, int z, int id, int meta)
+	public void setBlockAndRotate(int x, int y, int z, Block block, int meta)
 	{
-		this.setBlock(x, y, z, id, this.rotateMeta(meta));
+		this.setBlock(x, y, z, block, this.rotateMeta(meta));
 	}
 	
-	public int getBlockID(int x, int y, int z)
+	public Block getBlock(int x, int y, int z)
 	{
-		return this.world.getBlockId(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z));
+		return this.world.getBlock(this.xOffset(x, z), this.yOffset(y), this.zOffset(x, z));
 	}
 	
 	public int getBlockMeta(int x, int y, int z)
@@ -256,8 +260,8 @@ public abstract class MineSegment
 			return;
 		}
 		
-		world.setBlock(i, j, k, Block.chest.blockID);
-		TileEntityChest chestTile = (TileEntityChest)world.getBlockTileEntity(i, j, k);
+		world.setBlock(i, j, k, Blocks.chest);
+		TileEntityChest chestTile = (TileEntityChest)world.getTileEntity(i, j, k);
 		
 		if(chestTile != null)
 		{

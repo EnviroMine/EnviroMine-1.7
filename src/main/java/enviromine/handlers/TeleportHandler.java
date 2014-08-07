@@ -1,21 +1,19 @@
 package enviromine.handlers;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.PortalPosition;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class TeleportHandler extends Teleporter
 {
@@ -28,7 +26,7 @@ public class TeleportHandler extends Teleporter
 	 * A list of valid keys for the destinationCoordainteCache. These are based on the X & Z of the players initial
 	 * location.
 	 */
-	private final List destinationCoordinateKeys = new ArrayList();
+	private final List<Long> destinationCoordinateKeys = new ArrayList<Long>();
 	
 	public TeleportHandler(WorldServer par1WorldServer)
 	{
@@ -109,10 +107,10 @@ public class TeleportHandler extends Teleporter
 					
 					for (int i2 = this.worldServerInstance.getActualHeight() - 1; i2 >= 0; --i2)
 					{
-						if (this.worldServerInstance.getBlockId(k1, i2, l1) == ObjectHandler.elevatorBottom.blockID && this.worldServerInstance.getBlockId(k1, i2 + 1, l1) == ObjectHandler.elevatorTop.blockID)
+						if (this.worldServerInstance.getBlock(k1, i2, l1) == ObjectHandler.elevatorBottom && this.worldServerInstance.getBlock(k1, i2 + 1, l1) == ObjectHandler.elevatorTop)
 						{
 							breakLoop = true;
-							while (this.worldServerInstance.getBlockId(k1, i2 - 1, l1) == ObjectHandler.elevatorBottom.blockID || this.worldServerInstance.getBlockId(k1, i2 - 1, l1) == ObjectHandler.elevatorTop.blockID)
+							while (this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevatorBottom || this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevatorTop)
 							{
 								--i2;
 							}
@@ -152,7 +150,7 @@ public class TeleportHandler extends Teleporter
 		{
 			if (flag)
 			{
-				this.destinationCoordinateCache.add(j1, new PortalPosition(this, i, j, k, this.worldServerInstance.getTotalWorldTime()));
+				this.destinationCoordinateCache.add(j1, new PortalPosition(i, j, k, this.worldServerInstance.getTotalWorldTime()));
 				this.destinationCoordinateKeys.add(Long.valueOf(j1));
 			}
 			
@@ -182,7 +180,7 @@ public class TeleportHandler extends Teleporter
 		{
 			for(int checkH = 120; checkH >= 32; checkH--)
 			{
-				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.isBlockNormalCube(i, checkH - 1, k))
+				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.getBlock(i, checkH - 1, k).isNormalCube())
 				{
 					j = checkH;
 					break;
@@ -199,7 +197,7 @@ public class TeleportHandler extends Teleporter
 		{
 			for(int checkH = 9; checkH >= 5; checkH--)
 			{
-				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.isBlockNormalCube(i, checkH - 1, k))
+				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.getBlock(i, checkH - 1, k).isNormalCube())
 				{
 					j = checkH;
 					break;
@@ -224,17 +222,17 @@ public class TeleportHandler extends Teleporter
 					{
 						if(y == j - 1)
 						{
-							if(!this.worldServerInstance.isBlockNormalCube(x, y, z));
+							if(!this.worldServerInstance.getBlock(x, y, z).isNormalCube());
 							{
-								this.worldServerInstance.setBlock(x, y, z, Block.planks.blockID);
+								this.worldServerInstance.setBlock(x, y, z, Blocks.planks);
 								
 								if(x != i && z != k)
 								{
 									int supY = y - 1;
 									
-									while(!this.worldServerInstance.isBlockNormalCube(x, supY, z) && supY >= 0)
+									while(!this.worldServerInstance.getBlock(x, supY, z).isNormalCube() && supY >= 0)
 									{
-										this.worldServerInstance.setBlock(x, supY, z, Block.fence.blockID);
+										this.worldServerInstance.setBlock(x, supY, z, Blocks.fence);
 										supY -= 1;
 									}
 								}
@@ -248,8 +246,8 @@ public class TeleportHandler extends Teleporter
 			}
 		}
 		
-		this.worldServerInstance.setBlock(i, j + 1, k, ObjectHandler.elevatorTop.blockID);
-		this.worldServerInstance.setBlock(i, j, k, ObjectHandler.elevatorBottom.blockID);
+		this.worldServerInstance.setBlock(i, j + 1, k, ObjectHandler.elevatorTop);
+		this.worldServerInstance.setBlock(i, j, k, ObjectHandler.elevatorBottom);
 		
 		return true;
 	}
@@ -263,12 +261,12 @@ public class TeleportHandler extends Teleporter
 	{
 		if (par1 % 100L == 0L)
 		{
-			Iterator iterator = this.destinationCoordinateKeys.iterator();
+			Iterator<Long> iterator = this.destinationCoordinateKeys.iterator();
 			long j = par1 - 600L;
 			
 			while (iterator.hasNext())
 			{
-				Long olong = (Long)iterator.next();
+				Long olong = iterator.next();
 				PortalPosition portalposition = (PortalPosition)this.destinationCoordinateCache.getValueByKey(olong.longValue());
 				
 				if (portalposition == null || portalposition.lastUpdateTime < j)

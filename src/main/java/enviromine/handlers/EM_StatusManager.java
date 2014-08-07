@@ -1,23 +1,5 @@
 package enviromine.handlers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import com.google.common.base.Stopwatch;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.EnviroPotion;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gui.EM_GuiEnviroMeters;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.ItemProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -49,6 +31,26 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+
+import enviromine.EnviroPotion;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gui.EM_GuiEnviroMeters;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.ItemProperties;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import com.google.common.base.Stopwatch;
 
 public class EM_StatusManager
 {
@@ -105,27 +107,7 @@ public class EM_StatusManager
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
 		}
 		
-		try
-		{
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			DataOutputStream outputStream = new DataOutputStream(bos);
-			
-			outputStream.writeBytes(dataString);
-			
-			Packet250CustomPayload packet = new Packet250CustomPayload();
-			packet.channel = EM_Settings.Channel;
-			packet.data = bos.toByteArray();
-			packet.length = bos.size();
-			PacketDispatcher.sendPacketToAllPlayers(packet);
-			
-			outputStream.close();
-			bos.close();
-		} catch (IOException e)
-		{
-			EnviroMine.logger.log(Level.SEVERE, "EnviroMine failed to build tracker sync packet!", e);
-		}
-		
-		
+		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));
 	}
 	
 	public static EnviroDataTracker lookupTracker(EntityLivingBase entity)
@@ -151,9 +133,9 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EnviroDataTracker lookupTrackerFromUsername(String username)
+	public static EnviroDataTracker lookupTrackerFromUUID(UUID uuid)
 	{
-		return trackerList.get(username);
+		return trackerList.get(uuid);
 	}
 	
 	private static Stopwatch timer = Stopwatch.createUnstarted();
@@ -265,7 +247,7 @@ public class EM_StatusManager
 					}
 					
 					dist = (float)entityLiving.getDistance(i + x, j + y, k + z);
-						
+					
 					Block block = Blocks.air;
 					int meta = 0;
 					
@@ -359,8 +341,8 @@ public class EM_StatusManager
 						if(temp < getTempFalloff(100, dist, range))
 						{
 							temp = getTempFalloff(100, dist, range);
-
-
+							
+							
 						}
 					} else if((block == Blocks.torch || block == Blocks.lit_furnace))
 					{
@@ -371,7 +353,7 @@ public class EM_StatusManager
 						if(temp < getTempFalloff(75, dist, range))
 						{
 							temp = getTempFalloff(75, dist, range);
-
+							
 						}
 					} else if(block instanceof BlockLeavesBase || block instanceof BlockFlower || block == Blocks.waterlily || block == Blocks.grass)
 					{
@@ -403,7 +385,7 @@ public class EM_StatusManager
 						if(temp < getTempFalloff(50, dist, range))
 						{
 							temp = getTempFalloff(50, dist, range);
-
+							
 						}
 					} else if(block == Blocks.flowing_water || block == Blocks.water || (block == Blocks.cauldron && meta > 0))
 					{
@@ -1161,7 +1143,7 @@ public class EM_StatusManager
 	{
 		float temp= 0F;
 		
-
+		
 		return temp;
 		
 	}

@@ -16,7 +16,7 @@ public class HandlingTheThing
 {
 	public static void stalkPlayer(EntityPlayer player)
 	{
-		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(player.username);
+		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(player.getCommandSenderName());
 		int i = MathHelper.floor_double(player.posX);
 		int j = MathHelper.floor_double(player.posY);
 		int k = MathHelper.floor_double(player.posZ);

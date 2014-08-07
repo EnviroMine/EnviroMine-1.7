@@ -4,7 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
@@ -335,7 +338,8 @@ public class TileEntityGas extends TileEntity
 			} else
 			{
 				Packet packet = this.getDescriptionPacket();
-				PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId, packet);
+				
+				MinecraftServer.getServer().getConfigurationManager().sendToAllNear(this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId, packet);
 			}
 		} else
 		{
@@ -363,7 +367,7 @@ public class TileEntityGas extends TileEntity
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbttagcompound);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbttagcompound);
     }
 	
 	public void addGas(int id, int addNum)
@@ -527,7 +531,7 @@ public class TileEntityGas extends TileEntity
 			
 			TileEntity tile = this.worldObj.getTileEntity(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]);
 			
-			if((tile != null && tile instanceof TileEntityGas) || this.worldObj.getBlockId(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]) == 0)
+			if((tile != null && tile instanceof TileEntityGas) || this.worldObj.getBlock(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2]) == Blocks.air)
 			{
 				if(this.offLoadGas(this.xCoord + rDir[0], this.yCoord + rDir[1], this.zCoord + rDir[2], rDir[3]))
 				{
@@ -572,9 +576,9 @@ public class TileEntityGas extends TileEntity
 		TileEntity tile = this.worldObj.getTileEntity(i, j, k);
 		if(tile == null)
 		{
-			if(this.worldObj.getBlockId(i, j, k) == 0 && this.getBlockType().blockID != 0)
+			if(this.worldObj.getBlock(i, j, k) == Blocks.air && this.getBlockType() != Blocks.air)
 			{
-				this.worldObj.setBlock(i, j, k, this.getBlockType().blockID);
+				this.worldObj.setBlock(i, j, k, this.getBlockType());
 				
 				if(this.worldObj.getTileEntity(i, j, k) == null)
 				{
@@ -813,11 +817,11 @@ public class TileEntityGas extends TileEntity
 	}
 	
 	@Override
-	public void onDataPacket(INetworkManager netManager, Packet132TileEntityData packet)
+	public void onDataPacket(NetworkManager netManager, S35PacketUpdateTileEntity packet)
 	{
-		if(packet.actionType == 0)
+		if(packet.func_148853_f() == 0)
 		{
-			this.readFromNBT(packet.data);
+			this.readFromNBT(packet.func_148857_g());
 		}
 	}
 }

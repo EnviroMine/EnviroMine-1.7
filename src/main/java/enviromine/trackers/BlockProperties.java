@@ -13,7 +13,7 @@ public class BlockProperties
 	public int maxFall;
 	public int supportDist;
 	
-	public int dropID;
+	public String dropName;
 	public int dropMeta;
 	public int dropNum;
 	
@@ -28,7 +28,7 @@ public class BlockProperties
 	public boolean canHang;
 	public boolean wetSlide;
 	
-	public BlockProperties(String name, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, int dropID, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
+	public BlockProperties(String name, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, String dropName, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
 	{
 		this.name = name;
 		this.meta = meta;
@@ -36,7 +36,7 @@ public class BlockProperties
 		this.minFall = minFall;
 		this.maxFall = maxFall;
 		this.supportDist = supportDist;
-		this.dropID = dropID;
+		this.dropName = dropName;
 		this.dropMeta = dropMeta;
 		this.dropNum = dropNum;
 		this.enableTemp = enableTemp;

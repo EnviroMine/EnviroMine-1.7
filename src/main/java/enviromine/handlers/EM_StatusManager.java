@@ -1271,7 +1271,7 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EntityPlayer findPlayer(String username)
+	public static EntityPlayer findPlayer(UUID uuid)
 	{
 		World[] worlds = new World[1];
 		
@@ -1295,11 +1295,11 @@ public class EM_StatusManager
 			{
 				continue;
 			}
-			EntityPlayer player = worlds[i].getPlayerEntityByName(username);
+			EntityPlayer player = worlds[i].func_152378_a(uuid);
 			
 			if(player != null)
 			{
-				if(!player.isDead)
+				if(player.isEntityAlive())
 				{
 					return player;
 				}

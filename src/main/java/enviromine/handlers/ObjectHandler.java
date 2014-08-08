@@ -7,15 +7,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.util.EnumHelper;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.BlockElevatorBottom;
 import enviromine.blocks.BlockElevatorTop;

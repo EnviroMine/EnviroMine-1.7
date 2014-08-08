@@ -1,13 +1,14 @@
 package enviromine.world;
 
-import java.util.ArrayList;
-import enviromine.core.EM_Settings;
-import enviromine.handlers.EM_PhysManager;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
+import enviromine.core.EM_Settings;
+import enviromine.handlers.EM_PhysManager;
+
+import java.util.ArrayList;
 
 public class Earthquake
 {

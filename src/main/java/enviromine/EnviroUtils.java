@@ -1,19 +1,22 @@
 package enviromine;
 
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.potion.Potion;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteOrder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.potion.Potion;
-import net.minecraftforge.common.util.ForgeDirection;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 
 public class EnviroUtils
 {
@@ -104,7 +107,7 @@ public class EnviroUtils
 		int G = (int)((aG * iRatio) + (bG * ratio));
 		int B = (int)((aB * iRatio) + (bB * ratio));
 		
-		return new Color(R, G, B);
+		return new Color(R, G, B, A);
 		//return A << 24 | R << 16 | G << 8 | B;
 	}
 	
@@ -228,9 +231,7 @@ public class EnviroUtils
 		float f1 = (float)(par5 >> 16 & 255) / 255.0F;
 		float f2 = (float)(par5 >> 8 & 255) / 255.0F;
 		float f3 = (float)(par5 & 255) / 255.0F;
-		
-		Minecraft mc = Minecraft.getMinecraft();
-		
+				
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(false);

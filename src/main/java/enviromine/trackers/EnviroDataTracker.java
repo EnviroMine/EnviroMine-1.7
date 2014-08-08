@@ -398,7 +398,7 @@ public class EnviroDataTracker
 		
 			if(chillPrevTime == 0) 
 			{
-				chillPrevTime =  mc.getSystemTime() - 17001;
+				chillPrevTime =  Minecraft.getSystemTime() - 17001;
 
 					if(bodyTemp >= 43F)
 					{
@@ -440,14 +440,14 @@ public class EnviroDataTracker
 					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.hypothermia.id, 200, 0));
 				}
 				
-				System.out.println("Check:" + mc.getSystemTime() +"-"+ chillPrevTime +"="+(mc.getSystemTime() - chillPrevTime));
+				System.out.println("Check:" + Minecraft.getSystemTime() +"-"+ chillPrevTime +"="+(Minecraft.getSystemTime() - chillPrevTime));
 				
-				if ((mc.getSystemTime() - chillPrevTime) > 17000)
+				if ((Minecraft.getSystemTime() - chillPrevTime) > 17000)
 				{
 					mc.thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
 					//TODO OLD
 					//mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
-					chillPrevTime = mc.getSystemTime();
+					chillPrevTime = Minecraft.getSystemTime();
 				}
 			}
 			
@@ -471,12 +471,12 @@ public class EnviroDataTracker
 					}
 				}
 				
-				if ((mc.getSystemTime() - chillPrevTime) > 1700)
+				if ((Minecraft.getSystemTime() - chillPrevTime) > 1700)
 				{
 					mc.thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
 					//TODO OLD
 					//mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
-					chillPrevTime = mc.getSystemTime();
+					chillPrevTime = Minecraft.getSystemTime();
 				}
 			}
 			

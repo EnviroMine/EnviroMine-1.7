@@ -1,6 +1,5 @@
 package enviromine.trackers;
 
-import net.minecraft.block.Block;
 
 public class BlockProperties
 {

@@ -1,14 +1,12 @@
 package enviromine.handlers;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.AchievementPage;
+
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class EnviroAchievements
 {

@@ -909,7 +909,6 @@ public class EM_ConfigHandler
 		
 		Configuration config = new Configuration(dimensionFile, true);
 		config.load();
-		String worldname = "";
 		
 		for(int p = 0; p <= DimensionIds.length - 1; p++)
 		{
@@ -980,7 +979,6 @@ public class EM_ConfigHandler
 		
 		Configuration config = new Configuration(dimensionFile, true);
 		config.load();
-		String worldname = "";
 		for(int p = 0; p <= 2; p++)
 		{
 			WorldProvider dimension = WorldProvider.getProviderForDimension(dimensionIds[p]);
@@ -1387,7 +1385,6 @@ public class EM_ConfigHandler
 	{
 		boolean CommaSplit = false;
 		boolean ColonSplit = false;
-		List<String> CommaList = new ArrayList<String>();
 		List<String> ColonList = new ArrayList<String>();
 		List<Integer> ids = new ArrayList<Integer>();
 		String[] idSplitComma = null;

@@ -6,22 +6,25 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EnviroUtils;
 import enviromine.core.EM_Settings;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
@@ -793,7 +796,6 @@ public class EM_GuiEnviroMeters extends Gui
 					
 					if(EM_Settings.breathSound == true)
 					{
-						EntityPlayer player = mc.thePlayer;
 						ISound sound = null; //TODO ("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F)
 						mc.getSoundHandler().playSound(sound);
 					}

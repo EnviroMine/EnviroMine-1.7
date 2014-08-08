@@ -30,8 +30,6 @@ public class RenderCameraShake extends EntityRenderer
 		offsetY = 0.2F;
 		
 		double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
-		float tempPitch = mc.thePlayer.cameraPitch;
-		float tempYaw = mc.thePlayer.cameraYaw;
 		
 		mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
 		mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);

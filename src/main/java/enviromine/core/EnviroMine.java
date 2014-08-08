@@ -63,10 +63,12 @@ public class EnviroMine
 		// Load Configuration files And Custom files
 		EM_ConfigHandler.initConfig();
 		
-		ObjectHandler.RegisterItems();
-		ObjectHandler.RegisterBlocks();
-		ObjectHandler.RegisterGases();
-		ObjectHandler.RegisterEntities();
+		ObjectHandler.initItems();
+		ObjectHandler.registerItems();
+		ObjectHandler.initBlocks();
+		ObjectHandler.registerBlocks();
+		ObjectHandler.registerGases();
+		ObjectHandler.registerEntities();
 		
 		if(EM_Settings.shaftGen == true)
 		{
@@ -86,8 +88,7 @@ public class EnviroMine
 	{
 		proxy.init(event);
 		
-		ObjectHandler.RegisterRecipes();
-		ObjectHandler.RegisterNames();
+		ObjectHandler.registerRecipes();
 		
 		EnviroUtils.extendPotionList();
 		

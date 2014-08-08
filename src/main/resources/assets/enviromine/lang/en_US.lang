@@ -1,3 +1,17 @@
 language.name=English
 language.region=US
 language.code=en_US
+
+item.badwater.name=Dirty Water Bottle
+item.saltwater.name=Salt Water Bottle
+item.coldwater.name=Cold Water Bottle
+item.camelpack.name=Camel Pack
+item.gasmask.name=Gas Mask
+item.hardhat.name=Hard Hat
+item.airfilter.name=Air Filter
+item.rottenfood.name=Rotten Food
+
+tile.elevator_top.name=Elevator Top
+tile.elevator_bottom.name=Elevator Bottom
+
+itemGroup.enviroTab=EnviroMine

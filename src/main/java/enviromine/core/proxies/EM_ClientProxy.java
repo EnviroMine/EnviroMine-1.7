@@ -58,6 +58,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		super.init(event);
 		EnviroKeybinds.Init();
+		ObjectHandler.initRenderers();
 	}
 	
 	@Override

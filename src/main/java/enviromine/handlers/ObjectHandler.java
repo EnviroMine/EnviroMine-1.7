@@ -15,7 +15,6 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.BlockElevatorBottom;
@@ -59,44 +58,62 @@ public class ObjectHandler
 	
 	public static int renderGasID;
 	
-	public static void RegisterItems()
+	public static void initItems()
 	{
-		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.item.badwater").setCreativeTab(EnviroMine.enviroTab);
-		saltWaterBottle = new EnviroItemSaltWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.item.saltwater").setCreativeTab(EnviroMine.enviroTab);
-		coldWaterBottle = new EnviroItemColdWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.item.coldwater").setCreativeTab(EnviroMine.enviroTab);
-		airFilter = new Item().setMaxStackSize(1).setUnlocalizedName("enviromine.item.airfilter").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:air_filter");
-		rottenFood = new RottenFood(1).setMaxStackSize(64).setUnlocalizedName("enviromine.item.rottenfood").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:rot");
+		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("badwater").setCreativeTab(EnviroMine.enviroTab);
+		saltWaterBottle = new EnviroItemSaltWaterBottle().setMaxStackSize(1).setUnlocalizedName("saltwater").setCreativeTab(EnviroMine.enviroTab);
+		coldWaterBottle = new EnviroItemColdWaterBottle().setMaxStackSize(1).setUnlocalizedName("coldwater").setCreativeTab(EnviroMine.enviroTab);
+		airFilter = new Item().setMaxStackSize(1).setUnlocalizedName("airfilter").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:air_filter");
+		rottenFood = new RottenFood(1).setMaxStackSize(64).setUnlocalizedName("rottenfood").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:rot");
 		
 		camelPackMaterial = EnumHelper.addArmorMaterial("camelPack", 100, new int[]{1, 0, 0, 0}, 0);
 		
-		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("enviromine.item.camelpack").setCreativeTab(EnviroMine.enviroTab);
-		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("enviromine.item.gasmask").setCreativeTab(EnviroMine.enviroTab);
-		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("enviromine.item.hardhat").setCreativeTab(EnviroMine.enviroTab);
-		//GameRegistry.registerItem(airFilter, "enviromine.airFilter");
+		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("camelpack").setCreativeTab(EnviroMine.enviroTab);
+		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("gasmask").setCreativeTab(EnviroMine.enviroTab);
+		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("hardhat").setCreativeTab(EnviroMine.enviroTab);
 	}
 	
-	public static void RegisterBlocks()
+	public static void registerItems()
+	{
+		GameRegistry.registerItem(badWaterBottle, "badWaterBottle");
+		GameRegistry.registerItem(saltWaterBottle, "saltWaterBottle");
+		GameRegistry.registerItem(coldWaterBottle, "coldWaterBottle");
+		GameRegistry.registerItem(airFilter, "airFilter");
+		GameRegistry.registerItem(rottenFood, "rottenFood");
+		GameRegistry.registerItem(camelPack, "camelPack");
+		GameRegistry.registerItem(gasMask, "gasMask");
+		GameRegistry.registerItem(hardHat, "hardHat");
+	}
+	
+	public static void initBlocks()
 	{
 		//elevator = new BlockElevator(EM_Settings.blockElevatorID, Material.iron);
-		gasBlock = new BlockGas(EM_Settings.gasBlockID, Material.air).setBlockName("enviromine.block.gas").setCreativeTab(EnviroMine.enviroTab);
-		fireGasBlock = new BlockGas(EM_Settings.fireGasBlockID, Material.air).setBlockName("enviromine.block.firegas").setCreativeTab(EnviroMine.enviroTab).setLightLevel(1.0F);
+		gasBlock = new BlockGas(EM_Settings.gasBlockID, Material.air).setBlockName("gas").setCreativeTab(EnviroMine.enviroTab);
+		fireGasBlock = new BlockGas(EM_Settings.fireGasBlockID, Material.air).setBlockName("firegas").setCreativeTab(EnviroMine.enviroTab).setLightLevel(1.0F);
 		
-		GameRegistry.registerBlock(gasBlock, "enviromine.block.gas");
-		GameRegistry.registerBlock(fireGasBlock, "enviromine.block.firegas");
-		renderGasID = RenderingRegistry.getNextAvailableRenderId();
-		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
-		
-		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.block.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
-		GameRegistry.registerBlock(elevatorTop, "enviromine.block.elevator_top");
-		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.block.elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
-		GameRegistry.registerBlock(elevatorBottom, "enviromine.block.elevator_bottom");
+		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
+		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
 	}
 	
-	public static void RegisterGases()
+	public static void registerBlocks()
+	{
+		GameRegistry.registerBlock(gasBlock, "gas");
+		GameRegistry.registerBlock(fireGasBlock, "firegas");
+		GameRegistry.registerBlock(elevatorTop, "elevator_top");
+		GameRegistry.registerBlock(elevatorBottom, "elevator_bottom");
+	}
+	
+	public static void initRenderers()
+	{
+		renderGasID = RenderingRegistry.getNextAvailableRenderId();
+		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
+	}
+	
+	public static void registerGases()
 	{
 	}
 	
-	public static void RegisterEntities()
+	public static void registerEntities()
 	{
 		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", EM_Settings.physBlockID);
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
@@ -111,7 +128,7 @@ public class ObjectHandler
 		}
 	}
 	
-	public static void RegisterRecipes()
+	public static void registerRecipes()
 	{
 		GameRegistry.addSmelting(badWaterBottle, new ItemStack(Items.potionitem, 1, 0), 0.0F);
 		GameRegistry.addSmelting(saltWaterBottle, new ItemStack(Items.potionitem, 1, 0), 0.0F);
@@ -134,24 +151,9 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(elevatorBottom), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
 	}
 	
-	public static void RegisterNames()
-	{
-		//TODO Should be Changed 1.7 
-		LanguageRegistry.addName(badWaterBottle, "Dirty Water Bottle");
-		LanguageRegistry.addName(saltWaterBottle, "Salt Water Bottle");
-		LanguageRegistry.addName(coldWaterBottle, "Cold Water Bottle");
-		LanguageRegistry.addName(camelPack, "Camel Pack");
-		LanguageRegistry.addName(gasMask, "Gas Mask");
-		LanguageRegistry.addName(hardHat, "Hard Hat");
-		LanguageRegistry.addName(airFilter, "Air Filter");
-		LanguageRegistry.addName(elevatorTop, "Elevator Top");
-		LanguageRegistry.addName(elevatorBottom, "Elevator Bottom");
-		LanguageRegistry.addName(rottenFood, "Rotten Food");
-	}
-	
 	//TODO Should Probably be be Removed Sounds.Json now controls this
 	//@ForgeSubscribe
-	public void RegisterSounds(SoundLoadEvent event)
+	public void registerSounds(SoundLoadEvent event)
 	{
 		/*
 		// You add them the same way as you add blocks.

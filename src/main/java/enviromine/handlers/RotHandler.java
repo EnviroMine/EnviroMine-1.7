@@ -1,14 +1,16 @@
 package enviromine.handlers;
 
-import enviromine.core.EM_Settings;
-import enviromine.items.RottenFood;
-import enviromine.trackers.RotProperties;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import enviromine.core.EM_Settings;
+import enviromine.items.RottenFood;
+import enviromine.trackers.RotProperties;
 
 public class RotHandler
 {
@@ -18,17 +20,17 @@ public class RotHandler
 		RotProperties rotProps = null;
 		long rotTime = (long)(EM_Settings.foodRotTime * 24000L);
 		
-		if(EM_Settings.rotProperties.containsKey("" + item.itemID))
+		if(EM_Settings.rotProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem())))
 		{
-			rotProps = EM_Settings.rotProperties.get("" + item.itemID);
+			rotProps = EM_Settings.rotProperties.get(Item.itemRegistry.getNameForObject(item.getItem()));
 			rotTime = (long)(rotProps.days * 24000L);
-		} else if(EM_Settings.rotProperties.containsKey("" + item.itemID + "," + item.getItemDamage()))
+		} else if(EM_Settings.rotProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
 		{
-			rotProps = EM_Settings.rotProperties.get("" + item.itemID + "," + item.getItemDamage());
+			rotProps = EM_Settings.rotProperties.get(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood) && rotProps == null) || (rotTime < 0 && rotProps != null) || item.getItem() instanceof RottenFood || item.itemID == Item.rottenFlesh.itemID)
+		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood) && rotProps == null) || (rotTime < 0 && rotProps != null) || item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh)
 		{
 			return item;
 		} else
@@ -48,7 +50,7 @@ public class RotHandler
 			} else if(UBD + rotTime < world.getTotalWorldTime())
 			{
 				ItemStack rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);
-				rotStack.setItemName("Rotten " + item.getDisplayName());
+				rotStack.setStackDisplayName("Rotten " + item.getDisplayName());
 				return rotStack;
 			} else
 			{

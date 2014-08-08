@@ -1,6 +1,5 @@
 package enviromine.core;
 
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,8 +9,6 @@ import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
-
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,9 +21,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EM_VillageMineshaft;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -39,10 +33,8 @@ import enviromine.handlers.ObjectHandler;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
 
 @Mod(modid = EM_Settings.ID, name = EM_Settings.Name, version = EM_Settings.Version)
 public class EnviroMine
@@ -51,7 +43,7 @@ public class EnviroMine
 	public static BiomeGenBase caves;
 	public static CreativeTabs enviroTab = new EnviroTab("enviroTab");
 	
-	@Instance("EM_Instance")
+	@Instance(EM_Settings.ID)
 	public static EnviroMine instance;
 	
 	@SidedProxy(clientSide = EM_Settings.Proxy + ".EM_ClientProxy", serverSide = EM_Settings.Proxy + ".EM_CommonProxy")
@@ -130,19 +122,6 @@ public class EnviroMine
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.itemProperties.size() + " item properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.biomeProperties.size() + " biome properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.dimensionProperties.size() + " dimension properties");
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void registerKeyBindings(FMLInitializationEvent event)
-	{
-		// Add remove Keybind
-		KeyBinding key = new KeyBinding("EnviroMine Add/Remove Custom Object", Keyboard.KEY_J, "enviromine.keycatagory");
-		ClientRegistry.registerKeyBinding(key);
-		
-		// Reload Custom Objects Files
-		KeyBinding key1 = new KeyBinding("EnviroMine Reload All Custom Object", Keyboard.KEY_K, "enviromine.keycatagory");
-		ClientRegistry.registerKeyBinding(key1);
-		
 	}
 	
 	@EventHandler

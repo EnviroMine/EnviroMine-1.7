@@ -1,5 +1,6 @@
 package enviromine.gui;
 
+import enviromine.world.ClientQuake;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
@@ -20,7 +21,7 @@ public class RenderCameraShake extends EntityRenderer
 	@Override
 	public void updateCameraAndRender(float partialTick)
 	{
-		if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()))
+		if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()) || ClientQuake.GetQuakeShake(mc.theWorld, (int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ) <= 0F)
 		{
 			super.updateCameraAndRender(partialTick);
 			return;

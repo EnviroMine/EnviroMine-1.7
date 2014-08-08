@@ -41,7 +41,7 @@ public class EnviroAchievements
 		tradingFavours = new Achievement("enviromine.TradingFavours",		"enviromine.TradingFavours",	-2, 1, Items.emerald, null).registerStat();
 		iNeededThat = new Achievement("enviromine.INeededThat",		"enviromine.INeededThat",		-1, 1, Items.shears, null);
 		winterIsComing = new Achievement("enviromine.WinterIsComing",		"enviromine.WinterIsComing",	0, 1, Blocks.snow, null).registerStat();
-		ohGodWhy = new Achievement("enviromine.WinterIsComing",			"enviromine.OhGodWhy",			1, 1, Items.record_11, AchievementList.diamonds).registerStat();
+		ohGodWhy = new Achievement("enviromine.OhGodWhy",			"enviromine.OhGodWhy",			1, 1, Items.record_11, AchievementList.diamonds).registerStat();
 		safetyFirst = new Achievement("enviromine.SafetyFirst",		"enviromine.SafetyFirst",		2, 1, ObjectHandler.hardHat, AchievementList.portal).registerStat();
 		
 		boreToTheCore = new Achievement("enviromine.BoreToTheCore",		"enviromine.BoreToTheCore",		-2, 2, ObjectHandler.elevatorTop, AchievementList.portal).registerStat();

@@ -90,6 +90,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 		this.isAnvil2 = true;
 		this.fallHurtMax2 = 40;
 		this.fallHurtAmount2 = 2.0F;
+		this.block = block;
 		
 		if(EM_Settings.entityFailsafe > 0 && !world.isRemote)
 		{
@@ -157,7 +158,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 	@Override
 	public void onUpdate()
 	{
-		if(this.block == Blocks.air)
+		if(this.block == null || this.block == Blocks.air)
 		{
 			this.setDead();
 		} else

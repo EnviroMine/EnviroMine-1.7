@@ -4,21 +4,17 @@
 package enviromine.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
-
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
-
+import enviromine.world.ClientQuake;
 import io.netty.buffer.ByteBuf;
-
 import java.util.UUID;
-
 import org.apache.logging.log4j.Level;
 
 public class PacketEnviroMine implements IMessage
@@ -78,6 +74,9 @@ public class PacketEnviroMine implements IMessage
 			if(data[0].equalsIgnoreCase("ID:0"))
 			{
 				this.trackerSync(data);
+			} else if(data[0].equalsIgnoreCase("ID:3"))
+			{
+				this.registerQuake(data);
 			} else
 			{
 				EnviroMine.logger.log(Level.ERROR, "Received invalid packet on clientside!");
@@ -97,6 +96,29 @@ public class PacketEnviroMine implements IMessage
 				tracker.hydration = Float.valueOf(data[4]);
 				tracker.sanity = Float.valueOf(data[5]);
 				tracker.airTemp = Float.valueOf(data[6]);
+			}
+		}
+		
+		private void registerQuake(String[] data)
+		{
+			int b = Integer.valueOf(data[1]);
+			int d = Integer.valueOf(data[2]);
+			int x = Integer.valueOf(data[3]);
+			int z = Integer.valueOf(data[4]);
+			int l = Integer.valueOf(data[5]);
+			int w = Integer.valueOf(data[6]);
+			float a = Float.valueOf(data[7]);
+			int h = Integer.valueOf(data[8]);
+			
+			if(b == 0)
+			{
+				new ClientQuake(d, x, z, l, w, a);
+			} else if(b == 1)
+			{
+				ClientQuake.UpdateQuakeHeight(d, x, z, l, w, a, h);
+			} else if(b == 2)
+			{
+				ClientQuake.RemoveQuake(x, z);
 			}
 		}
 	}

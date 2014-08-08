@@ -9,10 +9,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.TeleportHandler;
+import enviromine.world.Earthquake;
 
 public class BlockElevatorTop extends Block implements ITileEntityProvider
 {
@@ -32,6 +32,10 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 	{
 		if(player.isSneaking())
 		{
+			if(!world.isRemote)
+			{
+				new Earthquake(world, i, k, 64, 8);
+			}
 			return true;
 		}
 		

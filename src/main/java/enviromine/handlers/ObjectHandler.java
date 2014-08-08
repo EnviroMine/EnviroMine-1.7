@@ -86,9 +86,9 @@ public class ObjectHandler
 		renderGasID = RenderingRegistry.getNextAvailableRenderId();
 		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
 		
-		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.block.elevator_top").setCreativeTab(EnviroMine.enviroTab);
+		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.block.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
 		GameRegistry.registerBlock(elevatorTop, "enviromine.block.elevator_top");
-		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.block.elevator_bottom").setCreativeTab(EnviroMine.enviroTab);
+		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.block.elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
 		GameRegistry.registerBlock(elevatorBottom, "enviromine.block.elevator_bottom");
 	}
 	

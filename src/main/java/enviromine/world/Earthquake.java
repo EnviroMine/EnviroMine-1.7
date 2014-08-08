@@ -4,15 +4,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
-
+import enviromine.network.packet.PacketEnviroMine;
 import java.util.ArrayList;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class Earthquake
 {
 	public static ArrayList<Earthquake> pendingQuakes = new ArrayList<Earthquake>();
+	public static ArrayList<ClientQuake> clientQuakes = new ArrayList<ClientQuake>();
 	public static int tickCount = 0;
 	
 	World world;
@@ -21,6 +23,7 @@ public class Earthquake
 	
 	int length;
 	int width;
+	float angle;
 	
 	int passY = 1;
 	
@@ -28,19 +31,28 @@ public class Earthquake
 	
 	public Earthquake(World world, int i, int k, int l, int w)
 	{
-		this.world = world;
 		this.posX = i;
 		this.posZ = k;
 		this.length = l;
 		this.width = w;
 		
-		this.markRavine();
-		pendingQuakes.add(this);
+		if(world != null)
+		{
+			this.world = world;
+			this.angle = MathHelper.clamp_float(world.rand.nextFloat() * 4F - 2F, -2F, 2F);
+			this.markRavine(angle);
+			pendingQuakes.add(this);
+			
+			if(!(this instanceof ClientQuake))
+			{
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128));
+			}
+		}
 	}
 	
-	public void markRavine()
+	public void markRavine(float angle)
 	{
-		float angle = world.rand.nextFloat() * 4 - 2;
+		ravineMask.clear();
 		
 		for(int i = -length / 2; i < length / 2; i++)
 		{
@@ -140,6 +152,7 @@ public class Earthquake
 			}
 			
 			passY += 1;
+			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,1," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + "," + passY), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128));
 		}
 		
 		return false;
@@ -206,6 +219,7 @@ public class Earthquake
 			//quake.removeAll();
 			if(!quake.removeBlock() || quake.ravineMask.size() <= 0)
 			{
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,2," + quake.world.provider.dimensionId + "," + quake.posX + "," + quake.posZ + "," + quake.length + "," + quake.width + "," + quake.angle + "," + quake.passY), new TargetPoint(quake.world.provider.dimensionId, quake.posX, quake.passY, quake.posZ, 128));
 				pendingQuakes.remove(i);
 			}
 		}

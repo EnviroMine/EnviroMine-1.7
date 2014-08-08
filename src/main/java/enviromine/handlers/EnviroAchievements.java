@@ -2,7 +2,10 @@ package enviromine.handlers;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.AchievementPage;
@@ -31,26 +34,26 @@ public class EnviroAchievements
 	
 	public static void InitAchievements()
 	{
-		funwaysFault = new Achievement(12301,		"enviromine.FunwaysFault",		-2, 0, Block.cobblestone, AchievementList.buildPickaxe).registerAchievement();
-		mindOverMatter = new Achievement(12302, 	"enviromine.MindOverMatter",	-1, 0, Item.eyeOfEnder, AchievementList.buildSword).registerAchievement();
-		proMiner = new Achievement(12303,			"enviromine.ProMiner",			0, 0, Item.pickaxeDiamond, AchievementList.buildPickaxe).registerAchievement();
-		hardBoiled = new Achievement(12304,			"enviromine.HardBoiled",		1, 0, Item.egg, null).registerAchievement();
-		ironArmy = new Achievement(12305,			"enviromine.IronArmy",			2, 0, Item.ingotIron, AchievementList.buildBetterPickaxe).registerAchievement();
+		funwaysFault = new Achievement("enviromine.FunwaysFault",		"enviromine.FunwaysFault",		-2, 0, Blocks.cobblestone, AchievementList.buildPickaxe).registerStat();
+		mindOverMatter = new Achievement("enviromine.MindOverMatter", 	"enviromine.MindOverMatter",	-1, 0, Items.ender_eye, AchievementList.buildSword).registerStat();
+		proMiner = new Achievement("enviromine.ProMiner",			"enviromine.ProMiner",			0, 0, Items.diamond_pickaxe, AchievementList.buildPickaxe).registerStat();
+		hardBoiled = new Achievement("enviromine.HardBoiled",			"enviromine.HardBoiled",		1, 0, Items.egg, null).registerStat();
+		ironArmy = new Achievement("enviromine.IronArmy",			"enviromine.IronArmy",			2, 0, Items.iron_ingot, AchievementList.buildBetterPickaxe).registerStat();
 		
-		tradingFavours = new Achievement(12306,		"enviromine.TradingFavours",	-2, 1, Item.emerald, null).registerAchievement();
-		iNeededThat = new Achievement(12307,		"enviromine.INeededThat",		-1, 1, Item.shears, null);
-		winterIsComing = new Achievement(12308,		"enviromine.WinterIsComing",	0, 1, Block.snow, null).registerAchievement();
-		ohGodWhy = new Achievement(12309,			"enviromine.OhGodWhy",			1, 1, Item.record11, AchievementList.diamonds).registerAchievement();
-		safetyFirst = new Achievement(12310,		"enviromine.SafetyFirst",		2, 1, ObjectHandler.hardHat, AchievementList.portal).registerAchievement();
+		tradingFavours = new Achievement("enviromine.TradingFavours",		"enviromine.TradingFavours",	-2, 1, Items.emerald, null).registerStat();
+		iNeededThat = new Achievement("enviromine.INeededThat",		"enviromine.INeededThat",		-1, 1, Items.shears, null);
+		winterIsComing = new Achievement("enviromine.WinterIsComing",		"enviromine.WinterIsComing",	0, 1, Blocks.snow, null).registerStat();
+		ohGodWhy = new Achievement("enviromine.WinterIsComing",			"enviromine.OhGodWhy",			1, 1, Items.record_11, AchievementList.diamonds).registerStat();
+		safetyFirst = new Achievement("enviromine.SafetyFirst",		"enviromine.SafetyFirst",		2, 1, ObjectHandler.hardHat, AchievementList.portal).registerStat();
 		
-		boreToTheCore = new Achievement(12311,		"enviromine.BoreToTheCore",		-2, 2, ObjectHandler.elevatorTop, AchievementList.portal).registerAchievement();
-		intoTheDarkness = new Achievement(12312,	"enviromine.IntoTheDarkness",	-1, 2, Block.torchWood, boreToTheCore).registerAchievement();
-		thatJustHappened = new Achievement(12313,	"enviromine.ThatJustHappened",	0, 2, Block.fire, null).registerAchievement();
-		itsPitchBlack = new Achievement(12314, 		"enviromine.ItsPitchBlack",		1, 2, Block.torchRedstoneIdle, boreToTheCore).registerAchievement();
-		tenSecondRule = new Achievement(12315, 		"enviromine.TenSecondRule",		2, 2, Item.rottenFlesh, null).registerAchievement();
+		boreToTheCore = new Achievement("enviromine.BoreToTheCore",		"enviromine.BoreToTheCore",		-2, 2, ObjectHandler.elevatorTop, AchievementList.portal).registerStat();
+		intoTheDarkness = new Achievement("enviromine.IntoTheDarkness",	"enviromine.IntoTheDarkness",	-1, 2, Blocks.torch, boreToTheCore).registerStat();
+		thatJustHappened = new Achievement("enviromine.ThatJustHappened",	"enviromine.ThatJustHappened",	0, 2, Blocks.fire, null).registerStat();
+		itsPitchBlack = new Achievement("enviromine.ItsPitchBlack", 		"enviromine.ItsPitchBlack",		1, 2, Blocks.redstone_torch, boreToTheCore).registerStat();
+		tenSecondRule = new Achievement("enviromine.TenSecondRule", 		"enviromine.TenSecondRule",		2, 2, Items.rotten_flesh, null).registerStat();
 		
-		medicalMarvels = new Achievement(12316, 	"enviromine.MedicalMarvels",	-2, 3, Item.potion, null).registerAchievement();
-		suckItUpPrincess = new Achievement(12317, 	"enviromine.SuckItUpPrincess",	-1, 3, Item.bone, AchievementList.buildSword).registerAchievement();
+		medicalMarvels = new Achievement("enviromine.MedicalMarvels", 	"enviromine.MedicalMarvels",	-2, 3, Items.potionitem, null).registerStat();
+		suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", 	"enviromine.SuckItUpPrincess",	-1, 3, Items.bone, AchievementList.buildSword).registerStat();
 		
 		page = new AchievementPage("EnviroMine", funwaysFault, mindOverMatter, proMiner, hardBoiled, ironArmy, tradingFavours, iNeededThat, winterIsComing, ohGodWhy, safetyFirst, boreToTheCore, intoTheDarkness, thatJustHappened, itsPitchBlack, tenSecondRule, medicalMarvels, suckItUpPrincess);
 		AchievementPage.registerAchievementPage(page);
@@ -81,7 +84,7 @@ public class EnviroAchievements
 	
 	public static void addLocalisation(Achievement ach, String title, String desc)
 	{
-		LanguageRegistry.instance().addStringLocalization(ach.statName, title);
-		LanguageRegistry.instance().addStringLocalization(ach.statName + ".desc", desc);
+		LanguageRegistry.instance().addStringLocalization("achievement." + ach, "en_US", title);
+		LanguageRegistry.instance().addStringLocalization("achievement." + ach + ".desc", "en_US", desc);
 	}
 }

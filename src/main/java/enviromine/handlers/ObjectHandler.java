@@ -11,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.util.EnumHelper;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -20,14 +18,11 @@ import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.BlockElevatorBottom;
 import enviromine.blocks.BlockElevatorTop;
 import enviromine.blocks.BlockGas;
-import enviromine.blocks.renderers.TileEntityElevatorBottomRenderer;
-import enviromine.blocks.renderers.TileEntityElevatorTopRenderer;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.gases.RenderGasHandler;
 import enviromine.items.EnviroArmor;
 import enviromine.items.EnviroItemBadWaterBottle;
 import enviromine.items.EnviroItemColdWaterBottle;
@@ -103,12 +98,6 @@ public class ObjectHandler
 		GameRegistry.registerBlock(elevatorBottom, "elevator_bottom");
 	}
 	
-	public static void initRenderers()
-	{
-		renderGasID = RenderingRegistry.getNextAvailableRenderId();
-		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
-	}
-	
 	public static void registerGases()
 	{
 	}
@@ -120,12 +109,6 @@ public class ObjectHandler
 		
 		GameRegistry.registerTileEntity(TileEntityElevatorTop.class, "enviromine.tile.elevator_top");
 		GameRegistry.registerTileEntity(TileEntityElevatorBottom.class, "enviromine.tile.elevator_bottom");
-		
-		if(EnviroMine.proxy.isClient())
-		{
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorTop.class, new TileEntityElevatorTopRenderer());
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorBottom.class, new TileEntityElevatorBottomRenderer());
-		}
 	}
 	
 	public static void registerRecipes()

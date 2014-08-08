@@ -32,6 +32,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 import enviromine.EnviroPotion;
@@ -140,7 +141,17 @@ public class EM_StatusManager
 	
 	public static EnviroDataTracker lookupTrackerFromUsername(String username)
 	{
-		EntityLivingBase entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
+		EntityLivingBase entity = null;
+		
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+			entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
+		} else {
+			World[] worlds = MinecraftServer.getServer().worldServers;
+			for (int i = 0; i < worlds.length; i++) {
+				entity = worlds[i].getPlayerEntityByName(username);
+				if (entity != null) { break; }
+			}
+		}
 		return lookupTracker(entity);
 	}
 	

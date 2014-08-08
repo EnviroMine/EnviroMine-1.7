@@ -3,11 +3,20 @@ package enviromine.core.proxies;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+import enviromine.blocks.renderers.TileEntityElevatorBottomRenderer;
+import enviromine.blocks.renderers.TileEntityElevatorTopRenderer;
+import enviromine.blocks.tiles.TileEntityElevatorBottom;
+import enviromine.blocks.tiles.TileEntityElevatorTop;
+import enviromine.gases.RenderGasHandler;
 import enviromine.gui.EM_GuiEnviroMeters;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
@@ -58,7 +67,17 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		super.init(event);
 		EnviroKeybinds.Init();
-		ObjectHandler.initRenderers();
+		initRenderers();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void initRenderers()
+	{
+		ObjectHandler.renderGasID = RenderingRegistry.getNextAvailableRenderId();
+		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorTop.class, new TileEntityElevatorTopRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorBottom.class, new TileEntityElevatorBottomRenderer());
 	}
 	
 	@Override

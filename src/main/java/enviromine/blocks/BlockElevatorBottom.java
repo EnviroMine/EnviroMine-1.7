@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -29,11 +30,6 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if(player.isSneaking())
-		{
-			return true;
-		}
-		
 		EntityPlayerMP playerMP = null;
 		
 		if(player instanceof EntityPlayerMP)
@@ -46,6 +42,9 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 		
 		if(world.getBlock(i, j + 1, k) != ObjectHandler.elevatorTop)
 		{
+			if (player.inventory.getCurrentItem().getItem() == Item.getItemFromBlock(ObjectHandler.elevatorTop)) {
+				return false;
+			}
 			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
 			return true;
 		}
@@ -81,7 +80,8 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 		{
 			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));
 		}
-		return true;
+		
+		return false;
 	}
 	
 	//Make sure you set this as your TileEntity class relevant for the block!

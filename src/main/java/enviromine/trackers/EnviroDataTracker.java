@@ -1,7 +1,5 @@
 package enviromine.trackers;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,13 +13,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class EnviroDataTracker
 {
@@ -61,7 +68,7 @@ public class EnviroDataTracker
 	
 	public int updateTimer = 0;
 	
-	public Minecraft mc = Minecraft.getMinecraft();
+	private Side side = FMLCommonHandler.instance().getEffectiveSide();
 	
 	//Sound Time
 	public long chillPrevTime = 0;
@@ -361,7 +368,7 @@ public class EnviroDataTracker
 				trackedEntity.worldObj.playSoundAtEntity(trackedEntity, "enviromine:gag", 1f, 1f);
 				//mc.sndManager.playSound("enviromine:gag", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
 			}
-
+			
 			if(airQuality <= 10F)
 			{
 				trackedEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 200, 1));
@@ -371,13 +378,13 @@ public class EnviroDataTracker
 				trackedEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 200, 0));
 				trackedEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 0));
 			}
-
+			
 			/* For sound Overheating
 			if(sizzlePrevTime == 0) 
 			{
 				sizzlePrevTime =  mc.getSystemTime() - 16001;
 			}*/
-		
+			
 			if(!trackedEntity.isPotionActive(Potion.fireResistance))
 			{
 				if(bodyTemp >= 39F && enableHeat && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
@@ -392,62 +399,62 @@ public class EnviroDataTracker
 					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 0));
 				}
 				
-
+				
 				
 			}
-		
+			
 			if(chillPrevTime == 0) 
 			{
-				chillPrevTime =  Minecraft.getSystemTime() - 17001;
-
-					if(bodyTemp >= 43F)
-					{
-						trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 2));
-					} else if(bodyTemp >= 41F)
-					{
-						trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 1));
-					} else
-					{
-						trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 0));
-					}
-					/* For Adding Sound for Overheating
+				if (side.isClient()) {
+					chillPrevTime = Minecraft.getSystemTime() - 17001;
+				} else {
+					chillPrevTime =  MinecraftServer.getSystemTimeMillis() - 17001;
+				}
+				
+				if(bodyTemp >= 43F)
+				{
+					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 2));
+				} else if(bodyTemp >= 41F)
+				{
+					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 1));
+				} else
+				{
+					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 0));
+				}
+				/* For Adding Sound for Overheating
 					System.out.println(mc.getSystemTime() +"-"+ sizzlePrevTime + "="+ (mc.getSystemTime() - sizzlePrevTime));
 					if ((mc.getSystemTime() - sizzlePrevTime) > 16000)
 					{
 						mc.sndManager.playSound("enviromine:sizzle", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, .5f, 1.0F);
 						sizzlePrevTime = mc.getSystemTime();
 					}
-					*/
-
+				 */
+				
 			}
 			else if(trackedEntity.isPotionActive(EnviroPotion.heatstroke))
 			{
 				trackedEntity.removePotionEffect(EnviroPotion.heatstroke.id);
 			}
-		
+			
 			if(bodyTemp <= 35F && enableFrostbite && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
 			{
 				if(bodyTemp <= 30F)
 				{
 					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.hypothermia.id, 200, 2));
-
+					
 				} else if(bodyTemp <= 32F)
 				{
 					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.hypothermia.id, 200, 1));
-
+					
 				} else
 				{
 					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.hypothermia.id, 200, 0));
 				}
 				
-				System.out.println("Check:" + Minecraft.getSystemTime() +"-"+ chillPrevTime +"="+(Minecraft.getSystemTime() - chillPrevTime));
-				
-				if ((Minecraft.getSystemTime() - chillPrevTime) > 17000)
-				{
-					mc.thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
-					//TODO OLD
-					//mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
-					chillPrevTime = Minecraft.getSystemTime();
+				if (this.side.isClient()) {
+					System.out.println("Check:" + Minecraft.getSystemTime() +"-"+ chillPrevTime +"="+(Minecraft.getSystemTime() - chillPrevTime));
+					
+					playSoundWithTimeCheck(17000, "enviromine:chill",  EM_Settings.breathVolume, 1.0F);
 				}
 			}
 			
@@ -471,12 +478,9 @@ public class EnviroDataTracker
 					}
 				}
 				
-				if ((Minecraft.getSystemTime() - chillPrevTime) > 1700)
-				{
-					mc.thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
-					//TODO OLD
-					//mc.sndManager.playSound("enviromine:chill", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
-					chillPrevTime = Minecraft.getSystemTime();
+				
+				if (this.side.isClient()) {
+					playSoundWithTimeCheck(1700, "enviromine:chill",  EM_Settings.breathVolume, 1.0F);
 				}
 			}
 			
@@ -519,6 +523,16 @@ public class EnviroDataTracker
 		
 		this.fixFloatinfPointErrors();
 		EM_StatusManager.saveTracker(this);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private void playSoundWithTimeCheck(int time, String sound, float volume, float pitch)
+	{
+		if ((Minecraft.getSystemTime() - chillPrevTime) > 17000)
+		{
+			Minecraft.getMinecraft().thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
+			chillPrevTime = Minecraft.getSystemTime();
+		}
 	}
 	
 	public void fixFloatinfPointErrors()

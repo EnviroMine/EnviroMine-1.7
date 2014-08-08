@@ -21,6 +21,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
+import cpw.mods.fml.relauncher.Side;
 import enviromine.EM_VillageMineshaft;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -30,6 +31,7 @@ import enviromine.core.proxies.EM_CommonProxy;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
+import enviromine.network.packet.PacketEnviroMine;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
@@ -73,6 +75,9 @@ public class EnviroMine
 		}
 		
 		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
+		this.network.registerMessage(PacketEnviroMine.HandlerServer.class, PacketEnviroMine.class, 0, Side.SERVER);
+		this.network.registerMessage(PacketEnviroMine.HandlerClient.class, PacketEnviroMine.class, 1, Side.CLIENT);
+		
 		GameRegistry.registerWorldGenerator(new WorldFeatureGenerator(), 20);
 	}
 	

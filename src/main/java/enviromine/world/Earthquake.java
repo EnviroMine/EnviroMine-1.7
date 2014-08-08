@@ -45,7 +45,8 @@ public class Earthquake
 			
 			if(!(this instanceof ClientQuake))
 			{
-				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128));
+				int size = length > width? length/2 : width/2;
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 			}
 		}
 	}
@@ -97,17 +98,6 @@ public class Earthquake
 				{
 					if((world.getBlock(x, yy, z).getMaterial() == Material.lava && yy >= 8) || world.getBlock(x, yy, z).getMaterial() == Material.water || world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.clay || world.getBlock(x, yy, z).getMaterial() == Material.sand || world.getBlock(x, yy, z).getMaterial() == Material.ground || world.getBlock(x, yy, z).getMaterial() == Material.grass || (yy < 8 && world.getBlock(x, yy, z).getMaterial() == Material.air))
 					{
-						world.setBlock(x, y, z, Blocks.flowing_lava);
-						
-						if(EM_Settings.enablePhysics)
-						{
-							EM_PhysManager.schedulePhysUpdate(world, x, y, z, false, "Quake");
-						}
-						return true;
-					} else
-					{
-						world.setBlockToAir(x, y, z);
-						
 						if(yy < 8)
 						{
 							world.setBlock(x, yy, z, Blocks.flowing_lava);
@@ -118,9 +108,9 @@ public class Earthquake
 								EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
 							}
 							
-							ravineMask.set(i, new int[]{x, y + 1, z});
 							if(yy == y)
 							{
+								ravineMask.set(i, new int[]{x, y + 1, z});
 								return true;
 							}
 						} else
@@ -133,16 +123,16 @@ public class Earthquake
 								EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
 							}
 							
-							ravineMask.set(i, new int[]{x, y + 1, z});
 							if(yy == y)
 							{
+								ravineMask.set(i, new int[]{x, y + 1, z});
 								return true;
 							}
 						}
 					}
 				}
 				
-				if(world.getTopSolidOrLiquidBlock(x, z) < 16)
+				if(world.getTopSolidOrLiquidBlock(x, z) < 16 || world.canBlockSeeTheSky(x, y, z))
 				{
 					ravineMask.remove(i);
 				} else
@@ -152,7 +142,8 @@ public class Earthquake
 			}
 			
 			passY += 1;
-			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,1," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + "," + passY), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128));
+			int size = length > width? length/2 : width/2;
+			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,1," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + "," + passY), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 		}
 		
 		return false;
@@ -219,7 +210,8 @@ public class Earthquake
 			//quake.removeAll();
 			if(!quake.removeBlock() || quake.ravineMask.size() <= 0)
 			{
-				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,2," + quake.world.provider.dimensionId + "," + quake.posX + "," + quake.posZ + "," + quake.length + "," + quake.width + "," + quake.angle + "," + quake.passY), new TargetPoint(quake.world.provider.dimensionId, quake.posX, quake.passY, quake.posZ, 128));
+				int size = quake.length > quake.width? quake.length/2 : quake.width/2;
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,2," + quake.world.provider.dimensionId + "," + quake.posX + "," + quake.posZ + "," + quake.length + "," + quake.width + "," + quake.angle + "," + quake.passY), new TargetPoint(quake.world.provider.dimensionId, quake.posX, quake.passY, quake.posZ, 128 + size));
 				pendingQuakes.remove(i);
 			}
 		}

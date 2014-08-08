@@ -1,5 +1,6 @@
 package enviromine.world;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
 public class ClientQuake extends Earthquake
@@ -45,14 +46,30 @@ public class ClientQuake extends Earthquake
 		}
 	}
 	
-	public static float GetQuakeShake(World world, int x, int y, int z)
+	public static float GetQuakeShake(World world, Entity entity)
 	{
+		float dist = 64F;
+		
 		if(clientQuakes.size() > 0)
 		{
-			return 1F;
-		} else
-		{
-			return 0F;
+			for(int i = clientQuakes.size() - 1; i >= 0; i--)
+			{
+				ClientQuake quake = clientQuakes.get(i);
+				int size = quake.length > quake.width? quake.length/2 : quake.width/2;
+				
+				if(entity.getDistance(quake.posX, quake.passY, quake.posZ) < dist + size)
+				{
+					dist = (float)entity.getDistance(quake.posX, quake.passY, quake.posZ) - size;
+					dist = dist < 0? 0 : dist;
+				}
+				
+				if(entity.getDistance(quake.posX, quake.passY, quake.posZ) > 128 + size)
+				{
+					clientQuakes.remove(i);
+				}
+			}
 		}
+		
+		return 1F - (dist/64F);
 	}
 }

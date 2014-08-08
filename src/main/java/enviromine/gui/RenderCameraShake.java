@@ -21,14 +21,22 @@ public class RenderCameraShake extends EntityRenderer
 	@Override
 	public void updateCameraAndRender(float partialTick)
 	{
-		if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()) || ClientQuake.GetQuakeShake(mc.theWorld, (int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ) <= 0F)
+		if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()))
 		{
 			super.updateCameraAndRender(partialTick);
 			return;
 		}
 		
-		shakeSpeed = 2D;
-		offsetY = 0.2F;
+		float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
+		
+		if(shakeMult <= 0F)
+		{
+			super.updateCameraAndRender(partialTick);
+			return;
+		}
+		
+		shakeSpeed = 2D * shakeMult;
+		offsetY = 0.2F * shakeMult;
 		
 		double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
 		

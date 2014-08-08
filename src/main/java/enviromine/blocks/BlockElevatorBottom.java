@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
+import enviromine.handlers.ObjectHandler;
 
 public class BlockElevatorBottom extends Block implements ITileEntityProvider
 {
@@ -39,6 +41,9 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 			return true;
 		}
 		
+		if (player.inventory.getCurrentItem().getItem() == Item.getItemFromBlock(ObjectHandler.elevatorTop)) {
+			return false;
+		}
 		player.addChatMessage(new ChatComponentText("This feature is not finished!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 		return true;
 		

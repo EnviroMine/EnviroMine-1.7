@@ -248,7 +248,7 @@ public class EM_ConfigHandler
 		
 		// Physics Settings
 		String PhySetCat = "Physics";
-		int minPhysInterval = 5;
+		int minPhysInterval = 6;
 		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
 		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128, "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
 		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)"), minPhysInterval);

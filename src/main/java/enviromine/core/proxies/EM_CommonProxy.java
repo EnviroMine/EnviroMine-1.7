@@ -25,8 +25,7 @@ public class EM_CommonProxy
 		return false;
 	}
 	
-	public void registerTickHandlers()
-	{
+	public void registerTickHandlers() {
 		FMLCommonHandler.instance().bus().register(new EM_ServerScheduledTickHandler());
 	}
 	

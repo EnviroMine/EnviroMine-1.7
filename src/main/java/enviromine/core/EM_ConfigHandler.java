@@ -612,9 +612,9 @@ public class EM_ConfigHandler
 		ItemDefaultSave(custom, itemsCat + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
 		
 		ItemDefaultSave(custom, itemsCat + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".yellowFlower", Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".yellowFlower", Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		ItemDefaultSave(custom, itemsCat + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
 		ItemDefaultSave(custom, itemsCat + ".snowBlock", 	Block.blockRegistry.getNameForObject(Blocks.snow), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
 		ItemDefaultSave(custom, itemsCat + ".ice", 			Block.blockRegistry.getNameForObject(Blocks.ice), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
 		ItemDefaultSave(custom, itemsCat + ".snowLayer",	Block.blockRegistry.getNameForObject(Blocks.snow_layer), 	-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);

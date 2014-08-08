@@ -133,7 +133,7 @@ public class CamelPackRefillHandler implements IRecipe
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
 		IInventory craftMatrix = event.craftMatrix;
-		if(!craftMatrix.getInventoryName().equals("container.crafting"))
+		if(!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
 		{
 			return;
 		} else {

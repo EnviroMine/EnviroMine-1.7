@@ -33,7 +33,7 @@ public class UpdateNotification
 			return;
 		}
 		
-		// File link: http://bit.ly/1r4JJt3;
+		// File link: http://bit.ly/1pwDr2o;
 		
 		try
 		{

@@ -41,6 +41,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -107,9 +108,13 @@ public class EM_EventManager
 				if(event.entity instanceof EntityPlayer)
 				{
 					EnviroDataTracker oldTrack = EM_StatusManager.lookupTrackerFromUUID(((EntityPlayer)event.entity).getUniqueID());
-					if(oldTrack != null)
+					if(oldTrack != null && (oldTrack.trackedEntity == null || (oldTrack.trackedEntity.isDead && oldTrack.trackedEntity.getHealth() <= 0F)))
 					{
 						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
+						if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
+						{
+							EM_StatusManager.syncMultiplayerTracker(oldTrack);
+						}
 						return;
 					}
 				}
@@ -147,17 +152,18 @@ public class EM_EventManager
 		{
 			if(event.entityLiving instanceof EntityPlayer && event.source == null)
 			{
-				/*EntityPlayer player = EM_StatusManager.findPlayer(((EntityPlayer)event.entityLiving).username);
+				EntityPlayer player = EM_StatusManager.findPlayer(event.entity.getUniqueID());
 				
 				if(player != null)
 				{
-					tracker.resetData();
-					EM_StatusManager.saveAndRemoveTracker(tracker);
+					tracker.trackedEntity = player;
+					//tracker.resetData();
+					//EM_StatusManager.saveAndRemoveTracker(tracker);
 				} else
 				{
 					tracker.resetData();
 					EM_StatusManager.saveAndRemoveTracker(tracker);
-				}*/
+				}
 				return;
 			} else
 			{
@@ -292,7 +298,6 @@ public class EM_EventManager
 		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null && EnviroMine.proxy.isClient())
 		{
 			EnviroMine.instance.network.sendToServer(new PacketEnviroMine("ID:1," + event.entityPlayer.getUniqueID().toString()));
-			System.out.println("Sending packet to server...");
 		}
 	}
 	

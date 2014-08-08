@@ -5,7 +5,6 @@ import enviromine.EnviroPotion;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
-
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -19,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -83,7 +81,7 @@ public class EnviroDataTracker
 			return;
 		}
 		
-		if(trackedEntity.isDead)
+		if(trackedEntity.isDead && trackedEntity.getHealth() <= 0F)
 		{
 			if(trackedEntity instanceof EntityPlayer)
 			{
@@ -91,7 +89,7 @@ public class EnviroDataTracker
 				
 				if(player == null)
 				{
-					//EM_StatusManager.saveAndRemoveTracker(this);
+					EM_StatusManager.saveAndRemoveTracker(this);
 					return;
 				} else
 				{
@@ -273,7 +271,7 @@ public class EnviroDataTracker
 		{
 			if(plate.getItem() == EnviroMine.camelPack)
 			{
-				if(plate.getItemDamage() < plate.getMaxDamage() && hydration <= 99F - EM_Settings.hydrationMult)
+				if(plate.getItemDamage() < plate.getMaxDamage() && hydration <= 100F - (float)EM_Settings.hydrationMult)
 				{
 					plate.setItemDamage(plate.getItemDamage() + 1);
 					hydrate((float)EM_Settings.hydrationMult);
@@ -478,7 +476,7 @@ public class EnviroDataTracker
 			{
 				EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entity);
 				
-				if(tracker != null)
+				if(tracker != null && !tracker.trackedEntity.isDead)
 				{
 					return false;
 				} else

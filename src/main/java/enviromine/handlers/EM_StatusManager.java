@@ -1174,7 +1174,7 @@ public class EM_StatusManager
 			tags.setFloat("ENVIRO_SAN", tracker.sanity);
 			if(tracker.trackedEntity instanceof EntityPlayer)
 			{
-				trackerList.remove(tracker.trackedEntity.getUniqueID());
+				trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
 			} else
 			{
 				trackerList.remove("" + tracker.trackedEntity.getEntityId());
@@ -1292,7 +1292,7 @@ public class EM_StatusManager
 			
 			if(player != null)
 			{
-				if(!player.isDead)
+				if(player.isEntityAlive())
 				{
 					return player;
 				}

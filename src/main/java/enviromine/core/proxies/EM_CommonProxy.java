@@ -33,7 +33,7 @@ public class EM_CommonProxy
 	public void registerEventHandlers()
 	{
 		MinecraftForge.EVENT_BUS.register(new EM_EventManager());
-		MinecraftForge.EVENT_BUS.register(new UpdateNotification());
+		FMLCommonHandler.instance().bus().register(new UpdateNotification());
 		
 		CamelPackRefillHandler tmp = new CamelPackRefillHandler();
 		CraftingManager.getInstance().getRecipeList().add(tmp);

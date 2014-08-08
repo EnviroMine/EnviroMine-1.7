@@ -1,14 +1,5 @@
 package enviromine.core;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -19,12 +10,10 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.Level;
-
-import scala.Int;
 import cpw.mods.fml.common.registry.EntityRegistry;
+
 import enviromine.handlers.keybinds.AddRemoveCustom;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
@@ -34,6 +23,20 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.ItemProperties;
 import enviromine.trackers.RotProperties;
 import enviromine.trackers.StabilityType;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.Level;
+
+import scala.Int;
 
 public class EM_ConfigHandler
 {
@@ -245,9 +248,10 @@ public class EM_ConfigHandler
 		
 		// Physics Settings
 		String PhySetCat = "Physics";
+		int minPhysInterval = 5;
 		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
 		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128, "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
-		EM_Settings.physInterval = config.get(PhySetCat, "Physics Interval", 2, "The number of ticks between physics update passes (must be 2 or more)").getInt(2);
+		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)"), minPhysInterval);
 		EM_Settings.stoneCracks = config.get(PhySetCat, "Stone Cracks Before Falling", true).getBoolean(true);
 		EM_Settings.defaultStability = config.get(PhySetCat, "Default Stability Type (BlockIDs > 175)", "loose").getString();
 		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
@@ -336,6 +340,16 @@ public class EM_ConfigHandler
 		if(EM_Settings.breathPause < 200)
 		{
 			EM_Settings.breathPause = 200;
+		}
+	}
+	
+	private static int getConfigIntWithMinInt(Property prop, int min)
+	{
+		if (prop.getInt(min) >= min) {
+			return prop.getInt(min);
+		} else {
+			prop.set(min);
+			return min;
 		}
 	}
 	

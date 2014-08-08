@@ -1,5 +1,8 @@
 package enviromine.handlers;
 
+import enviromine.core.EM_Settings;
+import enviromine.items.RottenFood;
+import enviromine.trackers.RotProperties;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -7,10 +10,6 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import enviromine.core.EM_Settings;
-import enviromine.items.RottenFood;
-import enviromine.trackers.RotProperties;
 
 public class RotHandler
 {
@@ -20,13 +19,13 @@ public class RotHandler
 		RotProperties rotProps = null;
 		long rotTime = (long)(EM_Settings.foodRotTime * 24000L);
 		
-		if(EM_Settings.rotProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem())))
+		if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(item)))
 		{
-			rotProps = EM_Settings.rotProperties.get(Item.itemRegistry.getNameForObject(item.getItem()));
+			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(item));
 			rotTime = (long)(rotProps.days * 24000L);
-		} else if(EM_Settings.rotProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
+		} else if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage()))
 		{
-			rotProps = EM_Settings.rotProperties.get(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
+			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage());
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		

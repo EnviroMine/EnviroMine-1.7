@@ -134,7 +134,6 @@ public class MapGenModifiedRavine extends MapGenBase
 								
 								if (i3 >= 0 && i3 < 256)
 								{
-									Block block = p_151540_5_[j3];
 									
 									if (isOceanBlock(p_151540_5_, j3, k2, i3, l2, p_151540_3_, p_151540_4_))
 									{
@@ -170,8 +169,6 @@ public class MapGenModifiedRavine extends MapGenBase
 										
 										if ((d13 * d13 + d14 * d14) * (double)this.field_75046_d[l3] + d11 * d11 / 6.0D < 1.0D)
 										{
-											Block block1 = p_151540_5_[k3];
-											
 											if (isTopBlock(p_151540_5_, k3, k2, l3, j3, p_151540_3_, p_151540_4_))
 											{
 												flag = true;
@@ -254,28 +251,28 @@ public class MapGenModifiedRavine extends MapGenBase
 	 * @param chunkZ Chunk Y position
 	 * @param foundTop True if we've encountered the biome's top block. Ideally if we've broken the surface.
 	 */
-	 protected void digBlock(Block[] data, int index, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
+	protected void digBlock(Block[] data, int index, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
 	{
-		 BiomeGenBase biome = worldObj.getBiomeGenForCoords(x + chunkX * 16, z + chunkZ * 16);
-		 Block top    = (isExceptionBiome(biome) ? Blocks.grass : biome.topBlock);
-		 Block filler = (isExceptionBiome(biome) ? Blocks.dirt  : biome.fillerBlock);
-		 Block block  = data[index];
-		 
-		 if (block == Blocks.stone || block == filler || block == top)
-		 {
-			 if (y < 10)
-			 {
-				 data[index] = Blocks.flowing_lava;
-			 }
-			 else
-			 {
-				 data[index] = null;
-				 
-				 if (foundTop && data[index - 1] == filler)
-				 {
-					 data[index - 1] = top;
-				 }
-			 }
-		 }
+		BiomeGenBase biome = worldObj.getBiomeGenForCoords(x + chunkX * 16, z + chunkZ * 16);
+		Block top    = (isExceptionBiome(biome) ? Blocks.grass : biome.topBlock);
+		Block filler = (isExceptionBiome(biome) ? Blocks.dirt  : biome.fillerBlock);
+		Block block  = data[index];
+		
+		if (block == Blocks.stone || block == filler || block == top)
+		{
+			if (y < 10)
+			{
+				data[index] = Blocks.flowing_lava;
+			}
+			else
+			{
+				data[index] = null;
+				
+				if (foundTop && data[index - 1] == filler)
+				{
+					data[index - 1] = top;
+				}
+			}
+		}
 	}
 }

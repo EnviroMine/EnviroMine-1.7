@@ -142,8 +142,6 @@ public class MapGenModifiedCaves extends MapGenBase
 								
 								if (i3 >= 0 && i3 < 256)
 								{
-									Block block = p_151541_5_[j3];
-									
 									if (isOceanBlock(p_151541_5_, j3, k2, i3, l2, p_151541_3_, p_151541_4_))
 									{
 										flag3 = true;
@@ -178,8 +176,6 @@ public class MapGenModifiedCaves extends MapGenBase
 										
 										if (d12 > -0.7D && d13 * d13 + d12 * d12 + d14 * d14 < 1.0D)
 										{
-											Block block1 = p_151541_5_[k3];
-											
 											if (isTopBlock(p_151541_5_, k3, k2, l3, j3, p_151541_3_, p_151541_4_))
 											{
 												flag1 = true;

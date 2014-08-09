@@ -496,7 +496,6 @@ public class ChunkProviderCaves implements IChunkProvider
 		 
 		 int k = p_73153_2_ * 16;
 		 int l = p_73153_3_ * 16;
-		 int i1;
 		 int j1;
 		 int k1;
 		 int l1;

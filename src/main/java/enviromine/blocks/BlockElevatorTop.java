@@ -5,7 +5,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -31,15 +30,17 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if(player.isSneaking())
-		{
-			if(!world.isRemote)
+		if(!world.isRemote) {
+			if(player.isSneaking())
 			{
 				new Earthquake(world, i, k, 64, 8);
 			}
-			return true;
+		} else {
+			player.addChatMessage(new ChatComponentText("This feature is not finished!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 		}
+		return true;
 		
+		/*
 		EntityPlayerMP playerMP = null;
 		
 		if(player instanceof EntityPlayerMP)
@@ -50,10 +51,6 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		player.addChatMessage(new ChatComponentText("This feature is not finished!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-		return true;
-		
-		/*
 		if(world.getBlock(i, j - 1, k) != ObjectHandler.elevatorBottom)
 		{
 			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
@@ -92,7 +89,7 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));
 		}
 		return true;
-		*/
+		 */
 	}
 	
 	//Make sure you set this as your TileEntity class relevant for the block!

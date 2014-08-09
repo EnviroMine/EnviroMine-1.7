@@ -6,8 +6,6 @@ import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.AchievementPage;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
-
 public class EnviroAchievements
 {
 	public static AchievementPage page;

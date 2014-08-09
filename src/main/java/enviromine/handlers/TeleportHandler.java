@@ -105,7 +105,7 @@ public class TeleportHandler extends Teleporter
 				{
 					double d6 = (double)l1 + 0.5D - par1Entity.posZ;
 					
-					for (int i2 = this.worldServerInstance.getActualHeight() - 1; i2 >= 0; --i2)
+					for (int i2 = 127 - 1; i2 >= 0; --i2)
 					{
 						if (this.worldServerInstance.getBlock(k1, i2, l1) == ObjectHandler.elevatorBottom && this.worldServerInstance.getBlock(k1, i2 + 1, l1) == ObjectHandler.elevatorTop)
 						{

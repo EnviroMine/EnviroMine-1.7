@@ -3,6 +3,7 @@ package enviromine.handlers;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +31,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -49,10 +51,8 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -63,11 +63,9 @@ import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-
 import java.awt.Color;
 import java.io.File;
 import java.util.UUID;
-
 import org.apache.logging.log4j.Level;
 
 public class EM_EventManager
@@ -127,6 +125,7 @@ public class EM_EventManager
 					if(oldTrack != null)
 					{
 						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
+						oldTrack.loadNBTTags();
 						return;
 					}
 				}
@@ -189,17 +188,18 @@ public class EM_EventManager
 		{
 			if(event.entityLiving instanceof EntityPlayer && event.source == null)
 			{
-				/*EntityPlayer player = EM_StatusManager.findPlayer(((EntityPlayer)event.entityLiving).username);
+				EntityPlayer player = EM_StatusManager.findPlayer(event.entityLiving.getUniqueID());
 				
 				if(player != null)
 				{
-					tracker.resetData();
-					EM_StatusManager.saveAndRemoveTracker(tracker);
+					tracker.trackedEntity = player;
+					tracker.loadNBTTags();
+					//EM_StatusManager.saveAndRemoveTracker(tracker);
 				} else
 				{
 					tracker.resetData();
 					EM_StatusManager.saveAndRemoveTracker(tracker);
-				}*/
+				}
 				return;
 			} else
 			{
@@ -274,9 +274,7 @@ public class EM_EventManager
 	{
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
-			Minecraft.getMinecraft().thePlayer.playSound(event.name, event.volume, event.pitch);
-			//TODO Old 1.64 version
-			//Minecraft.getMinecraft().sndManager.playSound(event.name, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ, 1.0F, 1.0F);
+			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
 			event.setCanceled(true);
 		}
 	}

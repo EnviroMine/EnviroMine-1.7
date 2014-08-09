@@ -1,17 +1,18 @@
 package enviromine.core.proxies;
 
-import enviromine.gui.UpdateNotification;
-import enviromine.handlers.CamelPackRefillHandler;
-import enviromine.handlers.EM_EventManager;
-import enviromine.handlers.EM_ServerScheduledTickHandler;
-
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+
+import enviromine.gui.UpdateNotification;
+import enviromine.handlers.CamelPackIntegrationHandler;
+import enviromine.handlers.CamelPackRefillHandler;
+import enviromine.handlers.EM_EventManager;
+import enviromine.handlers.EM_ServerScheduledTickHandler;
 
 public class EM_CommonProxy
 {
@@ -35,7 +36,8 @@ public class EM_CommonProxy
 		MinecraftForge.EVENT_BUS.register(new UpdateNotification());
 		
 		CamelPackRefillHandler tmp = new CamelPackRefillHandler();
-		CraftingManager.getInstance().getRecipeList().add(tmp);
+		GameRegistry.addRecipe(tmp);
+		GameRegistry.addRecipe(new CamelPackIntegrationHandler());
 		FMLCommonHandler.instance().bus().register(tmp);
 	}
 	

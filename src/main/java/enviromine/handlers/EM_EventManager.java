@@ -51,8 +51,11 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -63,9 +66,11 @@ import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
+
 import java.awt.Color;
 import java.io.File;
 import java.util.UUID;
+
 import org.apache.logging.log4j.Level;
 
 public class EM_EventManager
@@ -1109,6 +1114,16 @@ public class EM_EventManager
 		if(EM_Settings.worldDir != null && event.world.provider.dimensionId == 0)
 		{
 			MineshaftBuilder.saveBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
+		}
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void onTooltip(ItemTooltipEvent event)
+	{
+		if (event.itemStack.hasTagCompound() && event.itemStack.getTagCompound().hasKey("camelPackFill")) {
+			int i = 100-event.itemStack.getTagCompound().getInteger("camelPackFill");
+			int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
+			event.toolTip.add("Camel pack: " + disp + "%");
 		}
 	}
 	

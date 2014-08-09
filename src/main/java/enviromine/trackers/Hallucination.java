@@ -40,6 +40,7 @@ public class Hallucination
 
 		BiomeGenBase biome = entityLiving.worldObj.getBiomeGenForCoords(MathHelper.floor_double(entityLiving.posX), MathHelper.floor_double(entityLiving.posZ));
 		
+		@SuppressWarnings("unchecked")
 		ArrayList<SpawnListEntry> spawnList = (ArrayList<SpawnListEntry>)biome.getSpawnableList(EnumCreatureType.monster);
 		
 		if(spawnList.size() <= 0)
@@ -58,69 +59,9 @@ public class Hallucination
             return;
         }
 		
-		/*if(entityLiving.dimension == -1)
-		{
-			switch(rand.nextInt(3))
-			{
-				case 0:
-				{
-					falseSound = "mob.skeleton.say";
-					falseEntity = new EntitySkeleton(entityLiving.worldObj);
-					((EntitySkeleton)falseEntity).setSkeletonType(1);
-					break;
-				}
-				case 1:
-				{
-					falseSound = "mob.blaze.breathe";
-					falseEntity = new EntityBlaze(entityLiving.worldObj);
-					break;
-				}
-				case 2:
-				{
-					falseSound = "mob.ghast.scream";
-					falseEntity = new EntityGhast(entityLiving.worldObj);
-					break;
-				}
-			}
-		} else
-		{
-			switch(rand.nextInt(5))
-			{
-				case 0:
-				{
-					falseSound = "mob.zombie.say";
-					falseEntity = new EntityZombie(entityLiving.worldObj);
-					break;
-				}
-				case 1:
-				{
-					falseSound = "random.fuse";
-					falseEntity = new EntityCreeper(entityLiving.worldObj);
-					break;
-				}
-				case 2:
-				{
-					falseSound = "mob.spider.say";
-					falseEntity = new EntitySpider(entityLiving.worldObj);
-					break;
-				}
-				case 3:
-				{
-					falseSound = "mob.skeleton.say";
-					falseEntity = new EntitySkeleton(entityLiving.worldObj);
-					break;
-				}
-				case 4:
-				{
-					falseSound = "mob.enderman.scream";
-					falseEntity = new EntityEnderman(entityLiving.worldObj);
-					break;
-				}
-			}
-		}*/
-		
 		if(falseEntity == null)
 		{
+			System.out.println("Halucination instance returned null!");
 			return;
 		}
 		
@@ -164,7 +105,7 @@ public class Hallucination
 	
 	public static boolean isAtValidSpawn(EntityLivingBase creature)
 	{
-		return creature.worldObj.isBlockNormalCubeDefault(MathHelper.floor_double(creature.posX), MathHelper.floor_double(creature.posY - 1), MathHelper.floor_double(creature.posZ), false) && creature.worldObj.checkNoEntityCollision(creature.boundingBox) && creature.worldObj.getCollidingBoundingBoxes(creature, creature.boundingBox).isEmpty() && !creature.worldObj.isAnyLiquid(creature.boundingBox) && isValidLightLevel(creature);
+		return creature.worldObj.checkNoEntityCollision(creature.boundingBox) && creature.worldObj.getCollidingBoundingBoxes(creature, creature.boundingBox).isEmpty() && !creature.worldObj.isAnyLiquid(creature.boundingBox) && isValidLightLevel(creature);
 	}
 	
 	/**
@@ -181,20 +122,12 @@ public class Hallucination
 		int j = MathHelper.floor_double(creature.boundingBox.minY);
 		int k = MathHelper.floor_double(creature.posZ);
 		
-		if(creature.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > creature.getRNG().nextInt(32) && creature.worldObj.isDaytime())
+		if(creature.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > creature.getRNG().nextInt(32) && creature.worldObj.isDaytime() && !creature.worldObj.isThundering())
 		{
 			return false;
 		} else
 		{
-			int l = creature.worldObj.getBlockLightValue(i, j, k);
-			
-			if(creature.worldObj.isThundering())
-			{
-				int i1 = creature.worldObj.skylightSubtracted;
-				creature.worldObj.skylightSubtracted = 10;
-				l = creature.worldObj.getBlockLightValue(i, j, k);
-				creature.worldObj.skylightSubtracted = i1;
-			}
+			int l = creature.worldObj.getSavedLightValue(EnumSkyBlock.Block, i, j, k);
 			
 			return l <= creature.getRNG().nextInt(8);
 		}

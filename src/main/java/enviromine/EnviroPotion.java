@@ -160,7 +160,7 @@ public class EnviroPotion extends Potion
 					}
 					case 2:
 					{
-						sound = "random.fuse";
+						sound = "creeper.primed";
 						break;
 					}
 					case 3:
@@ -205,7 +205,7 @@ public class EnviroPotion extends Potion
 					}
 					case 11:
 					{
-						sound = "mob.ghast.idle";
+						sound = "mob.ghast.moan";
 						break;
 					}
 					case 12:
@@ -215,7 +215,7 @@ public class EnviroPotion extends Potion
 					}
 					case 13:
 					{
-						sound = "damage.hurtflesh";
+						sound = "game.player.hurt";
 						break;
 					}
 					case 14:
@@ -225,7 +225,7 @@ public class EnviroPotion extends Potion
 					}
 					case 15:
 					{
-						sound = "mob.bat.idle";
+						sound = "mob.endermen.portal";
 						break;
 					}
 				}

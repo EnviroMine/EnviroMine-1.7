@@ -87,6 +87,10 @@ public class PacketEnviroMine implements IMessage
 			
 			if(tracker != null)
 			{
+				tracker.prevAirQuality = tracker.airQuality;
+				tracker.prevBodyTemp = tracker.bodyTemp;
+				tracker.prevHydration = tracker.hydration;
+				tracker.prevSanity = tracker.sanity;
 				tracker.airQuality = Float.valueOf(data[2]);
 				tracker.bodyTemp = Float.valueOf(data[3]);
 				tracker.hydration = Float.valueOf(data[4]);

@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -14,7 +13,6 @@ import net.minecraftforge.common.config.Property;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 
-import enviromine.handlers.keybinds.AddRemoveCustom;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
@@ -848,6 +846,7 @@ public class EM_ConfigHandler
 		*/
 	}
 	
+	/*
 	private static void DetectedArmorGen(ItemArmor armor)
 	{
 		File armorFile = new File(customPath + armor.getClass().getSimpleName() + ".cfg");
@@ -881,6 +880,7 @@ public class EM_ConfigHandler
 		
 		config.save();
 	}
+	*/
 	
 	public static void SearchForDimensions()
 	{

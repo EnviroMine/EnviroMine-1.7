@@ -63,9 +63,9 @@ public class ObjectHandler
 		
 		camelPackMaterial = EnumHelper.addArmorMaterial("camelPack", 100, new int[]{1, 0, 0, 0}, 0);
 		
-		camelPack = new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("camelpack").setCreativeTab(EnviroMine.enviroTab);
-		gasMask = new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("gasmask").setCreativeTab(EnviroMine.enviroTab);
-		hardHat = new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("hardhat").setCreativeTab(EnviroMine.enviroTab);
+		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("camelpack").setCreativeTab(EnviroMine.enviroTab);
+		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("gasmask").setCreativeTab(EnviroMine.enviroTab);
+		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("hardhat").setCreativeTab(EnviroMine.enviroTab);
 	}
 	
 	public static void registerItems()

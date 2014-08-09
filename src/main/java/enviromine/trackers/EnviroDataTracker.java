@@ -106,7 +106,7 @@ public class EnviroDataTracker
 				
 				if(player == null)
 				{
-					//EM_StatusManager.saveAndRemoveTracker(this);
+					EM_StatusManager.saveAndRemoveTracker(this);
 					return;
 				} else
 				{

@@ -55,6 +55,8 @@ import net.minecraftforge.event.world.WorldEvent.Unload;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
@@ -275,6 +277,7 @@ public class EM_EventManager
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
 	{
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))

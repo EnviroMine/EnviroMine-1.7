@@ -53,7 +53,6 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -168,9 +167,13 @@ public class EM_EventManager
 	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event)
 	{
-		if(event.itemStack != null && event.itemStack.getTagCompound() != null)
+		if(event.itemStack != null && event.itemStack.hasTagCompound())
 		{
-			if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
+			if (event.itemStack.getTagCompound().hasKey("camelPackFill")) {
+				int i = event.itemStack.getTagCompound().getInteger("camelPackFill");
+				int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
+				event.toolTip.add("Camel pack: " + disp + "%");
+			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
 			{
 				double rotDate = event.itemStack.getTagCompound().getLong("EM_ROT_DATE");
 				double rotTime = event.itemStack.getTagCompound().getLong("EM_ROT_TIME");
@@ -383,29 +386,29 @@ public class EM_EventManager
 				if(player.worldObj.getBlock(i, j, k) == Blocks.jukebox)
 				{
 					TileEntityJukebox recordplayer = (TileEntityJukebox)player.worldObj.getTileEntity(i, j, k);
-
-		            if (recordplayer != null)
-		            {
-		            	if(recordplayer.func_145856_a() == null)
-		            	{
-		            		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(player);
-		            		
-		            		if(tracker != null)
-		            		{
-		            			if(tracker.sanity >= 75F)
-		            			{
-		            				tracker.sanity -= 50F;
-		            			}
-		            			
-		            			player.addChatMessage(new ChatComponentText("An eerie shiver travels down your spine"));
-		            		}
-		            	}
-		            }
+					
+					if (recordplayer != null)
+					{
+						if(recordplayer.func_145856_a() == null)
+						{
+							EnviroDataTracker tracker = EM_StatusManager.lookupTracker(player);
+							
+							if(tracker != null)
+							{
+								if(tracker.sanity >= 75F)
+								{
+									tracker.sanity -= 50F;
+								}
+								
+								player.addChatMessage(new ChatComponentText("An eerie shiver travels down your spine"));
+							}
+						}
+					}
 				}
 			}
 		}
 	}
-
+	
 	public static void fillBottle(World world, EntityPlayer player, int x, int y, int z, ItemStack item, PlayerInteractEvent event)
 	{
 		MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, player, true);
@@ -449,26 +452,26 @@ public class EM_EventManager
 					
 					switch(getWaterType(world, i, j, k))
 					{
-						case 0:
-						{
-							newItem = Items.potionitem;
-							break;
-						}
-						case 1:
-						{
-							newItem = ObjectHandler.badWaterBottle;
-							break;
-						}
-						case 2:
-						{
-							newItem = ObjectHandler.saltWaterBottle;
-							break;
-						}
-						case 3:
-						{
-							newItem = ObjectHandler.coldWaterBottle;
-							break;
-						}
+					case 0:
+					{
+						newItem = Items.potionitem;
+						break;
+					}
+					case 1:
+					{
+						newItem = ObjectHandler.badWaterBottle;
+						break;
+					}
+					case 2:
+					{
+						newItem = ObjectHandler.saltWaterBottle;
+						break;
+					}
+					case 3:
+					{
+						newItem = ObjectHandler.coldWaterBottle;
+						break;
+					}
 					}
 					
 					if(isValidCauldron && (world.getBlock(i, j - 1, k) == Blocks.fire || world.getBlock(i, j - 1, k) == Blocks.flowing_lava || world.getBlock(i, j - 1, k) == Blocks.lava))
@@ -745,7 +748,7 @@ public class EM_EventManager
 				attribute.removeModifier(attribute.getModifier(EM_DEHY1_ID));
 			}
 		}
-
+		
 		UUID EM_FROST1_ID = EM_Settings.FROST1_UUID;
 		UUID EM_FROST2_ID = EM_Settings.FROST2_UUID;
 		UUID EM_FROST3_ID = EM_Settings.FROST3_UUID;
@@ -1053,7 +1056,7 @@ public class EM_EventManager
 		{
 			EM_PhysManager.worldStartTime = event.world.getTotalWorldTime();
 		}
-
+		
 		MinecraftServer server = MinecraftServer.getServer();
 		
 		if(EM_Settings.worldDir == null && server.isServerRunning())
@@ -1117,16 +1120,6 @@ public class EM_EventManager
 		if(EM_Settings.worldDir != null && event.world.provider.dimensionId == 0)
 		{
 			MineshaftBuilder.saveBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
-		}
-	}
-	
-	@SubscribeEvent(priority=EventPriority.LOWEST)
-	public void onTooltip(ItemTooltipEvent event)
-	{
-		if (event.itemStack.hasTagCompound() && event.itemStack.getTagCompound().hasKey("camelPackFill")) {
-			int i = event.itemStack.getTagCompound().getInteger("camelPackFill");
-			int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
-			event.toolTip.add("Camel pack: " + disp + "%");
 		}
 	}
 	

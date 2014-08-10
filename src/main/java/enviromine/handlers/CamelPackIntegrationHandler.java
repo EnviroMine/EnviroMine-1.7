@@ -78,12 +78,15 @@ public class CamelPackIntegrationHandler implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		String name = armor.getDisplayName();
-		if (!armor.hasTagCompound()) {
-			armor.setTagCompound(new NBTTagCompound());
+		if (armor != null) {
+			if (!armor.hasTagCompound()) {
+				armor.setTagCompound(new NBTTagCompound());
+			}
+			armor.getTagCompound().setInteger("camelPackFill", 100-pack.getItemDamage());
+			
+			return armor;
+		} else {
+			return null;
 		}
-		armor.getTagCompound().setInteger("camelPackFill", pack.getItemDamage());
-		
-		return armor;
 	}
 }

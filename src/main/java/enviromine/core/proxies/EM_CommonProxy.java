@@ -37,8 +37,11 @@ public class EM_CommonProxy
 		
 		CamelPackRefillHandler tmp = new CamelPackRefillHandler();
 		GameRegistry.addRecipe(tmp);
-		GameRegistry.addRecipe(new CamelPackIntegrationHandler());
 		FMLCommonHandler.instance().bus().register(tmp);
+		
+		CamelPackIntegrationHandler tmp2 = new CamelPackIntegrationHandler();
+		GameRegistry.addRecipe(tmp2);
+		FMLCommonHandler.instance().bus().register(tmp2);
 	}
 	
 	public void preInit(FMLPreInitializationEvent event)

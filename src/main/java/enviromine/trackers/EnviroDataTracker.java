@@ -332,6 +332,19 @@ public class EnviroDataTracker
 						bodyTemp -= EM_Settings.tempMult/10F;
 					}
 				}
+			} else if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
+			{
+				int fill = plate.getTagCompound().getInteger("camelPackFill");
+				if(fill > 0 && hydration <= 99F - EM_Settings.hydrationMult)
+				{
+					plate.getTagCompound().setInteger("camelPackFill", fill-1);
+					hydrate((float)EM_Settings.hydrationMult);
+					
+					if(bodyTemp >= 37F + EM_Settings.tempMult/10F)
+					{
+						bodyTemp -= EM_Settings.tempMult/10F;
+					}
+				}
 			}
 		}
 		

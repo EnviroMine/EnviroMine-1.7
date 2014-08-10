@@ -1,0 +1,53 @@
+language.name=Russian
+language.region=RU
+language.code=ru_RU
+
+item.badwater.name=Бутылка грязной воды
+item.saltwater.name=Бутылка солёной воды
+item.coldwater.name=Бутылка холодной воды
+item.camelpack.name=Бурдюк
+item.gasmask.name=Противогаз
+item.hardhat.name=Каска
+item.airfilter.name=Воздушный фильтр
+item.rottenfood.name=Испорченная руда
+
+tile.elevator_top.name=Верх лифта
+tile.elevator_bottom.name=Низ лифта
+
+itemGroup.enviroTab=EnviroMine
+
+achievement.enviromine.FunwaysFault=Ошибка Funway
+achievement.enviromine.MindOverMatter=Разум важнее материи
+achievement.enviromine.ProMiner=Профессиональный шахтёр
+achievement.enviromine.HardBoiled=Сильно сваренный
+achievement.enviromine.IronArmy=Железная армия
+achievement.enviromine.TradingFavours=Польза торговли
+achievement.enviromine.INeededThat=Я нуждался в этом
+achievement.enviromine.WinterIsComing=Зима близко
+achievement.enviromine.OhGodWhy=О, Боже, почему
+achievement.enviromine.SafetyFirst=Безопасность прежде всего
+achievement.enviromine.BoreToTheCore=Копаем до ядра
+achievement.enviromine.IntoTheDarkness=В темноту
+achievement.enviromine.ThatJustHappened=Это только что произошло
+achievement.enviromine.ItsPitchBlack=It's Pitch Black
+achievement.enviromine.TenSecondRule=Правило 10 секунд
+achievement.enviromine.MedicalMarvels=Медицинские чудеса
+achievement.enviromine.SuckItUpPrincess=Получи принцесса
+
+achievement.enviromine.FunwaysFault.desc=Выживете в пещере
+achievement.enviromine.MindOverMatter.desc=Убейте 5 враждебных мобов, находясь под воздействием безумия III
+achievement.enviromine.ProMiner.desc=В сумме наберите 1 час добывания не умирая (с физикой и всеми эффектами)
+achievement.enviromine.HardBoiled.desc=Переживите тепловой удар III
+achievement.enviromine.IronArmy.desc=Назовите железного голема "Siyliss"
+achievement.enviromine.TradingFavours.desc=Получите помощь от жителя
+achievement.enviromine.INeededThat.desc=Нащупайте инструмент, находясь под воздействием обморожения I
+achievement.enviromine.WinterIsComing.desc=Переживите 7 дней в снежном биоме без гипотермии
+achievement.enviromine.OhGodWhy.desc=Play 11
+achievement.enviromine.SafetyFirst.desc=Сделайте каску
+achievement.enviromine.BoreToTheCore.desc=Войдите в пещерное измерение
+achievement.enviromine.IntoTheDarkness.desc=Пройдите 1 км. в пещерном измерении и вернитесь живым
+achievement.enviromine.ThatJustHappened.desc=Переживите газовую атаку
+achievement.enviromine.ItsPitchBlack.desc=???
+achievement.enviromine.TenSecondRule.desc=Съешьте испорченную еду
+achievement.enviromine.MedicalMarvels.desc=Вылечите любую инфекцию или заболевание
+achievement.enviromine.SuckItUpPrincess.desc=Убейте враждебного моба, когда у Вас сломана одна или более конечностей

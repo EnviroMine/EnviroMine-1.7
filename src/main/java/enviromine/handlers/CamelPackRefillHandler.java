@@ -64,12 +64,20 @@ public class CamelPackRefillHandler implements IRecipe
 				}
 			} else if(item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
-				fillBottle = false;
-				bottles.add(item);
+				if (bottles.size() > 0 && fillBottle) {
+					return false;
+				} else {
+					fillBottle = false;
+					bottles.add(item);
+				}
 			} else if(item.getItem() == Items.glass_bottle && bottles.size() == 0)
 			{
-				fillBottle = true;
-				bottles.add(item);
+				if (bottles.size() > 0 && !fillBottle) {
+					return false;
+				} else {
+					fillBottle = true;
+					bottles.add(item);
+				}
 			} else if(item != null)
 			{
 				return false;

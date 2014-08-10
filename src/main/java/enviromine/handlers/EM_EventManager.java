@@ -1121,7 +1121,7 @@ public class EM_EventManager
 	public void onTooltip(ItemTooltipEvent event)
 	{
 		if (event.itemStack.hasTagCompound() && event.itemStack.getTagCompound().hasKey("camelPackFill")) {
-			int i = 100-event.itemStack.getTagCompound().getInteger("camelPackFill");
+			int i = event.itemStack.getTagCompound().getInteger("camelPackFill");
 			int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
 			event.toolTip.add("Camel pack: " + disp + "%");
 		}

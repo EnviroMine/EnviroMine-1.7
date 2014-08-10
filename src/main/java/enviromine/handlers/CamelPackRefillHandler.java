@@ -16,19 +16,17 @@ import java.util.Iterator;
 public class CamelPackRefillHandler implements IRecipe
 {
 	public boolean fillBottle;
+	public boolean isArmor;
 	public int packDamage;
 	public ArrayList<ItemStack> bottles = new ArrayList<ItemStack>();
 	public ItemStack pack;
 	
-	public CamelPackRefillHandler()
-	{
-	}
+	public CamelPackRefillHandler() {}
 	
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
-		if(!inv.getInventoryName().equals("container.crafting"))
-		{
+		if(!inv.getInventoryName().equals("container.crafting")) {
 			return false;
 		}
 		
@@ -49,9 +47,20 @@ public class CamelPackRefillHandler implements IRecipe
 					return false;
 				} else
 				{
-					pack = item;
+					pack = item.copy();
 					packDamage = item.getItemDamage();
 					hasPack = true;
+				}
+			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill")) {
+				if(hasPack)
+				{
+					return false;
+				} else
+				{
+					pack = item.copy();
+					packDamage = 100-item.getTagCompound().getInteger("camelPackFill");
+					hasPack = true;
+					isArmor = true;
 				}
 			} else if(item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
@@ -83,8 +92,7 @@ public class CamelPackRefillHandler implements IRecipe
 	}
 	
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventorycrafting)
-	{
+	public ItemStack getCraftingResult(InventoryCrafting inventorycrafting) {
 		return this.getRecipeOutput();
 	}
 	
@@ -97,7 +105,12 @@ public class CamelPackRefillHandler implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		if(!fillBottle)
+		if(fillBottle)
+		{
+			ItemStack newItem = new ItemStack(Items.potionitem);
+			newItem.setItemDamage(0);
+			return newItem;
+		} else
 		{
 			Iterator<ItemStack> iterator = bottles.iterator();
 			
@@ -106,23 +119,24 @@ public class CamelPackRefillHandler implements IRecipe
 				ItemStack bottle = iterator.next();
 				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
-		}
-		
-		if(fillBottle)
-		{
-			ItemStack newItem = new ItemStack(Items.potionitem);
-			newItem.setItemDamage(0);
-			return newItem;
-		} else
-		{
+			
 			if(packDamage > (bottles.size() * 25))
 			{
-				ItemStack newItem = new ItemStack(ObjectHandler.camelPack);
-				newItem.setItemDamage(packDamage - (bottles.size() * 25));
-				return newItem;
+				if (isArmor) {
+					pack.getTagCompound().setInteger("camelPackFill", 100-(packDamage - (bottles.size() * 25)));
+					return pack;
+				} else {
+					pack.setItemDamage(packDamage - (bottles.size() * 25));
+					return pack;
+				}
 			} else
 			{
-				return new ItemStack(ObjectHandler.camelPack);
+				if (isArmor) {
+					pack.getTagCompound().setInteger("camelPackFill", 100);
+					return pack;
+				} else {
+					return new ItemStack(ObjectHandler.camelPack);
+				}
 			}
 		}
 	}

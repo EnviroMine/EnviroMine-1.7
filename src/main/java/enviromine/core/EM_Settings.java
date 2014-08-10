@@ -24,7 +24,7 @@ public class EM_Settings
 	
 	//Mod Data
 	public static final String Version = "FWG_EM_VER";
-	public static final String ID = "EnviroMine";
+	public static final String ModID = "enviromine";
 	public static final String Channel = "EM_CH";
 	public static final String Name = "EnviroMine";
 	public static final String Proxy = "enviromine.core.proxies";

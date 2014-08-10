@@ -374,6 +374,7 @@ public class EnviroDataTracker
 		
 		if(curAttackTime >= attackDelay)
 		{
+			//Air Check
 			if(airQuality <= 0)
 			{
 				trackedEntity.attackEntityFrom(EnviroDamageSource.suffocate, 4.0F);
@@ -391,64 +392,29 @@ public class EnviroDataTracker
 				trackedEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 200, 0));
 				trackedEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 0));
 			}
-			
-			/* For sound Overheating
-			if(sizzlePrevTime == 0) 
-			{
-				sizzlePrevTime =  mc.getSystemTime() - 16001;
-			}*/
-			
+
+			// Heat Temp Checks
 			if(!trackedEntity.isPotionActive(Potion.fireResistance))
 			{
 				if(bodyTemp >= 39F && enableHeat && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
 				{
-					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 2));
-				} else if(bodyTemp >= 41F)
-				{
-					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 1));
-					
-				} else
-				{
-					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 0));
-				}
-				
-				
-				
-			}
-			
-			if(chillPrevTime == 0) 
-			{
-				if (side.isClient()) {
-					chillPrevTime = Minecraft.getSystemTime() - 17001;
-				} else {
-					chillPrevTime =  MinecraftServer.getSystemTimeMillis() - 17001;
-				}
-				
-				if(bodyTemp >= 43F)
-				{
-					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 2));
-				} else if(bodyTemp >= 41F)
-				{
-					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 1));
-				} else
-				{
-					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 0));
-				}
-				/* For Adding Sound for Overheating
-					System.out.println(mc.getSystemTime() +"-"+ sizzlePrevTime + "="+ (mc.getSystemTime() - sizzlePrevTime));
-					if ((mc.getSystemTime() - sizzlePrevTime) > 16000)
+					if(bodyTemp >= 43F)
 					{
-						mc.sndManager.playSound("enviromine:sizzle", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, .5f, 1.0F);
-						sizzlePrevTime = mc.getSystemTime();
+						trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 2));
+					} else if(bodyTemp >= 41F)
+					{
+						trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 1));
+					} else
+					{
+						trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.heatstroke.id, 200, 0));
 					}
-				 */
-				
-			}
-			else if(trackedEntity.isPotionActive(EnviroPotion.heatstroke))
+				}
+			} else if(trackedEntity.isPotionActive(EnviroPotion.heatstroke))
 			{
 				trackedEntity.removePotionEffect(EnviroPotion.heatstroke.id);
 			}
 			
+			//Cold Temp Checks
 			if(bodyTemp <= 35F && enableFrostbite && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
 			{
 				if(bodyTemp <= 30F)

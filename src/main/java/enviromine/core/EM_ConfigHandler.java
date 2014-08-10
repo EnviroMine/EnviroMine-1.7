@@ -1,27 +1,5 @@
 package enviromine.core;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.potion.Potion;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BiomeProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.DimensionProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.ItemProperties;
-import enviromine.trackers.RotProperties;
-import enviromine.trackers.StabilityType;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,10 +9,32 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.potion.Potion;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Level;
 
 import scala.Int;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import enviromine.EnviroUtils;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BiomeProperties;
+import enviromine.trackers.BlockProperties;
+import enviromine.trackers.DimensionProperties;
+import enviromine.trackers.EntityProperties;
+import enviromine.trackers.ItemProperties;
+import enviromine.trackers.RotProperties;
+import enviromine.trackers.StabilityType;
 
 public class EM_ConfigHandler
 {
@@ -273,20 +273,6 @@ public class EM_ConfigHandler
 		EM_Settings.ShowDebug = config.get(GuiSetCat, "Show Gui Debugging Info", false, "Show Hide Gui Text Display and Icons").getBoolean(false);
 		EM_Settings.ShowText = config.get(GuiSetCat, "Show Gui Status Text", true).getBoolean(true);
 		EM_Settings.ShowGuiIcons = config.get(GuiSetCat, "Show Gui Icons", true).getBoolean(true);
-		
-		// Config Item ID's
-		String itemCatagory = "items";
-		EM_Settings.dirtBottleID = config.get(itemCatagory, "Dirty Water Bottle", 5001).getInt(5001);
-		EM_Settings.saltBottleID = config.get(itemCatagory, "Salt Water Bottle", 5002).getInt(5002);
-		EM_Settings.coldBottleID = config.get(itemCatagory, "Cold Water Bottle", 5003).getInt(5003);
-		EM_Settings.camelPackID = config.get(itemCatagory, "Camel Pack", 5004).getInt(5004);
-		
-		// Config Block ID's
-		String blockCatagory = "blocks";
-		EM_Settings.blockElevatorTopID = config.get(blockCatagory, "Elevator Top ID", 501).getInt(501);
-		EM_Settings.blockElevatorBottomID = config.get(blockCatagory, "Elevator Bottom ID", 502).getInt(502);
-		EM_Settings.gasBlockID = config.get(blockCatagory, "Normal Gas ID", 503).getInt(503);
-		EM_Settings.fireGasBlockID = config.get(blockCatagory, "Gas Fire ID", 504).getInt(504);
 		
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
@@ -813,7 +799,6 @@ public class EM_ConfigHandler
 	
 	private static void ArmorDefaultSave(Configuration config, String catName, String name, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
 	{
-		//config.get(catName, APName[0], id).getInt(id);
 		config.get(catName, APName[0], name).getString();
 		config.get(catName, APName[1], nightTemp).getDouble(nightTemp);
 		config.get(catName, APName[2], shadeTemp).getDouble(shadeTemp);
@@ -825,32 +810,43 @@ public class EM_ConfigHandler
 		config.get(catName, APName[8], air).getDouble(air);
 	}
 	
-	//TODO 
+	//TODO Modded Armor 
 	public static void SearchForModdedArmors()
 	{
 		EnviroMine.logger.log(Level.INFO, "Searcing for mod armors...");
 	
-		// Change to New Item Iterator
-		/*
+		
+		Iterator itemList = Item.itemRegistry.iterator();
+		Item theitem;
 		int armorCount = 0;
-		for(int i = 420; i < Item.itemsList.length; i++)
+		
+		while(itemList.hasNext())
 		{
-			if(Item.itemsList[i] instanceof ItemArmor)
+			theitem = (Item) itemList.next();
+			String[] Names = SplitObjectName(Item.itemRegistry.getNameForObject(theitem));
+			
+			if(!Names[0].equalsIgnoreCase("minecraft")) // Ignore Minecraft Items
 			{
-				DetectedArmorGen((ItemArmor)Item.itemsList[i]);
-				armorCount += 1;
+				if(theitem instanceof ItemArmor)
+				{
+					
+					DetectedArmorGen((ItemArmor)theitem, Names[0]);
+					armorCount += 1;
+				}
 			}
+
+			
 		}
 		
 		EnviroMine.logger.log(Level.INFO, "Found " + armorCount + " mod armors");
-		*/
 	}
 	
-	/*
-	private static void DetectedArmorGen(ItemArmor armor)
-	{
-		File armorFile = new File(customPath + armor.getClass().getSimpleName() + ".cfg");
+
+	private static void DetectedArmorGen(ItemArmor armor, String ModID)
+	{		//TODO REMOVE AFTER TESTING
+			//		File armorFile = new File(customPath + armor.getClass().getSimpleName() + ".cfg");
 		
+		File armorFile = new File(customPath + ModID + ".cfg");
 		if(!armorFile.exists())
 		{
 			try
@@ -862,10 +858,11 @@ public class EM_ConfigHandler
 				return;
 			}
 		}
-		
+	
 		Configuration config = new Configuration(armorFile, true);
 		config.load();
-		String catName = armorCat + "." + AddRemoveCustom.replaceULN(armor.getUnlocalizedName());
+		
+		String catName = armorCat + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName());
 		
 		config.addCustomCategoryComment(catName, "");
 		config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();
@@ -880,34 +877,38 @@ public class EM_ConfigHandler
 		
 		config.save();
 	}
-	*/
+
 	
 	public static void SearchForDimensions()
 	{
 		Integer[] DimensionIds = DimensionManager.getStaticDimensionIDs();
 		
-		if(EM_Settings.useDefaultConfig == true)
-		{
-			DimensionDefaultSave();
-		}
-		//Remove Vanilla Dimensions
-		
-		DimensionIds = ArrayUtils.removeElements(DimensionIds, 0);
-		DimensionIds = ArrayUtils.removeElements(DimensionIds, 1);
-		DimensionIds = ArrayUtils.removeElements(DimensionIds, -1);
-		
-		//DimensionIds.aslist
+
 		EnviroMine.logger.log(Level.INFO, "Found " + DimensionIds.length + " Mod Dimension");
 		
-		if(DimensionIds.length != 0 && DimensionIds != null)
+		for(int p = 0; p <= DimensionIds.length - 1 && DimensionIds[p] != null; p++)
 		{
-			DetectedDimension(DimensionIds);
+			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
+			
+			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
+			
+			System.out.println(modname[0]);
+			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
+			{
+				DimensionSaveConfig(dimension, "Defaults");
+			}
+			else
+			{
+				DimensionSaveConfig(dimension, modname[0]);
+			}
 		}
 	}
+
 	
-	private static void DetectedDimension(Integer[] DimensionIds)
+	private static void DimensionSaveConfig(WorldProvider dimension, String ModID)
 	{
-		File dimensionFile = new File(customPath + "ModDimensions.cfg");
+		
+	File dimensionFile = new File(customPath + ModID + ".cfg");
 		
 		if(!dimensionFile.exists())
 		{
@@ -924,16 +925,11 @@ public class EM_ConfigHandler
 		Configuration config = new Configuration(dimensionFile, true);
 		config.load();
 		
-		for(int p = 0; p <= DimensionIds.length - 1; p++)
-		{
-			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
-			
-			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-			String catName = dimensionCat + "." + modname[0] + " - " + dimension.getDimensionName().toLowerCase().trim();
+			String catName = dimensionCat + "."  + dimension.getDimensionName().toLowerCase().trim();
 			config.addCustomCategoryComment(catName, "");
 			
-			// if our Dimension else.. default settings...
-			if(DimensionIds[p] == EM_Settings.caveDimID)
+
+			if(dimension.getDimensionName().toLowerCase().trim() == "caves")
 			{
 				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
 				config.get(catName, DMName[1], true).getBoolean(true);
@@ -968,104 +964,37 @@ public class EM_ConfigHandler
 				config.get(catName, DMName[13], false).getBoolean(false);
 				config.get(catName, DMName[14], 65).getInt(65);
 			}
-		}
 		config.save();
+		
 	}
 	
-	private static void DimensionDefaultSave()
-	{
-		File dimensionFile = new File(customPath + "Defaults.cfg");
-		
-		if(!dimensionFile.exists())
-		{
-			try
-			{
-				dimensionFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		// Vanilla Dimensions
-		int[] dimensionIds = {1, 0, -1};
-		
-		Configuration config = new Configuration(dimensionFile, true);
-		config.load();
-		for(int p = 0; p <= 2; p++)
-		{
-			WorldProvider dimension = WorldProvider.getProviderForDimension(dimensionIds[p]);
-			
-			String catName = dimensionCat + ".Vanilla - " + dimension.getDimensionName().toLowerCase().trim();
-			config.addCustomCategoryComment(catName, "");
-			
-			config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-			config.get(catName, DMName[1], false).getBoolean(false);
-			config.get(catName, DMName[2], true).getBoolean(true);
-			config.get(catName, DMName[3], true).getBoolean(true);
-			config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[5], true).getBoolean(true);
-			config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[7], true).getBoolean(true);
-			config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[9], true).getBoolean(true);
-			config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[11], true).getBoolean(true);
-			config.get(catName, DMName[12], true).getBoolean(true);
-			config.get(catName, DMName[13], false).getBoolean(false);
-			config.get(catName, DMName[14], 65).getInt(65);
-		}
-		config.save();
-	}
 	
+	 
+	 
+	 
 	public static void SearchForBiomes()
 	{
-		File biomesFile = new File(customPath + "ModBiomes.cfg");
-		
-		if(!biomesFile.exists())
-		{
-			try
-			{
-				biomesFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		Configuration config = new Configuration(biomesFile, true);
-		config.load();
-		
+
 		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
 		
-		for(int p = 23; p <= BiomeArray.length - 1 && BiomeArray[p] != null; p++)
+		for(int p = 0; p <= BiomeArray.length - 1 && BiomeArray[p] != null; p++)
 		{
-			
-			String catName = biomeCat + "." + BiomeArray[p].biomeName;
-			config.addCustomCategoryComment(catName, "");
-			
-			config.get(catName, BOName[0], BiomeArray[p].biomeID, "Make sure if you change this id you also change it here.").getInt(BiomeArray[p].biomeID);
-			config.get(catName, BOName[1], false).getBoolean(false);
-			config.get(catName, BOName[2], getWater(BiomeArray[p]), "Water Quality: dirty, salt, cold, clean").getString();
-			config.get(catName, BOName[3], getTemp(BiomeArray[p]), "In Celsius").getDouble(37.00);
-			config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-			config.get(catName, BOName[5], 0.0).getDouble(0.0);
-			config.get(catName, BOName[6], 0.0).getDouble(0.0);
-		}
-		
-		config.save();
-		
-		if(EM_Settings.useDefaultConfig == true)
-		{
-			BiomeDefaultSave();
+			String[] modname = BiomeArray[p].getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
+
+			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
+			{
+				BiomeSaveConfig(BiomeArray[p], "Defaults");
+			}
+			else
+			{
+				BiomeSaveConfig(BiomeArray[p], modname[0]);
+			}
 		}
 	}
 	
-	private static void BiomeDefaultSave()
+	private static void BiomeSaveConfig(BiomeGenBase biomeArray, String ModID)
 	{
-		File biomesFile = new File(customPath + "Defaults.cfg");
+		File biomesFile = new File(customPath + ModID +".cfg");
 		
 		if(!biomesFile.exists())
 		{
@@ -1082,26 +1011,20 @@ public class EM_ConfigHandler
 		Configuration config = new Configuration(biomesFile, true);
 		config.load();
 		
-		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
+		String catName = biomeCat + "." + biomeArray.biomeName;
+		config.addCustomCategoryComment(catName, "");
 		
-		for(int p = 0; p <= 22 && BiomeArray[p] != null; p++)
-		{
-			
-			String catName = biomeCat + "." +BiomeArray[p].biomeName;
-			config.addCustomCategoryComment(catName, "");
-			
-			config.get(catName, BOName[0], BiomeArray[p].biomeID, "Make sure if you change this id you also change it here.").getInt(BiomeArray[p].biomeID);
-			config.get(catName, BOName[1], false).getBoolean(false);
-			config.get(catName, BOName[2], "clean", "Water Quality: dirty, salt, cold, clean").getString();
-			config.get(catName, BOName[3], getTemp(BiomeArray[p]), "In Celsius").getDouble(37.00);
-			config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-			config.get(catName, BOName[5], 0.0).getDouble(0.0);
-			config.get(catName, BOName[6], 0.0).getDouble(0.0);
-		}
+		config.get(catName, BOName[0], biomeArray.biomeID, "Make sure if you change this id you also change it here.").getInt(biomeArray.biomeID);
+		config.get(catName, BOName[1], false).getBoolean(false);
+		config.get(catName, BOName[2], getWater(biomeArray), "Water Quality: dirty, salt, cold, clean").getString();
+		config.get(catName, BOName[3], getTemp(biomeArray), "In Celsius").getDouble(37.00);
+		config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
+		config.get(catName, BOName[5], 0.0).getDouble(0.0);
+		config.get(catName, BOName[6], 0.0).getDouble(0.0);
 		
 		config.save();
 	}
-	
+
 	private static double getTemp(BiomeGenBase biome)
 	{
 		float bTemp = biome.temperature * 2.25F;
@@ -1390,127 +1313,176 @@ public class EM_ConfigHandler
 	}
 	
 	
-	//TODO ID list needs Removal
-	/** 
-	 * Pass a <String> of Id's and Returns an ArrayList of All Id's
-	 * 	
-	 */
-	public static List<Integer> getIDS(String idString)
+	private static String[] SplitObjectName(String splitName)
 	{
-		boolean CommaSplit = false;
-		boolean ColonSplit = false;
-		List<String> ColonList = new ArrayList<String>();
-		List<Integer> ids = new ArrayList<Integer>();
-		String[] idSplitComma = null;
-		String[] idSplitColon = null;
+		String[] nameArr = splitName.split(":");
+		return nameArr;
+	}
+
+} // End of Page
+
+
+
+
+
+//TODO REMOVE AFTER TESTING
+	/*
+	private static void DetectedDimension(Integer[] DimensionIds)
+	{
+		File dimensionFile = new File(customPath + "ModDimensions.cfg");
 		
-		//System.out.println("checking number");
-		if(!((String)idString).isEmpty() && ((String)idString).contains(","))
-		{
-			idSplitComma = idString.split(",");
-			
-			for(int o = 0; o <= (idSplitComma.length - 1); ++o)
-			{
-				//System.out.println("Found ID "+ idSplitComma[o]);
-				idSplitComma[o] = idSplitComma[o].trim();
-				
-				if(idSplitComma[o].contains(":"))
-				{
-					ColonList.add(idSplitComma[o]);
-				} else
-				{
-					ids.add(Integer.parseInt(idSplitComma[o]));
-				}
-			}
-			
-			CommaSplit = true;
-		}
-		
-		if(!((String)idString).isEmpty() && ((String)idString).contains(":"))
-		{
-			
-			if(CommaSplit = false)
-			{
-				idSplitColon = idString.split(":");
-				idSplitColon[0] = idSplitColon[0].trim();
-				idSplitColon[1] = idSplitColon[1].trim();
-				ids = getRangeIDS(idSplitColon, ids);
-			}
-			
-			else
-			{
-				Iterator<String> iterator = ColonList.iterator();
-				while(iterator.hasNext())
-				{
-					idSplitColon = iterator.next().split(":");
-					idSplitColon[0] = idSplitColon[0].trim();
-					idSplitColon[1] = idSplitColon[1].trim();
-					ids = getRangeIDS(idSplitColon, ids);
-				}
-			}
-			
-			ColonSplit = true;
-		}
-		
-		if(CommaSplit == false && ColonSplit == false)
+		if(!dimensionFile.exists())
 		{
 			try
 			{
-				ids.add(Integer.parseInt(idString));
-			} catch(NullPointerException e)
+				dimensionFile.createNewFile();
+			} catch(IOException e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM ID: " + idString);
-			} catch(StringIndexOutOfBoundsException e)
-			{
-				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM ID: " + idString);
-			} catch(NumberFormatException e)
-			{
-				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM ID: " + idString);
+				return;
 			}
 		}
 		
-		return ids;
+		Configuration config = new Configuration(dimensionFile, true);
+		config.load();
+		
+		for(int p = 0; p <= DimensionIds.length - 1; p++)
+		{
+			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
+			
+			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
+			String catName = dimensionCat + "." + modname[0] + " - " + dimension.getDimensionName().toLowerCase().trim();
+			config.addCustomCategoryComment(catName, "");
+			
+			// if our Dimension else.. default settings...
+			if(DimensionIds[p] == EM_Settings.caveDimID)
+			{
+				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
+				config.get(catName, DMName[1], true).getBoolean(true);
+				config.get(catName, DMName[2], true).getBoolean(true);
+				config.get(catName, DMName[3], true).getBoolean(true);
+				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[5], true).getBoolean(true);
+				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[7], true).getBoolean(true);
+				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[9], true).getBoolean(true);
+				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[11], true).getBoolean(true);
+				config.get(catName, DMName[12], true).getBoolean(true);
+				config.get(catName, DMName[13], false).getBoolean(false);
+				config.get(catName, DMName[14], 65).getInt(65);
+			} else
+			{
+				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
+				config.get(catName, DMName[1], false).getBoolean(false);
+				config.get(catName, DMName[2], true).getBoolean(true);
+				config.get(catName, DMName[3], true).getBoolean(true);
+				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[5], true).getBoolean(true);
+				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[7], true).getBoolean(true);
+				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[9], true).getBoolean(true);
+				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[11], true).getBoolean(true);
+				config.get(catName, DMName[12], true).getBoolean(true);
+				config.get(catName, DMName[13], false).getBoolean(false);
+				config.get(catName, DMName[14], 65).getInt(65);
+			}
+		}
+		config.save();
 	}
 	
-	// This arranges a range of IDS from small to large numbers 
-	private static List<Integer> getRangeIDS(String[] idSplitColon, List<Integer> ids)
+
+	
+	
+	private static void DimensionDefaultSave()
 	{
-		//System.out.println("Found Colon");
+		File dimensionFile = new File(customPath + "Defaults.cfg");
 		
+		if(!dimensionFile.exists())
+		{
+			try
+			{
+				dimensionFile.createNewFile();
+			} catch(IOException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+		}
+		
+		// Vanilla Dimensions
+		int[] dimensionIds = {1, 0, -1};
+		
+		Configuration config = new Configuration(dimensionFile, true);
+		config.load();
+		for(int p = 0; p <= 2; p++)
+		{
+			WorldProvider dimension = WorldProvider.getProviderForDimension(dimensionIds[p]);
+			
+			String catName = dimensionCat + ".Vanilla - " + dimension.getDimensionName().toLowerCase().trim();
+			config.addCustomCategoryComment(catName, "");
+			
+			config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
+			config.get(catName, DMName[1], false).getBoolean(false);
+			config.get(catName, DMName[2], true).getBoolean(true);
+			config.get(catName, DMName[3], true).getBoolean(true);
+			config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
+			config.get(catName, DMName[5], true).getBoolean(true);
+			config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
+			config.get(catName, DMName[7], true).getBoolean(true);
+			config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
+			config.get(catName, DMName[9], true).getBoolean(true);
+			config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
+			config.get(catName, DMName[11], true).getBoolean(true);
+			config.get(catName, DMName[12], true).getBoolean(true);
+			config.get(catName, DMName[13], false).getBoolean(false);
+			config.get(catName, DMName[14], 65).getInt(65);
+		}
+		config.save();
+	}
+	*/
+
+//TODO REMOVE AFTER TESTING
+/*
+private static void BiomeDefaultSave()
+{
+	File biomesFile = new File(customPath + "Defaults.cfg");
+	
+	if(!biomesFile.exists())
+	{
 		try
 		{
-			
-			int Min = Integer.parseInt(idSplitColon[0]);
-			int Max = Integer.parseInt(idSplitColon[1]);
-			
-			if(Max <= Min)
-			{
-				Min = Integer.parseInt(idSplitColon[1]);
-				Max = Integer.parseInt(idSplitColon[0]);
-			}
-			
-			for(int j = Min; j <= Max; ++j)
-			{
-				ids.add(j);
-			}
-			
-		} catch(NullPointerException e)
+			biomesFile.createNewFile();
+		} catch(IOException e)
 		{
 			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM IDs: \"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
-		} catch(StringIndexOutOfBoundsException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM IDs: \"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
-		} catch(NumberFormatException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM IDs:\"" + idSplitColon[0] + ":" + idSplitColon[1] + "\"");
+			return;
 		}
-		return ids;
 	}
 	
-} // End of Page
+	Configuration config = new Configuration(biomesFile, true);
+	config.load();
+	
+	BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
+	
+	for(int p = 0; p <= 22 && BiomeArray[p] != null; p++)
+	{
+		
+		String catName = biomeCat + "." +BiomeArray[p].biomeName;
+		config.addCustomCategoryComment(catName, "");
+		
+		config.get(catName, BOName[0], BiomeArray[p].biomeID, "Make sure if you change this id you also change it here.").getInt(BiomeArray[p].biomeID);
+		config.get(catName, BOName[1], false).getBoolean(false);
+		config.get(catName, BOName[2], "clean", "Water Quality: dirty, salt, cold, clean").getString();
+		config.get(catName, BOName[3], getTemp(BiomeArray[p]), "In Celsius").getDouble(37.00);
+		config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
+		config.get(catName, BOName[5], 0.0).getDouble(0.0);
+		config.get(catName, BOName[6], 0.0).getDouble(0.0);
+	}
+	
+	config.save();
+}*/
+

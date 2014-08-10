@@ -1,8 +1,5 @@
 package enviromine.handlers.keybinds;
 
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EnviroMine;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -12,10 +9,13 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
-
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+import enviromine.EnviroUtils;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EnviroMine;
 
 public class AddRemoveCustom
 {
@@ -56,8 +56,8 @@ public class AddRemoveCustom
 						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem().getUnlocalizedName());
 						String name = mc.thePlayer.getHeldItem().getDisplayName();
 						
-						idName = replaceULN(idName);
-						name = replaceULN(name);
+						idName = EnviroUtils.replaceULN(idName);
+						name = EnviroUtils.replaceULN(name);
 						
 						dataToCustom[0] = idName;
 						dataToCustom[1] = itemMeta;
@@ -110,8 +110,8 @@ public class AddRemoveCustom
 						String blockULName = block.getUnlocalizedName();
 						String blockName = block.getLocalizedName();
 						
-						blockULName = replaceULN(blockULName);
-						blockName = replaceULN(blockName);
+						blockULName = EnviroUtils.replaceULN(blockULName);
+						blockName = EnviroUtils.replaceULN(blockName);
 							
 						dataToCustom[0] = block;
 						dataToCustom[1] = blockMeta;
@@ -134,12 +134,12 @@ public class AddRemoveCustom
 		}
 	}
 	
-	public static String replaceULN(String unlocalizedName)
-	{
-		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
-		return newName;
+	//public static String replaceULN(String unlocalizedName)
+	//{
+	//	String newName = unlocalizedName.replaceAll("\\.+", "\\_");
+	//	return newName;
 		
-	}
+	//}
 	
 	
 }

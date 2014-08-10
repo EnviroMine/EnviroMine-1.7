@@ -3,10 +3,8 @@ package enviromine;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 
@@ -265,5 +263,12 @@ public class EnviroUtils
 		tessellator.addVertexWithUV((double)(x + (width * scale)), (double)(y + 0), 0, (double)((float)(u + width) * f), (double)((float)(v + 0) * f1));
 		tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), 0, (double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
 		tessellator.draw();
+	}
+	
+	public static String replaceULN(String unlocalizedName)
+	{
+		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
+		return newName;
+		
 	}
 }

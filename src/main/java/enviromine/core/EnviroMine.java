@@ -38,14 +38,14 @@ import enviromine.world.features.WorldFeatureGenerator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = EM_Settings.ID, name = EM_Settings.Name, version = EM_Settings.Version)
+@Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version)
 public class EnviroMine
 {
 	public static Logger logger;
 	public static BiomeGenBase caves;
 	public static CreativeTabs enviroTab = new EnviroTab("enviroTab");
 	
-	@Instance(EM_Settings.ID)
+	@Instance(EM_Settings.ModID)
 	public static EnviroMine instance;
 	
 	@SidedProxy(clientSide = EM_Settings.Proxy + ".EM_ClientProxy", serverSide = EM_Settings.Proxy + ".EM_CommonProxy")

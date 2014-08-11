@@ -48,7 +48,7 @@ public class EM_GuiEnviroMeters extends Gui
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent event)
 	{
-		if((event.type != ElementType.EXPERIENCE && event.type != ElementType.JUMPBAR) || event.isCancelable())
+		if(event.type != ElementType.HELMET || event.isCancelable())
 		{
 			return;
 		}
@@ -591,7 +591,7 @@ public class EM_GuiEnviroMeters extends Gui
 	@SideOnly(Side.CLIENT)
 	private void ShowDebugText(RenderGameOverlayEvent event)
 	{
-		if((event.type != ElementType.EXPERIENCE && event.type != ElementType.JUMPBAR) || event.isCancelable())
+		if(event.type != ElementType.HELMET || event.isCancelable())
 		{
 			return;
 		}

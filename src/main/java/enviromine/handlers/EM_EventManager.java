@@ -69,6 +69,8 @@ import net.minecraftforge.event.world.WorldEvent.Unload;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.Color;
 import java.util.List;
 import java.util.UUID;
@@ -248,11 +250,15 @@ public class EM_EventManager
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
 	{
 		if(event.entity != null && event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
-			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			if(EnviroMine.proxy.isClient())
+			{
+				Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			}
 			event.setCanceled(true);
 		}
 	}

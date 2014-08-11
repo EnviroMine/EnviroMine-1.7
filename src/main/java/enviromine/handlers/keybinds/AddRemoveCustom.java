@@ -53,8 +53,17 @@ public class AddRemoveCustom
 					{
 						Item item = mc.thePlayer.getHeldItem().getItem();
 						int itemMeta = mc.thePlayer.getHeldItem().getItemDamage();
-						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem().getUnlocalizedName());
+						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem());
 						String name = mc.thePlayer.getHeldItem().getDisplayName();
+						
+						if(idName == null)
+						{
+							System.out.println("idName == null");
+						}
+						if(name == null)
+						{
+							System.out.println("name == null");
+						}
 						
 						idName = replaceULN(idName);
 						name = replaceULN(name);
@@ -77,7 +86,11 @@ public class AddRemoveCustom
 					
 					MovingObjectType type = Minecraft.getMinecraft().objectMouseOver.typeOfHit;
 					
-					if(type.name() == "ENTITY")
+					if(type == null)
+					{
+						mc.thePlayer.addChatMessage(new ChatComponentText("Look at a block, entity or hold an item to add it to the configs."));
+						return;
+					} else if(type.name() == "ENTITY")
 					{
 						Entity lookingAt = Minecraft.getMinecraft().objectMouseOver.entityHit;
 						int id = 0;

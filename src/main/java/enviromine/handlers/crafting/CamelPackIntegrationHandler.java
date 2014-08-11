@@ -59,7 +59,6 @@ public class CamelPackIntegrationHandler implements IRecipe
 					String name = Item.itemRegistry.getNameForObject(item.getItem());
 					if (EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
 					{
-						System.out.println(name);
 						if(hasArmor) {
 							return false;
 						} else {

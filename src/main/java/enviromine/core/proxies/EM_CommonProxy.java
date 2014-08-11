@@ -9,10 +9,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import enviromine.gui.UpdateNotification;
-import enviromine.handlers.CamelPackIntegrationHandler;
-import enviromine.handlers.CamelPackRefillHandler;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_ServerScheduledTickHandler;
+import enviromine.handlers.crafting.CamelPackIntegrationHandler;
+import enviromine.handlers.crafting.CamelPackRefillHandler;
 
 public class EM_CommonProxy
 {

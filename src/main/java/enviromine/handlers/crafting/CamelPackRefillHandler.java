@@ -1,4 +1,4 @@
-package enviromine.handlers;
+package enviromine.handlers.crafting;
 
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+
+import enviromine.handlers.ObjectHandler;
 
 import java.util.ArrayList;
 import java.util.Iterator;

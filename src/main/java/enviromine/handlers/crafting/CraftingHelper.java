@@ -1,4 +1,4 @@
-package enviromine.handlers;
+package enviromine.handlers.crafting;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerWorkbench;

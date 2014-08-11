@@ -68,7 +68,7 @@ public class EnviroDataTracker
 	
 	public int updateTimer = 0;
 	
-	private Side side = FMLCommonHandler.instance().getEffectiveSide();
+	private Side side = FMLCommonHandler.instance().getSide();
 	
 	//Sound Time
 	public long chillPrevTime = 0;

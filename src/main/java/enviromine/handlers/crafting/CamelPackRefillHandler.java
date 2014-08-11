@@ -28,7 +28,7 @@ public class CamelPackRefillHandler implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+		if (FMLCommonHandler.instance().getSide().isClient()) {
 			return matchesClient(inv);
 		}
 		lastHelper = CraftingHelper.getInstanceFromCraftmatrix(inv);
@@ -105,7 +105,7 @@ public class CamelPackRefillHandler implements IRecipe
 			return false;
 		} else
 		{
-			if (FMLCommonHandler.instance().getEffectiveSide().isServer()){
+			if (FMLCommonHandler.instance().getSide().isServer()){
 				CraftingHelper.getInstanceFromCraftmatrix(inv).fillBottle = lastHelper.fillBottle;
 			}
 			return hasPack && lastHelper.bottles.size() >= 1;
@@ -194,7 +194,7 @@ public class CamelPackRefillHandler implements IRecipe
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+		if (FMLCommonHandler.instance().getSide().isClient()) {
 			return getCraftingResultClient();
 		}
 		

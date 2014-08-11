@@ -23,7 +23,7 @@ public class PacketServerOverride implements IMessage
 	
 	public PacketServerOverride()
 	{
-		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
+		if(FMLCommonHandler.instance().getSide().isServer())
 		{
 			readFromSettings();
 		}
@@ -112,6 +112,8 @@ public class PacketServerOverride implements IMessage
 		@Override
 		public IMessage onMessage(PacketServerOverride message, MessageContext ctx)
 		{
+			System.out.println("adsfa");
+			
 			EM_Settings.enableAirQ = message.enableAirQ;
 			EM_Settings.enableBodyTemp = message.enableBodyTemp;
 			EM_Settings.enableHydrate = message.enableHydrate;
@@ -121,13 +123,17 @@ public class PacketServerOverride implements IMessage
 			while(iterator.hasNext())
 			{
 				String name = iterator.next();
+				System.out.println(name+" is allowed");
 				if(EM_Settings.armorProperties.containsKey(name))
 				{
+					System.out.println("Overwriting...");
 					ArmorProperties prop = EM_Settings.armorProperties.get(name);
 					prop.allowCamelPack = true;
 					EM_Settings.armorProperties.put(name, prop);
+					System.out.println(EM_Settings.armorProperties.get(name).allowCamelPack);
 				} else
 				{
+					System.out.println("Creating new...");
 					EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, true));
 				}
 			}
@@ -136,6 +142,7 @@ public class PacketServerOverride implements IMessage
 			while(iterator.hasNext())
 			{
 				String name = iterator.next();
+				System.out.println(name+" is not allowed");
 				if(EM_Settings.armorProperties.containsKey(name))
 				{
 					ArmorProperties prop = EM_Settings.armorProperties.get(name);

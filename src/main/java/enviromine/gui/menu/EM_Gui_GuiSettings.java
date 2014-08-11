@@ -45,14 +45,25 @@ public class EM_Gui_GuiSettings extends GuiScreen
 		GuiButton minbarsbutton = new GuiButton(158, this.width / 2 + 2, this.height / 6 + 52 - 6, 150, 20, StatCollector.translateToLocal("emoptions.minBars"));
 	
 		
+		if(EM_Settings.minimalHud)
+		{
+			showstatusbutton.enabled = false;
+			showiconsbutton.enabled = false;
+		}
+		else 
+		{
+			showstatusbutton.enabled = true;
+			showiconsbutton.enabled = true;
+		}		
+		
 
 		tempScalebutton.displayString = I18n.format("emoptions.tempScale", new Object[0]) + ": " + I18n.format("emoptions.tempScale."+ (EM_Settings.useFarenheit == true ? "f" : "c" ), new Object[0]);
 			this.buttonList.add(tempScalebutton);
-		showstatusbutton.displayString =I18n.format("emoptions.status", new Object[0]) + ": " + I18n.format("emoptions.status."+ (EM_Settings.ShowText == true ? "visible" : "hidden" ), new Object[0]);
+		showstatusbutton.displayString =I18n.format("emoptions.status", new Object[0]) + ": " + I18n.format("emoptions.status."+ (EM_Settings.ShowText == true || EM_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showstatusbutton);
 		showdebugbutton.displayString =I18n.format("emoptions.debug", new Object[0]) + ": " + I18n.format("emoptions.debug."+ (EM_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showdebugbutton);
-		showiconsbutton.displayString =I18n.format("emoptions.showIcons", new Object[0]) + ": " + I18n.format("emoptions.showIcons."+ (EM_Settings.ShowGuiIcons == true ? "visible" : "hidden" ), new Object[0]);
+		showiconsbutton.displayString =I18n.format("emoptions.showIcons", new Object[0]) + ": " + I18n.format("emoptions.showIcons."+ (EM_Settings.ShowGuiIcons == true || EM_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showiconsbutton);
 		sweatParticlesbutton.displayString = I18n.format("emoptions.sweatParticles", new Object[0]) + ": " + I18n.format("emoptions.sweatParticles."+ (EM_Settings.sweatParticals == true ? "on" : "off" ), new Object[0]);
 			this.buttonList.add(sweatParticlesbutton);
@@ -92,8 +103,8 @@ public class EM_Gui_GuiSettings extends GuiScreen
 			switch(par1GuiButton.id)
 			{
 				case 200:
-					this.mc.displayGuiScreen(this.parentGuiScreen);
-					break;
+					this.mc.displayGuiScreen(parentGuiScreen);
+					return;
 				case 150:
 					EM_Settings.ShowDebug = !EM_Settings.ShowDebug; 
 						par1GuiButton.displayString =I18n.format("emoptions.debug", new Object[0]) + ": " + I18n.format("emoptions.debug."+ (EM_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
@@ -119,12 +130,16 @@ public class EM_Gui_GuiSettings extends GuiScreen
 				case 158:
 					EM_Settings.minimalHud = !EM_Settings.minimalHud;
 						par1GuiButton.displayString = I18n.format("emoptions.minBars", new Object[0]) + ": " + I18n.format("emoptions.minBars."+ (EM_Settings.minimalHud == true ? "on" : "off" ), new Object[0]);
+		               
 					break;
 				case 159:
 					EM_Settings.sweatParticals = !EM_Settings.sweatParticals;
 						par1GuiButton.displayString = I18n.format("emoptions.sweatParticles", new Object[0]) + ": " + I18n.format("emoptions.sweatParticles."+ (EM_Settings.sweatParticals == true ? "on" : "off" ), new Object[0]);
 					break;
+					
+					
 			}
+			this.mc.displayGuiScreen(this);
 		}
 		
 		

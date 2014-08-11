@@ -1,14 +1,14 @@
 package enviromine.handlers.keybinds;
 
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gui.menu.EM_Gui_GuiSettings;
-import enviromine.gui.menu.EM_Gui_Menu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 
 import org.lwjgl.input.Keyboard;
+
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gui.menu.EM_Gui_Menu;
 
 public class ReloadCustomObjects
 {
@@ -27,7 +27,7 @@ public class ReloadCustomObjects
 		// if you want your key to be able to close the gui screen, handle it outside this if statement
 		if(mc.currentScreen == null)
 		{
-			Minecraft.getMinecraft().displayGuiScreen(new EM_Gui_GuiSettings(null));
+			Minecraft.getMinecraft().displayGuiScreen(new EM_Gui_Menu());
 			
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			{

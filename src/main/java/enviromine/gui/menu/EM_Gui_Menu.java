@@ -2,6 +2,7 @@ package enviromine.gui.menu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.StatCollector;
 
 public class EM_Gui_Menu extends GuiScreen
 {
@@ -14,10 +15,10 @@ public class EM_Gui_Menu extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		this.buttonList.add(new GuiButton(101, this.width / 2 - 75, this.height / 6 + 50 - 6, 150, 20, "Gui Options"));
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 75, this.height / 6 + 74 - 6, 150, 20, "Config Settings"));
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 75, this.height / 6 + 98 - 6, 150, 20, "Custom Editor"));
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, "gui.done"));
+		this.buttonList.add(new GuiButton(101, this.width / 2 - 75, this.height / 6 + 50 - 6, 150, 20, StatCollector.translateToLocal("emoptions.guiOptions")));
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 75, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("emoptions.configSettings")));
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 75, this.height / 6 + 98 - 6, 150, 20, StatCollector.translateToLocal("emoptions.customEditor")));
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.done")));
 		
 	}
 	
@@ -51,7 +52,7 @@ public class EM_Gui_Menu extends GuiScreen
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj, "Enviromine Main Menu", this.width / 2, 15, 16777215);
+		this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal("emoptions.guiMainmenu.title"), this.width / 2, 15, 16777215);
 		super.drawScreen(par1, par2, par3);
 	}
 }

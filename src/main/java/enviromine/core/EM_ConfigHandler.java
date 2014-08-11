@@ -52,7 +52,7 @@ public class EM_ConfigHandler
 	static String biomeCat = "biomes";
 	
 	// Arrays for property names
-	/** Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air */
+	/** Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air<br>9 ({@link Boolean}) Allow Camel Pack */
 	static String[] APName;
 	/** Block properties:<br>00 ({@link String}) Name<br>01 ({@link Int}) MetaID<br>02 ({@link String}) DropName<br>03 ({@link Int}) DropMetaID<br>04 ({@link Int}) DropNumber<br>05 ({@link Boolean}) EnableTemprature<br>06 ({@link Double}) Temprature<br>07 ({@link Double}) AirQuality<br>08 ({@link Double}) Sanity<br>09 ({@link String}) Stability<br>10 ({@link Boolean}) Slides<br>11 ({@link Boolean}) Slides when wet */ //Stablility slides slides when wet
 	static String[] BPName;
@@ -106,7 +106,7 @@ public class EM_ConfigHandler
 	
 	private static void setPropertyNames()
 	{
-		APName = new String[9];
+		APName = new String[10];
 		APName[0] = "01.ID";
 		APName[1] = "02.Temp Add - Night";
 		APName[2] = "03.Temp Add - Shade";
@@ -116,6 +116,7 @@ public class EM_ConfigHandler
 		APName[6] = "07.Temp Multiplier - Sun";
 		APName[7] = "08.Sanity";
 		APName[8] = "09.Air";
+		APName[9] = "10.Allow Camel Pack";
 		
 		BPName = new String[12];
 		BPName[0] = "01.Name";
@@ -640,8 +641,9 @@ public class EM_ConfigHandler
 		float sunMult = (float)config.get(catagory, APName[6], 1.00).getDouble(1.00);
 		float sanity = (float)config.get(catagory, APName[7], 0.00).getDouble(0.00);
 		float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
+		boolean allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
 		
-		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air);
+		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
 		EM_Settings.armorProperties.put(name, entry);
 	}
 	

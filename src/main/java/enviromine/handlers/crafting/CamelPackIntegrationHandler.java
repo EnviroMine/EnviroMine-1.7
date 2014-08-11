@@ -2,6 +2,7 @@ package enviromine.handlers.crafting;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -12,6 +13,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 
+import enviromine.core.EM_Settings;
 import enviromine.handlers.ObjectHandler;
 
 public class CamelPackIntegrationHandler implements IRecipe
@@ -53,18 +55,24 @@ public class CamelPackIntegrationHandler implements IRecipe
 				}
 			} else if(item.getItem() instanceof ItemArmor) {
 				if (((ItemArmor)item.getItem()).armorType == 1) {
-					if(hasArmor) {
-						return false;
-					} else {
-						if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill")) {
-							if (hasPack) {
-								return false;
-							} else {
-								lastHelper.isRemove = true;
+					
+					String name = Item.itemRegistry.getNameForObject(item.getItem());
+					if (EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
+					{
+						System.out.println(name);
+						if(hasArmor) {
+							return false;
+						} else {
+							if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill")) {
+								if (hasPack) {
+									return false;
+								} else {
+									lastHelper.isRemove = true;
+								}
 							}
+							lastHelper.armor = item.copy();
+							hasArmor = true;
 						}
-						lastHelper.armor = item.copy();
-						hasArmor = true;
 					}
 				}
 			} else if(item != null) {
@@ -100,19 +108,23 @@ public class CamelPackIntegrationHandler implements IRecipe
 					hasPack = true;
 				}
 			} else if(item.getItem() instanceof ItemArmor) {
-				if (((ItemArmor)item.getItem()).armorType == 1) {
-					if(hasArmor) {
-						return false;
-					} else {
-						if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill")) {
-							if (hasPack) {
-								return false;
-							} else {
-								isRemove = true;
+				String name = Item.itemRegistry.getNameForObject(item.getItem());
+				if (EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
+				{
+					if (((ItemArmor)item.getItem()).armorType == 1) {
+						if(hasArmor) {
+							return false;
+						} else {
+							if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill")) {
+								if (hasPack) {
+									return false;
+								} else {
+									isRemove = true;
+								}
 							}
+							armor = item.copy();
+							hasArmor = true;
 						}
-						armor = item.copy();
-						hasArmor = true;
 					}
 				}
 			} else if(item != null) {

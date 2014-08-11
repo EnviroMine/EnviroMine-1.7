@@ -51,6 +51,9 @@ public class CraftingHelper
 		}
 		return helper;
 	}
+	public static boolean hasInstanceForPlayer(EntityPlayer player) {
+		return helpers.containsKey(player);
+	}
 	
 	public void reset()
 	{

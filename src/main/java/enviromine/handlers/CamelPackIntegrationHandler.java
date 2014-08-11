@@ -124,11 +124,11 @@ public class CamelPackIntegrationHandler implements IRecipe
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+		CraftingHelper helper = CraftingHelper.getInstanceFromCraftmatrix(inv);
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient() || helper == null) {
 			return getCraftingResultClient();
 		}
 		
-		CraftingHelper helper = CraftingHelper.getInstanceFromCraftmatrix(inv);
 		if (helper.armor != null) {
 			if (helper.isRemove) {
 				ItemStack out = new ItemStack(ObjectHandler.camelPack);
@@ -181,7 +181,7 @@ public class CamelPackIntegrationHandler implements IRecipe
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
 		IInventory craftMatrix = event.craftMatrix;
-		if(!craftMatrix.getInventoryName().equals("container.crafting") || !CraftingHelper.getInstanceFromPlayer(event.player).isRemove) {
+		if(!craftMatrix.getInventoryName().equals("container.crafting") || (CraftingHelper.hasInstanceForPlayer(event.player) && !CraftingHelper.getInstanceFromPlayer(event.player).isRemove)) {
 			return;
 		} else {
 			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)

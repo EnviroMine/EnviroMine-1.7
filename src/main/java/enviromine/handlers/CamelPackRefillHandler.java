@@ -182,9 +182,6 @@ public class CamelPackRefillHandler implements IRecipe
 			return false;
 		} else
 		{
-			if (FMLCommonHandler.instance().getEffectiveSide().isServer()){
-				CraftingHelper.getInstanceFromCraftmatrix(inv).fillBottle = fillBottle;
-			}
 			return hasPack && bottles.size() >= 1;
 		}
 	}

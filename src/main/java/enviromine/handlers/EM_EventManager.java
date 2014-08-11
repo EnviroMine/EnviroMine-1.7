@@ -60,8 +60,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
+import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.network.packet.PacketServerOverride;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
@@ -86,6 +88,17 @@ public class EM_EventManager
 			if(EM_PhysManager.chunkDelay.containsKey("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)))
 			{
 				chunkPhys = (EM_PhysManager.chunkDelay.get("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
+			}
+			
+			if (MinecraftServer.getServer().isSinglePlayer()) {
+				EM_Settings.armorProperties.clear();
+				EM_Settings.blockProperties.clear();
+				EM_Settings.itemProperties.clear();
+				EM_Settings.livingProperties.clear();
+				EM_Settings.stabilityTypes.clear();
+				EM_ConfigHandler.initConfig();
+			} else if (event.entity instanceof EntityPlayerMP) {
+				EnviroMine.instance.network.sendTo(new PacketServerOverride(), (EntityPlayerMP)event.entity);
 			}
 		}
 		

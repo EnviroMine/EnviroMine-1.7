@@ -1,4 +1,4 @@
-package enviromine.gui;
+package enviromine.gui.menu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -51,7 +51,7 @@ public class EM_Gui_Menu extends GuiScreen
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj, "Enviromine Menu", this.width / 2, 15, 16777215);
+		this.drawCenteredString(this.fontRendererObj, "Enviromine Main Menu", this.width / 2, 15, 16777215);
 		super.drawScreen(par1, par2, par3);
 	}
 }

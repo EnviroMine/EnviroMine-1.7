@@ -311,9 +311,13 @@ public class EM_ConfigHandler
 		EM_Settings.breathSound = config.get("Sound Options", "Mask: Hear Breathing", true).getBoolean(true);
 		EM_Settings.breathPause = config.get("Sound Options", "Mask: Pause Between Breaths", 300).getInt();
 		EM_Settings.breathVolume = (float)config.get("Sound Options", "Mask: Breathing Volume", 0.75, "[Hear Breathing (Defalut: True)] - Turning on and Off Gas Mask Breathing. [Breathing Volume (Default: 0.75)]Change Volume 0.0(0%) to 1(100%). [Pause Between Breaths (Default: 300)]Change Pause between breaths. Affects Sound and Gui (In GuiRender Ticks)").getDouble(0);
-		
+
+		EM_Settings.breathVolume = (EM_Settings.breathVolume > 1.0F ? 1.0F : EM_Settings.breathVolume);
+		EM_Settings.breathVolume = (EM_Settings.breathVolume < 0.0F ? 0.0F : EM_Settings.breathVolume);		
 		config.save();
 		
+
+		/*
 		if(EM_Settings.breathVolume > 1.0)
 		{
 			EM_Settings.breathVolume = (float)1.0;
@@ -324,7 +328,7 @@ public class EM_ConfigHandler
 		if(EM_Settings.breathPause < 200)
 		{
 			EM_Settings.breathPause = 200;
-		}
+		}*/
 	}
 	
 	private static int getConfigIntWithMinInt(Property prop, int min)

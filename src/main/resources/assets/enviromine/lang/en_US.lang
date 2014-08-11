@@ -51,3 +51,36 @@ achievement.enviromine.ItsPitchBlack.desc=???
 achievement.enviromine.TenSecondRule.desc=Eat rotten food
 achievement.enviromine.MedicalMarvels.desc=Cure any infection or disease
 achievement.enviromine.SuckItUpPrincess.desc=Kill a hostile mob while having one or more broken limbs
+
+emoptions.guiSetting.title=EnviroMine Gui Settings
+emoptions.guiBarPos.title=EnviroMine Bar Positions
+
+emoptions.status=Bar Status Text
+emoptions.status.visible=Shown
+emoptions.status.hidden=Hidden
+
+emoptions.minBars=Minimalistic Bars
+emoptions.minBars.on=On
+emoptions.minBars.off=Off
+
+emoptions.debug=Show Debugging
+emoptions.debug.visible=Shown
+emoptions.debug.hidden=Hidden
+
+emoptions.showIcons=Show Icons
+emoptions.showIcons.visible=Shown
+emoptions.showIcons.hidden=Hidden
+
+emoptions.barPos=Bar Positions ...
+
+emoptions.sweatParticles=Sweat Particles
+emoptions.sweatParticles.on=On
+emoptions.sweatParticles.off=Off
+
+emoptions.insaneParticles=Insanity Particles
+emoptions.insaneParticles.on=On
+emoptions.insaneParticles.off=Off
+
+emoptions.tempScale=Temp Scale
+emoptions.tempScale.f=Fahrenheit
+emoptions.tempScale.c=Celsius

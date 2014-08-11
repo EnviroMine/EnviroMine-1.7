@@ -1,4 +1,4 @@
-package enviromine.gui;
+package enviromine.gui.menu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,16 +25,7 @@ public class EM_Gui_General extends GuiScreen
 		this.buttonList.add(new GuiButton(150, this.width / 2 - 160, this.height / 6 + 96 - 6, 160, 20, "Physics: " +EM_Settings.enablePhysics));
 		
 		
-		
-		if (EM_Settings.useFarenheit == true)
-		{
-			this.buttonList.add(new GuiButton(152, this.width / 2 + 2, this.height / 6 + 96 - 6, 160, 20, "Temperature Scale: Fahrenheit"));	
-		}
-		else
-		{
-			this.buttonList.add(new GuiButton(152, this.width / 2 + 2, this.height / 6 + 96 - 6, 160, 20, "Temperature Scale: Celsius"));	
-		}
-		
+
 		
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, "gui.back"));
 		

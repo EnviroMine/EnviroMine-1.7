@@ -32,6 +32,7 @@ import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
 import enviromine.network.packet.PacketEnviroMine;
+import enviromine.network.packet.PacketServerOverride;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
@@ -79,6 +80,8 @@ public class EnviroMine
 		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
 		this.network.registerMessage(PacketEnviroMine.HandlerServer.class, PacketEnviroMine.class, 0, Side.SERVER);
 		this.network.registerMessage(PacketEnviroMine.HandlerClient.class, PacketEnviroMine.class, 1, Side.CLIENT);
+		this.network.registerMessage(PacketServerOverride.Handler.class, PacketServerOverride.class, 2, Side.CLIENT);
+
 		
 		GameRegistry.registerWorldGenerator(new WorldFeatureGenerator(), 20);
 	}

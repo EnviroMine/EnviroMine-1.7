@@ -1,27 +1,39 @@
 package enviromine.handlers;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 
 public class CamelPackIntegrationHandler implements IRecipe
 {
-	public int packDamage;
+	CraftingHelper lastHelper;
+	boolean isRemove;
 	public ItemStack pack;
 	public ItemStack armor;
-	
-	public CamelPackIntegrationHandler() {}
 	
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
+		lastHelper = CraftingHelper.getInstanceFromCraftmatrix(inv);
+		
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient() || lastHelper == null) {
+			return matchesClient(inv);
+		}
+		
 		if(!inv.getInventoryName().equals("container.crafting")) {
 			return false;
 		}
+		
+		lastHelper.reset();
+		
 		boolean hasPack = false;
 		boolean hasArmor = false;
 		
@@ -31,62 +43,160 @@ public class CamelPackIntegrationHandler implements IRecipe
 			if(item == null) {
 				continue;
 			} else if(item.getItem() == ObjectHandler.camelPack) {
-				if(hasPack) {
-					System.out.println("Debug 1");
+				if(hasPack || lastHelper.isRemove) {
 					return false;
 				} else {
-					pack = item;
-					packDamage = item.getItemDamage();
+					lastHelper.pack = item.copy();
 					hasPack = true;
 				}
 			} else if(item.getItem() instanceof ItemArmor) {
 				if (((ItemArmor)item.getItem()).armorType == 1) {
 					if(hasArmor) {
-						System.out.println("Debug 2");
 						return false;
 					} else {
-						if (!item.hasTagCompound() || !item.stackTagCompound.hasKey("camelPackFill")) {
-							armor = item.copy();
-							hasArmor = true;
+						if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill")) {
+							if (hasPack) {
+								return false;
+							} else {
+								lastHelper.isRemove = true;
+							}
 						}
+						lastHelper.armor = item.copy();
+						hasArmor = true;
 					}
 				}
 			} else if(item != null) {
-				System.out.println("Debug 3");
 				return false;
 			}
 		}
 		
-		boolean temp = !(!hasPack || !hasArmor || pack == null || armor == null);
-		if (!temp) {
-			System.out.println("Debug 4");
-		}
-		return temp;
+		return (hasArmor && lastHelper.armor != null && (lastHelper.isRemove || (hasPack && lastHelper.pack != null)));
 	}
 	
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv) {
-		return this.getRecipeOutput();
-	}
-	
-	@Override
-	public int getRecipeSize()
+	private boolean matchesClient(InventoryCrafting inv)
 	{
+		if(!inv.getInventoryName().equals("container.crafting")) {
+			return false;
+		}
+		boolean hasPack = false;
+		boolean hasArmor = false;
+		
+		this.isRemove = false;
+		this.pack = null;
+		this.armor = null;
+		
+		for(int i = inv.getSizeInventory() - 1; i >= 0; i--)
+		{
+			ItemStack item = inv.getStackInSlot(i);
+			if(item == null) {
+				continue;
+			} else if(item.getItem() == ObjectHandler.camelPack) {
+				if(hasPack || isRemove) {
+					return false;
+				} else {
+					pack = item.copy();
+					hasPack = true;
+				}
+			} else if(item.getItem() instanceof ItemArmor) {
+				if (((ItemArmor)item.getItem()).armorType == 1) {
+					if(hasArmor) {
+						return false;
+					} else {
+						if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill")) {
+							if (hasPack) {
+								return false;
+							} else {
+								isRemove = true;
+							}
+						}
+						armor = item.copy();
+						hasArmor = true;
+					}
+				}
+			} else if(item != null) {
+				return false;
+			}
+		}
+		
+		return (hasArmor && armor != null && (isRemove || (hasPack && pack != null)));
+	}
+	
+	@Override
+	public ItemStack getCraftingResult(InventoryCrafting inv)
+	{
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+			return getCraftingResultClient();
+		}
+		
+		CraftingHelper helper = CraftingHelper.getInstanceFromCraftmatrix(inv);
+		if (helper.armor != null) {
+			if (helper.isRemove) {
+				ItemStack out = new ItemStack(ObjectHandler.camelPack);
+				out.setItemDamage(100-helper.armor.getTagCompound().getInteger("camelPackFill"));
+				return out;
+			} else {
+				if (!helper.armor.hasTagCompound()) {
+					helper.armor.setTagCompound(new NBTTagCompound());
+				}
+				helper.armor.getTagCompound().setInteger("camelPackFill", 100-helper.pack.getItemDamage());
+				
+				return helper.armor;
+			}
+		}
+		
+		return null;
+	}
+	
+	private ItemStack getCraftingResultClient()
+	{
+		if (armor != null) {
+			if (isRemove) {
+				ItemStack out = new ItemStack(ObjectHandler.camelPack);
+				out.setItemDamage(100-armor.getTagCompound().getInteger("camelPackFill"));
+				return out;
+			} else {
+				if (!armor.hasTagCompound()) {
+					armor.setTagCompound(new NBTTagCompound());
+				}
+				armor.getTagCompound().setInteger("camelPackFill", 100-pack.getItemDamage());
+				
+				return armor;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public int getRecipeSize() {
 		return 4;
 	}
 	
 	@Override
-	public ItemStack getRecipeOutput()
+	public ItemStack getRecipeOutput() {
+		return null;
+	}
+	
+	@SubscribeEvent
+	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
-		if (armor != null) {
-			if (!armor.hasTagCompound()) {
-				armor.setTagCompound(new NBTTagCompound());
-			}
-			armor.getTagCompound().setInteger("camelPackFill", 100-pack.getItemDamage());
-			
-			return armor;
+		IInventory craftMatrix = event.craftMatrix;
+		if(!craftMatrix.getInventoryName().equals("container.crafting") || !CraftingHelper.getInstanceFromPlayer(event.player).isRemove) {
+			return;
 		} else {
-			return null;
+			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
+			{
+				ItemStack slot = craftMatrix.getStackInSlot(i);
+				
+				if(slot == null)
+				{
+					continue;
+				} else if(slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
+				{
+					slot.stackSize++;
+					slot.getTagCompound().removeTag("camelPackFill");
+				}
+			}
 		}
 	}
 }

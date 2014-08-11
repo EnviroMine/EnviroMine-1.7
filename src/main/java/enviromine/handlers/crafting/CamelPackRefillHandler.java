@@ -28,9 +28,11 @@ public class CamelPackRefillHandler implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+			return matchesClient(inv);
+		}
 		lastHelper = CraftingHelper.getInstanceFromCraftmatrix(inv);
-		
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient() || lastHelper == null) {
+		if (lastHelper == null) {
 			return matchesClient(inv);
 		}
 		

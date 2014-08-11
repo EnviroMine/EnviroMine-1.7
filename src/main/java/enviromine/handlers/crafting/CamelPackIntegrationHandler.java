@@ -8,11 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
 import enviromine.core.EM_Settings;
 import enviromine.handlers.ObjectHandler;
 
@@ -26,9 +24,11 @@ public class CamelPackIntegrationHandler implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+			return matchesClient(inv);
+		}
 		lastHelper = CraftingHelper.getInstanceFromCraftmatrix(inv);
-		
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient() || lastHelper == null) {
+		if (lastHelper == null) {
 			return matchesClient(inv);
 		}
 		

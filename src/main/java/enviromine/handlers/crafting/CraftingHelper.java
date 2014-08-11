@@ -5,12 +5,14 @@ import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@SideOnly(Side.SERVER)
 public class CraftingHelper
 {
 	private static final Map<EntityPlayer, CraftingHelper> helpers = new HashMap<EntityPlayer, CraftingHelper>();

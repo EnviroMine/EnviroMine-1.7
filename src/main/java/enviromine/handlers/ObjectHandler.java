@@ -105,6 +105,7 @@ public class ObjectHandler
 	public static void registerEntities()
 	{
 		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", EM_Settings.physBlockID);
+		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", EM_Settings.physBlockID, EnviroMine.instance, 64, 1, true);
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
 		
 		GameRegistry.registerTileEntity(TileEntityElevatorTop.class, "enviromine.tile.elevator_top");

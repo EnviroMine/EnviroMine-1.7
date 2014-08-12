@@ -16,6 +16,7 @@ public class Earthquake
 	public static ArrayList<Earthquake> pendingQuakes = new ArrayList<Earthquake>();
 	public static ArrayList<ClientQuake> clientQuakes = new ArrayList<ClientQuake>();
 	public static int tickCount = 0;
+	public static long next = 240000;
 	
 	World world;
 	int posX;
@@ -26,15 +27,17 @@ public class Earthquake
 	float angle;
 	
 	int passY = 1;
+	int mode;
 	
 	ArrayList<int[]> ravineMask = new ArrayList<int[]>(); // 2D array containing x,z coordinates of blocks within the ravine
 	
-	public Earthquake(World world, int i, int k, int l, int w)
+	public Earthquake(World world, int i, int k, int l, int w, int m)
 	{
 		this.posX = i;
 		this.posZ = k;
 		this.length = l;
 		this.width = w;
+		this.mode = m;
 		
 		if(world != null)
 		{
@@ -75,10 +78,123 @@ public class Earthquake
 				}
 			}
 		}
+		
+		if(this.mode >= 1)
+		{
+			this.reOrderFromCenter();
+		}
+	}
+	
+	public void reOrderFromCenter()
+	{
+		for(int i = 1; i < ravineMask.size(); i++)
+		{
+			int[] iEntry = ravineMask.get(i);
+			double iDist = trigDist(iEntry[0], iEntry[2]);
+			
+			for(int j = i - 1; j >= 0; j--)
+			{
+				int[] jEntry = ravineMask.get(j);
+				double jDist = trigDist(jEntry[0], jEntry[2]);
+				
+				if(jDist > iDist)
+				{
+					if(j == 0)
+					{
+						ravineMask.remove(i);
+						ravineMask.add(j, iEntry);
+					}
+					continue;
+				} else
+				{
+					if(j + 1 != i)
+					{
+						ravineMask.remove(i);
+						ravineMask.add(j + 1, iEntry);
+					}
+					break;
+				}
+			}
+		}
+	}
+	
+	public double trigDist(double a, double b)
+	{
+		return (double)MathHelper.sqrt_double(Math.pow(a - posX, 2) + Math.pow(b - posZ, 2));
+	}
+	
+	public boolean removeBlockCenter()
+	{
+		this.passY = 64;
+		
+		if(ravineMask.size() > 0)
+		{
+			int[] pos = this.ravineMask.get(0);
+			
+			int x = pos[0];
+			int y = pos[1];
+			int z = pos[2];
+			
+			for(int yy = y; yy >= 1; yy--)
+			{
+				if((world.getBlock(x, yy, z).getMaterial() == Material.lava && yy >= 8) || world.getBlock(x, yy, z).getMaterial() == Material.water || world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.clay || world.getBlock(x, yy, z).getMaterial() == Material.sand || world.getBlock(x, yy, z).getMaterial() == Material.ground || world.getBlock(x, yy, z).getMaterial() == Material.grass || (yy < 8 && world.getBlock(x, yy, z).getMaterial() == Material.air))
+				{
+					if(yy < 8)
+					{
+						world.setBlock(x, yy, z, Blocks.flowing_lava);
+						//System.out.println("Placed lava at (" + x + "," + yy + "," + z + ")");
+						
+						if(EM_Settings.enablePhysics)
+						{
+							EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
+						}
+						
+						if(yy == y)
+						{
+							ravineMask.set(0, new int[]{x, y + 1, z});
+							return true;
+						}
+					} else
+					{
+						world.setBlockToAir(x, yy, z);
+						//System.out.println("Placed air at (" + x + "," + yy + "," + z + ")");
+						
+						if(EM_Settings.enablePhysics)
+						{
+							EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
+						}
+						
+						if(yy == y)
+						{
+							ravineMask.set(0, new int[]{x, y + 1, z});
+							return true;
+						}
+					}
+				}
+			}
+			
+			if(world.getTopSolidOrLiquidBlock(x, z) < 16 || world.canBlockSeeTheSky(x, y, z))
+			{
+				ravineMask.remove(0);
+			} else
+			{
+				ravineMask.set(0, new int[]{x, y + 1, z});
+			}
+
+			int size = length > width? length/2 : width/2;
+			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,1," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + "," + passY), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean removeBlock()
 	{
+		if(mode >= 2)
+		{
+			return this.removeBlockCenter();
+		}
+		
 		while(passY < world.getActualHeight())
 		{
 			for(int i = 0; i < ravineMask.size(); i++)
@@ -168,7 +284,7 @@ public class Earthquake
 						
 						if(EM_Settings.enablePhysics)
 						{
-							EM_PhysManager.schedulePhysUpdate(world, x, y, z, false, "Quake");
+							//EM_PhysManager.schedulePhysUpdate(world, x, y, z, false, "Quake");
 						}
 					} else
 					{
@@ -176,7 +292,7 @@ public class Earthquake
 						
 						if(EM_Settings.enablePhysics)
 						{
-							EM_PhysManager.schedulePhysUpdate(world, x, y, z, false, "Quake");
+							//EM_PhysManager.schedulePhysUpdate(world, x, y, z, false, "Quake");
 						}
 					}
 				}
@@ -188,7 +304,7 @@ public class Earthquake
 	
 	public static void updateEarthquakes()
 	{
-		if(tickCount >= 5)
+		if(tickCount >= 0)
 		{
 			tickCount = 0;
 		} else

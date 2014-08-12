@@ -34,7 +34,7 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 		{
 			if(!world.isRemote)
 			{
-				new Earthquake(world, i, k, 64, 8);
+				new Earthquake(world, i, k, 64, 64, 1);
 			}
 			return true;
 		}

@@ -62,6 +62,7 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
+import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 import java.awt.Color;
 import java.io.File;
@@ -1076,6 +1077,8 @@ public class EM_EventManager
 				EM_PhysManager.usedSlidePositions.clear();
 				EM_PhysManager.worldStartTime = -1;
 				EM_PhysManager.chunkDelay.clear();
+				Earthquake.pendingQuakes.clear();
+				Earthquake.clientQuakes.clear();
 				
 				if(EM_Settings.worldDir != null)
 				{

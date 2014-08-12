@@ -147,6 +147,11 @@ public class EM_PhysManager
 					{
 						callPhysUpdate(world, x + i, y + j, k + z, type);
 					}
+					
+					if(physSchedule.size() <= 0)
+					{
+						return;
+					}
 				}
 			}
 		}
@@ -1048,6 +1053,8 @@ public class EM_PhysManager
 				updateNum = EM_Settings.updateCap;
 			}
 			
+			int updateRem = physSchedule.size();
+			
 			for(int i = updateNum - 1; i >= 0; i -= 1)
 			{
 				if(!MinecraftServer.getServer().isServerRunning())
@@ -1086,6 +1093,13 @@ public class EM_PhysManager
 					break;
 				}
 				
+				if(physSchedule.size() - 1 < i)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Unable to get physcis schedule entry, index out of bounds! (Size: " + physSchedule.size() + ", Index: " + i +")");
+					canClear = false;
+					break;
+				}
+				
 				Object[] entry = physSchedule.get(i);
 				
 				boolean locLoaded = false;
@@ -1114,10 +1128,24 @@ public class EM_PhysManager
 						updateSurroundingWithExclusions((World)entry[0], (Integer)entry[1], (Integer)entry[2], (Integer)entry[3], (Boolean)entry[4], (String)entry[5]);
 					}
 				}
+				
+				if(physSchedule.size() < updateRem)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Physics schedule dumped early! Resetting scheduler...");
+					physSchedule.clear();
+					canClear = false;
+					break;
+				}
+				
 				if(physSchedule.size() - 1 >= i)
 				{
 					physSchedule.remove(i);
+				} else
+				{
+					EnviroMine.logger.log(Level.ERROR, "Failed to remove entry from physics schedule. Things may break badly!");
 				}
+				
+				updateRem = physSchedule.size();
 			}
 			currentTime = 0;
 		} else

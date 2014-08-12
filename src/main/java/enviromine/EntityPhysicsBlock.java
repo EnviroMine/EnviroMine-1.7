@@ -47,18 +47,21 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 		{
 			List<EntityPhysicsBlock> entityList = this.worldObj.getEntitiesWithinAABB(EntityPhysicsBlock.class, this.boundingBox.expand(8F, 8F, 8F));
 			
-			if(entityList.size() >= 512)
+			if(entityList.size() >= 1024)
 			{
 				if(EM_Settings.entityFailsafe == 1)
 				{
-					EnviroMine.logger.log(Level.WARN, "Entity fail safe activated: Level 1");
+					EnviroMine.logger.log(Level.WARN, "Entity fail safe activated! Canceling new entities!");
 					EnviroMine.logger.log(Level.WARN, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.WARN, "No.: " + entityList.size());
+					EM_PhysManager.physSchedule.clear();
 					this.setDead();
 					return;
 				} else if(EM_Settings.entityFailsafe >= 2)
 				{
-					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated: Level 2");
+					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated! Deleting excess entities!");
 					EnviroMine.logger.log(Level.ERROR, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.ERROR, "No.: " + entityList.size());
 					Iterator<EntityPhysicsBlock> iterator = entityList.iterator();
 					
 					while(iterator.hasNext())
@@ -91,18 +94,21 @@ public class EntityPhysicsBlock extends EntityFallingBlock
 		{
 			List<EntityPhysicsBlock> entityList = this.worldObj.getEntitiesWithinAABB(EntityPhysicsBlock.class, this.boundingBox.expand(8F, 8F, 8F));
 			
-			if(entityList.size() >= 512)
+			if(entityList.size() >= 1024)
 			{
 				if(EM_Settings.entityFailsafe == 1)
 				{
-					EnviroMine.logger.log(Level.WARN, "Entity fail safe activated: Level 1");
+					EnviroMine.logger.log(Level.WARN, "Entity fail safe activated! Canceling new entities!");
 					EnviroMine.logger.log(Level.WARN, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.WARN, "No.: " + entityList.size());
+					EM_PhysManager.physSchedule.clear();
 					this.setDead();
 					return;
 				} else if(EM_Settings.entityFailsafe >= 2)
 				{
-					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated: Level 2");
+					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated! Deleting excess entities!");
 					EnviroMine.logger.log(Level.ERROR, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
+					EnviroMine.logger.log(Level.ERROR, "No.: " + entityList.size());
 					Iterator<EntityPhysicsBlock> iterator = entityList.iterator();
 					
 					while(iterator.hasNext())

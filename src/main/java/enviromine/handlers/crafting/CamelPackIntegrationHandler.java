@@ -8,96 +8,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+
 import enviromine.core.EM_Settings;
 import enviromine.handlers.ObjectHandler;
 
 public class CamelPackIntegrationHandler implements IRecipe
 {
-	CraftingHelper lastHelper;
 	boolean isRemove;
 	public ItemStack pack;
 	public ItemStack armor;
 	
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
-	{
-		if (FMLCommonHandler.instance().getSide().isClient())
-		{
-			return matchesClient(inv);
-		}
-		lastHelper = CraftingHelper.getInstanceFromCraftmatrix(inv);
-		if (lastHelper == null)
-		{
-			return matchesClient(inv);
-		}
-		
-		if (!inv.getInventoryName().equals("container.crafting"))
-		{
-			return false;
-		}
-		
-		lastHelper.reset();
-		
-		boolean hasPack = false;
-		boolean hasArmor = false;
-		
-		for (int i = inv.getSizeInventory() - 1; i >= 0; i--)
-		{
-			ItemStack item = inv.getStackInSlot(i);
-			if (item == null)
-			{
-				continue;
-			} else if (item.getItem() == ObjectHandler.camelPack)
-			{
-				if (hasPack || lastHelper.isRemove)
-				{
-					return false;
-				} else
-				{
-					lastHelper.pack = item.copy();
-					hasPack = true;
-				}
-			} else if (item.getItem() instanceof ItemArmor)
-			{
-				if (((ItemArmor)item.getItem()).armorType == 1)
-				{
-					
-					String name = Item.itemRegistry.getNameForObject(item.getItem());
-					if (EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
-					{
-						if (hasArmor)
-						{
-							return false;
-						} else
-						{
-							if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill"))
-							{
-								if (hasPack)
-								{
-									return false;
-								} else
-								{
-									lastHelper.isRemove = true;
-								}
-							}
-							lastHelper.armor = item.copy();
-							hasArmor = true;
-						}
-					}
-				}
-			} else if (item != null)
-			{
-				return false;
-			}
-		}
-		
-		return (hasArmor && lastHelper.armor != null && (lastHelper.isRemove || (hasPack && lastHelper.pack != null)));
-	}
-	
-	private boolean matchesClient(InventoryCrafting inv)
 	{
 		if (!inv.getInventoryName().equals("container.crafting"))
 		{
@@ -160,43 +85,15 @@ public class CamelPackIntegrationHandler implements IRecipe
 		}
 		
 		boolean tmp = (hasArmor && armor != null && (isRemove || (hasPack && pack != null)));
-		System.out.println("hasArmor: "+hasArmor);
+		System.out.println("hasArmor: " + hasArmor);
 		return tmp;
 	}
 	
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		CraftingHelper helper = CraftingHelper.getInstanceFromCraftmatrix(inv);
-		if (FMLCommonHandler.instance().getSide().isClient() || helper == null)
-		{
-			return getCraftingResultClient();
-		}
+		this.matches(inv, null);
 		
-		if (helper.armor != null)
-		{
-			if (helper.isRemove)
-			{
-				ItemStack out = new ItemStack(ObjectHandler.camelPack);
-				out.setItemDamage(100 - helper.armor.getTagCompound().getInteger("camelPackFill"));
-				return out;
-			} else
-			{
-				if (!helper.armor.hasTagCompound())
-				{
-					helper.armor.setTagCompound(new NBTTagCompound());
-				}
-				helper.armor.getTagCompound().setInteger("camelPackFill", 100 - helper.pack.getItemDamage());
-				
-				return helper.armor;
-			}
-		}
-		
-		return null;
-	}
-	
-	private ItemStack getCraftingResultClient()
-	{
 		if (armor != null)
 		{
 			if (isRemove)
@@ -235,7 +132,13 @@ public class CamelPackIntegrationHandler implements IRecipe
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
 		IInventory craftMatrix = event.craftMatrix;
-		if (!craftMatrix.getInventoryName().equals("container.crafting") || (CraftingHelper.hasInstanceForPlayer(event.player) && !CraftingHelper.getInstanceFromPlayer(event.player).isRemove))
+		if (!(craftMatrix instanceof InventoryCrafting)) {
+			return;
+		}
+		
+		this.matches((InventoryCrafting)craftMatrix, event.player.worldObj);
+		
+		if (!craftMatrix.getInventoryName().equals("container.crafting") || !isRemove)
 		{
 			return;
 		} else

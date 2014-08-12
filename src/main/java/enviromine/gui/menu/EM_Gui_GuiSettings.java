@@ -1,5 +1,8 @@
 package enviromine.gui.menu;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiOptionSlider;
@@ -7,6 +10,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.StatCollector;
+import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_Settings;
@@ -27,8 +32,9 @@ public class EM_Gui_GuiSettings extends GuiScreen
 	public void initGui()
 	{
 		//this.buttonList.add(new GuiDrag(151, this.width / 2 - 152, this.height / 6 + 200 - 6, 150, 20, StatCollector.translateToLocal("emoptions.tempScale")+": "+StatCollector.translateToLocal("empotions.tempScale.f")));
-	
-
+		GuiSlider ScaleSlider = new GuiSlider(149, this.width / 2 - 75, this.height / 6 + 8 - 6, 150, 20, StatCollector.translateToLocal("emoptions.guiScaling")+ ": ", "x", .5F, 2F, EM_Settings.guiScale, true, true);
+		ScaleSlider.precision = 2;
+		
 		GuiButton tempScalebutton = new GuiButton(151, this.width / 2 - 152, this.height / 6 + 30 - 6, 150, 20, StatCollector.translateToLocal("emoptions.tempScale")+": "+StatCollector.translateToLocal("empotions.tempScale.f"));
 
 		GuiButton showstatusbutton = new GuiButton(156, this.width / 2 - 152, this.height / 6 + 96 - 6, 150, 20, StatCollector.translateToLocal("emoptions.status"));
@@ -56,6 +62,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
 			showiconsbutton.enabled = true;
 		}		
 		
+		this.buttonList.add(ScaleSlider);
 
 		tempScalebutton.displayString = I18n.format("emoptions.tempScale", new Object[0]) + ": " + I18n.format("emoptions.tempScale."+ (EM_Settings.useFarenheit == true ? "f" : "c" ), new Object[0]);
 			this.buttonList.add(tempScalebutton);
@@ -94,6 +101,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
 	/**
 	 * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
 	 */
+
 	@Override
 	public void actionPerformed(GuiButton par1GuiButton)
 	{
@@ -105,6 +113,10 @@ public class EM_Gui_GuiSettings extends GuiScreen
 				case 200:
 					this.mc.displayGuiScreen(parentGuiScreen);
 					return;
+				case 149:
+					GuiSlider slider = (GuiSlider) par1GuiButton;
+					EM_Settings.guiScale = (float) slider.getValue();
+					break;
 				case 150:
 					EM_Settings.ShowDebug = !EM_Settings.ShowDebug; 
 						par1GuiButton.displayString =I18n.format("emoptions.debug", new Object[0]) + ": " + I18n.format("emoptions.debug."+ (EM_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
@@ -139,46 +151,19 @@ public class EM_Gui_GuiSettings extends GuiScreen
 					
 					
 			}
-			this.mc.displayGuiScreen(this);
+			//this.mc.displayGuiScreen(this);
 		}
-		
-		
-		
-		
-		
-		
-		
-	/*	
-		
-		if (par1GuiButton.enabled)
-		{
-			
-			if (par1GuiButton.id == 200)
-			{
-				this.mc.displayGuiScreen(this.parentGuiScreen);
-			}
-			else if(par1GuiButton.id == 151)
-			{
-				EM_Settings.useFarenheit = !EM_Settings.useFarenheit;
-				
-				if (EM_Settings.useFarenheit == true)
-				{
-					par1GuiButton.displayString = StatCollector.translateToLocal("emoptions.tempScale")+": "+StatCollector.translateToLocal("empotions.tempScale.f");	
-				}
-				else
-				{
-					par1GuiButton.displayString =  StatCollector.translateToLocal("emoptions.tempScale")+": "+StatCollector.translateToLocal("empotions.tempScale.c");	
-				}
-				
-			}
-			else if (par1GuiButton.id == 153)
-			{
-				this.mc.displayGuiScreen(this.parentGuiScreen);
-			}
-		}*/
-	
 	}
-	
+
+	//TODO Needs to be better.. and not called every tick
+	@Override
+	public void mouseClickMove(int p_146273_1_, int p_146273_2_, int lastbutton, long time) 
+	{
+		
+		actionPerformed((GuiButton) this.buttonList.get(0));
+
+	}
+
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{

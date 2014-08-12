@@ -47,24 +47,9 @@ public class EM_Gui_General extends GuiScreen
 		{
 			if(par1GuiButton.id == 150)
 			{
-				System.out.println("Test");
 				EM_Settings.enablePhysics = !EM_Settings.enablePhysics;
 				
 				par1GuiButton.displayString = "Physics: " + EM_Settings.enablePhysics;
-			}
-			else if(par1GuiButton.id == 152)
-			{
-				EM_Settings.useFarenheit = !EM_Settings.useFarenheit;
-				
-				if (EM_Settings.useFarenheit == true)
-				{
-					par1GuiButton.displayString = "Temperature Scale: Fahrenheit";	
-				}
-				else
-				{
-					par1GuiButton.displayString =  "Temperature Scale: Celsius";	
-				}
-				
 			}
 			else if (par1GuiButton.id == 200)
 			{

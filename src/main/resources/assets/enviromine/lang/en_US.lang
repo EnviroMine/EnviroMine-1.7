@@ -54,7 +54,9 @@ achievement.enviromine.SuckItUpPrincess.desc=Kill a hostile mob while having one
 
 emoptions.guiMainmenu.title=EnviroMine Main Menu
 emoptions.guiSetting.title=EnviroMine Gui Settings
+emoptions.guiBars.title=EnviroMine Hud Settings
 emoptions.guiBarPos.title=EnviroMine Hud Positions
+emoptions.guiScaling=Hud Scaling
 emoptions.guiOptions=Gui Options
 emoptions.configSettings=Server Settings
 emoptions.customEditor=Custom Editor

@@ -11,8 +11,9 @@ public class ArmorProperties
 	public float sunMult;
 	public float sanity;
 	public float air;
+	public boolean allowCamelPack;
 	
-	public ArmorProperties(String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air)
+	public ArmorProperties(String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air, boolean allowCamelPack)
 	{
 		this.name = name;
 		this.nightTemp = nightTemp;
@@ -23,5 +24,6 @@ public class ArmorProperties
 		this.sunMult = sunMult;
 		this.sanity = sanity;
 		this.air = air;
+		this.allowCamelPack = allowCamelPack;
 	}
 }

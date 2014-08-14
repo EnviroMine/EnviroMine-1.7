@@ -1,6 +1,10 @@
 package enviromine.gui;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -11,20 +15,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EnviroUtils;
 import enviromine.core.EM_Settings;
+import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
 {
@@ -87,11 +88,11 @@ public class EM_GuiEnviroMeters extends Gui
 			ticktimer++;
 		}
 		
-		if(EM_Settings.minimalHud)
+		if(UI_Settings.minimalHud)
 		{
 			barWidth = 0;
-			EM_Settings.ShowText = true;
-			EM_Settings.ShowGuiIcons = true;
+			UI_Settings.ShowText = true;
+			UI_Settings.ShowGuiIcons = true;
 		} else
 		{
 			barWidth = 64;
@@ -109,7 +110,7 @@ public class EM_GuiEnviroMeters extends Gui
 		
 		// GUI Scaling Code 
 		GL11.glPushMatrix(); // Isolate this GUI from the vanilla GUI
-		float scale = EM_Settings.guiScale;
+		float scale = UI_Settings.guiScale;
 		
 		double translate = new BigDecimal(String.valueOf(1 / scale)).setScale(3, RoundingMode.HALF_UP).doubleValue();
 		
@@ -231,10 +232,10 @@ public class EM_GuiEnviroMeters extends Gui
 			
 			// Add Bars to String Array for looping
 			String[] barPos = new String[4];
-			barPos[0] = EM_Settings.sanityBarPos;
-			barPos[1] = EM_Settings.oxygenBarPos;
-			barPos[2] = EM_Settings.waterBarPos;
-			barPos[3] = EM_Settings.heatBarPos;
+			barPos[0] = UI_Settings.sanityBarPos;
+			barPos[1] = UI_Settings.oxygenBarPos;
+			barPos[2] = UI_Settings.waterBarPos;
+			barPos[3] = UI_Settings.heatBarPos;
 			
 			boolean[] barTrue = new boolean[4];
 			barTrue[0] = EM_Settings.enableSanity;
@@ -271,7 +272,7 @@ public class EM_GuiEnviroMeters extends Gui
 				int curPosY = 0;
 				int frameborder = 4;
 				
-				if(EM_Settings.ShowText == true)
+				if(UI_Settings.ShowText == true)
 				{
 					addTW = 1;
 				}
@@ -413,7 +414,7 @@ public class EM_GuiEnviroMeters extends Gui
 					
 					this.drawTexturedModalRect(curPosX, curPosY, 0, 16, barWidth, meterHeight);
 					this.drawTexturedModalRect(curPosX, curPosY, 64, 16, sanityBar, meterHeight);
-					if(!EM_Settings.minimalHud)
+					if(!UI_Settings.minimalHud)
 					{
 						this.drawTexturedModalRect(curPosX + sanityBar - 2, curPosY + 2, 28, 64, 4, 4);
 					}
@@ -429,7 +430,7 @@ public class EM_GuiEnviroMeters extends Gui
 						this.drawTexturedModalRect(curPosX, curPosY, 0, meterHeight * frameborder, meterWidth - 32, meterHeight);
 					}
 					
-					if(EM_Settings.ShowGuiIcons == true)
+					if(UI_Settings.ShowGuiIcons == true)
 						this.drawTexturedModalRect(iconPos, SAcurY - 4, 32, 80, 16, 16);
 				}
 				
@@ -441,7 +442,7 @@ public class EM_GuiEnviroMeters extends Gui
 					
 					this.drawTexturedModalRect(curPosX, curPosY, 0, 8, barWidth, meterHeight);
 					this.drawTexturedModalRect(curPosX, curPosY, 64, 8, airBar, meterHeight);
-					if(!EM_Settings.minimalHud)
+					if(!UI_Settings.minimalHud)
 					{
 						this.drawTexturedModalRect(curPosX + airBar - 2, curPosY + 2, 8, 64, 4, 4);
 					}
@@ -457,7 +458,7 @@ public class EM_GuiEnviroMeters extends Gui
 						this.drawTexturedModalRect(curPosX, curPosY, 0, meterHeight * frameborder, meterWidth - 32, meterHeight);
 					}
 					
-					if(EM_Settings.ShowGuiIcons == true)
+					if(UI_Settings.ShowGuiIcons == true)
 						this.drawTexturedModalRect(iconPos, AQcurY - 4, 48, 80, 16, 16);
 					
 				}
@@ -469,7 +470,7 @@ public class EM_GuiEnviroMeters extends Gui
 					//water bar
 					this.drawTexturedModalRect(curPosX, curPosY, 0, 0, barWidth, meterHeight);
 					this.drawTexturedModalRect(curPosX, curPosY, 64, 0, waterBar, meterHeight);
-					if(!EM_Settings.minimalHud)
+					if(!UI_Settings.minimalHud)
 					{
 						this.drawTexturedModalRect(curPosX + waterBar - 2, curPosY + 2, 16, 64, 4, 4);
 					}
@@ -490,7 +491,7 @@ public class EM_GuiEnviroMeters extends Gui
 						this.drawTexturedModalRect(curPosX, curPosY, 0, meterHeight * frameborder, meterWidth - 32, meterHeight);
 					}
 					
-					if(EM_Settings.ShowGuiIcons == true)
+					if(UI_Settings.ShowGuiIcons == true)
 					{
 						this.drawTexturedModalRect(iconPos, WAcurY - 4, 16, 80, 16, 16);
 					}
@@ -504,7 +505,7 @@ public class EM_GuiEnviroMeters extends Gui
 					
 					// heat Bar
 					this.drawTexturedModalRect(curPosX, curPosY, 0, 24, barWidth, meterHeight);
-					if(!EM_Settings.minimalHud)
+					if(!UI_Settings.minimalHud)
 					{
 						this.drawTexturedModalRect(curPosX + preheatBar - 4, curPosY, 32, 64, 8, 8);
 						this.drawTexturedModalRect(curPosX + heatBar - 2, curPosY + 2, 20, 64, 4, 4);
@@ -521,7 +522,7 @@ public class EM_GuiEnviroMeters extends Gui
 						this.drawTexturedModalRect(curPosX, curPosY, 0, meterHeight * frameborder, meterWidth - 32, meterHeight);
 					}
 					
-					if(EM_Settings.ShowGuiIcons == true)
+					if(UI_Settings.ShowGuiIcons == true)
 					{
 						this.drawTexturedModalRect(iconPos, HTcurY - 4, 0, 80, 16, 16);
 						if(preheatIco >= 8)
@@ -537,7 +538,7 @@ public class EM_GuiEnviroMeters extends Gui
 			}
 			
 			// Display Debugging Text
-			if(EM_Settings.ShowText == true)
+			if(UI_Settings.ShowText == true)
 			{
 				if(EM_Settings.enableAirQ)
 				{
@@ -550,7 +551,7 @@ public class EM_GuiEnviroMeters extends Gui
 				{
 					this.mc.renderEngine.bindTexture(new ResourceLocation("enviromine", guiResource));
 					this.drawTexturedModalRect(HTcurX, HTcurY, 64, meterHeight * 4, 32, meterHeight);
-					if(EM_Settings.useFarenheit == true)
+					if(UI_Settings.useFarenheit == true)
 					{
 						Minecraft.getMinecraft().fontRenderer.drawString( FdispHeat + "F", HTcurX, HTcurY, 16777215);
 					} else
@@ -608,7 +609,7 @@ public class EM_GuiEnviroMeters extends Gui
 			return;
 		}
 		
-		if(!EM_Settings.ShowDebug || this.mc.gameSettings.showDebugInfo)
+		if(!UI_Settings.ShowDebug || this.mc.gameSettings.showDebugInfo)
 		{
 			return;
 		}
@@ -622,11 +623,11 @@ public class EM_GuiEnviroMeters extends Gui
 			DB_airquality = new BigDecimal(String.valueOf(tracker.airQuality - tracker.prevAirQuality)).setScale(3, RoundingMode.HALF_UP).floatValue();
 			DB_dehydrateRate = new BigDecimal(String.valueOf(tracker.hydration - tracker.prevHydration)).setScale(3, RoundingMode.HALF_UP).floatValue();
 			
-			if(EM_Settings.useFarenheit == true)
+			if(UI_Settings.useFarenheit == true)
 			{
-				Minecraft.getMinecraft().fontRenderer.drawString("Body Temp: " + ((tracker.bodyTemp * 1.8) + 32F) + "F", 10, 10, 16777215);
-				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + ((DB_abientTemp * 1.8) + 32F) + "F | Cur Biome: " + DB_biomeName, 10, 10 * 2, 16777215);
-				Minecraft.getMinecraft().fontRenderer.drawString("Temp Rate: " + ((DB_tempchange * 1.8) + 32F) + "F", 10, 10 * 3, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Body Temp: " + EnviroUtils.convertToFarenheit(tracker.bodyTemp) + "F", 10, 10, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + EnviroUtils.convertToFarenheit(DB_abientTemp) + "F | Cur Biome: " + DB_biomeName, 10, 10 * 2, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Temp Rate: " + EnviroUtils.convertToFarenheit(DB_tempchange) + "F", 10, 10 * 3, 16777215);
 				
 			} else
 			{
@@ -788,12 +789,12 @@ public class EM_GuiEnviroMeters extends Gui
 			if(pause)
 			{
 				pauseCnt++;
-				if(pauseCnt >= EM_Settings.breathPause)
+				if(pauseCnt >= UI_Settings.breathPause)
 				{
 					pauseCnt = 0;
 					pause = false;
 					
-					if(EM_Settings.breathSound == true)
+					if(UI_Settings.breathSound == true)
 					{
 						//ISound sound = null; //TODO ("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F)
 						//mc.getSoundHandler().playSound(sound);

@@ -32,6 +32,9 @@ public class EM_Gui_Menu extends GuiScreen
 			customEditor.enabled = false;			
 		}
 		
+		serverSettings.visible = false;
+		customEditor.visible = false;			
+	
 		this.buttonList.add(new GuiButton(101, this.width / 2 - 75, this.height / 6 + 50 - 6, 150, 20, StatCollector.translateToLocal("emoptions.guiOptions")));
 		this.buttonList.add(serverSettings);
 		this.buttonList.add(customEditor);

@@ -11,6 +11,7 @@ import enviromine.core.EnviroMine;
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.nio.ByteOrder;
 
 import org.apache.logging.log4j.Level;
@@ -270,5 +271,23 @@ public class EnviroUtils
 		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
 		return newName;
 		
+	}
+	
+	public static float convertToFarenheit(float num)
+	{
+		return convertToFarenheit(num, 2);
+	}
+	public static float convertToFarenheit(float num, int decimalPlace)
+	{
+		float newNum = (float) ((num * 1.8) + 32F);
+		BigDecimal convert = new BigDecimal(Float.toString(newNum));
+		convert.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		
+		return convert.floatValue();
+	}
+	
+	public static float convertToCelcius(float num)
+	{
+		return((num - 32F) * (5 / 9));
 	}
 }

@@ -259,20 +259,21 @@ public class EM_ConfigHandler
 		
 		// Gui settings
 		String GuiSetCat = "GUI Settings";
-		EM_Settings.sweatParticals = config.get(GuiSetCat, "Show Sweat Particales", true).getBoolean(true);
-		EM_Settings.insaneParticals = config.get(GuiSetCat, "Show Insanity Particles", true, "Show/Hide Particales").getBoolean(true);
-		EM_Settings.useFarenheit = config.get(GuiSetCat, "Use Farenheit instead of Celsius", false, "Will display either Farenhit or Celcius on GUI").getBoolean(false);
-		EM_Settings.heatBarPos = config.get(GuiSetCat, "Position Heat Bat", "Bottom_Left").getString();
-		EM_Settings.waterBarPos = config.get(GuiSetCat, "Position Thirst Bar", "Bottom_Left").getString();
-		EM_Settings.sanityBarPos = config.get(GuiSetCat, "Position Sanity Bar", "Bottom_Right").getString();
-		EM_Settings.oxygenBarPos = config.get(GuiSetCat, "Position Air Quality Bar", "Bottom_Right", "Change position of Enviro Bars. Options: Bottom_Left, Bottom_Right, Bottom_Center_Left, Bottom_Center_Right, Top_Left, Top_Right, Top_Center, Middle_Left, Middle_Right, Custom_#,# (Custom_X(0-100),Y(0-100))").getString();
-		EM_Settings.minimalHud = config.get(GuiSetCat, "Minimalistic Bars", false, "WARN: This option will hide the ambient air temperature! It will also override icons and text to true.").getBoolean(false);
+		if(config.hasCategory(GuiSetCat)) config.removeCategory(config.getCategory(GuiSetCat));
+		//EM_Settings.sweatParticals = config.get(GuiSetCat, "Show Sweat Particales", true).getBoolean(true);
+		//EM_Settings.insaneParticals = config.get(GuiSetCat, "Show Insanity Particles", true, "Show/Hide Particales").getBoolean(true);
+		//EM_Settings.useFarenheit = config.get(GuiSetCat, "Use Farenheit instead of Celsius", false, "Will display either Farenhit or Celcius on GUI").getBoolean(false);
+		//EM_Settings.heatBarPos = config.get(GuiSetCat, "Position Heat Bat", "Bottom_Left").getString();
+		//EM_Settings.waterBarPos = config.get(GuiSetCat, "Position Thirst Bar", "Bottom_Left").getString();
+		//EM_Settings.sanityBarPos = config.get(GuiSetCat, "Position Sanity Bar", "Bottom_Right").getString();
+		//EM_Settings.oxygenBarPos = config.get(GuiSetCat, "Position Air Quality Bar", "Bottom_Right", "Change position of Enviro Bars. Options: Bottom_Left, Bottom_Right, Bottom_Center_Left, Bottom_Center_Right, Top_Left, Top_Right, Top_Center, Middle_Left, Middle_Right, Custom_#,# (Custom_X(0-100),Y(0-100))").getString();
+		//EM_Settings.minimalHud = config.get(GuiSetCat, "Minimalistic Bars", false, "WARN: This option will hide the ambient air temperature! It will also override icons and text to true.").getBoolean(false);
 		
-		EM_Settings.guiScale = (float)config.get(GuiSetCat, "Gui Bar Scale", 1.0, "Scale Enviromine Bars, Enter 0.1(10%) to 1.0(100%)").getDouble(1.0);
+		//EM_Settings.guiScale = (float)config.get(GuiSetCat, "Gui Bar Scale", 1.0, "Scale Enviromine Bars, Enter 0.1(10%) to 1.0(100%)").getDouble(1.0);
 		
-		EM_Settings.ShowDebug = config.get(GuiSetCat, "Show Gui Debugging Info", false, "Show Hide Gui Text Display and Icons").getBoolean(false);
-		EM_Settings.ShowText = config.get(GuiSetCat, "Show Gui Status Text", true).getBoolean(true);
-		EM_Settings.ShowGuiIcons = config.get(GuiSetCat, "Show Gui Icons", true).getBoolean(true);
+		//EM_Settings.ShowDebug = config.get(GuiSetCat, "Show Gui Debugging Info", false, "Show Hide Gui Text Display and Icons").getBoolean(false);
+		//EM_Settings.ShowText = config.get(GuiSetCat, "Show Gui Status Text", true).getBoolean(true);
+		//EM_Settings.ShowGuiIcons = config.get(GuiSetCat, "Show Gui Icons", true).getBoolean(true);
 		
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
@@ -308,12 +309,14 @@ public class EM_ConfigHandler
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		
 		// Sound
-		EM_Settings.breathSound = config.get("Sound Options", "Mask: Hear Breathing", true).getBoolean(true);
-		EM_Settings.breathPause = config.get("Sound Options", "Mask: Pause Between Breaths", 300).getInt();
-		EM_Settings.breathVolume = (float)config.get("Sound Options", "Mask: Breathing Volume", 0.75, "[Hear Breathing (Defalut: True)] - Turning on and Off Gas Mask Breathing. [Breathing Volume (Default: 0.75)]Change Volume 0.0(0%) to 1(100%). [Pause Between Breaths (Default: 300)]Change Pause between breaths. Affects Sound and Gui (In GuiRender Ticks)").getDouble(0);
+		if(config.hasCategory("Sound Options")) config.removeCategory(config.getCategory("Sound Options"));
+		
+		//EM_Settings.breathSound = config.get("Sound Options", "Mask: Hear Breathing", true).getBoolean(true);
+		//EM_Settings.breathPause = config.get("Sound Options", "Mask: Pause Between Breaths", 300).getInt();
+		//EM_Settings.breathVolume = (float)config.get("Sound Options", "Mask: Breathing Volume", 0.75, "[Hear Breathing (Defalut: True)] - Turning on and Off Gas Mask Breathing. [Breathing Volume (Default: 0.75)]Change Volume 0.0(0%) to 1(100%). [Pause Between Breaths (Default: 300)]Change Pause between breaths. Affects Sound and Gui (In GuiRender Ticks)").getDouble(0);
 
-		EM_Settings.breathVolume = (EM_Settings.breathVolume > 1.0F ? 1.0F : EM_Settings.breathVolume);
-		EM_Settings.breathVolume = (EM_Settings.breathVolume < 0.0F ? 0.0F : EM_Settings.breathVolume);		
+		//EM_Settings.breathVolume = (EM_Settings.breathVolume > 1.0F ? 1.0F : EM_Settings.breathVolume);
+		//EM_Settings.breathVolume = (EM_Settings.breathVolume < 0.0F ? 0.0F : EM_Settings.breathVolume);		
 		config.save();
 		
 

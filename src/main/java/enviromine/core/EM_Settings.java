@@ -3,6 +3,7 @@ package enviromine.core;
 import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
+
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
@@ -37,28 +38,29 @@ public class EM_Settings
 	public static boolean enableBodyTemp = true;
 	public static boolean trackNonPlayer = false;
 	
-	public static boolean ShowGuiIcons;
+	//public static boolean ShowGuiIcons;
 	
-	public static float guiScale = 1f;
+	//public static float guiScale = 1f;
 	
 	public static boolean spreadIce = false;
 	
 	//Gui settings
-	public static boolean sweatParticals;
-	public static boolean insaneParticals;
+	//TODO Remove these Static values after fix
+	public static boolean sweatParticals = true;
+	public static boolean insaneParticals = true;
 	
-	public static boolean useFarenheit = false;
+	//public static boolean useFarenheit = false;
 	public static String heatBarPos;
 	public static String waterBarPos;
 	public static String sanityBarPos;
 	public static String oxygenBarPos;
 	
-	public static boolean ShowText;
-	public static boolean ShowDebug;
+	//public static boolean ShowText;
+	//public static boolean ShowDebug;
 	
-	public static boolean breathSound;
-	public static int breathPause;
-	public static float breathVolume;
+	//public static boolean breathSound;
+	//public static int breathPause;
+	//public static float breathVolume;
 	
 	public static int dirtBottleID = 5001;
 	public static int saltBottleID = 5002;
@@ -66,13 +68,13 @@ public class EM_Settings
 	public static int camelPackID = 5004;
 
 
-	public static int gasMaskID = 5005;
-	public static int airFilterID = 5006;
-	public static int hardHatID = 5007;
-	public static int rottenFoodID = 5008;
+	//public static int gasMaskID = 5005;
+	//public static int airFilterID = 5006;
+	//public static int hardHatID = 5007;
+	//public static int rottenFoodID = 5008;
 	
-	public static int blockElevatorTopID = 501;
-	public static int blockElevatorBottomID = 502;
+	//public static int blockElevatorTopID = 501;
+	//public static int blockElevatorBottomID = 502;
 	public static int gasBlockID = 503;
 	public static int fireGasBlockID = 504;
 	
@@ -121,7 +123,7 @@ public class EM_Settings
 	public static int physBlockID;
 	public static int entityFailsafe;
 	public static boolean villageAssist;
-	public static boolean minimalHud;
+	//public static boolean minimalHud;
 	
 	public static int caveDimID = -3;
 	public static int caveBiomeID = 23;
@@ -129,13 +131,5 @@ public class EM_Settings
 	public static boolean foodSpoiling = true;
 	public static double foodRotTime = 10.0D;
 	
-	public static float convertToFarenheit(float num)
-	{
-		return((num * (9 / 5)) + 32F);
-	}
-	
-	public static float convertToCelcius(float num)
-	{
-		return((num - 32F) * (5 / 9));
-	}
+
 }

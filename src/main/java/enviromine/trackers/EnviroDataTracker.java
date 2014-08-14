@@ -1,5 +1,8 @@
 package enviromine.trackers;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,22 +16,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class EnviroDataTracker
 {
@@ -433,7 +431,7 @@ public class EnviroDataTracker
 				if (this.side.isClient()) {
 					System.out.println("Check:" + Minecraft.getSystemTime() +"-"+ chillPrevTime +"="+(Minecraft.getSystemTime() - chillPrevTime));
 					
-					playSoundWithTimeCheck(17000, "enviromine:chill",  EM_Settings.breathVolume, 1.0F);
+					playSoundWithTimeCheck(17000, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
 			}
 			
@@ -459,7 +457,7 @@ public class EnviroDataTracker
 				
 				
 				if (this.side.isClient()) {
-					playSoundWithTimeCheck(1700, "enviromine:chill",  EM_Settings.breathVolume, 1.0F);
+					playSoundWithTimeCheck(1700, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
 			}
 			
@@ -509,7 +507,7 @@ public class EnviroDataTracker
 	{
 		if ((Minecraft.getSystemTime() - chillPrevTime) > 17000)
 		{
-			Minecraft.getMinecraft().thePlayer.playSound("enviromine:chill",  EM_Settings.breathVolume, 1.0F);
+			Minecraft.getMinecraft().thePlayer.playSound("enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 			chillPrevTime = Minecraft.getSystemTime();
 		}
 	}

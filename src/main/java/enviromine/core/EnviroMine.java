@@ -10,7 +10,6 @@ import enviromine.items.EnviroItemBadWaterBottle;
 import enviromine.items.EnviroItemColdWaterBottle;
 import enviromine.items.EnviroItemSaltWaterBottle;
 import enviromine.network.packet.PacketEnviroMine;
-import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -21,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.util.EnumHelper;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -101,12 +99,7 @@ public class EnviroMine
 	{
 		proxy.init(event);
 		
-		//EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", EM_Settings.physBlockID, instance, 64, 1, true);
-		
-		if(proxy.isClient())
-		{
-			//RenderingRegistry.registerEntityRenderingHandler(EntityPhysicsBlock.class, new RenderFallingBlock());
-		}
+		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", EM_Settings.physBlockID, instance, 64, 1, true);
 		
 		LanguageRegistry.addName(badWaterBottle, "Dirty Water Bottle");
 		LanguageRegistry.addName(saltWaterBottle, "Salt Water Bottle");

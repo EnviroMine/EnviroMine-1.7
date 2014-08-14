@@ -4,22 +4,19 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
@@ -82,8 +79,20 @@ public class EM_GuiEnviroMeters extends Gui
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
-		if(tracker !=null && tracker.isDisabled) {
-			tracker = null;
+		if(tracker != null && (tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F))
+		{
+			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getUniqueID());
+			
+			if(player != null)
+			{
+				tracker.trackedEntity = player;
+				tracker.loadNBTTags();
+			} else
+			{
+				tracker.resetData();
+				EM_StatusManager.saveAndRemoveTracker(tracker);
+				tracker = null;
+			}
 		}
 		
 		if(tracker == null)

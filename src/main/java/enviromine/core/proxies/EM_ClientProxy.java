@@ -1,9 +1,12 @@
 package enviromine.core.proxies;
 
+import enviromine.EntityPhysicsBlock;
 import enviromine.gui.EM_GuiEnviroMeters;
 import enviromine.handlers.keybinds.EnviroKeybinds;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -54,6 +57,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		super.init(event);
 		EnviroKeybinds.Init();
+		RenderingRegistry.registerEntityRenderingHandler(EntityPhysicsBlock.class, new RenderFallingBlock());
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)

@@ -101,6 +101,12 @@ public class EM_EventManager
 					return;
 				}
 			}
+			
+			if(event.entity.isDead || ((EntityLivingBase)event.entity).getHealth() <= 0)
+			{
+				return;
+			}
+			
 			if(EnviroDataTracker.isLegalType((EntityLivingBase)event.entity))
 			{
 				// If Not tracking mob/animals and not a player than stop

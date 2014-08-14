@@ -96,6 +96,10 @@ public class PacketEnviroMine implements IMessage
 				tracker.hydration = Float.valueOf(data[4]);
 				tracker.sanity = Float.valueOf(data[5]);
 				tracker.airTemp = Float.valueOf(data[6]);
+			} else
+			{
+				EnviroMine.logger.log(Level.ERROR, "Failed to sync tracker for entity with UUID: " + data[1].trim());
+				EnviroMine.logger.log(Level.ERROR, "Stats may be inaccurate!");
 			}
 		}
 	}

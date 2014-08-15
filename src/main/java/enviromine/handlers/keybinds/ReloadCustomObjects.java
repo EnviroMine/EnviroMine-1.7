@@ -27,7 +27,6 @@ public class ReloadCustomObjects
 		// if you want your key to be able to close the gui screen, handle it outside this if statement
 		if(mc.currentScreen == null)
 		{
-			Minecraft.getMinecraft().displayGuiScreen(new EM_Gui_Menu());
 			
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			{

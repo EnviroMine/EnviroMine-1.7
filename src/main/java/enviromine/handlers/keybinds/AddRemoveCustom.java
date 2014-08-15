@@ -53,11 +53,12 @@ public class AddRemoveCustom
 					{
 						Item item = mc.thePlayer.getHeldItem().getItem();
 						int itemMeta = mc.thePlayer.getHeldItem().getItemDamage();
-						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem().getUnlocalizedName());
+						String idName = Item.itemRegistry.getNameForObject(item);
 						String name = mc.thePlayer.getHeldItem().getDisplayName();
 						
-						idName = EnviroUtils.replaceULN(idName);
-						name = EnviroUtils.replaceULN(name);
+						//TODO
+						//idName = EnviroUtils.replaceULN(idName);
+						//name = EnviroUtils.replaceULN(name);
 						
 						dataToCustom[0] = idName;
 						dataToCustom[1] = itemMeta;
@@ -76,7 +77,7 @@ public class AddRemoveCustom
 					}
 					
 					MovingObjectType type = Minecraft.getMinecraft().objectMouseOver.typeOfHit;
-					
+					//System.out.println(type.name());
 					if(type.name() == "ENTITY")
 					{
 						Entity lookingAt = Minecraft.getMinecraft().objectMouseOver.entityHit;
@@ -110,9 +111,10 @@ public class AddRemoveCustom
 						String blockULName = block.getUnlocalizedName();
 						String blockName = block.getLocalizedName();
 						
-						blockULName = EnviroUtils.replaceULN(blockULName);
+						//blockULName = EnviroUtils.replaceULN(blockULName);
 						blockName = EnviroUtils.replaceULN(blockName);
-							
+						
+							//System.out.println("type:"+type.name());
 						dataToCustom[0] = block;
 						dataToCustom[1] = blockMeta;
 						dataToCustom[2] = blockULName;

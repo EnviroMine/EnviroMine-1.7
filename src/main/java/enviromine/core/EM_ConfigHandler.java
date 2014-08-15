@@ -666,7 +666,7 @@ public class EM_ConfigHandler
 	private static void LoadBiomeProperty(Configuration config, String category)
 	{
 		
-		System.out.println(category);
+		//System.out.println(category);
 		
 		//String catName = biomeCat + "." + category;
 		config.addCustomCategoryComment(category, "");
@@ -686,7 +686,7 @@ public class EM_ConfigHandler
 	
 	private static void LoadDimensionProperty(Configuration config, String category)
 	{
-		
+		//System.out.println(category);
 		//String catName = dimensionCat + "." + category;
 		config.addCustomCategoryComment(category, "");
 		
@@ -901,7 +901,7 @@ public class EM_ConfigHandler
 			
 			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
 			
-			System.out.println(modname[0]);
+			//System.out.println(modname[0]);
 			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
 			{
 				DimensionSaveConfig(dimension, "Defaults");
@@ -1091,10 +1091,10 @@ public class EM_ConfigHandler
 		// Check to make sure this is a Data File Before Editing
 		File configFile = new File(customPath + "MyCustom.cfg");
 		
-		if(EM_Settings.genArmorConfigs && type.equalsIgnoreCase("ARMOR"))
-		{
-			configFile = new File(customPath + data.getClass().getSimpleName());
-		}
+		//if(EM_Settings.genArmorConfigs && type.equalsIgnoreCase("ARMOR"))
+		//{
+		//	configFile = new File(customPath + data.getClass().getSimpleName());
+		//}
 		
 		Configuration config;
 		try
@@ -1120,7 +1120,7 @@ public class EM_ConfigHandler
 		config.addCustomCategoryComment(blockCat, "Add Custom Blocks");
 		config.addCustomCategoryComment(entityCat, "Custom Entities");
 		
-		if(type.equalsIgnoreCase("TILE"))
+		if(type.equalsIgnoreCase("BLOCK"))
 		{
 			String nameULCat = blockCat + "." + name + " " + (Integer)data[1];
 			
@@ -1131,9 +1131,9 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameULCat, name);
-				config.get(nameULCat, BPName[0], (String)data[0]).getString();
+				config.get(nameULCat, BPName[0], (String)data[2]).getString();
 				config.get(nameULCat, BPName[1], (Integer)data[1]).getInt(0);
-				config.get(nameULCat, BPName[2], (String)data[0]).getString();
+				config.get(nameULCat, BPName[2], (String)data[2]).getString();
 				config.get(nameULCat, BPName[3], (Integer)data[1]).getInt(0);
 				config.get(nameULCat, BPName[4], 0).getInt(0);
 				config.get(nameULCat, BPName[5], false).getBoolean(false);

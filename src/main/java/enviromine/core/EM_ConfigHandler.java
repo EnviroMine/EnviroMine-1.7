@@ -445,7 +445,7 @@ public class EM_ConfigHandler
 			{
 				config = new Configuration(customFiles, true);
 				
-				EnviroMine.logger.log(Level.INFO, "Loading Config File: " + customFiles.getAbsolutePath());
+				//EnviroMine.logger.log(Level.INFO, "Loading Config File: " + customFiles.getAbsolutePath());
 				
 			} catch(NullPointerException e)
 			{
@@ -673,7 +673,7 @@ public class EM_ConfigHandler
 	private static void LoadBiomeProperty(Configuration config, String category)
 	{
 		
-		System.out.println(category);
+		//System.out.println(category);
 		
 		//String catName = biomeCat + "." + category;
 		config.addCustomCategoryComment(category, "");

@@ -1147,16 +1147,16 @@ public class EM_EventManager
 	{
 		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
 		if (plate != null && (plate.getItem() == ObjectHandler.camelPack || (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")))) {
+			//model = new ModelCamelPack();
+			
 			GL11.glPushMatrix();
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			GL11.glRotatef(180F, 0F, 1F, 0F);
-			//event.entityPlayer
-			//System.out.println(event.renderer.modelBipedMain.);
+			GL11.glRotatef(180F + event.entityLiving.renderYawOffset, 0F, 1F, 0F);
+			GL11.glEnable(GL11.GL_BLEND);
 			model.render(event.entity, 0, 0, 0, 0, 0, .06325f);
+			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
 		}
-		//event.entityPlayer.rotationYaw
-		//ForgeHooksClient.getArmorModel(entityLiving, itemStack, slotID, _default)
 	}
 	
 	@SubscribeEvent

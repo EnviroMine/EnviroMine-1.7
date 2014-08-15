@@ -17,11 +17,11 @@ public class ModelCamelPack extends ModelBase
 	
 	public ModelCamelPack()
 	{
-		textureWidth = 64;
-		textureHeight = 32;
+		textureWidth = 20;
+		textureHeight = 13;
 		
 		pack = new ModelRenderer(this, 0, 0);
-		pack.addBox(-4F, 1F, 1F, 7, 10, 3);
+		pack.addBox(-3F, 2F, 2F, 6, 9, 4);
 		pack.setRotationPoint(0F, 0F, 0F);
 		pack.setTextureSize(64, 32);
 		pack.mirror = true;

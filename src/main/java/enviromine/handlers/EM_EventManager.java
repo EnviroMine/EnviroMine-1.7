@@ -273,21 +273,23 @@ public class EM_EventManager
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		ItemStack item = event.entityPlayer.getCurrentEquippedItem();
-		if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_BLOCK && item != null)
+		if(event.getResult() != Result.DENY && (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) && item != null)
 		{
-			if(item.getItem() instanceof ItemBlock && !event.entityPlayer.worldObj.isRemote)
+			if (event.action == Action.RIGHT_CLICK_BLOCK)
 			{
-				int adjCoords[] = getAdjacentBlockCoordsFromSide(event.x, event.y, event.z, event.face);
-				EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2], true, "Normal");
-			} else if(item.getItem() == Items.glass_bottle && !event.entityPlayer.worldObj.isRemote)
-			{
-				if(event.entityPlayer.worldObj.getBlock(event.x, event.y, event.z) == Blocks.cauldron && event.entityPlayer.worldObj.getBlockMetadata(event.x, event.y, event.z) > 0)
+				if(item.getItem() instanceof ItemBlock && !event.entityPlayer.worldObj.isRemote)
 				{
-					fillBottle(event.entityPlayer.worldObj, event.entityPlayer, event.x, event.y, event.z, item, event);
+					int adjCoords[] = getAdjacentBlockCoordsFromSide(event.x, event.y, event.z, event.face);
+					EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2], true, "Normal");
+				} else if(item.getItem() == Items.record_11)
+				{
+					RecordEasterEgg(event.entityPlayer, event.x, event.y, event.z);
 				}
-			} else if(item.getItem() == Items.record_11)
+			}
+			
+			if(item.getItem() == Items.glass_bottle && !event.entityPlayer.worldObj.isRemote)
 			{
-				RecordEasterEgg(event.entityPlayer, event.x, event.y, event.z);
+				fillBottle(event.entityPlayer.worldObj, event.entityPlayer, event.x, event.y, event.z, item, event);
 			}
 		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_BLOCK && item == null)
 		{
@@ -300,15 +302,6 @@ public class EM_EventManager
 		} else if(event.getResult() != Result.DENY && event.action == Action.LEFT_CLICK_BLOCK)
 		{
 			EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, event.x, event.y, event.z, true, "Normal");
-		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item != null)
-		{
-			if(item.getItem() instanceof ItemGlassBottle && !event.entityPlayer.worldObj.isRemote)
-			{
-				if(!(event.entityPlayer.worldObj.getBlock(event.x, event.y, event.z) == Blocks.cauldron && event.entityPlayer.worldObj.getBlockMetadata(event.x, event.y, event.z) > 0))
-				{
-					fillBottle(event.entityPlayer.worldObj, event.entityPlayer, event.x, event.y, event.z, item, event);
-				}
-			}
 		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null && EnviroMine.proxy.isClient())
 		{
 			EnviroMine.instance.network.sendToServer(new PacketEnviroMine("ID:1," + event.entityPlayer.getUniqueID().toString()));

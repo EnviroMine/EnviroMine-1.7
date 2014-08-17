@@ -36,29 +36,14 @@ public class EM_Settings
 	public static boolean enableSanity = true;
 	public static boolean enableBodyTemp = true;
 	public static boolean trackNonPlayer = false;
-	
-	public static boolean ShowGuiIcons;
-	
-	public static float guiScale = 1f;
-	
+
 	public static boolean spreadIce = false;
-	
-	//Gui settings
-	public static boolean sweatParticals;
-	public static boolean insaneParticals;
 	
 	public static boolean useFarenheit = false;
 	public static String heatBarPos;
 	public static String waterBarPos;
 	public static String sanityBarPos;
 	public static String oxygenBarPos;
-	
-	public static boolean ShowText;
-	public static boolean ShowDebug;
-	
-	public static boolean breathSound;
-	public static int breathPause;
-	public static float breathVolume;
 	
 	public static int dirtBottleID = 5001;
 	public static int saltBottleID = 5002;

@@ -52,6 +52,7 @@ achievement.enviromine.TenSecondRule.desc=Eat rotten food
 achievement.enviromine.MedicalMarvels.desc=Cure any infection or disease
 achievement.enviromine.SuckItUpPrincess.desc=Kill a hostile mob while having one or more broken limbs
 
+options.enviromine.menu.title=Enviromine Menu
 options.enviromine.guiMainmenu.title=EnviroMine Main Menu
 options.enviromine.guiSetting.title=EnviroMine Gui Settings
 options.enviromine.guiBars.title=EnviroMine Hud Settings

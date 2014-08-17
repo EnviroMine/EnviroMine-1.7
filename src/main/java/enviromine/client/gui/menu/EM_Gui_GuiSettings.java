@@ -27,7 +27,9 @@ public class EM_Gui_GuiSettings extends GuiScreen
 	{
 		System.out.println(UI_Settings.guiScale);
 		
-		GuiSlider ScaleSlider = new GuiSlider(149, this.width / 2 - 75, this.height / 6 + 8 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiScaling")+ ": ", "x", .5F, 2F, UI_Settings.guiScale, true, true);
+//		GuiSlider ScaleSlider = new GuiSlider(149, this.width / 2 - 75, this.height / 6 + 8 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiScaling")+ ": ", "x", .5F, 2F, UI_Settings.guiScale, true, true);
+		GuiSlider ScaleSlider = new GuiSlider(149, this.width / 2 + 2, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiScaling")+ ": ", "x", .5F, 2F, UI_Settings.guiScale, true, true);
+
 		ScaleSlider.precision = 2;
 		ScaleSlider.updateSlider();
 	
@@ -41,9 +43,9 @@ public class EM_Gui_GuiSettings extends GuiScreen
 		
 		GuiButton showiconsbutton = new GuiButton(154,this.width / 2 - 152, this.height / 6 + 74 - 6 , 150, 20, StatCollector.translateToLocal("options.enviromine.showIcons"));
 
-		GuiButton sweatParticlesbutton = new GuiButton(159, this.width / 2 + 2, this.height / 6 + 96 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.sweatParticles"));
+		//GuiButton sweatParticlesbutton = new GuiButton(159, this.width / 2 + 2, this.height / 6 + 96 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.sweatParticles"));
 
-		GuiButton insaneParticlesbutton = new GuiButton(152, this.width / 2 + 2, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.insaneParticles"));
+		//GuiButton insaneParticlesbutton = new GuiButton(152, this.width / 2 + 2, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.insaneParticles"));
 
 
 		GuiButton minbarsbutton = new GuiButton(158, this.width / 2 + 2, this.height / 6 + 52 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.minBars"));
@@ -70,10 +72,10 @@ public class EM_Gui_GuiSettings extends GuiScreen
 			this.buttonList.add(showdebugbutton);
 		showiconsbutton.displayString =I18n.format("options.enviromine.showIcons", new Object[0]) + ": " + I18n.format("options.enviromine.showIcons."+ (UI_Settings.ShowGuiIcons == true || UI_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showiconsbutton);
-		sweatParticlesbutton.displayString = I18n.format("options.enviromine.sweatParticles", new Object[0]) + ": " + I18n.format("options.enviromine.sweatParticles."+ (UI_Settings.sweatParticals == true ? "on" : "off" ), new Object[0]);
-			this.buttonList.add(sweatParticlesbutton);
-		insaneParticlesbutton.displayString = I18n.format("options.enviromine.insaneParticles", new Object[0]) + ": " + I18n.format("options.enviromine.insaneParticles."+ (UI_Settings.insaneParticals == true ? "on" : "off" ), new Object[0]);
-			this.buttonList.add(insaneParticlesbutton);
+		//sweatParticlesbutton.displayString = I18n.format("options.enviromine.sweatParticles", new Object[0]) + ": " + I18n.format("options.enviromine.sweatParticles."+ (UI_Settings.sweatParticals == true ? "on" : "off" ), new Object[0]);
+			//this.buttonList.add(sweatParticlesbutton);
+		//insaneParticlesbutton.displayString = I18n.format("options.enviromine.insaneParticles", new Object[0]) + ": " + I18n.format("options.enviromine.insaneParticles."+ (UI_Settings.insaneParticals == true ? "on" : "off" ), new Object[0]);
+			//this.buttonList.add(insaneParticlesbutton);
 		minbarsbutton.displayString = I18n.format("options.enviromine.minBars", new Object[0]) + ": " + I18n.format("options.enviromine.minBars."+ (UI_Settings.minimalHud == true ? "on" : "off" ), new Object[0]);
 			this.buttonList.add(minbarsbutton);
 	

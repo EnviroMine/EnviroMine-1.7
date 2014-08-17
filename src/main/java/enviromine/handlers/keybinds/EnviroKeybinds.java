@@ -14,17 +14,14 @@ public class EnviroKeybinds
 {
 	public static KeyBinding reloadConfig;
 	public static KeyBinding addRemove;
-	public static KeyBinding menu;
 	
 	public static void Init()
 	{
 		reloadConfig = new KeyBinding("key.enviromine.reload", Keyboard.KEY_L, "key.categories.enviromine");
 		addRemove = new KeyBinding("key.enviromine.addremove", Keyboard.KEY_K, "key.categories.enviromine");
-		menu = new KeyBinding("key.enviromine.menu", Keyboard.KEY_O, "key.categories.enviromine");
 		
 		ClientRegistry.registerKeyBinding(reloadConfig);
 		ClientRegistry.registerKeyBinding(addRemove);
-		ClientRegistry.registerKeyBinding(menu);
 	}
 	
 	@SubscribeEvent
@@ -40,10 +37,5 @@ public class EnviroKeybinds
 			AddRemoveCustom.doAddRemove();
 		}
 		
-		if(menu.getIsKeyPressed())
-		{
-			Minecraft.getMinecraft().displayGuiScreen(new EM_Gui_Menu());
-		}
-
 	}
 }

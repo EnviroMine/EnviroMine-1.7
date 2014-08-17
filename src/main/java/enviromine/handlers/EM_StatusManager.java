@@ -31,10 +31,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import enviromine.EnviroPotion;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.core.EM_Settings;
@@ -45,12 +43,11 @@ import enviromine.trackers.BlockProperties;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.ItemProperties;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
+import org.apache.logging.log4j.Level;
 import com.google.common.base.Stopwatch;
 
 public class EM_StatusManager
@@ -98,6 +95,7 @@ public class EM_StatusManager
 	
 	public static void syncMultiplayerTracker(EnviroDataTracker tracker)
 	{
+		tracker.fixFloatinfPointErrors();
 		String dataString = "";
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
@@ -106,6 +104,11 @@ public class EM_StatusManager
 		{
 			return;
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
+		}
+		
+		if(dataString.length() >= 2048)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tracker Sync data too long! Problems may occur client side while parsing!");
 		}
 		
 		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));

@@ -36,9 +36,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 import enviromine.EnviroPotion;
+import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.gui.EM_GuiEnviroMeters;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BlockProperties;

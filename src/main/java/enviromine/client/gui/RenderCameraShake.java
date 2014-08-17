@@ -1,4 +1,4 @@
-package enviromine.gui;
+package enviromine.client.gui;
 
 import enviromine.world.ClientQuake;
 import net.minecraft.client.Minecraft;

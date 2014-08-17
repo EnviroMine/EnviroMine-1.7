@@ -1,4 +1,4 @@
-package enviromine.gui;
+package enviromine.client.gui;
 
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;

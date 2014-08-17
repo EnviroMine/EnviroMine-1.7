@@ -1,9 +1,7 @@
 package enviromine.gui.menu;
 
-import enviromine.core.EM_Settings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
 
 public class EM_Gui_Bars extends GuiScreen

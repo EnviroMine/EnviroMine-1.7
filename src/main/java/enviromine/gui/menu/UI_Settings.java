@@ -1,5 +1,10 @@
 package enviromine.gui.menu;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import enviromine.core.EnviroMine;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,14 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.core.EnviroMine;
 
 @SideOnly(Side.CLIENT)
 public class UI_Settings {
@@ -43,8 +42,7 @@ public class UI_Settings {
 		File f = new File(enviroSettingsFile);
 		if (!f.exists()) {
 			// Check Propeties will Write new file
-			Properties prop = checkProperties(new Properties());
-
+			checkProperties(new Properties());
 		}
 
 		readSettings();

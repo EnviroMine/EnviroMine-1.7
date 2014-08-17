@@ -1,15 +1,15 @@
 package enviromine.world.chunk;
 
-import java.util.Random;
-
-import enviromine.core.EnviroMine;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.MapGenBase;
+
+import enviromine.core.EnviroMine;
+
+import java.util.Random;
 
 public class MapGenModifiedRavine extends MapGenBase
 {

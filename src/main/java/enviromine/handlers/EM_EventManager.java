@@ -1131,12 +1131,16 @@ public class EM_EventManager
 	
 	/* Client only events */
 	@SideOnly(Side.CLIENT)
-	ModelCamelPack model = new ModelCamelPack();
+	ModelCamelPack model;
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
 	{
+		if (model == null) {
+			model = new ModelCamelPack();
+		}
+		
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
 			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));

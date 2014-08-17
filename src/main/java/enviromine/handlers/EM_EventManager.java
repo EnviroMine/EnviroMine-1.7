@@ -1130,6 +1130,7 @@ public class EM_EventManager
 	}
 	
 	/* Client only events */
+	@SideOnly(Side.CLIENT)
 	ModelCamelPack model = new ModelCamelPack();
 	
 	@SubscribeEvent

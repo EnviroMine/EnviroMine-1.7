@@ -129,6 +129,9 @@ public class EM_Settings
 	public static boolean foodSpoiling = true;
 	public static double foodRotTime = 10.0D;
 	
+	/** Whether or not this overridden with server settings */
+	public static boolean isOverridden = false;
+	
 	public static float convertToFarenheit(float num)
 	{
 		return((num * (9 / 5)) + 32F);

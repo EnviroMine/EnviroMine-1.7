@@ -154,6 +154,13 @@ public class PacketServerOverride implements IMessage
 				}
 			}
 			
+			iterator = EM_Settings.armorProperties.keySet().iterator();
+			while (iterator.hasNext()) {
+				String name = iterator.next();
+				System.out.println(name + ": " + EM_Settings.armorProperties.get(name).allowCamelPack);
+			}
+			EM_Settings.isOverridden = true;
+			
 			return null; //Reply
 		}
 	}

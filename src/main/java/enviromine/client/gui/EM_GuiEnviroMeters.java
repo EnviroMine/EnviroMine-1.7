@@ -1,5 +1,8 @@
 package enviromine.client.gui;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -11,21 +14,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EnviroUtils;
+import enviromine.client.gui.menu.UI_Settings;
 import enviromine.core.EM_Settings;
-import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
 {

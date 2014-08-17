@@ -2,7 +2,6 @@ package enviromine.core.proxies;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
-
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -11,14 +10,13 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.blocks.renderers.TileEntityElevatorBottomRenderer;
 import enviromine.blocks.renderers.TileEntityElevatorTopRenderer;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.client.gui.EM_GuiEnviroMeters;
+import enviromine.client.gui.menu.UI_Settings;
 import enviromine.gases.RenderGasHandler;
-import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
 

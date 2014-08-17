@@ -119,7 +119,23 @@ public class PacketServerOverride implements IMessage
 			EM_Settings.enableHydrate = message.enableHydrate;
 			EM_Settings.enableSanity = message.enableSanity;
 			
-			Iterator<String> iterator = message.allowedArmors.iterator();
+			Iterator<String>iterator = message.disallowedArmors.iterator();
+			while(iterator.hasNext())
+			{
+				String name = iterator.next();
+				System.out.println(name+" is not allowed");
+				if(EM_Settings.armorProperties.containsKey(name))
+				{
+					ArmorProperties prop = EM_Settings.armorProperties.get(name);
+					prop.allowCamelPack = false;
+					EM_Settings.armorProperties.put(name, prop);
+				} else
+				{
+					EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, false));
+				}
+			}
+			
+			iterator = message.allowedArmors.iterator();
 			while(iterator.hasNext())
 			{
 				String name = iterator.next();
@@ -136,28 +152,6 @@ public class PacketServerOverride implements IMessage
 					System.out.println("Creating new...");
 					EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, true));
 				}
-			}
-			
-			iterator = message.disallowedArmors.iterator();
-			while(iterator.hasNext())
-			{
-				String name = iterator.next();
-				System.out.println(name+" is not allowed");
-				if(EM_Settings.armorProperties.containsKey(name))
-				{
-					ArmorProperties prop = EM_Settings.armorProperties.get(name);
-					prop.allowCamelPack = false;
-					EM_Settings.armorProperties.put(name, prop);
-				} else
-				{
-					EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, false));
-				}
-			}
-			
-			iterator = EM_Settings.armorProperties.keySet().iterator();
-			while (iterator.hasNext()) {
-				String name = iterator.next();
-				System.out.println(name + ": " + EM_Settings.armorProperties.get(name).allowCamelPack);
 			}
 			EM_Settings.isOverridden = true;
 			

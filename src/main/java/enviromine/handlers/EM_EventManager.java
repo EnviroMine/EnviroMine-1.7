@@ -35,6 +35,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -60,6 +61,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
+import enviromine.client.ModelCamelPack;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -68,7 +70,6 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
-import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 import java.awt.Color;
@@ -76,6 +77,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 
 public class EM_EventManager
 {
@@ -90,18 +92,20 @@ public class EM_EventManager
 			{
 				chunkPhys = (EM_PhysManager.chunkDelay.get("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
-			//TODO
-	/*		
-			if (MinecraftServer.getServer().isSinglePlayer()) {
-				EM_Settings.armorProperties.clear();
-				EM_Settings.blockProperties.clear();
-				EM_Settings.itemProperties.clear();
-				EM_Settings.livingProperties.clear();
-				EM_Settings.stabilityTypes.clear();
-				EM_ConfigHandler.initConfig();
-			} else if (event.entity instanceof EntityPlayerMP) {
-				EnviroMine.instance.network.sendTo(new PacketServerOverride(), (EntityPlayerMP)event.entity);
-			}*/
+			
+			if (event.entity instanceof EntityPlayerMP) {
+				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
+					EM_Settings.armorProperties.clear();
+					EM_Settings.blockProperties.clear();
+					EM_Settings.itemProperties.clear();
+					EM_Settings.livingProperties.clear();
+					EM_Settings.stabilityTypes.clear();
+					EM_ConfigHandler.initConfig();
+				} else {
+					System.out.println("Sending packet");
+					EnviroMine.instance.network.sendTo(new PacketServerOverride(), (EntityPlayerMP)event.entity);
+				}
+			}
 		}
 		
 		if(event.entity instanceof EntityItem)
@@ -176,32 +180,6 @@ public class EM_EventManager
 			event.world.spawnEntityInWorld(newSand);
 			event.setCanceled(true);
 			event.entity.setDead();
-		}
-	}
-	
-	@SubscribeEvent
-	public void onItemTooltip(ItemTooltipEvent event)
-	{
-		if(event.itemStack != null && event.itemStack.hasTagCompound())
-		{
-			if (event.itemStack.getTagCompound().hasKey("camelPackFill")) {
-				int i = event.itemStack.getTagCompound().getInteger("camelPackFill");
-				int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
-				event.toolTip.add("Camel pack: " + disp + "%");
-			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
-			{
-				double rotDate = event.itemStack.getTagCompound().getLong("EM_ROT_DATE");
-				double rotTime = event.itemStack.getTagCompound().getLong("EM_ROT_TIME");
-				double curTime = event.entity.worldObj.getTotalWorldTime();
-				
-				if(curTime - rotDate <= 0)
-				{
-					event.toolTip.add("Rotten: 0%");
-				} else
-				{
-					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
-				}
-			}
 		}
 	}
 	
@@ -291,17 +269,6 @@ public class EM_EventManager
 					}
 				}
 			}
-		}
-	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
-	{
-		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
-		{
-			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
-			event.setCanceled(true);
 		}
 	}
 	
@@ -467,26 +434,26 @@ public class EM_EventManager
 					
 					switch(getWaterType(world, i, j, k))
 					{
-					case 0:
-					{
-						newItem = Items.potionitem;
-						break;
-					}
-					case 1:
-					{
-						newItem = ObjectHandler.badWaterBottle;
-						break;
-					}
-					case 2:
-					{
-						newItem = ObjectHandler.saltWaterBottle;
-						break;
-					}
-					case 3:
-					{
-						newItem = ObjectHandler.coldWaterBottle;
-						break;
-					}
+						case 0:
+						{
+							newItem = Items.potionitem;
+							break;
+						}
+						case 1:
+						{
+							newItem = ObjectHandler.badWaterBottle;
+							break;
+						}
+						case 2:
+						{
+							newItem = ObjectHandler.saltWaterBottle;
+							break;
+						}
+						case 3:
+						{
+							newItem = ObjectHandler.coldWaterBottle;
+							break;
+						}
 					}
 					
 					if(isValidCauldron && (world.getBlock(i, j - 1, k) == Blocks.fire || world.getBlock(i, j - 1, k) == Blocks.flowing_lava || world.getBlock(i, j - 1, k) == Blocks.lava))
@@ -1102,8 +1069,6 @@ public class EM_EventManager
 				EM_PhysManager.usedSlidePositions.clear();
 				EM_PhysManager.worldStartTime = -1;
 				EM_PhysManager.chunkDelay.clear();
-				Earthquake.pendingQuakes.clear();
-				Earthquake.clientQuakes.clear();
 				
 				if(EM_Settings.worldDir != null)
 				{
@@ -1162,5 +1127,69 @@ public class EM_EventManager
 		}
 		Vec3 vec31 = vec3.addVector((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
 		return par1World.func_147447_a(vec3, vec31, par3, !par3, false); //TODO
+	}
+	
+	/* Client only events */
+	@SideOnly(Side.CLIENT)
+	ModelCamelPack model;
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
+	{
+		if (model == null) {
+			model = new ModelCamelPack();
+		}
+		
+		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
+		{
+			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			event.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onRender(RenderPlayerEvent.Post event)
+	{
+		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
+		if (plate != null && (plate.getItem() == ObjectHandler.camelPack || (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")))) {
+			//model = new ModelCamelPack();
+			
+			GL11.glPushMatrix();
+			GL11.glRotatef(180F, 0F, 0F, 1F);
+			GL11.glRotatef(180F + event.entityLiving.renderYawOffset, 0F, 1F, 0F);
+			GL11.glEnable(GL11.GL_BLEND);
+			model.render(event.entity, 0, 0, 0, 0, 0, .06325f);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glPopMatrix();
+		}
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onItemTooltip(ItemTooltipEvent event)
+	{
+		if(event.itemStack != null && event.itemStack.hasTagCompound())
+		{
+			if (event.itemStack.getTagCompound().hasKey("camelPackFill")) {
+				int i = event.itemStack.getTagCompound().getInteger("camelPackFill");
+				int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
+				event.toolTip.add("Camel pack: " + disp + "%");
+			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
+			{
+				double rotDate = event.itemStack.getTagCompound().getLong("EM_ROT_DATE");
+				double rotTime = event.itemStack.getTagCompound().getLong("EM_ROT_TIME");
+				double curTime = event.entity.worldObj.getTotalWorldTime();
+				
+				if(curTime - rotDate <= 0)
+				{
+					event.toolTip.add("Rotten: 0%");
+				} else
+				{
+					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
+				}
+			}
+		}
 	}
 }

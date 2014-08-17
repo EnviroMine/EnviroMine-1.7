@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 
@@ -18,7 +17,6 @@ import java.util.Iterator;
 
 public class CamelPackRefillHandler implements IRecipe
 {
-	CraftingHelper lastHelper;
 	public boolean fillBottle;
 	public boolean isArmor;
 	public int packDamage;
@@ -28,92 +26,8 @@ public class CamelPackRefillHandler implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
-		if (FMLCommonHandler.instance().getSide().isClient()) {
-			return matchesClient(inv);
-		}
-		lastHelper = CraftingHelper.getInstanceFromCraftmatrix(inv);
-		if (lastHelper == null) {
-			return matchesClient(inv);
-		}
-		
-		if(!inv.getInventoryName().equals("container.crafting")) {
-			return false;
-		}
-		
-		lastHelper.reset();
-		boolean hasPack = false;
-		
-		for(int i = inv.getSizeInventory() - 1; i >= 0; i--)
+		if (!inv.getInventoryName().equals("container.crafting"))
 		{
-			ItemStack item = inv.getStackInSlot(i);
-			
-			if(item == null)
-			{
-				continue;
-			} else if(item.getItem() == ObjectHandler.camelPack)
-			{
-				if(hasPack)
-				{
-					return false;
-				} else
-				{
-					lastHelper.pack = item.copy();
-					lastHelper.packDamage = item.getItemDamage();
-					hasPack = true;
-				}
-			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill")) {
-				if(hasPack)
-				{
-					return false;
-				} else
-				{
-					lastHelper.pack = item.copy();
-					lastHelper.packDamage = 100-item.getTagCompound().getInteger("camelPackFill");
-					hasPack = true;
-					lastHelper.isArmor = true;
-				}
-			} else if(item.getItem() == Items.potionitem && item.getItemDamage() == 0)
-			{
-				if (lastHelper.bottles.size() > 0 && lastHelper.fillBottle) {
-					return false;
-				} else {
-					lastHelper.fillBottle = false;
-					lastHelper.bottles.add(item);
-				}
-			} else if(item.getItem() == Items.glass_bottle && lastHelper.bottles.size() == 0)
-			{
-				if (lastHelper.bottles.size() > 0 && !lastHelper.fillBottle) {
-					return false;
-				} else {
-					lastHelper.fillBottle = true;
-					lastHelper.bottles.add(item);
-				}
-			} else if(item != null)
-			{
-				return false;
-			}
-		}
-		
-		if((lastHelper.packDamage == 0 && !lastHelper.fillBottle) || !hasPack || lastHelper.pack == null)
-		{
-			return false;
-		} else if(lastHelper.packDamage - (lastHelper.bottles.size() * 25) <= -25 && lastHelper.fillBottle == false)
-		{
-			return false;
-		} else if(lastHelper.packDamage + 25 > lastHelper.pack.getMaxDamage() && lastHelper.fillBottle == true)
-		{
-			return false;
-		} else
-		{
-			if (FMLCommonHandler.instance().getSide().isServer()){
-				CraftingHelper.getInstanceFromCraftmatrix(inv).fillBottle = lastHelper.fillBottle;
-			}
-			return hasPack && lastHelper.bottles.size() >= 1;
-		}
-	}
-	private boolean matchesClient(InventoryCrafting inv)
-	{
-		if(!inv.getInventoryName().equals("container.crafting")) {
 			return false;
 		}
 		
@@ -124,16 +38,16 @@ public class CamelPackRefillHandler implements IRecipe
 		this.bottles.clear();
 		boolean hasPack = false;
 		
-		for(int i = inv.getSizeInventory() - 1; i >= 0; i--)
+		for (int i = inv.getSizeInventory() - 1; i >= 0; i--)
 		{
 			ItemStack item = inv.getStackInSlot(i);
 			
-			if(item == null)
+			if (item == null)
 			{
 				continue;
-			} else if(item.getItem() == ObjectHandler.camelPack)
+			} else if (item.getItem() == ObjectHandler.camelPack)
 			{
-				if(hasPack)
+				if (hasPack)
 				{
 					return false;
 				} else
@@ -142,46 +56,51 @@ public class CamelPackRefillHandler implements IRecipe
 					packDamage = item.getItemDamage();
 					hasPack = true;
 				}
-			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill")) {
-				if(hasPack)
+			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill"))
+			{
+				if (hasPack)
 				{
 					return false;
 				} else
 				{
 					pack = item.copy();
-					packDamage = 100-item.getTagCompound().getInteger("camelPackFill");
+					packDamage = 100 - item.getTagCompound().getInteger("camelPackFill");
 					hasPack = true;
 					isArmor = true;
 				}
-			} else if(item.getItem() == Items.potionitem && item.getItemDamage() == 0)
+			} else if (item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
-				if (bottles.size() > 0 && fillBottle) {
+				if (bottles.size() > 0 && fillBottle)
+				{
 					return false;
-				} else {
+				} else
+				{
 					fillBottle = false;
 					bottles.add(item);
 				}
-			} else if(item.getItem() == Items.glass_bottle && bottles.size() == 0)
+			} else if (item.getItem() == Items.glass_bottle && bottles.size() == 0)
 			{
-				if (bottles.size() > 0 && !fillBottle) {
+				if (bottles.size() > 0 && !fillBottle)
+				{
 					return false;
-				} else {
+				} else
+				{
 					fillBottle = true;
 					bottles.add(item);
 				}
-			} else if(item != null)
+			} else if (item != null)
 			{
 				return false;
 			}
 		}
 		
-		if((packDamage == 0 && !fillBottle) || !hasPack || pack == null)
+		if ((packDamage == 0 && !fillBottle) || !hasPack || pack == null)
 		{
 			return false;
-		} else if(packDamage - (bottles.size() * 25) <= -25 && fillBottle == false)
+		} else if (packDamage - (bottles.size() * 25) <= -25 && fillBottle == false)
 		{
 			return false;
-		} else if(packDamage + 25 > pack.getMaxDamage() && fillBottle == true)
+		} else if (packDamage + 25 > pack.getMaxDamage() && fillBottle == true)
 		{
 			return false;
 		} else
@@ -190,53 +109,12 @@ public class CamelPackRefillHandler implements IRecipe
 		}
 	}
 	
-	
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		if (FMLCommonHandler.instance().getSide().isClient()) {
-			return getCraftingResultClient();
-		}
+		this.matches(inv, null);
 		
-		CraftingHelper helper = CraftingHelper.getInstanceFromCraftmatrix(inv);
-		if(helper.fillBottle)
-		{
-			ItemStack newItem = new ItemStack(Items.potionitem);
-			newItem.setItemDamage(0);
-			return newItem;
-		} else
-		{
-			Iterator<ItemStack> iterator = helper.bottles.iterator();
-			
-			while(iterator.hasNext())
-			{
-				ItemStack bottle = iterator.next();
-				bottle.getItem().setContainerItem(Items.glass_bottle);
-			}
-			
-			if(helper.packDamage > (helper.bottles.size() * 25))
-			{
-				if (helper.isArmor) {
-					helper.pack.getTagCompound().setInteger("camelPackFill", 100-(helper.packDamage - (helper.bottles.size() * 25)));
-					return helper.pack;
-				} else {
-					helper.pack.setItemDamage(helper.packDamage - (helper.bottles.size() * 25));
-					return helper.pack;
-				}
-			} else
-			{
-				if (helper.isArmor) {
-					helper.pack.getTagCompound().setInteger("camelPackFill", 100);
-					return helper.pack;
-				} else {
-					return new ItemStack(ObjectHandler.camelPack);
-				}
-			}
-		}
-	}
-	private ItemStack getCraftingResultClient()
-	{
-		if(fillBottle)
+		if (fillBottle)
 		{
 			ItemStack newItem = new ItemStack(Items.potionitem);
 			newItem.setItemDamage(0);
@@ -245,27 +123,31 @@ public class CamelPackRefillHandler implements IRecipe
 		{
 			Iterator<ItemStack> iterator = bottles.iterator();
 			
-			while(iterator.hasNext())
+			while (iterator.hasNext())
 			{
 				ItemStack bottle = iterator.next();
 				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
 			
-			if(packDamage > (bottles.size() * 25))
+			if (packDamage > (bottles.size() * 25))
 			{
-				if (isArmor) {
-					pack.getTagCompound().setInteger("camelPackFill", 100-(packDamage - (bottles.size() * 25)));
+				if (isArmor)
+				{
+					pack.getTagCompound().setInteger("camelPackFill", 100 - (packDamage - (bottles.size() * 25)));
 					return pack;
-				} else {
+				} else
+				{
 					pack.setItemDamage(packDamage - (bottles.size() * 25));
 					return pack;
 				}
 			} else
 			{
-				if (isArmor) {
+				if (isArmor)
+				{
 					pack.getTagCompound().setInteger("camelPackFill", 100);
 					return pack;
-				} else {
+				} else
+				{
 					return new ItemStack(ObjectHandler.camelPack);
 				}
 			}
@@ -288,18 +170,26 @@ public class CamelPackRefillHandler implements IRecipe
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
 		IInventory craftMatrix = event.craftMatrix;
-		if(!craftMatrix.getInventoryName().equals("container.crafting") || !CraftingHelper.getInstanceFromPlayer(event.player).fillBottle)
+		if (!(craftMatrix instanceof InventoryCrafting))
 		{
 			return;
-		} else {
-			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
+		}
+		
+		this.matches((InventoryCrafting)craftMatrix, event.player.worldObj);
+		
+		if (!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
+		{
+			return;
+		} else
+		{
+			for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 			{
 				ItemStack slot = craftMatrix.getStackInSlot(i);
 				
-				if(slot == null)
+				if (slot == null)
 				{
 					continue;
-				} else if(slot.getItem() == ObjectHandler.camelPack)
+				} else if (slot.getItem() == ObjectHandler.camelPack)
 				{
 					slot.stackSize += 1;
 					slot.setItemDamage(slot.getItemDamage() + 25);

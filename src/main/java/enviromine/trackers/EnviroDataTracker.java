@@ -121,6 +121,7 @@ public class EnviroDataTracker
 		if(!(trackedEntity instanceof EntityPlayer) && !EM_Settings.trackNonPlayer || (EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 		{
 			EM_StatusManager.saveAndRemoveTracker(this);
+			return;
 		}
 		
 		int i = MathHelper.floor_double(trackedEntity.posX);

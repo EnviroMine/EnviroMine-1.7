@@ -136,7 +136,7 @@ public class EM_StatusManager
 	
 	public static EnviroDataTracker lookupTrackerFromUUID(UUID uuid)
 	{
-		return trackerList.get(uuid);
+		return trackerList.get(uuid.toString());
 	}
 	
 	public static EnviroDataTracker lookupTrackerFromUsername(String username)
@@ -663,6 +663,11 @@ public class EM_StatusManager
 		int validEntities = 0;
 		
 		EnviroDataTracker tracker = lookupTracker(entityLiving);
+		
+		if(tracker == null)
+		{
+			System.out.println("Tracker updating as null! Crash imminent!");
+		}
 		
 		while(iterator.hasNext())
 		{

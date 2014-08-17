@@ -51,32 +51,31 @@ public class CamelPackIntegrationHandler implements IRecipe
 					pack = item.copy();
 					hasPack = true;
 				}
-			} else if (item.getItem() instanceof ItemArmor)
+			} else if (item.getItem() instanceof ItemArmor && ((ItemArmor)item.getItem()).armorType == 1)
 			{
 				String name = Item.itemRegistry.getNameForObject(item.getItem());
 				if (EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
 				{
-					if (((ItemArmor)item.getItem()).armorType == 1)
+					if (hasArmor)
 					{
-						if (hasArmor)
+						return false;
+					} else
+					{
+						if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill"))
 						{
-							return false;
-						} else
-						{
-							if (item.hasTagCompound() && item.stackTagCompound.hasKey("camelPackFill"))
+							if (hasPack)
 							{
-								if (hasPack)
-								{
-									return false;
-								} else
-								{
-									isRemove = true;
-								}
+								return false;
+							} else
+							{
+								isRemove = true;
 							}
-							armor = item.copy();
-							hasArmor = true;
 						}
+						armor = item.copy();
+						hasArmor = true;
 					}
+				} else {
+					return false;
 				}
 			} else if (item != null)
 			{

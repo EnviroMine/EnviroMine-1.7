@@ -93,7 +93,7 @@ public class EM_EventManager
 				chunkPhys = (EM_PhysManager.chunkDelay.get("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
 			
-			if (event.entity instanceof EntityPlayerMP) {
+			/*if (event.entity instanceof EntityPlayerMP) {
 				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
 					EM_Settings.armorProperties.clear();
 					EM_Settings.blockProperties.clear();
@@ -105,7 +105,7 @@ public class EM_EventManager
 					System.out.println("Sending packet");
 					EnviroMine.instance.network.sendTo(new PacketServerOverride(), (EntityPlayerMP)event.entity);
 				}
-			}
+			}*/
 		}
 		
 		if(event.entity instanceof EntityItem)

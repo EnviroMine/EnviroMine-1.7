@@ -16,8 +16,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import enviromine.EnviroUtils;
+import enviromine.client.gui.menu.UI_Settings;
 import enviromine.core.EM_Settings;
-import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;

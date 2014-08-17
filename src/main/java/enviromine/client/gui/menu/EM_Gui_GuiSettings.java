@@ -1,4 +1,4 @@
-package enviromine.gui.menu;
+package enviromine.client.gui.menu;
 
 import java.math.BigDecimal;
 

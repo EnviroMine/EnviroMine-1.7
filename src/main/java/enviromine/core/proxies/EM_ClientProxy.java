@@ -15,10 +15,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.client.gui.EM_GuiEnviroMeters;
+import enviromine.client.gui.menu.UI_Settings;
 import enviromine.client.renderer.tileentity.TileEntityElevatorBottomRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorTopRenderer;
 import enviromine.gases.RenderGasHandler;
-import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
 

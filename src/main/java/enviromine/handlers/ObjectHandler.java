@@ -55,17 +55,17 @@ public class ObjectHandler
 	
 	public static void initItems()
 	{
-		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("badwater").setCreativeTab(EnviroMine.enviroTab);
-		saltWaterBottle = new EnviroItemSaltWaterBottle().setMaxStackSize(1).setUnlocalizedName("saltwater").setCreativeTab(EnviroMine.enviroTab);
-		coldWaterBottle = new EnviroItemColdWaterBottle().setMaxStackSize(1).setUnlocalizedName("coldwater").setCreativeTab(EnviroMine.enviroTab);
-		airFilter = new Item().setMaxStackSize(1).setUnlocalizedName("airfilter").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:air_filter");
-		rottenFood = new RottenFood(1).setMaxStackSize(64).setUnlocalizedName("rottenfood").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:rot");
+		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.badwater").setCreativeTab(EnviroMine.enviroTab);
+		saltWaterBottle = new EnviroItemSaltWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.saltwater").setCreativeTab(EnviroMine.enviroTab);
+		coldWaterBottle = new EnviroItemColdWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.coldwater").setCreativeTab(EnviroMine.enviroTab);
+		airFilter = new Item().setMaxStackSize(1).setUnlocalizedName("enviromine.airfilter").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:air_filter");
+		rottenFood = new RottenFood(1).setMaxStackSize(64).setUnlocalizedName("enviromine.rottenfood").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:rot");
 		
 		camelPackMaterial = EnumHelper.addArmorMaterial("camelPack", 100, new int[]{1, 0, 0, 0}, 0);
 		
-		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("camelpack").setCreativeTab(EnviroMine.enviroTab);
-		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("gasmask").setCreativeTab(EnviroMine.enviroTab);
-		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("hardhat").setCreativeTab(EnviroMine.enviroTab);
+		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("enviromine.camelpack").setCreativeTab(EnviroMine.enviroTab);
+		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("enviromine.gasmask").setCreativeTab(EnviroMine.enviroTab);
+		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("enviromine.hardhat").setCreativeTab(EnviroMine.enviroTab);
 	}
 	
 	public static void registerItems()
@@ -83,11 +83,11 @@ public class ObjectHandler
 	public static void initBlocks()
 	{
 		//elevator = new BlockElevator(EM_Settings.blockElevatorID, Material.iron);
-		gasBlock = new BlockGas(EM_Settings.gasBlockID, Material.air).setBlockName("gas").setCreativeTab(EnviroMine.enviroTab);
-		fireGasBlock = new BlockGas(EM_Settings.fireGasBlockID, Material.air).setBlockName("firegas").setCreativeTab(EnviroMine.enviroTab).setLightLevel(1.0F);
+		gasBlock = new BlockGas(EM_Settings.gasBlockID, Material.air).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab);
+		fireGasBlock = new BlockGas(EM_Settings.fireGasBlockID, Material.air).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setLightLevel(1.0F);
 		
-		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
-		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
+		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
+		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
 	}
 	
 	public static void registerBlocks()

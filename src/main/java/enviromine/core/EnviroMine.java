@@ -32,20 +32,21 @@ import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
 import enviromine.network.packet.PacketEnviroMine;
+import enviromine.network.packet.PacketServerOverride;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = EM_Settings.ID, name = EM_Settings.Name, version = EM_Settings.Version)
+@Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version)
 public class EnviroMine
 {
 	public static Logger logger;
 	public static BiomeGenBase caves;
 	public static CreativeTabs enviroTab = new EnviroTab("enviroTab");
 	
-	@Instance(EM_Settings.ID)
+	@Instance(EM_Settings.ModID)
 	public static EnviroMine instance;
 	
 	@SidedProxy(clientSide = EM_Settings.Proxy + ".EM_ClientProxy", serverSide = EM_Settings.Proxy + ".EM_CommonProxy")
@@ -79,6 +80,8 @@ public class EnviroMine
 		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
 		this.network.registerMessage(PacketEnviroMine.HandlerServer.class, PacketEnviroMine.class, 0, Side.SERVER);
 		this.network.registerMessage(PacketEnviroMine.HandlerClient.class, PacketEnviroMine.class, 1, Side.CLIENT);
+		this.network.registerMessage(PacketServerOverride.Handler.class, PacketServerOverride.class, 2, Side.CLIENT);
+
 		
 		GameRegistry.registerWorldGenerator(new WorldFeatureGenerator(), 20);
 	}

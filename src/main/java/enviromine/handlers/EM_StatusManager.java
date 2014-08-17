@@ -143,7 +143,7 @@ public class EM_StatusManager
 	{
 		EntityLivingBase entity = null;
 		
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+		if (FMLCommonHandler.instance().getSide().isClient()) {
 			entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
 		} else {
 			World[] worlds = MinecraftServer.getServer().worldServers;

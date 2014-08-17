@@ -8,11 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-
 import enviromine.blocks.tiles.TileEntityElevatorTop;
+import enviromine.handlers.ObjectHandler;
+import enviromine.handlers.TeleportHandler;
 import enviromine.world.Earthquake;
 
 public class BlockElevatorTop extends Block implements ITileEntityProvider
@@ -35,7 +34,7 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 		{
 			if(!world.isRemote)
 			{
-				new Earthquake(world, i, k, 64, 8);
+				new Earthquake(world, i, k, 64, 64, 1);
 			}
 			return true;
 		}
@@ -50,10 +49,6 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		player.addChatMessage(new ChatComponentText("This feature is not finished!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-		return true;
-		
-		/*
 		if(world.getBlock(i, j - 1, k) != ObjectHandler.elevatorBottom)
 		{
 			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
@@ -92,7 +87,6 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));
 		}
 		return true;
-		*/
 	}
 	
 	//Make sure you set this as your TileEntity class relevant for the block!

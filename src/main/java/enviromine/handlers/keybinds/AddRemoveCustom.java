@@ -1,8 +1,5 @@
 package enviromine.handlers.keybinds;
 
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EnviroMine;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -12,10 +9,13 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
-
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+import enviromine.EnviroUtils;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EnviroMine;
 
 public class AddRemoveCustom
 {
@@ -53,11 +53,12 @@ public class AddRemoveCustom
 					{
 						Item item = mc.thePlayer.getHeldItem().getItem();
 						int itemMeta = mc.thePlayer.getHeldItem().getItemDamage();
-						String idName = Item.itemRegistry.getNameForObject(mc.thePlayer.getHeldItem().getItem().getUnlocalizedName());
+						String idName = Item.itemRegistry.getNameForObject(item);
 						String name = mc.thePlayer.getHeldItem().getDisplayName();
 						
-						idName = replaceULN(idName);
-						name = replaceULN(name);
+						//TODO
+						//idName = EnviroUtils.replaceULN(idName);
+						//name = EnviroUtils.replaceULN(name);
 						
 						dataToCustom[0] = idName;
 						dataToCustom[1] = itemMeta;
@@ -76,7 +77,7 @@ public class AddRemoveCustom
 					}
 					
 					MovingObjectType type = Minecraft.getMinecraft().objectMouseOver.typeOfHit;
-					
+					//System.out.println(type.name());
 					if(type.name() == "ENTITY")
 					{
 						Entity lookingAt = Minecraft.getMinecraft().objectMouseOver.entityHit;
@@ -110,9 +111,10 @@ public class AddRemoveCustom
 						String blockULName = block.getUnlocalizedName();
 						String blockName = block.getLocalizedName();
 						
-						blockULName = replaceULN(blockULName);
-						blockName = replaceULN(blockName);
-							
+						//blockULName = EnviroUtils.replaceULN(blockULName);
+						blockName = EnviroUtils.replaceULN(blockName);
+						
+							//System.out.println("type:"+type.name());
 						dataToCustom[0] = block;
 						dataToCustom[1] = blockMeta;
 						dataToCustom[2] = blockULName;
@@ -134,12 +136,12 @@ public class AddRemoveCustom
 		}
 	}
 	
-	public static String replaceULN(String unlocalizedName)
-	{
-		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
-		return newName;
+	//public static String replaceULN(String unlocalizedName)
+	//{
+	//	String newName = unlocalizedName.replaceAll("\\.+", "\\_");
+	//	return newName;
 		
-	}
+	//}
 	
 	
 }

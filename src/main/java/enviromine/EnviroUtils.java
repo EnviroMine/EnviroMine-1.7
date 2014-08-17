@@ -3,16 +3,15 @@ package enviromine;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.nio.ByteOrder;
 
 import org.apache.logging.log4j.Level;
@@ -265,5 +264,30 @@ public class EnviroUtils
 		tessellator.addVertexWithUV((double)(x + (width * scale)), (double)(y + 0), 0, (double)((float)(u + width) * f), (double)((float)(v + 0) * f1));
 		tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), 0, (double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
 		tessellator.draw();
+	}
+	
+	public static String replaceULN(String unlocalizedName)
+	{
+		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
+		return newName;
+		
+	}
+	
+	public static float convertToFarenheit(float num)
+	{
+		return convertToFarenheit(num, 2);
+	}
+	public static float convertToFarenheit(float num, int decimalPlace)
+	{
+		float newNum = (float) ((num * 1.8) + 32F);
+		BigDecimal convert = new BigDecimal(Float.toString(newNum));
+		convert.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		
+		return convert.floatValue();
+	}
+	
+	public static float convertToCelcius(float num)
+	{
+		return((num - 32F) * (5 / 9));
 	}
 }

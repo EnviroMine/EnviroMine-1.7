@@ -1,4 +1,4 @@
-package enviromine.blocks.renderers;
+package enviromine.client.renderer.tileentity;
 
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
@@ -8,14 +8,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
-public class TileEntityElevatorTopRenderer extends TileEntitySpecialRenderer
+public class TileEntityElevatorBottomRenderer extends TileEntitySpecialRenderer
 {
 	IModelCustom model;
 	ResourceLocation texture;
 	
-	public TileEntityElevatorTopRenderer()
+	public TileEntityElevatorBottomRenderer()
 	{
-		model = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/topblockelevator.obj"));
+		model = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/bottomblockelevator.obj"));
 		texture = new ResourceLocation("enviromine", "textures/blocks/elevator_model.png");
 	}
 	

@@ -12,11 +12,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import enviromine.blocks.renderers.TileEntityElevatorBottomRenderer;
-import enviromine.blocks.renderers.TileEntityElevatorTopRenderer;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.client.gui.EM_GuiEnviroMeters;
+import enviromine.client.renderer.tileentity.TileEntityElevatorBottomRenderer;
+import enviromine.client.renderer.tileentity.TileEntityElevatorTopRenderer;
 import enviromine.gases.RenderGasHandler;
 import enviromine.gui.menu.UI_Settings;
 import enviromine.handlers.ObjectHandler;

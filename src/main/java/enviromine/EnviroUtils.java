@@ -2,6 +2,7 @@ package enviromine;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -289,5 +290,41 @@ public class EnviroUtils
 	public static float convertToCelcius(float num)
 	{
 		return((num - 32F) * (5 / 9));
+	}
+	
+	public static double getBiomeTemp(BiomeGenBase biome)
+	{
+		float bTemp = biome.temperature * 2.25F;
+		
+		if(bTemp > 1.5F)
+		{
+			bTemp = 30F + ((bTemp - 1F) * 10);
+		} else if(bTemp < -1.5F)
+		{
+			bTemp = -30F + ((bTemp + 1F) * 10);
+		} else
+		{
+			bTemp *= 20;
+		}
+		
+		return bTemp;
+		
+	}
+	
+	public static String getBiomeWater(BiomeGenBase biome)
+	{
+		if(biome.biomeName == BiomeGenBase.swampland.biomeName || biome.biomeName == BiomeGenBase.jungle.biomeName || biome.biomeName == BiomeGenBase.jungleHills.biomeName)
+		{
+			return "dirty";
+		} else if(biome.biomeName == BiomeGenBase.frozenOcean.biomeName || biome.biomeName == BiomeGenBase.ocean.biomeName || biome.biomeName == BiomeGenBase.beach.biomeName)
+		{
+			return "salt";
+		} else if(biome.biomeName == BiomeGenBase.icePlains.biomeName || biome.biomeName == BiomeGenBase.taiga.biomeName || biome.biomeName == BiomeGenBase.taigaHills.biomeName || biome.temperature < 0F)
+		{
+			return "cold";
+		} else
+		{
+			return "clean";
+		}
 	}
 }

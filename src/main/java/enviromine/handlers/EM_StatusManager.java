@@ -1,5 +1,10 @@
 package enviromine.handlers;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -32,26 +37,22 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
 
+import com.google.common.base.Stopwatch;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.ItemProperties;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import com.google.common.base.Stopwatch;
 
 public class EM_StatusManager
 {
@@ -249,11 +250,23 @@ public class EM_StatusManager
 					if(y == 0)
 					{
 						Chunk testChunk = entityLiving.worldObj.getChunkFromBlockCoords((i + x), (k + z));
-						BiomeGenBase testBiome = testChunk.getBiomeGenForWorldCoords((i + x) & 15, (k + z) & 15, entityLiving.worldObj.getWorldChunkManager());
-						
-						if(testBiome != null)
+						BiomeGenBase checkBiome = testChunk.getBiomeGenForWorldCoords((i + x) & 15, (k + z) & 15, entityLiving.worldObj.getWorldChunkManager());
+						//TODO Changed for Overriding Biomes
+						if(checkBiome != null)
 						{
-							surBiomeTemps += testBiome.temperature;
+							BiomeProperties biomeOverride = null;
+							if(EM_Settings.biomeProperties.containsKey("" + checkBiome.biomeID))
+							{
+								biomeOverride = EM_Settings.biomeProperties.get("" + checkBiome.biomeID);
+							}
+							if(biomeOverride != null && biomeOverride.biomeOveride)
+							{
+								surBiomeTemps += biomeOverride.ambientTemp;
+							}
+							else
+							{
+								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
+							}
 							biomeTempChecks += 1;
 						}
 					}
@@ -562,8 +575,13 @@ public class EM_StatusManager
 		}
 		
 		//float bTemp = biome.temperature * 2.25F;
-		float bTemp = (surBiomeTemps / biomeTempChecks)* 2.25F;
 		
+		//TODO (Changed for Biome overrides) Moved to EnviroUtils.. called above
+		//float bTemp = (surBiomeTemps / biomeTempChecks)* 2.25F;
+		
+
+		float bTemp = (surBiomeTemps / biomeTempChecks);
+		/*		
 		if(bTemp > 1.5F)
 		{
 			bTemp = 30F + ((bTemp - 1F) * 10);
@@ -574,7 +592,7 @@ public class EM_StatusManager
 		{
 			bTemp *= 20;
 		}
-		
+		*/
 		if(!entityLiving.worldObj.provider.isHellWorld)
 		{
 			if(entityLiving.posY <= 48)
@@ -1096,6 +1114,29 @@ public class EM_StatusManager
 			}
 		}
 		
+		//TODO Biomes Overrids
+		/*
+		 * Not sure where to put this really
+		 * So its here for now.
+		 * 
+		 */
+		BiomeProperties biomeProp = null;
+		if(EM_Settings.biomeProperties.containsKey("" + biome.biomeID))
+		{
+			 biomeProp = EM_Settings.biomeProperties.get("" +  biome.biomeID);
+
+			 if(biomeProp != null && biomeProp.biomeOveride)
+				{
+					dehydrateBonus += biomeProp.dehydrateRate;
+					
+					if(biomeProp.tempRate > 0)	riseSpeed += biomeProp.tempRate;
+					else dropSpeed += biomeProp.tempRate;
+					
+					sanityRate += biomeProp.sanityRate;
+				}
+
+		}
+
 		if(biome.getIntRainfall() == 0 && isDay)
 		{
 			dehydrateBonus += 0.05F;

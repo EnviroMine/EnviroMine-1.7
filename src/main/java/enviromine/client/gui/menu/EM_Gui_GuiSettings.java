@@ -138,7 +138,6 @@ public class EM_Gui_GuiSettings extends GuiScreen
 						par1GuiButton.displayString =I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine.status."+ (UI_Settings.ShowText == true ? "visible" : "hidden" ), new Object[0]);
 					break;
 				case 157:
-					this.mc.displayGuiScreen(new EM_Gui_Bars(this));
 					break;//barpos
 				case 158:
 					UI_Settings.minimalHud = !UI_Settings.minimalHud;

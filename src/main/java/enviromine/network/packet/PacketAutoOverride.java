@@ -13,7 +13,6 @@ import enviromine.core.EnviroMine;
 import enviromine.network.packet.encoders.IPacketEncoder;
 
 import java.lang.reflect.Field;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -109,83 +108,7 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 		@Override
 		public IMessage onMessage(PacketAutoOverride message, MessageContext ctx)
 		{
-			Iterator<String> iterator = message.strings.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				String key = iterator.next();
-				setField(key, message.strings.get(key));
-			}
-			iterator = message.integers.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				String key = iterator.next();
-				setField(key, message.integers.get(key));
-			}
-			iterator = message.booleans.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				String key = iterator.next();
-				setField(key, message.booleans.get(key));
-			}
-			iterator = message.floats.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				String key = iterator.next();
-				setField(key, message.floats.get(key));
-			}
-			iterator = message.custom.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				String key = iterator.next();
-				decodeCustom(key, message.custom.get(key));
-			}
-			
-			EM_Settings.isOverridden = true;
-			
-			return null; //Reply
-		}
-		
-		private void decodeCustom(String clazz, String msg)
-		{
-			try
-			{
-				Object obj = Class.forName(clazz).newInstance();
-				if (obj instanceof IPacketEncoder)
-				{
-					IPacketEncoder encoder = (IPacketEncoder)obj;
-					
-					encoder.decode(msg);
-				}
-			} catch (ClassNotFoundException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding: Class " + clazz + " is not valid");
-			} catch (InstantiationException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding: An error occoured getting encoder class", e);
-			} catch (IllegalAccessException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding: An error occoured getting encoder class", e);
-			}
-		}
-		
-		private void setField(String name, Object obj)
-		{
-			try
-			{
-				EM_Settings.class.getDeclaredField(name).set(null, obj);
-			} catch (IllegalArgumentException e)
-			{
-				e.printStackTrace();
-			} catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
-			} catch (NoSuchFieldException e)
-			{
-				e.printStackTrace();
-			} catch (SecurityException e)
-			{
-				e.printStackTrace();
-			}
+			return (new PacketServerOverride.Handler()).onMessage(message, ctx);
 		}
 	}
 }

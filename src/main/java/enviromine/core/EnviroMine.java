@@ -9,6 +9,7 @@ import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -22,6 +23,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
+
 import enviromine.EM_VillageMineshaft;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -31,11 +33,13 @@ import enviromine.core.proxies.EM_CommonProxy;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
+import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +84,8 @@ public class EnviroMine
 		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(EM_Settings.Channel);
 		this.network.registerMessage(PacketEnviroMine.HandlerServer.class, PacketEnviroMine.class, 0, Side.SERVER);
 		this.network.registerMessage(PacketEnviroMine.HandlerClient.class, PacketEnviroMine.class, 1, Side.CLIENT);
-		this.network.registerMessage(PacketServerOverride.Handler.class, PacketServerOverride.class, 2, Side.CLIENT);
+		this.network.registerMessage(PacketAutoOverride.Handler.class, PacketAutoOverride.class, 2, Side.CLIENT);
+		this.network.registerMessage(PacketServerOverride.Handler.class, PacketServerOverride.class, 3, Side.CLIENT);
 
 		
 		GameRegistry.registerWorldGenerator(new WorldFeatureGenerator(), 20);

@@ -93,7 +93,7 @@ public class PacketServerOverride implements IMessage
 							{
 								IPacketEncoder encoder = (IPacketEncoder)obj;
 								
-								custom.put(annotation.value(), encoder.encode());
+								custom.put(annotation.value(), encoder.encode(fields[i]));
 							}
 						} catch (ClassNotFoundException e)
 						{

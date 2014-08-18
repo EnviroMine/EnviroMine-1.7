@@ -10,7 +10,6 @@ import enviromine.trackers.BlockProperties;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.ItemProperties;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -42,14 +41,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
+import org.apache.logging.log4j.Level;
 import com.google.common.base.Stopwatch;
 
 public class EM_StatusManager
@@ -74,6 +71,8 @@ public class EM_StatusManager
 			return;
 		}
 		
+		tracker.fixFloatinfPointErrors();
+		
 		if(EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning())
 		{
 			if(Minecraft.getMinecraft().isGamePaused() && !EnviroMine.proxy.isOpenToLAN())
@@ -97,6 +96,7 @@ public class EM_StatusManager
 	
 	public static void syncMultiplayerTracker(EnviroDataTracker tracker)
 	{
+		tracker.fixFloatinfPointErrors();
 		String dataString = "";
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
@@ -105,6 +105,11 @@ public class EM_StatusManager
 		{
 			return;
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
+		}
+		
+		if(dataString.length() >= 2048)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tracker Sync data too long! Problems may occur client side while parsing!");
 		}
 		
 		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));
@@ -1209,6 +1214,7 @@ public class EM_StatusManager
 		while(iterator.hasNext())
 		{
 			EnviroDataTracker tracker = iterator.next();
+			tracker.isDisabled = true;
 			NBTTagCompound tags = tracker.trackedEntity.getEntityData();
 			tags.setFloat("ENVIRO_AIR", tracker.airQuality);
 			tags.setFloat("ENVIRO_HYD", tracker.hydration);

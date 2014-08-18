@@ -43,7 +43,7 @@ public class PacketEnviroMine implements IMessage
 		public IMessage onMessage(PacketEnviroMine packet, MessageContext ctx)
 		{
 			String[] data = packet.message.split(",");
-			if(data[0].equalsIgnoreCase("ID:1"))
+			if(data[0].trim().equalsIgnoreCase("ID:1"))
 			{
 				this.emptyRightClick(data);
 			} else
@@ -70,7 +70,7 @@ public class PacketEnviroMine implements IMessage
 		public IMessage onMessage(PacketEnviroMine packet, MessageContext ctx)
 		{
 			String[] data = packet.message.split(",");
-			if(data[0].equalsIgnoreCase("ID:0"))
+			if(data[0].trim().equalsIgnoreCase("ID:0"))
 			{
 				this.trackerSync(data);
 			} else

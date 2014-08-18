@@ -94,6 +94,7 @@ public class EnviroDataTracker
 				} else
 				{
 					trackedEntity = player;
+					this.isDisabled = false;
 					this.loadNBTTags();
 				}
 			} else

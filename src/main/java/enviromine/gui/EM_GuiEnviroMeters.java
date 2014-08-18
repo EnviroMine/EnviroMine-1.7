@@ -79,13 +79,14 @@ public class EM_GuiEnviroMeters extends Gui
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
-		if(tracker != null && (tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F))
+		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
 		{
 			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getUniqueID());
 			
 			if(player != null)
 			{
 				tracker.trackedEntity = player;
+				tracker.isDisabled = false;
 				tracker.loadNBTTags();
 			} else
 			{
@@ -102,6 +103,9 @@ public class EM_GuiEnviroMeters extends Gui
 				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
 			}
+		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
+		{
+			tracker = null;
 		} else
 		{
 			int waterBar = MathHelper.ceiling_float_int((tracker.hydration / 100) * barWidth);

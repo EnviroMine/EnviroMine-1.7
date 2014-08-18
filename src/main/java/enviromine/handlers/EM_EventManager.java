@@ -121,6 +121,8 @@ public class EM_EventManager
 					if(oldTrack != null && (oldTrack.trackedEntity == null || (oldTrack.trackedEntity.isDead && oldTrack.trackedEntity.getHealth() <= 0F)))
 					{
 						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
+						oldTrack.isDisabled = false;
+						oldTrack.loadNBTTags();
 						if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
 						{
 							EM_StatusManager.syncMultiplayerTracker(oldTrack);
@@ -167,6 +169,8 @@ public class EM_EventManager
 				if(player != null)
 				{
 					tracker.trackedEntity = player;
+					tracker.isDisabled = false;
+					tracker.loadNBTTags();
 					//tracker.resetData();
 					//EM_StatusManager.saveAndRemoveTracker(tracker);
 				} else
@@ -675,7 +679,7 @@ public class EM_EventManager
 	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
-		if(event.entityLiving.isDead)
+		if(event.entityLiving.isDead || event.entityLiving.getHealth() <= 0F)
 		{
 			return;
 		}
@@ -706,7 +710,23 @@ public class EM_EventManager
 		
 		if(tracker == null)
 		{
-			return;
+			if((!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN()) && (EM_Settings.enableAirQ || EM_Settings.enableBodyTemp || EM_Settings.enableHydrate || EM_Settings.enableSanity))
+			{
+				if(event.entityLiving instanceof EntityPlayer || (EM_Settings.trackNonPlayer && EnviroDataTracker.isLegalType(event.entityLiving)))
+				{
+					EnviroMine.logger.log(Level.ERROR, "Server lost track of player! Attempting to re-sync...");
+					EnviroDataTracker emTrack = new EnviroDataTracker((EntityLivingBase)event.entity);
+					EM_StatusManager.addToManager(emTrack);
+					emTrack.loadNBTTags();
+					EM_StatusManager.syncMultiplayerTracker(emTrack);
+				} else
+				{
+					return;
+				}
+			} else
+			{
+				return;
+			}
 		}
 		
 		EM_StatusManager.updateTracker(tracker);

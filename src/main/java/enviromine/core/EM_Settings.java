@@ -102,7 +102,9 @@ public class EM_Settings
 	public static boolean oldMineGen = true;
 	
 	//Properties
+	@ShouldOverride("enviromine.network.packet.encoders.ArmorPropsEncoder")
 	public static HashMap<String,ArmorProperties> armorProperties = new HashMap<String,ArmorProperties>();
+	@ShouldOverride("enviromine.network.packet.encoders.BlocksPropsEncoder")
 	public static HashMap<String,BlockProperties> blockProperties = new HashMap<String,BlockProperties>();
 	public static HashMap<Integer,EntityProperties> livingProperties = new HashMap<Integer,EntityProperties>();
 	public static HashMap<String,ItemProperties> itemProperties = new HashMap<String,ItemProperties>();

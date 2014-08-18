@@ -10,16 +10,13 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.encoders.IPacketEncoder;
-import enviromine.trackers.ArmorProperties;
 
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 
@@ -27,15 +24,6 @@ import com.google.common.base.Strings;
 
 public class PacketServerOverride implements IMessage
 {
-	/*
-	public boolean enableAirQ;
-	public boolean enableHydrate;
-	public boolean enableSanity;
-	public boolean enableBodyTemp;
-	 */
-	public Set<String> allowedArmors = new HashSet<String>();
-	public Set<String> disallowedArmors = new HashSet<String>();
-	
 	private Map<String, String> strings = new HashMap<String, String>();
 	private Map<String, Integer> integers = new HashMap<String, Integer>();
 	private Map<String, Boolean> booleans = new HashMap<String, Boolean>();
@@ -79,7 +67,6 @@ public class PacketServerOverride implements IMessage
 			ShouldOverride annotation = fields[i].getAnnotation(ShouldOverride.class);
 			if (annotation != null)
 			{
-				System.out.println("ShouldOverride!");
 				if (fields[i].getType() == String.class)
 				{
 					addToMap(strings, fields[i]);
@@ -120,26 +107,6 @@ public class PacketServerOverride implements IMessage
 						}
 					}
 				}
-			}
-		}
-		
-		/*
-		this.enableAirQ = EM_Settings.enableAirQ;
-		this.enableBodyTemp = EM_Settings.enableBodyTemp;
-		this.enableHydrate = EM_Settings.enableHydrate;
-		this.enableSanity = EM_Settings.enableSanity;
-		 */
-		
-		Iterator<String> iterator = EM_Settings.armorProperties.keySet().iterator();
-		while (iterator.hasNext())
-		{
-			String name = iterator.next();
-			if (EM_Settings.armorProperties.get(name).allowCamelPack)
-			{
-				this.allowedArmors.add(name);
-			} else
-			{
-				this.disallowedArmors.add(name);
 			}
 		}
 	}
@@ -187,31 +154,12 @@ public class PacketServerOverride implements IMessage
 		}
 		for (String type : customs)
 		{
-			String[] tmp = type.split(":");
+			String[] tmp = type.split("::");
 			if (tmp.length == 2)
 			{
 				this.custom.put(tmp[0], tmp[1]);
 			}
 		}
-		
-		String[] compound = ByteBufUtils.readUTF8String(buf).split(";");
-		for (String name : compound)
-		{
-			this.allowedArmors.add(name);
-		}
-		
-		compound = ByteBufUtils.readUTF8String(buf).split(";");
-		for (String name : compound)
-		{
-			this.disallowedArmors.add(name);
-		}
-		
-		/*
-		this.enableAirQ = buf.readBoolean();
-		this.enableBodyTemp = buf.readBoolean();
-		this.enableHydrate = buf.readBoolean();
-		this.enableSanity = buf.readBoolean();
-		 */
 	}
 	
 	@Override
@@ -265,7 +213,7 @@ public class PacketServerOverride implements IMessage
 			
 			floatss += (key + ":" + floats.get(key));
 		}
-		ite = floats.keySet().iterator();
+		ite = custom.keySet().iterator();
 		String customs = "";
 		while (ite.hasNext())
 		{
@@ -275,53 +223,14 @@ public class PacketServerOverride implements IMessage
 				customs += ";;";
 			}
 			
-			customs += (key + ":" + floats.get(key));
+			customs += (key + "::" + custom.get(key));
 		}
 		
-		System.out.println("'" + strs + "'");
-		System.out.println("'" + intss + "'");
-		System.out.println("'" + bools + "'");
-		System.out.println("'" + floatss + "'");
-		System.out.println("'" + customs + "'");
 		ByteBufUtils.writeUTF8String(buf, strs);
 		ByteBufUtils.writeUTF8String(buf, intss);
 		ByteBufUtils.writeUTF8String(buf, bools);
 		ByteBufUtils.writeUTF8String(buf, floatss);
 		ByteBufUtils.writeUTF8String(buf, customs);
-		
-		String compound = "";
-		Iterator<String> iterator = this.allowedArmors.iterator();
-		while (iterator.hasNext())
-		{
-			if (compound.equals(""))
-			{
-				compound = iterator.next();
-			} else
-			{
-				compound += ";" + iterator.next();
-			}
-		}
-		ByteBufUtils.writeUTF8String(buf, compound);
-		
-		iterator = this.disallowedArmors.iterator();
-		while (iterator.hasNext())
-		{
-			if (compound.equals(""))
-			{
-				compound = iterator.next();
-			} else
-			{
-				compound += ";" + iterator.next();
-			}
-		}
-		ByteBufUtils.writeUTF8String(buf, compound);
-		
-		/*
-		buf.writeBoolean(this.enableAirQ);
-		buf.writeBoolean(this.enableBodyTemp);
-		buf.writeBoolean(this.enableHydrate);
-		buf.writeBoolean(this.enableSanity);
-		 */
 	}
 	
 	public static class Handler implements IMessageHandler<PacketServerOverride, IMessage>
@@ -329,8 +238,6 @@ public class PacketServerOverride implements IMessage
 		@Override
 		public IMessage onMessage(PacketServerOverride message, MessageContext ctx)
 		{
-			System.out.println("Starting to read packet. EnableBodyTemp is set to: " + EM_Settings.enableBodyTemp);
-			
 			Iterator<String> iterator = message.strings.keySet().iterator();
 			while (iterator.hasNext())
 			{
@@ -362,45 +269,7 @@ public class PacketServerOverride implements IMessage
 				decodeCustom(key, message.custom.get(key));
 			}
 			
-			/*
-			EM_Settings.enableAirQ = message.enableAirQ;
-			EM_Settings.enableBodyTemp = message.enableBodyTemp;
-			EM_Settings.enableHydrate = message.enableHydrate;
-			EM_Settings.enableSanity = message.enableSanity;
-			 */
-			
-			iterator = message.disallowedArmors.iterator();
-			while (iterator.hasNext())
-			{
-				String name = iterator.next();
-				if (EM_Settings.armorProperties.containsKey(name))
-				{
-					ArmorProperties prop = EM_Settings.armorProperties.get(name);
-					prop.allowCamelPack = false;
-					EM_Settings.armorProperties.put(name, prop);
-				} else
-				{
-					EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, false));
-				}
-			}
-			
-			iterator = message.allowedArmors.iterator();
-			while (iterator.hasNext())
-			{
-				String name = iterator.next();
-				if (EM_Settings.armorProperties.containsKey(name))
-				{
-					ArmorProperties prop = EM_Settings.armorProperties.get(name);
-					prop.allowCamelPack = true;
-					EM_Settings.armorProperties.put(name, prop);
-				} else
-				{
-					EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, true));
-				}
-			}
 			EM_Settings.isOverridden = true;
-			
-			System.out.println("Finished reading packet. EnableBodyTemp set to: " + EM_Settings.enableBodyTemp);
 			
 			return null; //Reply
 		}

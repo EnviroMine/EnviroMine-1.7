@@ -65,7 +65,7 @@ import enviromine.client.ModelCamelPack;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.network.packet.PacketServerOverride;
+import enviromine.network.packet.PacketAutoOverride;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
@@ -102,7 +102,8 @@ public class EM_EventManager
 					EM_Settings.stabilityTypes.clear();
 					EM_ConfigHandler.initConfig();
 				} else {
-					EnviroMine.instance.network.sendTo(new PacketServerOverride(), (EntityPlayerMP)event.entity);
+					EntityPlayerMP player = (EntityPlayerMP)event.entity;
+					EnviroMine.instance.network.sendTo(new PacketAutoOverride(player), player);
 				}
 			}
 		}

@@ -1,114 +1,50 @@
 package enviromine.network.packet;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 import enviromine.core.EM_Settings;
-import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.encoders.IPacketEncoder;
 
 import io.netty.buffer.ByteBuf;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 
-import com.google.common.base.Strings;
-
 public class PacketServerOverride implements IMessage
 {
-	private Map<String, String> strings = new HashMap<String, String>();
-	private Map<String, Integer> integers = new HashMap<String, Integer>();
-	private Map<String, Boolean> booleans = new HashMap<String, Boolean>();
-	private Map<String, Float> floats = new HashMap<String, Float>();
-	private Map<String, String> custom = new HashMap<String, String>();
+	private EntityPlayerMP player;
+	protected Map<String, String> strings = new HashMap<String, String>();
+	protected Map<String, Integer> integers = new HashMap<String, Integer>();
+	protected Map<String, Boolean> booleans = new HashMap<String, Boolean>();
+	protected Map<String, Float> floats = new HashMap<String, Float>();
+	protected Map<String, String> custom = new HashMap<String, String>();
 	
 	public PacketServerOverride()
 	{
-		if (FMLCommonHandler.instance().getSide().isServer())
-		{
-			readFromSettings();
-		}
 	}
 	
-	private <T> void addToMap(Map<String, T> map, Field field)
+	public PacketServerOverride(EntityPlayerMP player)
 	{
-		try
-		{
-			map.put(field.getName(), (T)field.get(null));
-		} catch (ClassCastException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		} catch (NullPointerException e)
-		{
-			e.printStackTrace();
-		}
+		this.player = player;
 	}
 	
-	private void readFromSettings()
+	public PacketServerOverride(EntityPlayerMP player, Map<String, String> strings, Map<String, Integer> integers, Map<String, Boolean> booleans, Map<String, Float> floats, Map<String, String> custom)
 	{
-		Field[] fields = EM_Settings.class.getFields();
-		
-		for (int i = 0; i < fields.length; i++)
-		{
-			ShouldOverride annotation = fields[i].getAnnotation(ShouldOverride.class);
-			if (annotation != null)
-			{
-				if (fields[i].getType() == String.class)
-				{
-					addToMap(strings, fields[i]);
-				} else if (fields[i].getType() == int.class)
-				{
-					addToMap(integers, fields[i]);
-				} else if (fields[i].getType() == boolean.class)
-				{
-					addToMap(booleans, fields[i]);
-				} else if (fields[i].getType() == float.class)
-				{
-					addToMap(floats, fields[i]);
-				} else
-				{
-					if (Strings.isNullOrEmpty(annotation.value()))
-					{
-						EnviroMine.logger.log(Level.ERROR, fields[i].getName() + " has an unkown type - skipping");
-					} else
-					{
-						try
-						{
-							Object obj = Class.forName(annotation.value()).newInstance();
-							if (obj instanceof IPacketEncoder)
-							{
-								IPacketEncoder encoder = (IPacketEncoder)obj;
-								
-								custom.put(annotation.value(), encoder.encode(fields[i]));
-							}
-						} catch (ClassNotFoundException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: Class " + annotation.value() + " on field " + fields[i].getName() + " is not valid");
-						} catch (InstantiationException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-						} catch (IllegalAccessException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-						}
-					}
-				}
-			}
-		}
+		this.player = player;
+		this.strings = strings == null ? this.strings : strings;
+		this.integers = integers == null ? this.integers : integers;
+		this.booleans = booleans == null ? this.booleans : booleans;
+		this.floats = floats == null ? this.floats : floats;
+		this.custom = custom == null ? this.custom : custom;
 	}
 	
 	@Override
@@ -224,6 +160,44 @@ public class PacketServerOverride implements IMessage
 			}
 			
 			customs += (key + "::" + custom.get(key));
+		}
+		
+		int length = strs.length() + intss.length() + bools.length() + floatss.length() + customs.length();
+		if (strs.length() > 2000 || intss.length() > 2000 || bools.length() > 2000 || floatss.length() > 2000 || customs.length() > 2000)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000!"); //TODO handle
+			return;
+		}
+		while (length > 2000)
+		{
+			IMessage packet = null;
+			if (strs.length() > 0)
+			{
+				packet = new PacketServerOverride(player, strings, null, null, null, null);
+				strs = "";
+			} else if (intss.length() > 0)
+			{
+				packet = new PacketServerOverride(player, null, integers, null, null, null);
+				intss = "";
+			} else if (bools.length() > 0)
+			{
+				packet = new PacketServerOverride(player, null, null, booleans, null, null);
+				bools = "";
+			} else if (floatss.length() > 0)
+			{
+				packet = new PacketServerOverride(player, null, null, null, floats, null);
+				floatss = "";
+			} else if (customs.length() > 0)
+			{
+				packet = new PacketServerOverride(player, null, null, null, null, custom);
+				customs = "";
+			}
+			
+			if (packet != null)
+			{
+				EnviroMine.instance.network.sendTo(packet, player);
+			}
+			length = strs.length() + intss.length() + bools.length() + floatss.length() + customs.length();
 		}
 		
 		ByteBufUtils.writeUTF8String(buf, strs);

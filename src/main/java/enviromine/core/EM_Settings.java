@@ -154,6 +154,12 @@ public class EM_Settings
 		return((num - 32F) * (5 / 9));
 	}
 	
+	/**
+	 * Tells the server that this field should be sent to the client to overwrite<br>
+	 * Usage:<br>
+	 * <tt>@ShouldOverride</tt> - for ints/booleans/floats/Strings<br>
+	 * <tt>@ShouldOverride(classpath (String))</tt> - for other types
+	 * */
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface ShouldOverride

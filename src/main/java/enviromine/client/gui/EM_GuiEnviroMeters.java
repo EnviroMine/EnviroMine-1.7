@@ -387,11 +387,21 @@ public class EM_GuiEnviroMeters extends Gui
 							curPosY = MathHelper.floor_float(cY/100F * (float)height);
 							curPosX = MathHelper.floor_float(cX/100F * (float)width);
 							
+							
 							if(cX > 50)
 							{
-								curPosX -= (barWidth);
+								//TODO HardCodded Testing
+								
+								//OLD curPosX -= (barWidth);
+								int addit = 0;
+								if(UI_Settings.ShowText == true) addit += textWidth;
+								if(UI_Settings.ShowGuiIcons == true) addit += iconWidth;
+							
+								
+								curPosX += addit;
 								textPos = curPosX - (textWidth * addTW);
 								iconPos = textPos - iconWidth;
+								//curPosX += barWidth; //testing
 							} else
 							{
 								textPos = curPosX + barWidth;

@@ -1,10 +1,14 @@
 package enviromine.client.gui.menu;
 
+import java.math.BigDecimal;
+
+import cpw.mods.fml.client.config.GuiSlider;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-
 import enviromine.core.EnviroMine;
 
 public class EM_Gui_Menu extends GuiScreen
@@ -41,14 +45,14 @@ public class EM_Gui_Menu extends GuiScreen
 		this.buttonList.add(serverSettings);
 		this.buttonList.add(customEditor);
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.back")));
-		
+
 		
 	}
 	
 	@Override
 	public boolean doesGuiPauseGame()
 	{
-		return true;
+		return false;
 	}
 	
 	/**
@@ -71,6 +75,7 @@ public class EM_Gui_Menu extends GuiScreen
 		}
 	}
 	
+
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{

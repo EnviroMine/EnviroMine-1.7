@@ -1,8 +1,5 @@
 package enviromine.core;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.UUID;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
@@ -11,6 +8,14 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.ItemProperties;
 import enviromine.trackers.RotProperties;
 import enviromine.trackers.StabilityType;
+
+import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class EM_Settings
 {
@@ -31,9 +36,13 @@ public class EM_Settings
 	
 	public static boolean enablePhysics = true;
 	public static boolean enableLandslide = true;
+	@ShouldOverride
 	public static boolean enableAirQ = true;
+	@ShouldOverride
 	public static boolean enableHydrate = true;
+	@ShouldOverride
 	public static boolean enableSanity = true;
+	@ShouldOverride
 	public static boolean enableBodyTemp = true;
 	public static boolean trackNonPlayer = false;
 	
@@ -142,4 +151,8 @@ public class EM_Settings
 	{
 		return((num - 32F) * (5 / 9));
 	}
+	
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface ShouldOverride {}
 }

@@ -154,5 +154,8 @@ public class EM_Settings
 	
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	public @interface ShouldOverride {}
+	public @interface ShouldOverride
+	{
+		String value() default "";
+	}
 }

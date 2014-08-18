@@ -9,11 +9,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import enviromine.core.EM_Settings;
 import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
+import enviromine.network.packet.encoders.IPacketEncoder;
 import enviromine.trackers.ArmorProperties;
 
 import io.netty.buffer.ByteBuf;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
+
+import com.google.common.base.Strings;
 
 public class PacketServerOverride implements IMessage
 {
@@ -38,6 +40,7 @@ public class PacketServerOverride implements IMessage
 	private Map<String, Integer> integers = new HashMap<String, Integer>();
 	private Map<String, Boolean> booleans = new HashMap<String, Boolean>();
 	private Map<String, Float> floats = new HashMap<String, Float>();
+	private Map<String, String> custom = new HashMap<String, String>();
 	
 	public PacketServerOverride()
 	{
@@ -73,27 +76,48 @@ public class PacketServerOverride implements IMessage
 		
 		for (int i = 0; i < fields.length; i++)
 		{
-			Annotation[] annos = fields[i].getAnnotations();
-			for (int j = 0; j < annos.length; j++)
+			ShouldOverride annotation = fields[i].getAnnotation(ShouldOverride.class);
+			if (annotation != null)
 			{
-				if (annos[j] instanceof ShouldOverride)
+				System.out.println("ShouldOverride!");
+				if (fields[i].getType() == String.class)
 				{
-					System.out.println("ShouldOverride!");
-					if (fields[i].getType() == String.class)
-					{
-						addToMap(strings, fields[i]);
-					} else if (fields[i].getType() == int.class)
-					{
-						addToMap(integers, fields[i]);
-					} else if (fields[i].getType() == boolean.class)
-					{
-						addToMap(booleans, fields[i]);
-					} else if (fields[i].getType() == float.class)
-					{
-						addToMap(floats, fields[i]);
-					} else
+					addToMap(strings, fields[i]);
+				} else if (fields[i].getType() == int.class)
+				{
+					addToMap(integers, fields[i]);
+				} else if (fields[i].getType() == boolean.class)
+				{
+					addToMap(booleans, fields[i]);
+				} else if (fields[i].getType() == float.class)
+				{
+					addToMap(floats, fields[i]);
+				} else
+				{
+					if (Strings.isNullOrEmpty(annotation.value()))
 					{
 						EnviroMine.logger.log(Level.ERROR, fields[i].getName() + " has an unkown type - skipping");
+					} else
+					{
+						try
+						{
+							Object obj = Class.forName(annotation.value()).newInstance();
+							if (obj instanceof IPacketEncoder)
+							{
+								IPacketEncoder encoder = (IPacketEncoder)obj;
+								
+								custom.put(annotation.value(), encoder.encode());
+							}
+						} catch (ClassNotFoundException e)
+						{
+							EnviroMine.logger.log(Level.ERROR, "Error encoding: Class " + annotation.value() + " on field " + fields[i].getName() + " is not valid");
+						} catch (InstantiationException e)
+						{
+							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
+						} catch (IllegalAccessException e)
+						{
+							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
+						}
 					}
 				}
 			}
@@ -127,6 +151,7 @@ public class PacketServerOverride implements IMessage
 		String[] intss = ByteBufUtils.readUTF8String(buf).split(";");
 		String[] bools = ByteBufUtils.readUTF8String(buf).split(";");
 		String[] floatss = ByteBufUtils.readUTF8String(buf).split(";");
+		String[] customs = ByteBufUtils.readUTF8String(buf).split(";;");
 		
 		for (String type : strs)
 		{
@@ -158,6 +183,14 @@ public class PacketServerOverride implements IMessage
 			if (tmp.length == 2)
 			{
 				this.floats.put(tmp[0], Float.parseFloat(tmp[1]));
+			}
+		}
+		for (String type : customs)
+		{
+			String[] tmp = type.split(":");
+			if (tmp.length == 2)
+			{
+				this.custom.put(tmp[0], tmp[1]);
 			}
 		}
 		
@@ -232,15 +265,29 @@ public class PacketServerOverride implements IMessage
 			
 			floatss += (key + ":" + floats.get(key));
 		}
+		ite = floats.keySet().iterator();
+		String customs = "";
+		while (ite.hasNext())
+		{
+			String key = ite.next();
+			if (!customs.equals(""))
+			{
+				customs += ";;";
+			}
+			
+			customs += (key + ":" + floats.get(key));
+		}
 		
 		System.out.println("'" + strs + "'");
 		System.out.println("'" + intss + "'");
 		System.out.println("'" + bools + "'");
 		System.out.println("'" + floatss + "'");
+		System.out.println("'" + customs + "'");
 		ByteBufUtils.writeUTF8String(buf, strs);
 		ByteBufUtils.writeUTF8String(buf, intss);
 		ByteBufUtils.writeUTF8String(buf, bools);
 		ByteBufUtils.writeUTF8String(buf, floatss);
+		ByteBufUtils.writeUTF8String(buf, customs);
 		
 		String compound = "";
 		Iterator<String> iterator = this.allowedArmors.iterator();
@@ -308,6 +355,12 @@ public class PacketServerOverride implements IMessage
 				String key = iterator.next();
 				setField(key, message.floats.get(key));
 			}
+			iterator = message.custom.keySet().iterator();
+			while (iterator.hasNext())
+			{
+				String key = iterator.next();
+				decodeCustom(key, message.custom.get(key));
+			}
 			
 			/*
 			EM_Settings.enableAirQ = message.enableAirQ;
@@ -350,6 +403,29 @@ public class PacketServerOverride implements IMessage
 			System.out.println("Finished reading packet. EnableBodyTemp set to: " + EM_Settings.enableBodyTemp);
 			
 			return null; //Reply
+		}
+		
+		private void decodeCustom(String clazz, String msg)
+		{
+			try
+			{
+				Object obj = Class.forName(clazz).newInstance();
+				if (obj instanceof IPacketEncoder)
+				{
+					IPacketEncoder encoder = (IPacketEncoder)obj;
+					
+					encoder.decode(msg);
+				}
+			} catch (ClassNotFoundException e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Error decoding: Class " + clazz + " is not valid");
+			} catch (InstantiationException e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Error decoding: An error occoured getting encoder class", e);
+			} catch (IllegalAccessException e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Error decoding: An error occoured getting encoder class", e);
+			}
 		}
 		
 		private void setField(String name, Object obj)

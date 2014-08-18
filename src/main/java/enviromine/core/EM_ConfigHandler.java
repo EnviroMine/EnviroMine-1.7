@@ -635,7 +635,12 @@ public class EM_ConfigHandler
 		float sunMult = (float)config.get(catagory, APName[6], 1.00).getDouble(1.00);
 		float sanity = (float)config.get(catagory, APName[7], 0.00).getDouble(0.00);
 		float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
-		boolean allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
+		
+		Object tmp = Item.itemRegistry.getObject(name);
+		boolean allowCamelPack = false;
+		if (tmp instanceof ItemArmor && ((ItemArmor)tmp).armorType == 1) {
+			allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
+		}
 		
 		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
 		EM_Settings.armorProperties.put(name, entry);

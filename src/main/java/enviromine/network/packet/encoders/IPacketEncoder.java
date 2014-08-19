@@ -1,9 +1,8 @@
 package enviromine.network.packet.encoders;
 
-import java.lang.reflect.Field;
 
-public interface IPacketEncoder
+public interface IPacketEncoder<T>
 {
-	public String encode(Field field);
-	public void decode(String str);
+	public String encode(T obj);
+	public T decode(String str);
 }

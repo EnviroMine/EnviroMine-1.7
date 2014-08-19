@@ -13,6 +13,7 @@ import enviromine.network.packet.encoders.IPacketEncoder;
 
 import io.netty.buffer.ByteBuf;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class PacketServerOverride implements IMessage
 	protected Map<String, Integer> integers = new HashMap<String, Integer>();
 	protected Map<String, Boolean> booleans = new HashMap<String, Boolean>();
 	protected Map<String, Float> floats = new HashMap<String, Float>();
-	protected Map<String, String> custom = new HashMap<String, String>();
+	protected Map<String, String[]> custom = new HashMap<String, String[]>();
 	
 	public PacketServerOverride()
 	{
@@ -37,7 +38,7 @@ public class PacketServerOverride implements IMessage
 		this.player = player;
 	}
 	
-	public PacketServerOverride(EntityPlayerMP player, Map<String, String> strings, Map<String, Integer> integers, Map<String, Boolean> booleans, Map<String, Float> floats, Map<String, String> custom)
+	public PacketServerOverride(EntityPlayerMP player, Map<String, String> strings, Map<String, Integer> integers, Map<String, Boolean> booleans, Map<String, Float> floats, Map<String, String[]> custom)
 	{
 		this.player = player;
 		this.strings = strings == null ? this.strings : strings;
@@ -93,7 +94,7 @@ public class PacketServerOverride implements IMessage
 			String[] tmp = type.split("::");
 			if (tmp.length == 2)
 			{
-				this.custom.put(tmp[0], tmp[1]);
+				this.custom.put(tmp[0], new String[]{tmp[1], tmp[2]});
 			}
 		}
 	}
@@ -159,7 +160,7 @@ public class PacketServerOverride implements IMessage
 				customs += ";;";
 			}
 			
-			customs += (key + "::" + custom.get(key));
+			customs += (key + "::" + custom.get(key)[0] + "::" + custom.get(key)[1]);
 		}
 		
 		int length = strs.length() + intss.length() + bools.length() + floatss.length() + customs.length();
@@ -240,7 +241,16 @@ public class PacketServerOverride implements IMessage
 			while (iterator.hasNext())
 			{
 				String key = iterator.next();
-				decodeCustom(key, message.custom.get(key));
+				try
+				{
+					decodeCustom(key, EM_Settings.class.getDeclaredField(message.custom.get(key)[0]), message.custom.get(key)[1]);
+				} catch (NoSuchFieldException e)
+				{
+					e.printStackTrace();
+				} catch (SecurityException e)
+				{
+					e.printStackTrace();
+				}
 			}
 			
 			EM_Settings.isOverridden = true;
@@ -248,7 +258,7 @@ public class PacketServerOverride implements IMessage
 			return null; //Reply
 		}
 		
-		private void decodeCustom(String clazz, String msg)
+		private void decodeCustom(String clazz, Field field, String msg)
 		{
 			try
 			{
@@ -257,7 +267,7 @@ public class PacketServerOverride implements IMessage
 				{
 					IPacketEncoder encoder = (IPacketEncoder)obj;
 					
-					encoder.decode(msg);
+					field.set(null, encoder.decode(msg));
 				}
 			} catch (ClassNotFoundException e)
 			{

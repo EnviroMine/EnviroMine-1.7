@@ -3,48 +3,41 @@ package enviromine.network.packet.encoders;
 import enviromine.core.EM_Settings;
 import enviromine.trackers.ArmorProperties;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class ArmorPropsEncoder implements IPacketEncoder
+public class ArmorPropsEncoder<T> implements IPacketEncoder<HashMap<String, ArmorProperties>>
 {
 	@Override
-	public String encode(Field field)
+	public String encode(HashMap<String, ArmorProperties> armorProps)
 	{
-		if (field.getType() == EM_Settings.armorProperties.getClass()) {
-			HashMap<String, ArmorProperties> armorProps;
-			try
+		try
+		{
+			Iterator<String> iterator = armorProps.keySet().iterator();
+			String str = "";
+			while (iterator.hasNext())
 			{
-				armorProps = (HashMap<String, ArmorProperties>)field.get(null);
-				Iterator<String> iterator = armorProps.keySet().iterator();
-				String str = "";
-				while (iterator.hasNext())
+				String name = iterator.next();
+				if (!str.equals(""))
 				{
-					String name = iterator.next();
-					if (!str.equals(""))
-					{
-						str += ";";
-					}
-					str += name + "," + armorProps.get(name).allowCamelPack;
+					str += ";";
 				}
-				
-				return str;
-			} catch (IllegalArgumentException e)
-			{
-				e.printStackTrace();
-			} catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
+				str += name + "," + armorProps.get(name).allowCamelPack;
 			}
+			
+			return str;
+		} catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
 		}
 		
 		return "";
 	}
 	
 	@Override
-	public void decode(String str)
+	public HashMap<String, ArmorProperties> decode(String str)
 	{
+		//HashMap<String, ArmorProperties> map = 
 		String[] pairs = str.split(";");
 		for (String pair : pairs)
 		{
@@ -62,5 +55,7 @@ public class ArmorPropsEncoder implements IPacketEncoder
 				EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, state));
 			}
 		}
+		
+		return null;
 	}
 }

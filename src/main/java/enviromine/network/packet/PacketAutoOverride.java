@@ -21,6 +21,11 @@ import com.google.common.base.Strings;
 
 public class PacketAutoOverride extends PacketServerOverride implements IMessage
 {
+	public PacketAutoOverride()
+	{
+		
+	}
+	
 	public PacketAutoOverride(EntityPlayerMP player)
 	{
 		super(player);
@@ -85,15 +90,18 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 							{
 								IPacketEncoder encoder = (IPacketEncoder)obj;
 								
-								custom.put(annotation.value(), encoder.encode(fields[i]));
+								custom.put(annotation.value(), new String[]{fields[i].getName(), encoder.encode(fields[i].get(null))});
 							}
 						} catch (ClassNotFoundException e)
 						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: Class " + annotation.value() + " on field " + fields[i].getName() + " is not valid");
+							EnviroMine.logger.log(Level.ERROR, "Error encoding: " + annotation.value() + "is not a vaid class. (On field: " + fields[i].getName() + ")");
 						} catch (InstantiationException e)
 						{
 							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
 						} catch (IllegalAccessException e)
+						{
+							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
+						} catch (NullPointerException e)
 						{
 							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
 						}

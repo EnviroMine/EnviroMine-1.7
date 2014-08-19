@@ -396,6 +396,8 @@ public class EM_ConfigHandler
 			
 			// Now Read/Save Each Category And Add into Proper Hash Maps
 			
+			int unknown = 0;
+			
 			for(int x = 0; x <= (catagory.size() - 1); x++)
 			{
 				String CurCat = catagory.get(x);
@@ -418,10 +420,16 @@ public class EM_ConfigHandler
 						LoadLivingProperty(config, catagory.get(x));
 					} else
 					{
-						EnviroMine.logger.log(Level.WARN, "Failed to load object " + CurCat);
+						unknown++;
 					}
 					
 				}
+			}
+			
+			if(unknown > 0)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to load " + unknown + " unknown objects!");
+				EnviroMine.logger.log(Level.WARN, "Please check your custom configs for typos.");
 			}
 			
 			config.save();
@@ -765,7 +773,7 @@ public class EM_ConfigHandler
 		config.addCustomCategoryComment(blockCat, "Add Custom Blocks");
 		config.addCustomCategoryComment(entityCat, "Custom Entities");
 		
-		if(type.equalsIgnoreCase("TILE"))
+		if(type.equalsIgnoreCase("BLOCK"))
 		{
 			String nameULCat = blockCat + "." + name + " " + (Integer)data[1];
 			
@@ -778,7 +786,7 @@ public class EM_ConfigHandler
 				config.addCustomCategoryComment(nameULCat, name);
 				config.get(nameULCat, BPName[0], (String)data[0]).getString();
 				config.get(nameULCat, BPName[1], (Integer)data[1]).getInt(0);
-				config.get(nameULCat, BPName[2], (Integer)data[0]).getInt(0);
+				config.get(nameULCat, BPName[2], (String)data[0]).getString();
 				config.get(nameULCat, BPName[3], (Integer)data[1]).getInt(0);
 				config.get(nameULCat, BPName[4], 0).getInt(0);
 				config.get(nameULCat, BPName[5], false).getBoolean(false);

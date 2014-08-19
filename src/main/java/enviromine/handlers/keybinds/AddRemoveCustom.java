@@ -126,7 +126,7 @@ public class AddRemoveCustom
 						blockULName = replaceULN(blockULName);
 						blockName = replaceULN(blockName);
 							
-						dataToCustom[0] = block;
+						dataToCustom[0] = Block.blockRegistry.getNameForObject(block);
 						dataToCustom[1] = blockMeta;
 						dataToCustom[2] = blockULName;
 						

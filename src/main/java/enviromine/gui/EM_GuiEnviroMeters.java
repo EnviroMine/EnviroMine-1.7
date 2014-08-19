@@ -7,6 +7,7 @@ import enviromine.trackers.EnviroDataTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -78,6 +79,8 @@ public class EM_GuiEnviroMeters extends Gui
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		RenderHelper.disableStandardItemLighting();
 		
 		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
 		{
@@ -540,7 +543,7 @@ public class EM_GuiEnviroMeters extends Gui
 				}
 			}
 			
-			this.mc.renderEngine.bindTexture(new ResourceLocation("enviromine", guiResource));
+			//this.mc.renderEngine.bindTexture(new ResourceLocation("enviromine", guiResource));
 			
 			if(tracker.bodyTemp >= 39)
 			{
@@ -579,9 +582,13 @@ public class EM_GuiEnviroMeters extends Gui
 				int grad = (int)((50 - tracker.sanity) / 50 * 64);
 				this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(200, 0, 249, grad), EnviroMine.getColorFromRGBA(200, 0, 249, grad));
 			}
+			
+			//GL11.glPopMatrix();
 		}
 		
 		ShowDebugText(event);
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
 	public static float DB_bodyTemp = 0;

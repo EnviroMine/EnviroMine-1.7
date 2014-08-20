@@ -4,32 +4,32 @@ public class DimensionProperties
 {
 	public int id;
 	public boolean override;
-	public boolean sanity;
+	public boolean trackSanity;
 	public boolean darkAffectSanity;
 	public double sanityMultiplyer;
-	public boolean air;
+	public boolean trackAirQuality;
 	public double airMulti;
-	public boolean water;
-	public double waterMulti;
-	public boolean temp;
+	public boolean trackHydration;
+	public double hydrationMulti;
+	public boolean trackTemp;
 	public double tempMulti;
 	public boolean dayNightTemp;
 	public boolean weatherAffectsTemp;
 	public boolean mineshaftGen;
 	public int sealevel;
 	
-	public DimensionProperties(int id, boolean override, boolean sanity, boolean darkAffectSanity, 	double sanityMultiplyer, boolean air, double airMulti, boolean water, double waterMulti, boolean temp, double tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
+	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, 	double sanityMultiplyer, boolean trackAirQuality, double airMulti, boolean trackHydration, double hydrationMulti, boolean trackTemp, double tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
 	{
 		this.id = id;
 		this.override = override;
-		this.sanity = sanity;
+		this.trackSanity = trackSanity;
 		this.darkAffectSanity = darkAffectSanity;
 		this.sanityMultiplyer = sanityMultiplyer;
-		this.air = air;
+		this.trackAirQuality = trackAirQuality;
 		this.airMulti = airMulti;
-		this.water = water;
-		this.waterMulti = waterMulti;
-		this.temp = temp;
+		this.trackHydration = trackHydration;
+		this.hydrationMulti = hydrationMulti;
+		this.trackTemp = trackTemp;
 		this.tempMulti = tempMulti;
 		this.dayNightTemp = dayNightTemp;
 		this.weatherAffectsTemp = weatherAffectsTemp;

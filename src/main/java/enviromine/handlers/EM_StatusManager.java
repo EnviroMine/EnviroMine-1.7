@@ -50,6 +50,7 @@ import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
+import enviromine.trackers.DimensionProperties;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.ItemProperties;
@@ -208,6 +209,16 @@ public class EM_StatusManager
 			return data;
 		}
 		
+		//TODO Added in Dimension overrides for Trackers
+		DimensionProperties dimensionProp = null;
+		if(EM_Settings.dimensionProperties.containsKey("" + entityLiving.worldObj.provider.dimensionId))
+		{ 
+			dimensionProp = EM_Settings.dimensionProperties.get("" +entityLiving.worldObj.provider.dimensionId);
+			
+			System.out.println("Loaded");
+		}
+		
+		
 		float surBiomeTemps = 0;
 		int biomeTempChecks = 0;
 		
@@ -233,11 +244,11 @@ public class EM_StatusManager
 				blockLightLev = chunk.getSavedLightValue(EnumSkyBlock.Block, i & 0xf, j, k & 0xf);
 			}
 		}
-		
-		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null)
+		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null )
 		{
-			sanityStartRate = -0.01F;
-			sanityRate = -0.01F;
+
+			   sanityStartRate = -0.01F;
+			   sanityRate = -0.01F;
 		}
 		
 		for(int x = -range; x <= range; x++)
@@ -635,31 +646,46 @@ public class EM_StatusManager
 			}
 		}
 		
-		if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
+		//TODO Dimension Override  WeatherOverrides
+		if (dimensionProp != null && dimensionProp.override && !dimensionProp.weatherAffectsTemp) {System.out.println("Dont register rains");}
+		else 
 		{
-			bTemp -= 10F;
-			dropSpeed = 0.005F;
-			animalHostility = -1;
-		}
-		
-		if(!entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && isDay && !entityLiving.worldObj.isRaining())
-		{
-			bTemp -= 2.5F;
-		}
-		
-		if(!isDay && bTemp > 0F)
-		{
-			if(biome.rainfall == 0.0F)
+			if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
 			{
-				bTemp /= 9;
-			} else
-			{
-				bTemp /= 2;
+				
+				bTemp -= 10F;
+				dropSpeed = 0.005F;
+				animalHostility = -1;
 			}
-		} else if(!isDay && bTemp <= 0F)
-		{
-			bTemp -= 10F;
+		
+		} // Dimension Overrides End
+	
+		//TODO Dimension Override  Day/Night Overrides
+		
+		if (dimensionProp != null && dimensionProp.override && !dimensionProp.dayNightTemp) { System.out.println("Dont register day/nights");}
+		else 
+		{	
+			if(!entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && isDay && !entityLiving.worldObj.isRaining())
+			{
+				bTemp -= 2.5F;
+			}
+
+			if(!isDay && bTemp > 0F)
+			{
+				if(biome.rainfall == 0.0F)
+				{
+					bTemp /= 9;
+				} else
+				{
+					bTemp /= 2;
+				}
+			} else if(!isDay && bTemp <= 0F)
+			{
+				bTemp -= 10F;
+			}
+
 		}
+
 		
 		if((entityLiving.worldObj.getBlock(i, j, k) == Blocks.water || entityLiving.worldObj.getBlock(i, j, k) == Blocks.flowing_water) && entityLiving.posY > 48)
 		{
@@ -1183,6 +1209,17 @@ public class EM_StatusManager
 			}
 			tempFin += 2F;
 		}
+		
+	//TODO Dimension override for Multipliers
+		if(dimensionProp != null && dimensionProp.override)
+		{   
+			quality = quality * (float) dimensionProp.airMulti;
+			riseSpeed = riseSpeed * (float) dimensionProp.tempMulti;
+			dropSpeed = dropSpeed * (float) dimensionProp.tempMulti;
+			sanityRate = sanityRate * (float) dimensionProp.sanityMultiplyer;
+			dehydrateBonus = dehydrateBonus * (float) dimensionProp.hydrationMulti;
+		}
+
 		
 		data[0] = quality * (float)EM_Settings.airMult;
 		data[1] = entityLiving.isPotionActive(Potion.fireResistance) && tempFin > 37F? 37F : (tempFin > 37F? 37F + ((tempFin-37F) * fireProt): tempFin);

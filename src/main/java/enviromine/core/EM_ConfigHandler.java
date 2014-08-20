@@ -187,15 +187,15 @@ public class EM_ConfigHandler
 		BOName[6] = "07.Dehydrate Rate";
 		
 		DMName = new String[15];
-		DMName[0] = "01.Biome ID";
+		DMName[0] = "01.Dimension ID";
 		DMName[1] = "02.Allow Config Override";
 		DMName[2] = "03.Track Sanity";
 		DMName[3] = "04.Dark Affects Sanity";
 		DMName[4] = "05.Sanity Multiplier";
-		DMName[5] = "06.Track Air";
-		DMName[6] = "07.Air Multiplier";
-		DMName[7] = "08.Track Water";
-		DMName[8] = "09.Water Multiplier";
+		DMName[5] = "06.Track Air Quility";
+		DMName[6] = "07.Air Quility Multiplier";
+		DMName[7] = "08.Track Hydration";
+		DMName[8] = "09.Hydration Multiplier";
 		DMName[9] = "10.Track Temperature";
 		DMName[10] = "11.Temperature Multiplier";
 		DMName[11] = "12.Day/Night Affects Temp";
@@ -311,27 +311,8 @@ public class EM_ConfigHandler
 		// Sound
 		if(config.hasCategory("Sound Options")) config.removeCategory(config.getCategory("Sound Options"));
 		
-		//EM_Settings.breathSound = config.get("Sound Options", "Mask: Hear Breathing", true).getBoolean(true);
-		//EM_Settings.breathPause = config.get("Sound Options", "Mask: Pause Between Breaths", 300).getInt();
-		//EM_Settings.breathVolume = (float)config.get("Sound Options", "Mask: Breathing Volume", 0.75, "[Hear Breathing (Defalut: True)] - Turning on and Off Gas Mask Breathing. [Breathing Volume (Default: 0.75)]Change Volume 0.0(0%) to 1(100%). [Pause Between Breaths (Default: 300)]Change Pause between breaths. Affects Sound and Gui (In GuiRender Ticks)").getDouble(0);
-
-		//EM_Settings.breathVolume = (EM_Settings.breathVolume > 1.0F ? 1.0F : EM_Settings.breathVolume);
-		//EM_Settings.breathVolume = (EM_Settings.breathVolume < 0.0F ? 0.0F : EM_Settings.breathVolume);		
 		config.save();
-		
 
-		/*
-		if(EM_Settings.breathVolume > 1.0)
-		{
-			EM_Settings.breathVolume = (float)1.0;
-		} else if(EM_Settings.breathVolume < 0.0)
-		{
-			EM_Settings.breathVolume = (float)0.0;
-		}
-		if(EM_Settings.breathPause < 200)
-		{
-			EM_Settings.breathPause = 200;
-		}*/
 	}
 	
 	private static int getConfigIntWithMinInt(Property prop, int min)
@@ -691,21 +672,21 @@ public class EM_ConfigHandler
 		
 		int id = config.get(category, DMName[0], 0).getInt(0);
 		boolean override = config.get(category, DMName[1], false).getBoolean(false);
-		boolean sanity = config.get(category, DMName[2], true).getBoolean(true);
+		boolean trackSanity = config.get(category, DMName[2], true).getBoolean(true);
 		boolean darkAffectSanity = config.get(category, DMName[3], true).getBoolean(true);
-		double sanityMultiplyer = config.get(category, DMName[3], 1.0D).getDouble(1.0D);
-		boolean air = config.get(category, DMName[5], true).getBoolean(true);
-		double airMulti = config.get(category, DMName[4], 1.0D).getDouble(1.0D);
-		boolean water = config.get(category, DMName[7], true).getBoolean(true);
-		double waterMulti = config.get(category, DMName[8], 1.0D).getDouble(1.0D);
-		boolean temp = config.get(category, DMName[9], true).getBoolean(true);
+		double sanityMulti = config.get(category, DMName[4], 1.0D).getDouble(1.0D);
+		boolean trackAirQuality = config.get(category, DMName[5], true).getBoolean(true);
+		double airMulti = config.get(category, DMName[6], 1.0D).getDouble(1.0D);
+		boolean trackHydration = config.get(category, DMName[7], true).getBoolean(true);
+		double hydrationMulti = config.get(category, DMName[8], 1.0D).getDouble(1.0D);
+		boolean trackTemp = config.get(category, DMName[9], true).getBoolean(true);
 		double tempMulti = config.get(category, DMName[10], 1.0D).getDouble(1.0D);
 		boolean dayNightTemp = config.get(category, DMName[11], true).getBoolean(true);
 		boolean weatherAffectsTemp = config.get(category, DMName[12], true).getBoolean(true);
 		boolean mineshaftGen = config.get(category, DMName[13], true).getBoolean(true);
 		int sealevel = config.get(category, DMName[14], 65).getInt(65);
 		
-		DimensionProperties entry = new DimensionProperties(id, override, sanity, darkAffectSanity, sanityMultiplyer, air, airMulti, water, waterMulti, temp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
+		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
 		EM_Settings.dimensionProperties.put("" + id, entry);
 		
 	}
@@ -946,7 +927,6 @@ public class EM_ConfigHandler
 				config.get(catName, DMName[1], true).getBoolean(true);
 				config.get(catName, DMName[2], true).getBoolean(true);
 				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[5], true).getBoolean(true);
 				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[7], true).getBoolean(true);
@@ -963,7 +943,6 @@ public class EM_ConfigHandler
 				config.get(catName, DMName[1], false).getBoolean(false);
 				config.get(catName, DMName[2], true).getBoolean(true);
 				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[5], true).getBoolean(true);
 				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[7], true).getBoolean(true);

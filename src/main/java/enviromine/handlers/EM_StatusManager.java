@@ -214,8 +214,6 @@ public class EM_StatusManager
 		if(EM_Settings.dimensionProperties.containsKey("" + entityLiving.worldObj.provider.dimensionId))
 		{ 
 			dimensionProp = EM_Settings.dimensionProperties.get("" +entityLiving.worldObj.provider.dimensionId);
-			
-			System.out.println("Loaded");
 		}
 		
 		

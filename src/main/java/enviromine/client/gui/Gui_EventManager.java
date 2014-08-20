@@ -24,6 +24,15 @@ public class Gui_EventManager
 
 	int	width, height;
 	
+	
+	//Render HUD
+	
+	
+	//Render Player
+	
+	
+	// Button Functions
+	
 	@SubscribeEvent
 	public void renderevent(InitGuiEvent.Post event)
 	{
@@ -56,5 +65,7 @@ public class Gui_EventManager
 			}
 	
 		}	
-}	}
+	}	
+	
+}
 

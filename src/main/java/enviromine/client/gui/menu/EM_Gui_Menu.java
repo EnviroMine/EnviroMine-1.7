@@ -20,8 +20,8 @@ public class EM_Gui_Menu extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		GuiButton serverSettings = new GuiButton(100, this.width / 2 - 75, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.configSettings"));
-		GuiButton customEditor =  new GuiButton(100, this.width / 2 - 75, this.height / 6 + 98 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.customEditor"));
+		GuiButton serverSettings = new GuiButton(100, this.width / 2 - 83, this.height / 6 + 98 - 6, 166, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
+		GuiButton customEditor =  new GuiButton(100, this.width / 2 - 83, this.height / 6 + 122 - 6, 166, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
 		
 		if(!EnviroMine.proxy.isClient() && MinecraftServer.getServer().getConfigurationManager().func_152607_e(mc.thePlayer.getGameProfile()) || EnviroMine.proxy.isClient() )
 		{
@@ -34,10 +34,13 @@ public class EM_Gui_Menu extends GuiScreen
 			customEditor.enabled = false;			
 		}
 		
-		serverSettings.visible = false;
-		customEditor.visible = false;			
+		serverSettings.enabled = false;
+		customEditor.enabled = false;	
+		
+		serverSettings.visible = true;
+		customEditor.visible = true;			
 	
-		this.buttonList.add(new GuiButton(101, this.width / 2 - 75, this.height / 6 + 50 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")));
+		this.buttonList.add(new GuiButton(101, this.width / 2 - 75, this.height / 6 + 50 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
 		this.buttonList.add(serverSettings);
 		this.buttonList.add(customEditor);
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.back")));
@@ -75,6 +78,11 @@ public class EM_Gui_Menu extends GuiScreen
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		this.drawDefaultBackground();
+		
+		if(!EnviroMine.proxy.isClient() && MinecraftServer.getServer().getConfigurationManager().func_152607_e(mc.thePlayer.getGameProfile()) || EnviroMine.proxy.isClient() )
+		{
+			this.drawString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.adminOptions.title") +" ", this.width / 2 -30, this.height / 6 + 74, 16777215);
+		}
 		this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.guiMainmenu.title"), this.width / 2, 15, 16777215);
 		super.drawScreen(par1, par2, par3);
 	}

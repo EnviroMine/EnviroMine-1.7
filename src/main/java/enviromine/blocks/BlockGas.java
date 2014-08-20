@@ -34,7 +34,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 	public IIcon gasIcon;
 	public ArrayList<String> igniteList = new ArrayList<String>();
 	
-	public BlockGas(int par1, Material par2Material)
+	public BlockGas(Material par2Material)
 	{
 		super(par2Material);
 		this.setTickRandomly(true);

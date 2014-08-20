@@ -52,10 +52,12 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -63,8 +65,7 @@ import enviromine.client.ModelCamelPack;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.network.packet.PacketServerOverride;
-import enviromine.trackers.BiomeProperties;
+import enviromine.network.packet.PacketAutoOverride;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
@@ -92,7 +93,7 @@ public class EM_EventManager
 				chunkPhys = (EM_PhysManager.chunkDelay.get("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
 			
-			/*if (event.entity instanceof EntityPlayerMP) {
+			if (event.entity instanceof EntityPlayerMP) {
 				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
 					EM_Settings.armorProperties.clear();
 					EM_Settings.blockProperties.clear();
@@ -101,10 +102,10 @@ public class EM_EventManager
 					EM_Settings.stabilityTypes.clear();
 					EM_ConfigHandler.initConfig();
 				} else {
-					System.out.println("Sending packet");
-					EnviroMine.instance.network.sendTo(new PacketServerOverride(), (EntityPlayerMP)event.entity);
+					EntityPlayerMP player = (EntityPlayerMP)event.entity;
+					EnviroMine.instance.network.sendTo(new PacketAutoOverride(player), player);
 				}
-			}*/
+			}
 		}
 		
 		if(event.entity instanceof EntityItem)
@@ -622,19 +623,7 @@ public class EM_EventManager
 				looksBad = true;
 			}
 		}
-		//TODO Biome Overrides
-		BiomeProperties biomeProp = null;
-		if(EM_Settings.biomeProperties.containsKey("" + biome.biomeID))
-		{
-			biomeProp = EM_Settings.biomeProperties.get("" +  biome.biomeID);
-
-			 if(biomeProp != null && biomeProp.biomeOveride)
-				{
-				 System.out.println("Get Water" + biomeProp.getWaterQualityId()); 
-				 	return biomeProp.getWaterQualityId();
-				}
-
-		}
+		
 		if(biome.biomeName == BiomeGenBase.swampland.biomeName || biome.biomeName == BiomeGenBase.jungle.biomeName || biome.biomeName == BiomeGenBase.jungleHills.biomeName || y < 48 || looksBad)
 		{
 			return 1;

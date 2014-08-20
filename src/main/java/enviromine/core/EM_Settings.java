@@ -1,8 +1,5 @@
 package enviromine.core;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.UUID;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
@@ -11,6 +8,14 @@ import enviromine.trackers.EntityProperties;
 import enviromine.trackers.ItemProperties;
 import enviromine.trackers.RotProperties;
 import enviromine.trackers.StabilityType;
+
+import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class EM_Settings
 {
@@ -31,21 +36,17 @@ public class EM_Settings
 	
 	public static boolean enablePhysics = true;
 	public static boolean enableLandslide = true;
+	@ShouldOverride
 	public static boolean enableAirQ = true;
+	@ShouldOverride
 	public static boolean enableHydrate = true;
+	@ShouldOverride
 	public static boolean enableSanity = true;
+	@ShouldOverride
 	public static boolean enableBodyTemp = true;
 	public static boolean trackNonPlayer = false;
-	
-	public static boolean ShowGuiIcons;
-	
-	public static float guiScale = 1f;
-	
+
 	public static boolean spreadIce = false;
-	
-	//Gui settings
-	public static boolean sweatParticals;
-	public static boolean insaneParticals;
 	
 	public static boolean useFarenheit = false;
 	public static String heatBarPos;
@@ -53,19 +54,12 @@ public class EM_Settings
 	public static String sanityBarPos;
 	public static String oxygenBarPos;
 	
-	public static boolean ShowText;
-	public static boolean ShowDebug;
-	
-	public static boolean breathSound;
-	public static int breathPause;
-	public static float breathVolume;
-	
 	public static int dirtBottleID = 5001;
 	public static int saltBottleID = 5002;
 	public static int coldBottleID = 5003;
 	public static int camelPackID = 5004;
-
-
+	
+	/*
 	public static int gasMaskID = 5005;
 	public static int airFilterID = 5006;
 	public static int hardHatID = 5007;
@@ -75,6 +69,7 @@ public class EM_Settings
 	public static int blockElevatorBottomID = 502;
 	public static int gasBlockID = 503;
 	public static int fireGasBlockID = 504;
+	*/
 	
 	public static int hypothermiaPotionID = 27;
 	public static int heatstrokePotionID = 28;
@@ -92,7 +87,9 @@ public class EM_Settings
 	public static boolean oldMineGen = true;
 	
 	//Properties
+	@ShouldOverride("enviromine.network.packet.encoders.ArmorPropsEncoder")
 	public static HashMap<String,ArmorProperties> armorProperties = new HashMap<String,ArmorProperties>();
+	@ShouldOverride("enviromine.network.packet.encoders.BlocksPropsEncoder")
 	public static HashMap<String,BlockProperties> blockProperties = new HashMap<String,BlockProperties>();
 	public static HashMap<Integer,EntityProperties> livingProperties = new HashMap<Integer,EntityProperties>();
 	public static HashMap<String,ItemProperties> itemProperties = new HashMap<String,ItemProperties>();
@@ -140,5 +137,18 @@ public class EM_Settings
 	public static float convertToCelcius(float num)
 	{
 		return((num - 32F) * (5 / 9));
+	}
+	
+	/**
+	 * Tells the server that this field should be sent to the client to overwrite<br>
+	 * Usage:<br>
+	 * <tt>@ShouldOverride</tt> - for ints/booleans/floats/Strings<br>
+	 * <tt>@ShouldOverride(classpath (String))</tt> - for other types
+	 * */
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface ShouldOverride
+	{
+		String value() default "";
 	}
 }

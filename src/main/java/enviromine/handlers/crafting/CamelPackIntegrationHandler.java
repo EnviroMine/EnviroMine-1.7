@@ -84,7 +84,6 @@ public class CamelPackIntegrationHandler implements IRecipe
 		}
 		
 		boolean tmp = (hasArmor && armor != null && (isRemove || (hasPack && pack != null)));
-		System.out.println("hasArmor: " + hasArmor);
 		return tmp;
 	}
 	

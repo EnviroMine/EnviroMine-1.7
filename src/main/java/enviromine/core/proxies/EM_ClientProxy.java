@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.client.gui.EM_GuiEnviroMeters;
+import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.menu.UI_Settings;
 import enviromine.client.renderer.tileentity.TileEntityElevatorBottomRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorTopRenderer;
@@ -52,6 +53,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()));
 		MinecraftForge.EVENT_BUS.register(new ObjectHandler());
+		MinecraftForge.EVENT_BUS.register(new Gui_EventManager());
 		FMLCommonHandler.instance().bus().register(new EnviroKeybinds());
 	}
 	

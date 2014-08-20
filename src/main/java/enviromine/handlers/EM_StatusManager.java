@@ -1,5 +1,10 @@
 package enviromine.handlers;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -31,24 +36,24 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
+
+import com.google.common.base.Stopwatch;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BiomeProperties;
 import enviromine.trackers.BlockProperties;
+import enviromine.trackers.DimensionProperties;
 import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.ItemProperties;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import org.apache.logging.log4j.Level;
-import com.google.common.base.Stopwatch;
 
 public class EM_StatusManager
 {
@@ -95,7 +100,6 @@ public class EM_StatusManager
 	
 	public static void syncMultiplayerTracker(EnviroDataTracker tracker)
 	{
-		tracker.fixFloatinfPointErrors();
 		String dataString = "";
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
@@ -104,11 +108,6 @@ public class EM_StatusManager
 		{
 			return;
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
-		}
-		
-		if(dataString.length() >= 2048)
-		{
-			EnviroMine.logger.log(Level.ERROR, "Tracker Sync data too long! Problems may occur client side while parsing!");
 		}
 		
 		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));
@@ -210,6 +209,14 @@ public class EM_StatusManager
 			return data;
 		}
 		
+		//TODO Added in Dimension overrides for Trackers
+		DimensionProperties dimensionProp = null;
+		if(EM_Settings.dimensionProperties.containsKey("" + entityLiving.worldObj.provider.dimensionId))
+		{ 
+			dimensionProp = EM_Settings.dimensionProperties.get("" +entityLiving.worldObj.provider.dimensionId);
+		}
+		
+		
 		float surBiomeTemps = 0;
 		int biomeTempChecks = 0;
 		
@@ -235,11 +242,11 @@ public class EM_StatusManager
 				blockLightLev = chunk.getSavedLightValue(EnumSkyBlock.Block, i & 0xf, j, k & 0xf);
 			}
 		}
-		
-		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null)
+		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null )
 		{
-			sanityStartRate = -0.01F;
-			sanityRate = -0.01F;
+
+			   sanityStartRate = -0.01F;
+			   sanityRate = -0.01F;
 		}
 		
 		for(int x = -range; x <= range; x++)
@@ -252,11 +259,23 @@ public class EM_StatusManager
 					if(y == 0)
 					{
 						Chunk testChunk = entityLiving.worldObj.getChunkFromBlockCoords((i + x), (k + z));
-						BiomeGenBase testBiome = testChunk.getBiomeGenForWorldCoords((i + x) & 15, (k + z) & 15, entityLiving.worldObj.getWorldChunkManager());
-						
-						if(testBiome != null)
+						BiomeGenBase checkBiome = testChunk.getBiomeGenForWorldCoords((i + x) & 15, (k + z) & 15, entityLiving.worldObj.getWorldChunkManager());
+						//TODO Changed for Overriding Biomes
+						if(checkBiome != null)
 						{
-							surBiomeTemps += testBiome.temperature;
+							BiomeProperties biomeOverride = null;
+							if(EM_Settings.biomeProperties.containsKey("" + checkBiome.biomeID))
+							{
+								biomeOverride = EM_Settings.biomeProperties.get("" + checkBiome.biomeID);
+							}
+							if(biomeOverride != null && biomeOverride.biomeOveride)
+							{
+								surBiomeTemps += biomeOverride.ambientTemp;
+							}
+							else
+							{
+								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
+							}
 							biomeTempChecks += 1;
 						}
 					}
@@ -565,8 +584,13 @@ public class EM_StatusManager
 		}
 		
 		//float bTemp = biome.temperature * 2.25F;
-		float bTemp = (surBiomeTemps / biomeTempChecks)* 2.25F;
 		
+		//TODO (Changed for Biome overrides) Moved to EnviroUtils.. called above
+		//float bTemp = (surBiomeTemps / biomeTempChecks)* 2.25F;
+		
+
+		float bTemp = (surBiomeTemps / biomeTempChecks);
+		/*		
 		if(bTemp > 1.5F)
 		{
 			bTemp = 30F + ((bTemp - 1F) * 10);
@@ -577,7 +601,7 @@ public class EM_StatusManager
 		{
 			bTemp *= 20;
 		}
-		
+		*/
 		if(!entityLiving.worldObj.provider.isHellWorld)
 		{
 			if(entityLiving.posY <= 48)
@@ -620,31 +644,46 @@ public class EM_StatusManager
 			}
 		}
 		
-		if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
+		//TODO Dimension Override  WeatherOverrides
+		if (dimensionProp != null && dimensionProp.override && !dimensionProp.weatherAffectsTemp) {System.out.println("Dont register rains");}
+		else 
 		{
-			bTemp -= 10F;
-			dropSpeed = 0.005F;
-			animalHostility = -1;
-		}
-		
-		if(!entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && isDay && !entityLiving.worldObj.isRaining())
-		{
-			bTemp -= 2.5F;
-		}
-		
-		if(!isDay && bTemp > 0F)
-		{
-			if(biome.rainfall == 0.0F)
+			if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
 			{
-				bTemp /= 9;
-			} else
-			{
-				bTemp /= 2;
+				
+				bTemp -= 10F;
+				dropSpeed = 0.005F;
+				animalHostility = -1;
 			}
-		} else if(!isDay && bTemp <= 0F)
-		{
-			bTemp -= 10F;
+		
+		} // Dimension Overrides End
+	
+		//TODO Dimension Override  Day/Night Overrides
+		
+		if (dimensionProp != null && dimensionProp.override && !dimensionProp.dayNightTemp) { System.out.println("Dont register day/nights");}
+		else 
+		{	
+			if(!entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && isDay && !entityLiving.worldObj.isRaining())
+			{
+				bTemp -= 2.5F;
+			}
+
+			if(!isDay && bTemp > 0F)
+			{
+				if(biome.rainfall == 0.0F)
+				{
+					bTemp /= 9;
+				} else
+				{
+					bTemp /= 2;
+				}
+			} else if(!isDay && bTemp <= 0F)
+			{
+				bTemp -= 10F;
+			}
+
 		}
+
 		
 		if((entityLiving.worldObj.getBlock(i, j, k) == Blocks.water || entityLiving.worldObj.getBlock(i, j, k) == Blocks.flowing_water) && entityLiving.posY > 48)
 		{
@@ -1099,6 +1138,29 @@ public class EM_StatusManager
 			}
 		}
 		
+		//TODO Biomes Overrids
+		/*
+		 * Not sure where to put this really
+		 * So its here for now.
+		 * 
+		 */
+		BiomeProperties biomeProp = null;
+		if(EM_Settings.biomeProperties.containsKey("" + biome.biomeID))
+		{
+			 biomeProp = EM_Settings.biomeProperties.get("" +  biome.biomeID);
+
+			 if(biomeProp != null && biomeProp.biomeOveride)
+				{
+					dehydrateBonus += biomeProp.dehydrateRate;
+					
+					if(biomeProp.tempRate > 0)	riseSpeed += biomeProp.tempRate;
+					else dropSpeed += biomeProp.tempRate;
+					
+					sanityRate += biomeProp.sanityRate;
+				}
+
+		}
+
 		if(biome.getIntRainfall() == 0 && isDay)
 		{
 			dehydrateBonus += 0.05F;
@@ -1145,6 +1207,17 @@ public class EM_StatusManager
 			}
 			tempFin += 2F;
 		}
+		
+	//TODO Dimension override for Multipliers
+		if(dimensionProp != null && dimensionProp.override)
+		{   
+			quality = quality * (float) dimensionProp.airMulti;
+			riseSpeed = riseSpeed * (float) dimensionProp.tempMulti;
+			dropSpeed = dropSpeed * (float) dimensionProp.tempMulti;
+			sanityRate = sanityRate * (float) dimensionProp.sanityMultiplyer;
+			dehydrateBonus = dehydrateBonus * (float) dimensionProp.hydrationMulti;
+		}
+
 		
 		data[0] = quality * (float)EM_Settings.airMult;
 		data[1] = entityLiving.isPotionActive(Potion.fireResistance) && tempFin > 37F? 37F : (tempFin > 37F? 37F + ((tempFin-37F) * fireProt): tempFin);
@@ -1342,12 +1415,12 @@ public class EM_StatusManager
 		
 		if(tracker != null)
 		{
-			if(tracker.bodyTemp >= 38F && EM_Settings.sweatParticals)
+			if(tracker.bodyTemp >= 38F)
 			{
 				entityLiving.worldObj.spawnParticle("dripWater", entityLiving.posX + rndX, entityLiving.posY + rndY, entityLiving.posZ + rndZ, 0.0D, 0.0D, 0.0D);
 			}
 			
-			if(tracker.trackedEntity.isPotionActive(EnviroPotion.insanity) && EM_Settings.insaneParticals)
+			if(tracker.trackedEntity.isPotionActive(EnviroPotion.insanity))
 			{
 				entityLiving.worldObj.spawnParticle("portal", entityLiving.posX + rndX, entityLiving.posY + rndY, entityLiving.posZ + rndZ, 0.0D, 0.0D, 0.0D);
 			}

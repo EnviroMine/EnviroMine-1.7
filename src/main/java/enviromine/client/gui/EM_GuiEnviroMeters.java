@@ -599,6 +599,7 @@ public class EM_GuiEnviroMeters extends Gui
 	public static int DB_physBuffer = 0;
 	
 	public static String DB_biomeName = "";
+	public static int DB_biomeID = 0;
 	
 	@SideOnly(Side.CLIENT)
 	private void ShowDebugText(RenderGameOverlayEvent event)
@@ -617,6 +618,7 @@ public class EM_GuiEnviroMeters extends Gui
 		{
 			DB_abientTemp = tracker.airTemp;
 			DB_biomeName = tracker.trackedEntity.worldObj.getBiomeGenForCoords(MathHelper.floor_double(tracker.trackedEntity.posX), MathHelper.floor_double(tracker.trackedEntity.posZ)).biomeName;
+			DB_biomeID = tracker.trackedEntity.worldObj.getBiomeGenForCoords(MathHelper.floor_double(tracker.trackedEntity.posX), MathHelper.floor_double(tracker.trackedEntity.posZ)).biomeID;
 			DB_tempchange = new BigDecimal(String.valueOf(tracker.bodyTemp - tracker.prevBodyTemp)).setScale(3, RoundingMode.HALF_UP).floatValue();
 			DB_sanityrate = new BigDecimal(String.valueOf(tracker.sanity - tracker.prevSanity)).setScale(3, RoundingMode.HALF_UP).floatValue();
 			DB_airquality = new BigDecimal(String.valueOf(tracker.airQuality - tracker.prevAirQuality)).setScale(3, RoundingMode.HALF_UP).floatValue();
@@ -625,13 +627,13 @@ public class EM_GuiEnviroMeters extends Gui
 			if(UI_Settings.useFarenheit == true)
 			{
 				Minecraft.getMinecraft().fontRenderer.drawString("Body Temp: " + EnviroUtils.convertToFarenheit(tracker.bodyTemp) + "F", 10, 10, 16777215);
-				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + EnviroUtils.convertToFarenheit(DB_abientTemp) + "F | Cur Biome: " + DB_biomeName, 10, 10 * 2, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + EnviroUtils.convertToFarenheit(DB_abientTemp) + "F | Cur Biome: " + DB_biomeName + " (" + DB_biomeID + ")", 10, 10 * 2, 16777215);
 				Minecraft.getMinecraft().fontRenderer.drawString("Temp Rate: " + EnviroUtils.convertToFarenheit(DB_tempchange) + "F", 10, 10 * 3, 16777215);
 				
 			} else
 			{
 				Minecraft.getMinecraft().fontRenderer.drawString("Body Temp: " + tracker.bodyTemp + "C", 10, 10, 16777215);
-				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + DB_abientTemp + "C | Cur Biome: " + DB_biomeName, 10, 10 * 2, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + DB_abientTemp + "C | Cur Biome: " + DB_biomeName + " (" + DB_biomeID + ")", 10, 10 * 2, 16777215);
 				Minecraft.getMinecraft().fontRenderer.drawString("Temp Rate: " + DB_tempchange + "C", 10, 10 * 3, 16777215);
 			}
 			

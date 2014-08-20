@@ -11,9 +11,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import enviromine.EnviroUtils;
 import enviromine.trackers.ArmorProperties;
 import enviromine.trackers.BiomeProperties;
@@ -189,15 +187,15 @@ public class EM_ConfigHandler
 		BOName[6] = "07.Dehydrate Rate";
 		
 		DMName = new String[15];
-		DMName[0] = "01.Biome ID";
+		DMName[0] = "01.Dimension ID";
 		DMName[1] = "02.Allow Config Override";
 		DMName[2] = "03.Track Sanity";
 		DMName[3] = "04.Dark Affects Sanity";
 		DMName[4] = "05.Sanity Multiplier";
-		DMName[5] = "06.Track Air";
-		DMName[6] = "07.Air Multiplier";
-		DMName[7] = "08.Track Water";
-		DMName[8] = "09.Water Multiplier";
+		DMName[5] = "06.Track Air Quility";
+		DMName[6] = "07.Air Quility Multiplier";
+		DMName[7] = "08.Track Hydration";
+		DMName[8] = "09.Hydration Multiplier";
 		DMName[9] = "10.Track Temperature";
 		DMName[10] = "11.Temperature Multiplier";
 		DMName[11] = "12.Day/Night Affects Temp";
@@ -313,27 +311,8 @@ public class EM_ConfigHandler
 		// Sound
 		if(config.hasCategory("Sound Options")) config.removeCategory(config.getCategory("Sound Options"));
 		
-		//EM_Settings.breathSound = config.get("Sound Options", "Mask: Hear Breathing", true).getBoolean(true);
-		//EM_Settings.breathPause = config.get("Sound Options", "Mask: Pause Between Breaths", 300).getInt();
-		//EM_Settings.breathVolume = (float)config.get("Sound Options", "Mask: Breathing Volume", 0.75, "[Hear Breathing (Defalut: True)] - Turning on and Off Gas Mask Breathing. [Breathing Volume (Default: 0.75)]Change Volume 0.0(0%) to 1(100%). [Pause Between Breaths (Default: 300)]Change Pause between breaths. Affects Sound and Gui (In GuiRender Ticks)").getDouble(0);
-
-		//EM_Settings.breathVolume = (EM_Settings.breathVolume > 1.0F ? 1.0F : EM_Settings.breathVolume);
-		//EM_Settings.breathVolume = (EM_Settings.breathVolume < 0.0F ? 0.0F : EM_Settings.breathVolume);		
 		config.save();
-		
 
-		/*
-		if(EM_Settings.breathVolume > 1.0)
-		{
-			EM_Settings.breathVolume = (float)1.0;
-		} else if(EM_Settings.breathVolume < 0.0)
-		{
-			EM_Settings.breathVolume = (float)0.0;
-		}
-		if(EM_Settings.breathPause < 200)
-		{
-			EM_Settings.breathPause = 200;
-		}*/
 	}
 	
 	private static int getConfigIntWithMinInt(Property prop, int min)
@@ -635,7 +614,12 @@ public class EM_ConfigHandler
 		float sunMult = (float)config.get(catagory, APName[6], 1.00).getDouble(1.00);
 		float sanity = (float)config.get(catagory, APName[7], 0.00).getDouble(0.00);
 		float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
-		boolean allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
+		
+		Object tmp = Item.itemRegistry.getObject(name);
+		boolean allowCamelPack = false;
+		if (tmp instanceof ItemArmor && ((ItemArmor)tmp).armorType == 1) {
+			allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
+		}
 		
 		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
 		EM_Settings.armorProperties.put(name, entry);
@@ -693,21 +677,21 @@ public class EM_ConfigHandler
 		
 		int id = config.get(category, DMName[0], 0).getInt(0);
 		boolean override = config.get(category, DMName[1], false).getBoolean(false);
-		boolean sanity = config.get(category, DMName[2], true).getBoolean(true);
+		boolean trackSanity = config.get(category, DMName[2], true).getBoolean(true);
 		boolean darkAffectSanity = config.get(category, DMName[3], true).getBoolean(true);
-		double sanityMultiplyer = config.get(category, DMName[3], 1.0D).getDouble(1.0D);
-		boolean air = config.get(category, DMName[5], true).getBoolean(true);
-		double airMulti = config.get(category, DMName[4], 1.0D).getDouble(1.0D);
-		boolean water = config.get(category, DMName[7], true).getBoolean(true);
-		double waterMulti = config.get(category, DMName[8], 1.0D).getDouble(1.0D);
-		boolean temp = config.get(category, DMName[9], true).getBoolean(true);
+		double sanityMulti = config.get(category, DMName[4], 1.0D).getDouble(1.0D);
+		boolean trackAirQuality = config.get(category, DMName[5], true).getBoolean(true);
+		double airMulti = config.get(category, DMName[6], 1.0D).getDouble(1.0D);
+		boolean trackHydration = config.get(category, DMName[7], true).getBoolean(true);
+		double hydrationMulti = config.get(category, DMName[8], 1.0D).getDouble(1.0D);
+		boolean trackTemp = config.get(category, DMName[9], true).getBoolean(true);
 		double tempMulti = config.get(category, DMName[10], 1.0D).getDouble(1.0D);
 		boolean dayNightTemp = config.get(category, DMName[11], true).getBoolean(true);
 		boolean weatherAffectsTemp = config.get(category, DMName[12], true).getBoolean(true);
 		boolean mineshaftGen = config.get(category, DMName[13], true).getBoolean(true);
 		int sealevel = config.get(category, DMName[14], 65).getInt(65);
 		
-		DimensionProperties entry = new DimensionProperties(id, override, sanity, darkAffectSanity, sanityMultiplyer, air, airMulti, water, waterMulti, temp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
+		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
 		EM_Settings.dimensionProperties.put("" + id, entry);
 		
 	}
@@ -856,7 +840,10 @@ public class EM_ConfigHandler
 	{		//TODO REMOVE AFTER TESTING
 			//		File armorFile = new File(customPath + armor.getClass().getSimpleName() + ".cfg");
 		
-		File armorFile = new File(customPath + ModID + ".cfg");
+		String[] classpath = armor.getClass().getCanonicalName().toString().split("\\.");
+		
+		
+		File armorFile = new File(customPath + classpath[0] + ".cfg");
 		if(!armorFile.exists())
 		{
 			try
@@ -945,7 +932,6 @@ public class EM_ConfigHandler
 				config.get(catName, DMName[1], true).getBoolean(true);
 				config.get(catName, DMName[2], true).getBoolean(true);
 				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[5], true).getBoolean(true);
 				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[7], true).getBoolean(true);
@@ -962,7 +948,6 @@ public class EM_ConfigHandler
 				config.get(catName, DMName[1], false).getBoolean(false);
 				config.get(catName, DMName[2], true).getBoolean(true);
 				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[5], true).getBoolean(true);
 				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
 				config.get(catName, DMName[7], true).getBoolean(true);
@@ -1026,8 +1011,8 @@ public class EM_ConfigHandler
 		
 		config.get(catName, BOName[0], biomeArray.biomeID, "Make sure if you change this id you also change it here.").getInt(biomeArray.biomeID);
 		config.get(catName, BOName[1], false).getBoolean(false);
-		config.get(catName, BOName[2], getWater(biomeArray), "Water Quality: dirty, salt, cold, clean").getString();
-		config.get(catName, BOName[3], getTemp(biomeArray), "In Celsius").getDouble(37.00);
+		config.get(catName, BOName[2], EnviroUtils.getBiomeWater(biomeArray), "Water Quality: dirty, salt, cold, clean").getString();
+		config.get(catName, BOName[3], EnviroUtils.getBiomeTemp(biomeArray), "In Celsius").getDouble(37.00);
 		config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
 		config.get(catName, BOName[5], 0.0).getDouble(0.0);
 		config.get(catName, BOName[6], 0.0).getDouble(0.0);
@@ -1035,41 +1020,7 @@ public class EM_ConfigHandler
 		config.save();
 	}
 
-	private static double getTemp(BiomeGenBase biome)
-	{
-		float bTemp = biome.temperature * 2.25F;
-		
-		if(bTemp > 1.5F)
-		{
-			bTemp = 30F + ((bTemp - 1F) * 10);
-		} else if(bTemp < -1.5F)
-		{
-			bTemp = -30F + ((bTemp + 1F) * 10);
-		} else
-		{
-			bTemp *= 20;
-		}
-		
-		return bTemp;
-		
-	}
-	
-	private static String getWater(BiomeGenBase biome)
-	{
-		if(biome.biomeName == BiomeGenBase.swampland.biomeName || biome.biomeName == BiomeGenBase.jungle.biomeName || biome.biomeName == BiomeGenBase.jungleHills.biomeName)
-		{
-			return "dirty";
-		} else if(biome.biomeName == BiomeGenBase.frozenOcean.biomeName || biome.biomeName == BiomeGenBase.ocean.biomeName || biome.biomeName == BiomeGenBase.beach.biomeName)
-		{
-			return "salt";
-		} else if(biome.biomeName == BiomeGenBase.icePlains.biomeName || biome.biomeName == BiomeGenBase.taiga.biomeName || biome.biomeName == BiomeGenBase.taigaHills.biomeName || biome.temperature < 0F)
-		{
-			return "cold";
-		} else
-		{
-			return "clean";
-		}
-	}
+
 	
 	private static void ItemDefaultSave(Configuration config, String catName, String name, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
 	{
@@ -1091,6 +1042,13 @@ public class EM_ConfigHandler
 		
 		// Check to make sure this is a Data File Before Editing
 		File configFile = new File(customPath + "MyCustom.cfg");
+		
+		String[] classpath = data.getClass().getCanonicalName().toString().toLowerCase().split("\\.");
+		String classname = "";
+		
+		if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
+		else classname = classpath[0];
+		
 		
 		//if(EM_Settings.genArmorConfigs && type.equalsIgnoreCase("ARMOR"))
 		//{
@@ -1131,7 +1089,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameULCat, name);
+				config.addCustomCategoryComment(nameULCat, classname + ":" + name);
 				config.get(nameULCat, BPName[0], (String)data[2]).getString();
 				config.get(nameULCat, BPName[1], (Integer)data[1]).getInt(0);
 				config.get(nameULCat, BPName[2], (String)data[2]).getString();
@@ -1157,7 +1115,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameEntityCat, "");
+				config.addCustomCategoryComment(nameEntityCat, classname + ":" + name);
 				config.get(nameEntityCat, EPName[0], (Integer)data[0]).getInt(0);
 				config.get(nameEntityCat, EPName[1], true).getBoolean(true);
 				config.get(nameEntityCat, EPName[2], true).getBoolean(true);
@@ -1187,7 +1145,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameItemCat, name);
+				config.addCustomCategoryComment(nameItemCat, classname + ":" + name);
 				config.get(nameItemCat, IPName[0], (String)data[0]).getString();
 				config.get(nameItemCat, IPName[1], (Integer)data[1]).getInt(0);
 				config.get(nameItemCat, IPName[2], false).getBoolean(false);
@@ -1212,7 +1170,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameArmorCat, name);
+				config.addCustomCategoryComment(nameArmorCat, classname + ":" + name);
 				config.get(nameArmorCat, APName[0], (String)data[0]).getString();
 				config.get(nameArmorCat, APName[1], 0.00).getDouble(0.00);
 				config.get(nameArmorCat, APName[2], 0.00).getDouble(0.00);
@@ -1330,169 +1288,4 @@ public class EM_ConfigHandler
 	}
 
 } // End of Page
-
-
-
-
-
-//TODO REMOVE AFTER TESTING
-	/*
-	private static void DetectedDimension(Integer[] DimensionIds)
-	{
-		File dimensionFile = new File(customPath + "ModDimensions.cfg");
-		
-		if(!dimensionFile.exists())
-		{
-			try
-			{
-				dimensionFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		Configuration config = new Configuration(dimensionFile, true);
-		config.load();
-		
-		for(int p = 0; p <= DimensionIds.length - 1; p++)
-		{
-			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
-			
-			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-			String catName = dimensionCat + "." + modname[0] + " - " + dimension.getDimensionName().toLowerCase().trim();
-			config.addCustomCategoryComment(catName, "");
-			
-			// if our Dimension else.. default settings...
-			if(DimensionIds[p] == EM_Settings.caveDimID)
-			{
-				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-				config.get(catName, DMName[1], true).getBoolean(true);
-				config.get(catName, DMName[2], true).getBoolean(true);
-				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[5], true).getBoolean(true);
-				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[7], true).getBoolean(true);
-				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[9], true).getBoolean(true);
-				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[11], true).getBoolean(true);
-				config.get(catName, DMName[12], true).getBoolean(true);
-				config.get(catName, DMName[13], false).getBoolean(false);
-				config.get(catName, DMName[14], 65).getInt(65);
-			} else
-			{
-				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-				config.get(catName, DMName[1], false).getBoolean(false);
-				config.get(catName, DMName[2], true).getBoolean(true);
-				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[5], true).getBoolean(true);
-				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[7], true).getBoolean(true);
-				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[9], true).getBoolean(true);
-				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[11], true).getBoolean(true);
-				config.get(catName, DMName[12], true).getBoolean(true);
-				config.get(catName, DMName[13], false).getBoolean(false);
-				config.get(catName, DMName[14], 65).getInt(65);
-			}
-		}
-		config.save();
-	}
-	
-
-	
-	
-	private static void DimensionDefaultSave()
-	{
-		File dimensionFile = new File(customPath + "Defaults.cfg");
-		
-		if(!dimensionFile.exists())
-		{
-			try
-			{
-				dimensionFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		// Vanilla Dimensions
-		int[] dimensionIds = {1, 0, -1};
-		
-		Configuration config = new Configuration(dimensionFile, true);
-		config.load();
-		for(int p = 0; p <= 2; p++)
-		{
-			WorldProvider dimension = WorldProvider.getProviderForDimension(dimensionIds[p]);
-			
-			String catName = dimensionCat + ".Vanilla - " + dimension.getDimensionName().toLowerCase().trim();
-			config.addCustomCategoryComment(catName, "");
-			
-			config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-			config.get(catName, DMName[1], false).getBoolean(false);
-			config.get(catName, DMName[2], true).getBoolean(true);
-			config.get(catName, DMName[3], true).getBoolean(true);
-			config.get(catName, DMName[3], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[5], true).getBoolean(true);
-			config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[7], true).getBoolean(true);
-			config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[9], true).getBoolean(true);
-			config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-			config.get(catName, DMName[11], true).getBoolean(true);
-			config.get(catName, DMName[12], true).getBoolean(true);
-			config.get(catName, DMName[13], false).getBoolean(false);
-			config.get(catName, DMName[14], 65).getInt(65);
-		}
-		config.save();
-	}
-	*/
-
-//TODO REMOVE AFTER TESTING
-/*
-private static void BiomeDefaultSave()
-{
-	File biomesFile = new File(customPath + "Defaults.cfg");
-	
-	if(!biomesFile.exists())
-	{
-		try
-		{
-			biomesFile.createNewFile();
-		} catch(IOException e)
-		{
-			e.printStackTrace();
-			return;
-		}
-	}
-	
-	Configuration config = new Configuration(biomesFile, true);
-	config.load();
-	
-	BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
-	
-	for(int p = 0; p <= 22 && BiomeArray[p] != null; p++)
-	{
-		
-		String catName = biomeCat + "." +BiomeArray[p].biomeName;
-		config.addCustomCategoryComment(catName, "");
-		
-		config.get(catName, BOName[0], BiomeArray[p].biomeID, "Make sure if you change this id you also change it here.").getInt(BiomeArray[p].biomeID);
-		config.get(catName, BOName[1], false).getBoolean(false);
-		config.get(catName, BOName[2], "clean", "Water Quality: dirty, salt, cold, clean").getString();
-		config.get(catName, BOName[3], getTemp(BiomeArray[p]), "In Celsius").getDouble(37.00);
-		config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-		config.get(catName, BOName[5], 0.0).getDouble(0.0);
-		config.get(catName, BOName[6], 0.0).getDouble(0.0);
-	}
-	
-	config.save();
-}*/
 

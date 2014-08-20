@@ -37,6 +37,9 @@ public class ReloadCustomObjects
 					EM_Settings.itemProperties.clear();
 					EM_Settings.livingProperties.clear();
 					EM_Settings.stabilityTypes.clear();
+					EM_Settings.biomeProperties.clear();
+					EM_Settings.dimensionProperties.clear();
+					
 					int Total = EM_ConfigHandler.initConfig();
 					mc.thePlayer.addChatMessage(new ChatComponentText("Loaded " + Total +" objects and " + EM_Settings.stabilityTypes.size() + " stability types"));
 					

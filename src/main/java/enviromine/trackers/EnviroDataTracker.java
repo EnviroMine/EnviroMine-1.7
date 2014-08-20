@@ -17,11 +17,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.client.gui.menu.UI_Settings;
@@ -361,6 +359,7 @@ public class EnviroDataTracker
 				hydration = prevHydration;
 				sanity = prevSanity;
 			}
+			
 		}
 		
 		// Apply side effects
@@ -500,6 +499,27 @@ public class EnviroDataTracker
 			hydration = prevHydration;
 			sanity = prevSanity;
 		}
+		
+		
+		//TODO Added in Dimension overrides for Trackers
+		DimensionProperties dimensionProp = null;
+		
+		if(EM_Settings.dimensionProperties.containsKey("" +trackedEntity.worldObj.provider.dimensionId))
+		{ 
+				
+			dimensionProp = EM_Settings.dimensionProperties.get("" +trackedEntity.worldObj.provider.dimensionId);
+			if(dimensionProp != null && dimensionProp.override)
+			{   
+				if(!dimensionProp.trackTemp && EM_Settings.enableBodyTemp) bodyTemp = prevBodyTemp;
+				if(!dimensionProp.trackAirQuality && EM_Settings.enableAirQ) airQuality = prevAirQuality;
+				if(!dimensionProp.trackHydration && EM_Settings.enableHydrate) hydration = prevHydration;
+				if(!dimensionProp.trackSanity && EM_Settings.enableSanity) sanity = prevSanity;
+								
+			}
+		}
+
+		
+		
 		
 		this.fixFloatinfPointErrors();
 		EM_StatusManager.saveTracker(this);

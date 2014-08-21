@@ -62,15 +62,14 @@ public class PacketServerOverride implements IMessage
 				String[] temp = new String[length];
 				for (int i = 0; i < length; i++)
 				{
-					temp[i] = tmp[i+2];
+					temp[i] = tmp[i + 2];
 				}
 				this.data.put(tmp[0], temp);
 			}
 		}
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf)
+	private String getDataAsString()
 	{
 		Iterator<String> iterator = data.keySet().iterator();
 		String info = "";
@@ -93,10 +92,45 @@ public class PacketServerOverride implements IMessage
 			info += tmp;
 		}
 		
+		return info;
+	}
+	
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		String info = getDataAsString();
+		
 		if (info.length() > 2000)
 		{
-			EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000!"); //TODO handle
-			return;
+			if (data.size() <= 1)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000!");
+				return;
+			} else
+			{
+				Map<String, String[]> newData = new HashMap<String, String[]>();
+				Iterator<String> iterator = data.keySet().iterator();
+				while (iterator.hasNext())
+				{
+					if (info.length() <= 2000)
+					{
+						break;
+					} else if (data.size() <= 1)
+					{
+						EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000!");
+						return;
+					} else
+					{
+						String key = iterator.next();
+						newData.put(key, data.get(key));
+						iterator.remove();
+						info = getDataAsString();
+					}
+				}
+				
+				IMessage packet = new PacketServerOverride(this.player, this.data);
+				EnviroMine.instance.network.sendTo(packet, player);
+			}
 		}
 		
 		ByteBufUtils.writeUTF8String(buf, info);
@@ -114,8 +148,9 @@ public class PacketServerOverride implements IMessage
 				try
 				{
 					String[] strs = message.data.get(key);
-					for (int i = 0; i < strs.length; i += 2) {
-						decodeCustom(key, EM_Settings.class.getDeclaredField(strs[i]), strs[i+1]);
+					for (int i = 0; i < strs.length; i += 2)
+					{
+						decodeCustom(key, EM_Settings.class.getDeclaredField(strs[i]), strs[i + 1]);
 					}
 				} catch (NoSuchFieldException e)
 				{

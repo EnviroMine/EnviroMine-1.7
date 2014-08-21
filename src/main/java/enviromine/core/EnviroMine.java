@@ -10,6 +10,9 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -23,7 +26,6 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
-
 import enviromine.EM_VillageMineshaft;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -36,12 +38,12 @@ import enviromine.handlers.ObjectHandler;
 import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
+import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.BiomeProperties;
+import enviromine.trackers.DimensionProperties;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 @Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version)
 public class EnviroMine
@@ -124,11 +126,11 @@ public class EnviroMine
 		
 		if(EM_Settings.genArmorConfigs)
 		{
-			EM_ConfigHandler.SearchForModdedArmors();
+			ArmorProperties.SearchForModdedArmors();
 		}
 		
-		EM_ConfigHandler.SearchForDimensions();
-		EM_ConfigHandler.SearchForBiomes();
+		DimensionProperties.SearchForDimensions();
+		BiomeProperties.SearchForBiomes();
 		
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.armorProperties.size() + " armor properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.blockProperties.size() + " block properties");

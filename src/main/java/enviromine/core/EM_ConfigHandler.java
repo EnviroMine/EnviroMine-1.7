@@ -39,7 +39,7 @@ public class EM_ConfigHandler
 {
 	// Dirs for Custom Files
 	public static String configPath = "config/enviromine/";
-	static String customPath = configPath + "CustomProperties/";
+	public static String customPath = configPath + "CustomProperties/";
 	
 	// Categories for Custom Objects
 	static String armorCat = "armor";
@@ -51,22 +51,23 @@ public class EM_ConfigHandler
 	static String biomeCat = "biomes";
 	
 	// Arrays for property names
+	
 	/** Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air<br>9 ({@link Boolean}) Allow Camel Pack */
-	static String[] APName;
+	//static String[] APName;
 	/** Block properties:<br>00 ({@link String}) Name<br>01 ({@link Int}) MetaID<br>02 ({@link String}) DropName<br>03 ({@link Int}) DropMetaID<br>04 ({@link Int}) DropNumber<br>05 ({@link Boolean}) EnableTemprature<br>06 ({@link Double}) Temprature<br>07 ({@link Double}) AirQuality<br>08 ({@link Double}) Sanity<br>09 ({@link String}) Stability<br>10 ({@link Boolean}) Slides<br>11 ({@link Boolean}) Slides when wet */ //Stablility slides slides when wet
-	static String[] BPName;
+	//static String[] BPName;
 	/** Entity properties:<br>00 ({@link Int}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
-	static String[] EPName;
+	//static String[] EPName;
 	/** Item properties:<br>00 ({@link String}) Name <br>01 ({@link Int}) Damage <br>02 ({@link Boolean}) Enable Ambient Temperature <br>03 ({@link Double}) Ambient Temperature <br>04 ({@link Double}) Ambient Air Quality <br>05 ({@link Double}) Ambient Santity <br>06 ({@link Double}) Effect Temperature <br>07 ({@link Double}) Effect Air Quality <br>08 ({@link Double}) Effect Sanity <br>09 ({@link Double}) Effect Hydration <br>10 ({@link Double}) Effect Temperature Cap */
-	static String[] IPName;
+	//static String[] IPName;
 	/** Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
-	static String[] SPName;
+	//static String[] SPName;
 	/** ?? */
-	static String[] RPName;
+	//static String[] RPName;
 	/** ?? */
-	static String[] DMName;
+	//static String[] DMName;
 	/** ?? */
-	static String[] BOName;
+	//static String[] BOName;
 	
 	public static int initConfig()
 	{
@@ -79,12 +80,12 @@ public class EM_ConfigHandler
 		EnviroMine.logger.log(Level.INFO, "Loading configs...");
 		
 		File stabConfigFile = new File(configPath + "StabilityTypes.cfg");
-		loadStabilityTypes(stabConfigFile);
+		StabilityType.loadStabilityTypes(stabConfigFile);
 		
 		// load defaults
 		if(EM_Settings.useDefaultConfig)
 		{
-			loadDefaultArmorProperties();
+			loadDefaultProperties();
 		}
 		
 		// Now load Files from "Custom Objects"
@@ -105,103 +106,33 @@ public class EM_ConfigHandler
 	
 	private static void setPropertyNames()
 	{
-		APName = new String[10];
-		APName[0] = "01.ID";
-		APName[1] = "02.Temp Add - Night";
-		APName[2] = "03.Temp Add - Shade";
-		APName[3] = "04.Temp Add - Sun";
-		APName[4] = "05.Temp Multiplier - Night";
-		APName[5] = "06.Temp Multiplier - Shade";
-		APName[6] = "07.Temp Multiplier - Sun";
-		APName[7] = "08.Sanity";
-		APName[8] = "09.Air";
-		APName[9] = "10.Allow Camel Pack";
+		DimensionProperties.setConfigNames();
 		
-		BPName = new String[12];
-		BPName[0] = "01.Name";
-		BPName[1] = "02.MetaID";
-		BPName[2] = "03.DropName";
-		BPName[3] = "04.DropMetaID";
-		BPName[4] = "05.DropNumber";
-		BPName[5] = "06.Enable Temperature";
-		BPName[6] = "07.Temperature";
-		BPName[7] = "08.Air Quality";
-		BPName[8] = "09.Sanity";
-		BPName[9] = "10.Stability";
-		BPName[10] = "11.Slides";
-		BPName[11] = "12.Slides When Wet";
+		BiomeProperties.setConfigNames();
 		
-		EPName = new String[15];
-		EPName[0] = "01.Entity ID";
-		EPName[1] = "02.Enable EnviroTracker";
-		EPName[2] = "03.Enable Dehydration";
-		EPName[3] = "04.Enable BodyTemp";
-		EPName[4] = "05.Enable Air Quality";
-		EPName[5] = "06.Immune To Frost";
-		EPName[6] = "07.Immune To Heat";
-		EPName[7] = "08.Ambient Sanity";
-		EPName[8] = "09.Hit Sanity";
-		EPName[9] = "10.Ambient Temperature";
-		EPName[10] = "11.Hit Temperature";
-		EPName[11] = "12.Ambient Air";
-		EPName[12] = "13.Hit Air";
-		EPName[13] = "14.Ambient Hydration";
-		EPName[14] = "15.Hit Hydration";
+		ItemProperties.setConfigNames();
 		
-		IPName = new String[11];
-		IPName[0] = "01.Name";
-		IPName[1] = "02.Damage";
-		IPName[2] = "03.Enable Ambient Temperature";
-		IPName[3] = "04.Ambient Temperature";
-		IPName[4] = "05.Ambient Air Quality";
-		IPName[5] = "06.Ambient Santity";
-		IPName[6] = "07.Effect Temperature";
-		IPName[7] = "08.Effect Air Quality";
-		IPName[8] = "09.Effect Sanity";
-		IPName[9] = "10.Effect Hydration";
-		IPName[10] = "11.Effect Temperature Cap";
+		EntityProperties.setConfigNames();
 		
-		SPName = new String[6];
-		SPName[0] = "01.Enable Physics";
-		SPName[1] = "02.Max Support Distance";
-		SPName[2] = "03.Min Missing Blocks To Fall";
-		SPName[3] = "04.Max Missing Blocks To Fall";
-		SPName[4] = "05.Can Hang";
-		SPName[5] = "06.Holds Others Up";
+		RotProperties.setConfigNames();
 		
-		//TODO edit these:
-		RPName = new String[5];
-		RPName[0] = "01.ID";
-		RPName[1] = "02.Damage";
-		RPName[2] = "03.Rotten ID";
-		RPName[3] = "04.Rotten Damage";
-		RPName[4] = "05.Days To Rot";
+		BlockProperties.setConfigNames();
 		
-		BOName = new String[7];
-		BOName[0] = "01.Biome ID";
-		BOName[1] = "02.Allow Config Override";
-		BOName[2] = "03.Water Quality";
-		BOName[3] = "04.Ambient Temperature";
-		BOName[4] = "05.Temp Rate";
-		BOName[5] = "06.Sanity Rate";
-		BOName[6] = "07.Dehydrate Rate";
+		ArmorProperties.setConfigNames();
 		
-		DMName = new String[15];
-		DMName[0] = "01.Dimension ID";
-		DMName[1] = "02.Allow Config Override";
-		DMName[2] = "03.Track Sanity";
-		DMName[3] = "04.Dark Affects Sanity";
-		DMName[4] = "05.Sanity Multiplier";
-		DMName[5] = "06.Track Air Quility";
-		DMName[6] = "07.Air Quility Multiplier";
-		DMName[7] = "08.Track Hydration";
-		DMName[8] = "09.Hydration Multiplier";
-		DMName[9] = "10.Track Temperature";
-		DMName[10] = "11.Temperature Multiplier";
-		DMName[11] = "12.Day/Night Affects Temp";
-		DMName[12] = "13.Weather Affects Temp";
-		DMName[13] = "14.Generate Mineshafts";
-		DMName[14] = "15.Where is Sea Level";
+		StabilityType.setConfigNames();
+	}
+	
+	public static void loadDefaultCategories(Configuration config)
+	{
+		// Load Default Categories
+		config.addCustomCategoryComment(armorCat, "Custom armor properties");
+		config.addCustomCategoryComment(blockCat, "Custom block properties");
+		config.addCustomCategoryComment(entityCat, "Custom entity properties");
+		config.addCustomCategoryComment(itemsCat, "Custom item properties");
+		config.addCustomCategoryComment(rotCat, "Custom spoiling properties");
+		config.addCustomCategoryComment(dimensionCat, "Custom Dimension properties");
+		config.addCustomCategoryComment(biomeCat, "Custom Biome properties");
 	}
 	
 	public static void loadGeneralConfig(File file)
@@ -257,24 +188,6 @@ public class EM_ConfigHandler
 		EM_Settings.physInterval = EM_Settings.physInterval >= 2 ? EM_Settings.physInterval : 2;
 		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
 		
-		// Gui settings
-		String GuiSetCat = "GUI Settings";
-		if(config.hasCategory(GuiSetCat)) config.removeCategory(config.getCategory(GuiSetCat));
-		//EM_Settings.sweatParticals = config.get(GuiSetCat, "Show Sweat Particales", true).getBoolean(true);
-		//EM_Settings.insaneParticals = config.get(GuiSetCat, "Show Insanity Particles", true, "Show/Hide Particales").getBoolean(true);
-		//EM_Settings.useFarenheit = config.get(GuiSetCat, "Use Farenheit instead of Celsius", false, "Will display either Farenhit or Celcius on GUI").getBoolean(false);
-		//EM_Settings.heatBarPos = config.get(GuiSetCat, "Position Heat Bat", "Bottom_Left").getString();
-		//EM_Settings.waterBarPos = config.get(GuiSetCat, "Position Thirst Bar", "Bottom_Left").getString();
-		//EM_Settings.sanityBarPos = config.get(GuiSetCat, "Position Sanity Bar", "Bottom_Right").getString();
-		//EM_Settings.oxygenBarPos = config.get(GuiSetCat, "Position Air Quality Bar", "Bottom_Right", "Change position of Enviro Bars. Options: Bottom_Left, Bottom_Right, Bottom_Center_Left, Bottom_Center_Right, Top_Left, Top_Right, Top_Center, Middle_Left, Middle_Right, Custom_#,# (Custom_X(0-100),Y(0-100))").getString();
-		//EM_Settings.minimalHud = config.get(GuiSetCat, "Minimalistic Bars", false, "WARN: This option will hide the ambient air temperature! It will also override icons and text to true.").getBoolean(false);
-		
-		//EM_Settings.guiScale = (float)config.get(GuiSetCat, "Gui Bar Scale", 1.0, "Scale Enviromine Bars, Enter 0.1(10%) to 1.0(100%)").getDouble(1.0);
-		
-		//EM_Settings.ShowDebug = config.get(GuiSetCat, "Show Gui Debugging Info", false, "Show Hide Gui Text Display and Icons").getBoolean(false);
-		//EM_Settings.ShowText = config.get(GuiSetCat, "Show Gui Status Text", true).getBoolean(true);
-		//EM_Settings.ShowGuiIcons = config.get(GuiSetCat, "Show Gui Icons", true).getBoolean(true);
-		
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 32, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(32);
@@ -308,8 +221,13 @@ public class EM_ConfigHandler
 		EM_Settings.genArmorConfigs = config.get(ConSetCat, "Generate Armor Configs", true, "Will attempt to find and generate blank configs for any custom armors loaded before EnviroMine.").getBoolean(true);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		
+		
+		// REMOVE OLD Settings if they exist
 		// Sound
 		if(config.hasCategory("Sound Options")) config.removeCategory(config.getCategory("Sound Options"));
+		// Gui settings
+		if(config.hasCategory("GUI Settings")) config.removeCategory(config.getCategory("GUI Settings"));
+	
 		
 		config.save();
 
@@ -435,14 +353,8 @@ public class EM_ConfigHandler
 			config.load();
 			
 			// Load Default Categories
-			config.addCustomCategoryComment(armorCat, "Custom armor properties");
-			config.addCustomCategoryComment(blockCat, "Custom block properties");
-			config.addCustomCategoryComment(entityCat, "Custom entity properties");
-			config.addCustomCategoryComment(itemsCat, "Custom item properties");
-			config.addCustomCategoryComment(rotCat, "Custom spoiling properties");
-			config.addCustomCategoryComment(dimensionCat, "Custom Dimension properties");
-			config.addCustomCategoryComment(biomeCat, "Custom Biome properties");
-			
+			loadDefaultCategories(config);
+
 			// 	Grab all Categories in File
 			List<String> catagory = new ArrayList<String>();
 			Set<String> nameList = config.getCategoryNames();
@@ -466,25 +378,25 @@ public class EM_ConfigHandler
 					
 					if(parent.equals(blockCat))
 					{
-						LoadBlockProperty(config, catagory.get(x));
+						BlockProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(armorCat))
 					{
-						LoadArmorProperty(config, catagory.get(x));
+						ArmorProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(itemsCat))
 					{
-						LoadItemProperty(config, catagory.get(x));
+						ItemProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(entityCat))
 					{
-						LoadLivingProperty(config, catagory.get(x));
+						EntityProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(rotCat))
 					{
-						LoadRotProperty(config, catagory.get(x));
+						RotProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(dimensionCat))
 					{
-						LoadDimensionProperty(config, catagory.get(x));
+						DimensionProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(biomeCat))
 					{
-						LoadBiomeProperty(config, catagory.get(x));
+						BiomeProperties.LoadProperty(config, catagory.get(x));
 					} else
 					{
 						EnviroMine.logger.log(Level.WARN, "Failed to load object " + CurCat);
@@ -497,215 +409,14 @@ public class EM_ConfigHandler
 		}
 	}
 	
-	private static void LoadRotProperty(Configuration config, String category)
-	{
-		config.addCustomCategoryComment(category, "");
-		String name = config.get(category, RPName[0], "").getString();
-		int meta = config.get(category, RPName[1], -1).getInt(-1);
-		int rotID = config.get(category, RPName[2], 0).getInt(0);
-		int rotMeta = config.get(category, RPName[3], 0).getInt(0);
-		double DTR = config.get(category, RPName[4], 0.00).getDouble(0.00);
-		
-		RotProperties entry = new RotProperties(name, meta, rotID, rotMeta, DTR);
-		
-		if(meta < 0)
-		{
-			EM_Settings.rotProperties.put("" + name, entry);
-		} else
-		{
-			EM_Settings.rotProperties.put("" + name + "," + meta, entry);
-		}
-	}
-	
-	private static void LoadItemProperty(Configuration config, String category)
-	{
-		config.addCustomCategoryComment(category, "");
-		
-		String name = config.get(category, IPName[0], "").getString();
-		int meta = config.get(category, IPName[1], 0).getInt(0);
-		boolean enableTemp = config.get(category, IPName[2], false).getBoolean(false);
-		float ambTemp = (float)config.get(category, IPName[3], 0.00).getDouble(0.00);
-		float ambAir = (float)config.get(category, IPName[4], 0.00).getDouble(0.00);
-		float ambSanity = (float)config.get(category, IPName[5], 0.00).getDouble(0.00);
-		float effTemp = (float)config.get(category, IPName[6], 0.00).getDouble(0.00);
-		float effAir = (float)config.get(category, IPName[7], 0.00).getDouble(0.00);
-		float effSanity = (float)config.get(category, IPName[8], 0.00).getDouble(0.00);
-		float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
-		float effTempCap = (float)config.get(category, IPName[10], 37.00).getDouble(37.00);
-		
-		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
-		
-		if(meta < 0)
-		{
-			EM_Settings.itemProperties.put("" + name, entry);
-		} else
-		{
-			EM_Settings.itemProperties.put("" + name + "," + meta, entry);
-		}
-	}
-	
-	private static void LoadBlockProperty(Configuration config, String category)
-	{
-		config.addCustomCategoryComment(category, "");
-		
-		String name = config.get(category, BPName[0], "").getString();
-		int metaData = config.get(category, BPName[1], 0).getInt(0);
-		String dropName = config.get(category, BPName[2], 0).getString();
-		int dropMeta = config.get(category, BPName[3], 0).getInt(0);
-		int dropNum = config.get(category, BPName[4], 0).getInt(0);
-		boolean enableTemp = config.get(category, BPName[5], false).getBoolean(false);
-		float temperature = (float)config.get(category, BPName[6], 0.00).getDouble(0.00);
-		float airQuality = (float)config.get(category, BPName[7], 0.00).getDouble(0.00);
-		float sanity = (float)config.get(category, BPName[8], 0.00).getDouble(0.00);
-		String stability = config.get(category, BPName[9], "loose").getString();
-		boolean slides = config.get(category, BPName[10], false).getBoolean(false);
-		boolean wetSlides = config.get(category, BPName[11], false).getBoolean(false);
-		
-		// 	Get Stability Options
-		int minFall = 99;
-		int maxFall = 99;
-		int supportDist = 5;
-		boolean holdOther = false;
-		boolean canHang = true;
-		boolean hasPhys = false;
-		
-		if(EM_Settings.stabilityTypes.containsKey(stability))
-		{
-			StabilityType stabType = EM_Settings.stabilityTypes.get(stability);
-			
-			minFall = stabType.minFall;
-			maxFall = stabType.maxFall;
-			supportDist = stabType.supportDist;
-			hasPhys = stabType.enablePhysics;
-			holdOther = stabType.holdOther;
-			canHang = stabType.canHang;
-		} else
-		{
-			EnviroMine.logger.log(Level.WARN, "Stability type '" + stability + "' not found.");
-			minFall = 99;
-			maxFall = 99;
-			supportDist = 9;
-			hasPhys = false;
-			holdOther = false;
-			canHang = true;
-		}
-		
-		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropName, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides);
-		
-		if(metaData < 0)
-		{
-			EM_Settings.blockProperties.put("" + name, entry);
-		} else
-		{
-			EM_Settings.blockProperties.put("" + name + "," + metaData, entry);
-		}
-	}
-	
-	private static void LoadArmorProperty(Configuration config, String catagory)
-	{
-		config.addCustomCategoryComment(catagory, "");
-			
-		String name = config.get(catagory, APName[0], "").getString();
-		float nightTemp = (float)config.get(catagory, APName[1], 0.00).getDouble(0.00);
-		float shadeTemp = (float)config.get(catagory, APName[2], 0.00).getDouble(0.00);
-		float sunTemp = (float)config.get(catagory, APName[3], 0.00).getDouble(0.00);
-		float nightMult = (float)config.get(catagory, APName[4], 1.00).getDouble(1.00);
-		float shadeMult = (float)config.get(catagory, APName[5], 1.00).getDouble(1.00);
-		float sunMult = (float)config.get(catagory, APName[6], 1.00).getDouble(1.00);
-		float sanity = (float)config.get(catagory, APName[7], 0.00).getDouble(0.00);
-		float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
-		
-		Object tmp = Item.itemRegistry.getObject(name);
-		boolean allowCamelPack = false;
-		if (tmp instanceof ItemArmor && ((ItemArmor)tmp).armorType == 1) {
-			allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
-		}
-		
-		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
-		EM_Settings.armorProperties.put(name, entry);
-	}
-	
-	private static void LoadLivingProperty(Configuration config, String catagory)
-	{
-		config.addCustomCategoryComment(catagory, "");
-		int id = config.get(catagory, EPName[0], 0).getInt(0);
-		boolean track = config.get(catagory, EPName[1], true).getBoolean(true);
-		boolean dehydration = config.get(catagory, EPName[2], true).getBoolean(true);
-		boolean bodyTemp = config.get(catagory, EPName[3], true).getBoolean(true);
-		boolean airQ = config.get(catagory, EPName[4], true).getBoolean(true);
-		boolean immuneToFrost = config.get(catagory, EPName[5], false).getBoolean(false);
-		boolean immuneToHeat = config.get(catagory, EPName[6], false).getBoolean(false);
-		float aSanity = (float)config.get(catagory, EPName[7], 0.0D).getDouble(0.0D);
-		float hSanity = (float)config.get(catagory, EPName[8], 0.0D).getDouble(0.0D);
-		float aTemp = (float)config.get(catagory, EPName[9], 37.0D, "Overridden by body temp").getDouble(37.0D);
-		float hTemp = (float)config.get(catagory, EPName[10], 0.0D).getDouble(0.0D);
-		float aAir = (float)config.get(catagory, EPName[11], 0.0D).getDouble(0.0D);
-		float hAir = (float)config.get(catagory, EPName[12], 0.0D).getDouble(0.0D);
-		float aHyd = (float)config.get(catagory, EPName[13], 0.0D).getDouble(0.0D);
-		float hHyd = (float)config.get(catagory, EPName[14], 0.0D).getDouble(0.0D);
-		
-		EntityProperties entry = new EntityProperties(id, track, dehydration, bodyTemp, airQ, immuneToFrost, immuneToHeat, aSanity, hSanity, aTemp, hTemp, aAir, hAir, aHyd, hHyd);
-		EM_Settings.livingProperties.put(id, entry);
-	}
-	
-	private static void LoadBiomeProperty(Configuration config, String category)
-	{
-		
-		//System.out.println(category);
-		
-		//String catName = biomeCat + "." + category;
-		config.addCustomCategoryComment(category, "");
-		
-		int id = config.get(category, BOName[0], 0, "Make sure if you change this id you also change it here.").getInt(0);
-		boolean biomeOveride = config.get(category, BOName[1], false).getBoolean(false);
-		String waterQ = config.get(category, BOName[2], "clean", "Water Quality: dirty, salt, cold, clean").getString();
-		double ambTemp = config.get(category, BOName[3], 37.00, "In Celsius").getDouble(37.00);
-		double tempRate = config.get(category, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-		double sanRate = config.get(category, BOName[5], 0.0).getDouble(0.0);
-		double dehyRate = config.get(category, BOName[6], 0.0).getDouble(0.0);
-		
-		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate);
-		EM_Settings.biomeProperties.put("" + id, entry);;
-		
-	}
-	
-	private static void LoadDimensionProperty(Configuration config, String category)
-	{
-		//System.out.println(category);
-		//String catName = dimensionCat + "." + category;
-		config.addCustomCategoryComment(category, "");
-		
-		int id = config.get(category, DMName[0], 0).getInt(0);
-		boolean override = config.get(category, DMName[1], false).getBoolean(false);
-		boolean trackSanity = config.get(category, DMName[2], true).getBoolean(true);
-		boolean darkAffectSanity = config.get(category, DMName[3], true).getBoolean(true);
-		double sanityMulti = config.get(category, DMName[4], 1.0D).getDouble(1.0D);
-		boolean trackAirQuality = config.get(category, DMName[5], true).getBoolean(true);
-		double airMulti = config.get(category, DMName[6], 1.0D).getDouble(1.0D);
-		boolean trackHydration = config.get(category, DMName[7], true).getBoolean(true);
-		double hydrationMulti = config.get(category, DMName[8], 1.0D).getDouble(1.0D);
-		boolean trackTemp = config.get(category, DMName[9], true).getBoolean(true);
-		double tempMulti = config.get(category, DMName[10], 1.0D).getDouble(1.0D);
-		boolean dayNightTemp = config.get(category, DMName[11], true).getBoolean(true);
-		boolean weatherAffectsTemp = config.get(category, DMName[12], true).getBoolean(true);
-		boolean mineshaftGen = config.get(category, DMName[13], true).getBoolean(true);
-		int sealevel = config.get(category, DMName[14], 65).getInt(65);
-		
-		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
-		EM_Settings.dimensionProperties.put("" + id, entry);
-		
-	}
-	
-	// RIGHT NOW I AM JUST LOADING DEFAULT ARMOR INTO HASH MAPS
-	// IF SOME CUSTOMIZED ARMOR>> THAN IT OVERIDES THIS FUNCTION
-	public static void loadDefaultArmorProperties()
+	public static void loadDefaultProperties()
 	{
 		File customFile = new File(customPath + "Defaults.cfg");
 		
-		Configuration custom;
+		Configuration config;
 		try
 		{
-			custom = new Configuration(customFile, true);
+			config = new Configuration(customFile, true);
 		} catch(NullPointerException e)
 		{
 			e.printStackTrace();
@@ -719,324 +430,19 @@ public class EM_ConfigHandler
 		}
 		EnviroMine.logger.log(Level.INFO, "Loading Default Config: " + customFile.getAbsolutePath());
 		
-		custom.load();
-		
-		// Load Default Categories
-		custom.addCustomCategoryComment(armorCat, "Custom armor properties");
-		custom.addCustomCategoryComment(blockCat, "Custom block properties");
-		custom.addCustomCategoryComment(entityCat, "Custom entity properties");
-		custom.addCustomCategoryComment(itemsCat, "Custom item properties");
-		
-		ArmorDefaultSave(custom, armorCat + ".helmetLeather", 	Item.itemRegistry.getNameForObject(Items.leather_helmet), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateLeather", 	Item.itemRegistry.getNameForObject(Items.leather_chestplate), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_leggings), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_boots), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		
-		ArmorDefaultSave(custom, armorCat + ".helmetIron", 		Item.itemRegistry.getNameForObject(Items.iron_helmet), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateIron", 		Item.itemRegistry.getNameForObject(Items.iron_chestplate), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsIron", 		Item.itemRegistry.getNameForObject(Items.iron_leggings), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsIron", 		Item.itemRegistry.getNameForObject(Items.iron_boots), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		
-		ArmorDefaultSave(custom, armorCat + ".helmetGold", 		Item.itemRegistry.getNameForObject(Items.golden_helmet), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateGold", 		Item.itemRegistry.getNameForObject(Items.golden_chestplate), 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsGold", 		Item.itemRegistry.getNameForObject(Items.golden_leggings), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsGold", 		Item.itemRegistry.getNameForObject(Items.golden_boots), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		
-		ArmorDefaultSave(custom, armorCat + ".helmetDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_helmet), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".plateDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_chestplate), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".legsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_leggings), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		ArmorDefaultSave(custom, armorCat + ".bootsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_boots), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		
-		ItemDefaultSave(custom, itemsCat + ".potions", 		Item.itemRegistry.getNameForObject(Items.potionitem), 	-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
-		ItemDefaultSave(custom, itemsCat + ".melon", 		Item.itemRegistry.getNameForObject(Items.melon), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		ItemDefaultSave(custom, itemsCat + ".carrot", 		Item.itemRegistry.getNameForObject(Items.carrot), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		ItemDefaultSave(custom, itemsCat + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_apple), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		ItemDefaultSave(custom, itemsCat + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		
-		ItemDefaultSave(custom, itemsCat + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".yellowFlower", Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".snowBlock", 	Block.blockRegistry.getNameForObject(Blocks.snow), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".ice", 			Block.blockRegistry.getNameForObject(Blocks.ice), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".snowLayer",	Block.blockRegistry.getNameForObject(Blocks.snow_layer), 	-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".netherrack", 	Block.blockRegistry.getNameForObject(Blocks.netherrack), 	-1, true, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".soulSand", 	Block.blockRegistry.getNameForObject(Blocks.soul_sand), 	-1, false, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".skull", 		Item.itemRegistry.getNameForObject(Items.skull), 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".web", 			Block.blockRegistry.getNameForObject(Blocks.web), 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
-		ItemDefaultSave(custom, itemsCat + ".11", 			Item.itemRegistry.getNameForObject(Items.record_11), 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		
-		EntityDefaultSave(custom, entityCat + ".blaze",		61, false, false, false, false, true, true, -0.01, 0.0, 75.0, 0.1, -0.05, 0.0, -0.01, -0.01);
-		EntityDefaultSave(custom, entityCat + ".wither", 	64,	false, false, false, false, true, true, -0.1, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-			
-		custom.save();
-	}
-	
-	private static void EntityDefaultSave(Configuration config, String catName, int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, double aSanity, double hSanity, double aTemp, double hTemp, double aAir, double hAir, double aHyd, double hHyd)
-	{
-		config.get(catName, EPName[0], id).getInt(id);
-		config.get(catName, EPName[1], track).getBoolean(track);
-		config.get(catName, EPName[2], dehydration).getBoolean(dehydration);
-		config.get(catName, EPName[3], bodyTemp).getBoolean(bodyTemp);
-		config.get(catName, EPName[4], airQ).getBoolean(airQ);
-		config.get(catName, EPName[5], immuneToFrost).getBoolean(immuneToFrost);
-		config.get(catName, EPName[6], immuneToHeat).getBoolean(immuneToHeat);
-		config.get(catName, EPName[7], aSanity).getDouble(aSanity);
-		config.get(catName, EPName[8], hSanity).getDouble(hSanity);
-		config.get(catName, EPName[9], aTemp, "Overridden by body temp").getDouble(aTemp);
-		config.get(catName, EPName[10], hTemp).getDouble(hTemp);
-		config.get(catName, EPName[11], aAir).getDouble(aAir);
-		config.get(catName, EPName[12], hAir).getDouble(hAir);
-		config.get(catName, EPName[13], aHyd).getDouble(aHyd);
-		config.get(catName, EPName[14], hHyd).getDouble(hHyd);
-	}
-	
-	private static void ArmorDefaultSave(Configuration config, String catName, String name, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
-	{
-		config.get(catName, APName[0], name).getString();
-		config.get(catName, APName[1], nightTemp).getDouble(nightTemp);
-		config.get(catName, APName[2], shadeTemp).getDouble(shadeTemp);
-		config.get(catName, APName[3], sunTemp).getDouble(sunTemp);
-		config.get(catName, APName[4], nightMult).getDouble(nightMult);
-		config.get(catName, APName[5], shadeMult).getDouble(shadeMult);
-		config.get(catName, APName[6], sunMult).getDouble(sunMult);
-		config.get(catName, APName[7], sanity).getDouble(sanity);
-		config.get(catName, APName[8], air).getDouble(air);
-	}
-	
-	//TODO Modded Armor 
-	public static void SearchForModdedArmors()
-	{
-		EnviroMine.logger.log(Level.INFO, "Searcing for mod armors...");
-	
-		
-		Iterator itemList = Item.itemRegistry.iterator();
-		Item theitem;
-		int armorCount = 0;
-		
-		while(itemList.hasNext())
-		{
-			theitem = (Item) itemList.next();
-			String[] Names = SplitObjectName(Item.itemRegistry.getNameForObject(theitem));
-			
-			if(!Names[0].equalsIgnoreCase("minecraft")) // Ignore Minecraft Items
-			{
-				if(theitem instanceof ItemArmor)
-				{
-					
-					DetectedArmorGen((ItemArmor)theitem, Names[0]);
-					armorCount += 1;
-				}
-			}
-
-			
-		}
-		
-		EnviroMine.logger.log(Level.INFO, "Found " + armorCount + " mod armors");
-	}
-	
-
-	private static void DetectedArmorGen(ItemArmor armor, String ModID)
-	{		//TODO REMOVE AFTER TESTING
-			//		File armorFile = new File(customPath + armor.getClass().getSimpleName() + ".cfg");
-		
-		String[] classpath = armor.getClass().getCanonicalName().toString().split("\\.");
-		
-		
-		File armorFile = new File(customPath + classpath[0] + ".cfg");
-		if(!armorFile.exists())
-		{
-			try
-			{
-				armorFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-	
-		Configuration config = new Configuration(armorFile, true);
 		config.load();
 		
-		String catName = armorCat + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName());
-		
-		config.addCustomCategoryComment(catName, "");
-		config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();
-		config.get(catName, APName[1], 0.0D).getDouble(0.0D);
-		config.get(catName, APName[2], 0.0D).getDouble(0.0D);
-		config.get(catName, APName[3], 0.0D).getDouble(0.0D);
-		config.get(catName, APName[4], 1.0D).getDouble(1.0D);
-		config.get(catName, APName[5], 1.0D).getDouble(1.0D);
-		config.get(catName, APName[6], 1.0D).getDouble(1.0D);
-		config.get(catName, APName[7], 0.0D).getDouble(0.0D);
-		config.get(catName, APName[8], 0.0D).getDouble(0.0D);
+			// Load Default Categories
+			loadDefaultCategories(config);
+
+			ItemProperties.SaveDefaults(config);
+			EntityProperties.SaveDefaults(config);
+			ArmorProperties.SaveDefaults(config);
 		
 		config.save();
 	}
-
 	
-	public static void SearchForDimensions()
-	{
-		Integer[] DimensionIds = DimensionManager.getStaticDimensionIDs();
-		
-
-		EnviroMine.logger.log(Level.INFO, "Found " + DimensionIds.length + " Mod Dimension");
-		
-		for(int p = 0; p <= DimensionIds.length - 1 && DimensionIds[p] != null; p++)
-		{
-			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
-			
-			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-			
-			//System.out.println(modname[0]);
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
-			{
-				DimensionSaveConfig(dimension, "Defaults");
-			}
-			else
-			{
-				DimensionSaveConfig(dimension, modname[0]);
-			}
-		}
-	}
-
-	
-	private static void DimensionSaveConfig(WorldProvider dimension, String ModID)
-	{
-		
-	File dimensionFile = new File(customPath + ModID + ".cfg");
-		
-		if(!dimensionFile.exists())
-		{
-			try
-			{
-				dimensionFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		Configuration config = new Configuration(dimensionFile, true);
-		config.load();
-		
-			String catName = dimensionCat + "."  + dimension.getDimensionName().toLowerCase().trim();
-			config.addCustomCategoryComment(catName, "");
-			
-
-			if(dimension.getDimensionName().toLowerCase().trim() == "caves")
-			{
-				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-				config.get(catName, DMName[1], true).getBoolean(true);
-				config.get(catName, DMName[2], true).getBoolean(true);
-				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[5], true).getBoolean(true);
-				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[7], true).getBoolean(true);
-				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[9], true).getBoolean(true);
-				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[11], true).getBoolean(true);
-				config.get(catName, DMName[12], true).getBoolean(true);
-				config.get(catName, DMName[13], false).getBoolean(false);
-				config.get(catName, DMName[14], 65).getInt(65);
-			} else
-			{
-				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-				config.get(catName, DMName[1], false).getBoolean(false);
-				config.get(catName, DMName[2], true).getBoolean(true);
-				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[5], true).getBoolean(true);
-				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[7], true).getBoolean(true);
-				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[9], true).getBoolean(true);
-				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[11], true).getBoolean(true);
-				config.get(catName, DMName[12], true).getBoolean(true);
-				config.get(catName, DMName[13], false).getBoolean(false);
-				config.get(catName, DMName[14], 65).getInt(65);
-			}
-		config.save();
-		
-	}
-	
-	
-	 
-	 
-	 
-	public static void SearchForBiomes()
-	{
-
-		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
-		
-		for(int p = 0; p <= BiomeArray.length - 1 && BiomeArray[p] != null; p++)
-		{
-			String[] modname = BiomeArray[p].getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
-			{
-				BiomeSaveConfig(BiomeArray[p], "Defaults");
-			}
-			else
-			{
-				BiomeSaveConfig(BiomeArray[p], modname[0]);
-			}
-		}
-	}
-	
-	private static void BiomeSaveConfig(BiomeGenBase biomeArray, String ModID)
-	{
-		File biomesFile = new File(customPath + ModID +".cfg");
-		
-		if(!biomesFile.exists())
-		{
-			try
-			{
-				biomesFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		Configuration config = new Configuration(biomesFile, true);
-		config.load();
-		
-		String catName = biomeCat + "." + biomeArray.biomeName;
-		config.addCustomCategoryComment(catName, "");
-		
-		config.get(catName, BOName[0], biomeArray.biomeID, "Make sure if you change this id you also change it here.").getInt(biomeArray.biomeID);
-		config.get(catName, BOName[1], false).getBoolean(false);
-		config.get(catName, BOName[2], EnviroUtils.getBiomeWater(biomeArray), "Water Quality: dirty, salt, cold, clean").getString();
-		config.get(catName, BOName[3], EnviroUtils.getBiomeTemp(biomeArray), "In Celsius").getDouble(37.00);
-		config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-		config.get(catName, BOName[5], 0.0).getDouble(0.0);
-		config.get(catName, BOName[6], 0.0).getDouble(0.0);
-		
-		config.save();
-	}
-
-
-	
-	private static void ItemDefaultSave(Configuration config, String catName, String name, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
-	{
-		config.get(catName, IPName[0], name).getString();
-		config.get(catName, IPName[1], meta).getInt(meta);
-		config.get(catName, IPName[2], enableAmbTemp).getBoolean(enableAmbTemp);
-		config.get(catName, IPName[3], ambTemp).getDouble(ambTemp);
-		config.get(catName, IPName[4], ambAir).getDouble(ambAir);
-		config.get(catName, IPName[5], ambSanity).getDouble(ambSanity);
-		config.get(catName, IPName[6], effTemp).getDouble(effTemp);
-		config.get(catName, IPName[7], effTemp).getDouble(effTemp);
-		config.get(catName, IPName[8], effSanity).getDouble(effSanity);
-		config.get(catName, IPName[9], effHydration).getDouble(effHydration);
-		config.get(catName, IPName[10], tempCap).getDouble(tempCap);
-	}
-	
+	//TODO FIX THIS
 	public static String SaveMyCustom(String type, String name, Object[] data)
 	{
 		
@@ -1048,12 +454,6 @@ public class EM_ConfigHandler
 		
 		if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
 		else classname = classpath[0];
-		
-		
-		//if(EM_Settings.genArmorConfigs && type.equalsIgnoreCase("ARMOR"))
-		//{
-		//	configFile = new File(customPath + data.getClass().getSimpleName());
-		//}
 		
 		Configuration config;
 		try
@@ -1075,9 +475,8 @@ public class EM_ConfigHandler
 		
 		String returnValue = "";
 		// Load Default Categories
-		config.addCustomCategoryComment(armorCat, "Add Custom Armor");
-		config.addCustomCategoryComment(blockCat, "Add Custom Blocks");
-		config.addCustomCategoryComment(entityCat, "Custom Entities");
+		loadDefaultCategories(config);
+
 		
 		if(type.equalsIgnoreCase("BLOCK"))
 		{
@@ -1089,20 +488,12 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
+
 				config.addCustomCategoryComment(nameULCat, classname + ":" + name);
-				config.get(nameULCat, BPName[0], (String)data[2]).getString();
-				config.get(nameULCat, BPName[1], (Integer)data[1]).getInt(0);
-				config.get(nameULCat, BPName[2], (String)data[2]).getString();
-				config.get(nameULCat, BPName[3], (Integer)data[1]).getInt(0);
-				config.get(nameULCat, BPName[4], 0).getInt(0);
-				config.get(nameULCat, BPName[5], false).getBoolean(false);
-				config.get(nameULCat, BPName[6], 0.00).getDouble(0.00);
-				config.get(nameULCat, BPName[7], 0.00).getDouble(0.00);
-				config.get(nameULCat, BPName[8], 0.00).getDouble(0.00);
-				config.get(nameULCat, BPName[9], "loose").getString();
-				config.get(nameULCat, BPName[10], false).getBoolean(false);
-				config.get(nameULCat, BPName[11], false).getBoolean(false);
+					int metadata = (Integer)data[1];
+					BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
 				returnValue = "Saved";
+
 			}
 		} else if(type.equalsIgnoreCase("ENTITY"))
 		{
@@ -1116,21 +507,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameEntityCat, classname + ":" + name);
-				config.get(nameEntityCat, EPName[0], (Integer)data[0]).getInt(0);
-				config.get(nameEntityCat, EPName[1], true).getBoolean(true);
-				config.get(nameEntityCat, EPName[2], true).getBoolean(true);
-				config.get(nameEntityCat, EPName[3], true).getBoolean(true);
-				config.get(nameEntityCat, EPName[4], true).getBoolean(true);
-				config.get(nameEntityCat, EPName[5], false).getBoolean(false);
-				config.get(nameEntityCat, EPName[6], false).getBoolean(false);
-				config.get(nameEntityCat, EPName[7], 0.0D).getDouble(0.0D);
-				config.get(nameEntityCat, EPName[8], 0.0D).getDouble(0.0D);
-				config.get(nameEntityCat, EPName[9], 37.0D, "Overridden by body temp").getDouble(37.0D);
-				config.get(nameEntityCat, EPName[10], 0.0D).getDouble(0.0D);
-				config.get(nameEntityCat, EPName[11], 0.0D).getDouble(0.0D);
-				config.get(nameEntityCat, EPName[12], 0.0D).getDouble(0.0D);
-				config.get(nameEntityCat, EPName[13], 0.0D).getDouble(0.0D);
-				config.get(nameEntityCat, EPName[14], 0.0D).getDouble(0.0D);
+				EntityProperties.SaveProperty(config, nameEntityCat, (Integer)data[0], true, true, true, true, false, false, 0.0D, 0.0D, 37.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 				returnValue = "Saved";
 			}
 			
@@ -1146,17 +523,7 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameItemCat, classname + ":" + name);
-				config.get(nameItemCat, IPName[0], (String)data[0]).getString();
-				config.get(nameItemCat, IPName[1], (Integer)data[1]).getInt(0);
-				config.get(nameItemCat, IPName[2], false).getBoolean(false);
-				config.get(nameItemCat, IPName[3], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[4], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[5], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[6], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[7], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[8], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[9], 0.00).getDouble(0.00);
-				config.get(nameItemCat, IPName[10], 37.00).getDouble(37.00);
+					ItemProperties.SaveProperty(config, nameItemCat, (String)data[0], (Integer)data[1], false, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 37.00);
 				returnValue = "Saved";
 			}
 			
@@ -1171,120 +538,17 @@ public class EM_ConfigHandler
 			} else
 			{
 				config.addCustomCategoryComment(nameArmorCat, classname + ":" + name);
-				config.get(nameArmorCat, APName[0], (String)data[0]).getString();
-				config.get(nameArmorCat, APName[1], 0.00).getDouble(0.00);
-				config.get(nameArmorCat, APName[2], 0.00).getDouble(0.00);
-				config.get(nameArmorCat, APName[3], 0.00).getDouble(0.00);
-				config.get(nameArmorCat, APName[4], 1.00).getDouble(1.00);
-				config.get(nameArmorCat, APName[5], 1.00).getDouble(1.00);
-				config.get(nameArmorCat, APName[6], 1.00).getDouble(1.00);
-				config.get(nameArmorCat, APName[7], 0.00).getDouble(0.00);
-				config.get(nameArmorCat, APName[8], 0.00).getDouble(0.00);
+					ArmorProperties.SaveProperty(config, nameArmorCat, (String)data[0], 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00);
 				returnValue = "Saved";
 			}
 		}
 		
 		config.save();
 		
+		
 		return returnValue;
-	}
-	
-	public static void loadStabilityTypes(File file)
-	{
-		Configuration config;
-		try
-		{
-			config = new Configuration(file, true);
-		} catch(NullPointerException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
-			return;
-		} catch(StringIndexOutOfBoundsException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
-			return;
-		}
 		
-		config.load();
-		
-		loadDefaultStabilityTypes(config);
-		
-		// 	Grab all Categories in File
-		List<String> catagory = new ArrayList<String>();
-		Set<String> nameList = config.getCategoryNames();
-		Iterator<String> nameListData = nameList.iterator();
-		
-		// add Categories to a List 
-		while(nameListData.hasNext())
-		{
-			catagory.add(nameListData.next());
-		}
-		
-		// Now Read/Save Each Category And Add into Proper Hash Maps
-		
-		for(int x = 0; x <= (catagory.size() - 1); x++)
-		{
-			String currentCat = catagory.get(x);
-			
-			boolean physEnable = config.get(currentCat, SPName[0], true).getBoolean(true);
-			int supportDist = config.get(currentCat, SPName[1], 0).getInt(0);
-			int minFall = config.get(currentCat, SPName[2], -1).getInt(-1);
-			int maxFall = config.get(currentCat, SPName[3], -1).getInt(-1);
-			boolean canHang = config.get(currentCat, SPName[4], false).getBoolean(false);
-			boolean holdOther = config.get(currentCat, SPName[5], false).getBoolean(false);
-			
-			EM_Settings.stabilityTypes.put(currentCat, new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
-		}
-		
-		config.save();
-	}
-	
-	public static void loadDefaultStabilityTypes(Configuration config)
-	{
-		boolean physEnable = config.get("sand-like", SPName[0], true).getBoolean(true);
-		int supportDist = config.get("sand-like", SPName[1], 0).getInt(0);
-		int minFall = config.get("sand-like", SPName[2], -1).getInt(-1);
-		int maxFall = config.get("sand-like", SPName[3], -1).getInt(-1);
-		boolean canHang = config.get("sand-like", SPName[4], false).getBoolean(false);
-		boolean holdOther = config.get("sand-like", SPName[5], false).getBoolean(false);
-		
-		EM_Settings.stabilityTypes.put("sand-like", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
-		
-		physEnable = config.get("loose", SPName[0], true).getBoolean(true);
-		supportDist = config.get("loose", SPName[1], 1).getInt(1);
-		minFall = config.get("loose", SPName[2], 10).getInt(10);
-		maxFall = config.get("loose", SPName[3], 15).getInt(15);
-		canHang = config.get("loose", SPName[4], false).getBoolean(false);
-		holdOther = config.get("loose", SPName[5], false).getBoolean(false);
-		
-		EM_Settings.stabilityTypes.put("loose", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
-		
-		physEnable = config.get("average", SPName[0], true).getBoolean(true);
-		supportDist = config.get("average", SPName[1], 2).getInt(2);
-		minFall = config.get("average", SPName[2], 15).getInt(15);
-		maxFall = config.get("average", SPName[3], 22).getInt(22);
-		canHang = config.get("average", SPName[4], false).getBoolean(false);
-		holdOther = config.get("average", SPName[5], false).getBoolean(false);
-		
-		EM_Settings.stabilityTypes.put("average", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
-		
-		physEnable = config.get("strong", SPName[0], true).getBoolean(true);
-		supportDist = config.get("strong", SPName[1], 3).getInt(3);
-		minFall = config.get("strong", SPName[2], 22).getInt(22);
-		maxFall = config.get("strong", SPName[3], 25).getInt(25);
-		canHang = config.get("strong", SPName[4], true).getBoolean(true);
-		holdOther = config.get("strong", SPName[5], false).getBoolean(false);
-		
-		EM_Settings.stabilityTypes.put("strong", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
-	}
-	
-	
-	private static String[] SplitObjectName(String splitName)
-	{
-		String[] nameArr = splitName.split(":");
-		return nameArr;
+		//return null;
 	}
 
 } // End of Page

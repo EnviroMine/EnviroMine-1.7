@@ -24,7 +24,8 @@ public class ArmorProperties
 	public float sanity;
 	public float air;
 	public boolean allowCamelPack;
-	
+
+	/** Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air<br>9 ({@link Boolean}) Allow Camel Pack */
 	static String[] APName;
 	
 	static String armorCat = "armor";
@@ -43,6 +44,7 @@ public class ArmorProperties
 		this.allowCamelPack = allowCamelPack;
 	}
 	
+	/** Set Config Names for Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air<br>9 ({@link Boolean}) Allow Camel Pack */
 	public static void setConfigNames()
 	{
 		APName = new String[10];

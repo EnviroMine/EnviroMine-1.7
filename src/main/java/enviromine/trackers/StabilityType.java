@@ -22,6 +22,7 @@ public class StabilityType
 	public boolean canHang;
 	public boolean holdOther;
 	
+	/** Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
 	static String[] SPName;
 	
 	public StabilityType(boolean enablePhysics, int supportDist, int minFall, int maxFall, boolean canHang, boolean holdOther)
@@ -34,6 +35,7 @@ public class StabilityType
 		this.holdOther = holdOther;
 	}
 	
+	/**Set up Config Names for Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
 	public static void setConfigNames()
 	{
 		SPName = new String[6];

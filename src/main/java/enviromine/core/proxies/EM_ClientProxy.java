@@ -12,14 +12,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
+import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.menu.UI_Settings;
+import enviromine.client.renderer.tileentity.RenderGasHandler;
+import enviromine.client.renderer.tileentity.TileEntityDavyLampRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorBottomRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorTopRenderer;
-import enviromine.gases.RenderGasHandler;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
 
@@ -83,6 +85,8 @@ public class EM_ClientProxy extends EM_CommonProxy
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorTop.class, new TileEntityElevatorTopRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorBottom.class, new TileEntityElevatorBottomRenderer());
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDavyLamp.class, new TileEntityDavyLampRenderer());
 	}
 	
 	@Override

@@ -117,7 +117,8 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	}
 	
 	//This is the icon to use for showing the block in your hand.
-	public void registerIcons(IIconRegister register)
+	@Override
+	public void registerBlockIcons(IIconRegister register)
 	{
 		this.blockIcon = register.registerIcon("enviromine:elevator_bottom_icon");
 	}

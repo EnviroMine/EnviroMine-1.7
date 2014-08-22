@@ -718,6 +718,11 @@ public class EM_PhysManager
 
 	public static boolean hasSupports(World world, int x, int y, int z, int dist)
 	{
+		if(dist <= 0)
+		{
+			return false;
+		}
+		
 		Block baseBlock = world.getBlock(x, y, z);
 		Material baseMat = baseBlock == null? Material.air : baseBlock.getMaterial();
 		

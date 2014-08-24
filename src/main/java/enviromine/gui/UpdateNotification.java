@@ -44,11 +44,6 @@ public class UpdateNotification
 				return;
 			}
 			
-			for(int i = 0; i < data.length; i++)
-			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
-			}
-			
 			String version = data[0].trim();
 			String http = data[1].trim();
 			

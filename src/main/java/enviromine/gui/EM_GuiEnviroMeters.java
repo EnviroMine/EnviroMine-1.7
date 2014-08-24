@@ -4,6 +4,7 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -545,42 +546,45 @@ public class EM_GuiEnviroMeters extends Gui
 			
 			//this.mc.renderEngine.bindTexture(new ResourceLocation("enviromine", guiResource));
 			
-			if(tracker.bodyTemp >= 39)
+			if(!tracker.trackedEntity.isEntityInsideOpaqueBlock() && !tracker.trackedEntity.isInsideOfMaterial(Material.water))
 			{
-				int grad = 0;
-				if(tracker.bodyTemp >= 41F)
+				if(tracker.bodyTemp >= 39)
 				{
-					grad = 64;
-				} else
-				{
-					grad = (int)((1F - (Math.abs(3 - (tracker.bodyTemp - 39)) / 3)) * 96);
+					int grad = 0;
+					if(tracker.bodyTemp >= 41F)
+					{
+						grad = 64;
+					} else
+					{
+						grad = (int)((1F - (Math.abs(3 - (tracker.bodyTemp - 39)) / 3)) * 96);
+					}
+					this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(255, 255, 255, grad), EnviroMine.getColorFromRGBA(255, 255, 255, grad));
 				}
-				this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(255, 255, 255, grad), EnviroMine.getColorFromRGBA(255, 255, 255, grad));
-			}
-			
-			if(tracker.bodyTemp <= 35F)
-			{
-				int grad = 0;
-				if(tracker.bodyTemp <= 32F)
+				
+				if(tracker.bodyTemp <= 35F)
 				{
-					grad = 64;
-				} else
-				{
-					grad = (int)(((Math.abs(3 - (tracker.bodyTemp - 32)) / 3)) * 64);
+					int grad = 0;
+					if(tracker.bodyTemp <= 32F)
+					{
+						grad = 64;
+					} else
+					{
+						grad = (int)(((Math.abs(3 - (tracker.bodyTemp - 32)) / 3)) * 64);
+					}
+					this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(125, 255, 255, grad), EnviroMine.getColorFromRGBA(125, 255, 255, grad));
 				}
-				this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(125, 255, 255, grad), EnviroMine.getColorFromRGBA(125, 255, 255, grad));
-			}
-			
-			if(tracker.airQuality < 50F)
-			{
-				int grad = (int)((50 - tracker.airQuality) / 50 * 64);
-				this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(32, 96, 0, grad), EnviroMine.getColorFromRGBA(32, 96, 0, grad));
-			}
-			
-			if(tracker.sanity < 50F)
-			{
-				int grad = (int)((50 - tracker.sanity) / 50 * 64);
-				this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(200, 0, 249, grad), EnviroMine.getColorFromRGBA(200, 0, 249, grad));
+				
+				if(tracker.airQuality < 50F)
+				{
+					int grad = (int)((50 - tracker.airQuality) / 50 * 64);
+					this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(32, 96, 0, grad), EnviroMine.getColorFromRGBA(32, 96, 0, grad));
+				}
+				
+				if(tracker.sanity < 50F)
+				{
+					int grad = (int)((50 - tracker.sanity) / 50 * 64);
+					this.drawGradientRect(0, 0, width, height, EnviroMine.getColorFromRGBA(200, 0, 249, grad), EnviroMine.getColorFromRGBA(200, 0, 249, grad));
+				}
 			}
 			
 			//GL11.glPopMatrix();

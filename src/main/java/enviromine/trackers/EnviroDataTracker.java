@@ -504,10 +504,10 @@ public class EnviroDataTracker
 		//TODO Added in Dimension overrides for Trackers
 		DimensionProperties dimensionProp = null;
 		
-		if(EM_Settings.dimensionProperties.containsKey("" +trackedEntity.worldObj.provider.dimensionId))
+		if(EM_Settings.dimensionProperties.containsKey(trackedEntity.worldObj.provider.dimensionId))
 		{ 
 				
-			dimensionProp = EM_Settings.dimensionProperties.get("" +trackedEntity.worldObj.provider.dimensionId);
+			dimensionProp = EM_Settings.dimensionProperties.get(trackedEntity.worldObj.provider.dimensionId);
 			if(dimensionProp != null && dimensionProp.override)
 			{   
 				if(!dimensionProp.trackTemp && EM_Settings.enableBodyTemp) bodyTemp = prevBodyTemp;

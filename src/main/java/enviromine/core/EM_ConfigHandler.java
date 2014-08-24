@@ -42,18 +42,18 @@ public class EM_ConfigHandler
 	public static String customPath = configPath + "CustomProperties/";
 	
 	// Categories for Custom Objects
-	static String armorCat = "armor";
-	static String blockCat = "blocks";
-	static String entityCat = "entity";
-	static String itemsCat = "items";
-	static String rotCat = "spoiling";
-	static String dimensionCat = "dimensions";
-	static String biomeCat = "biomes";
+	static String armorCat = ArmorProperties.categoryName;
+	static String blockCat = BlockProperties.categoryName;
+	static String entityCat = EntityProperties.categoryName;
+	static String itemsCat = ItemProperties.categoryName;
+	static String rotCat = RotProperties.categoryName;
+	static String dimensionCat = DimensionProperties.categoryName;
+	static String biomeCat = BiomeProperties.categoryName;
 	
 	public static int initConfig()
 	{
 		// Load in property names into arrays
-		setPropertyNames();
+		setPropertyConfigNames();
 		
 		// Check for Data Directory 
 		CheckDir(new File(customPath));
@@ -85,22 +85,15 @@ public class EM_ConfigHandler
 		return Total;
 	}
 	
-	private static void setPropertyNames()
+	private static void setPropertyConfigNames()
 	{
 		DimensionProperties.setConfigNames();
-		
 		BiomeProperties.setConfigNames();
-		
 		ItemProperties.setConfigNames();
-		
 		EntityProperties.setConfigNames();
-		
 		RotProperties.setConfigNames();
-		
 		BlockProperties.setConfigNames();
-		
 		ArmorProperties.setConfigNames();
-		
 		StabilityType.setConfigNames();
 	}
 	
@@ -300,11 +293,11 @@ public class EM_ConfigHandler
 		}
 	}
 	
-	//####################################
-	//#   Load Custom Objects            #
-	//# Used to Load Custom Blocks,Armor #                              
-	//#   Entitys, & Items from Mods     #
-	//####################################
+	/**
+	 * Load Custom Objects          
+	 * Used to Load Custom Blocks,Armor
+	 * Entitys, & Items from Custom Config Dir        
+	 */
 	public static void LoadCustomObjects(File customFiles)
 	{
 		boolean datFile = isCFGFile(customFiles.getName());
@@ -422,8 +415,8 @@ public class EM_ConfigHandler
 		
 		config.save();
 	}
+
 	
-	//TODO FIX THIS
 	public static String SaveMyCustom(String type, String name, Object[] data)
 	{
 		

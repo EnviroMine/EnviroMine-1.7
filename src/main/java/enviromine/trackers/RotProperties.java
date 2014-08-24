@@ -13,7 +13,7 @@ public class RotProperties
 	
 	static String[] RPName;
 	
-	static String rotCat = "spoiling";
+	public static String categoryName = "spoiling";
 	
 	public RotProperties(String name, int meta, int rotID, int rotMeta, double days)
 	{

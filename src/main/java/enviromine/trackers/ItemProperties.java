@@ -28,7 +28,7 @@ public class ItemProperties
 	/** Item properties:<br>00 ({@link String}) Name <br>01 ({@link Int}) Damage <br>02 ({@link Boolean}) Enable Ambient Temperature <br>03 ({@link Double}) Ambient Temperature <br>04 ({@link Double}) Ambient Air Quality <br>05 ({@link Double}) Ambient Santity <br>06 ({@link Double}) Effect Temperature <br>07 ({@link Double}) Effect Air Quality <br>08 ({@link Double}) Effect Sanity <br>09 ({@link Double}) Effect Hydration <br>10 ({@link Double}) Effect Temperature Cap */
 	static String[] IPName;
 	
-	static String itemsCat = "items";
+	public static String categoryName = "items";
 	
 	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap)
 	{
@@ -109,23 +109,23 @@ public class ItemProperties
 	
 	public static void SaveDefaults(Configuration configFile)
 	{
-		SaveProperty(configFile, itemsCat + ".potions", 	Item.itemRegistry.getNameForObject(Items.potionitem), 	-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
-		SaveProperty(configFile, itemsCat + ".melon", 		Item.itemRegistry.getNameForObject(Items.melon), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, itemsCat + ".carrot", 		Item.itemRegistry.getNameForObject(Items.carrot), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, itemsCat + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_apple), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, itemsCat + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		SaveProperty(configFile, categoryName + ".potions", 	Item.itemRegistry.getNameForObject(Items.potionitem), 	-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
+		SaveProperty(configFile, categoryName + ".melon", 		Item.itemRegistry.getNameForObject(Items.melon), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		SaveProperty(configFile, categoryName + ".carrot", 		Item.itemRegistry.getNameForObject(Items.carrot), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		SaveProperty(configFile, categoryName + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_apple), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		SaveProperty(configFile, categoryName + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
 		
-		SaveProperty(configFile, itemsCat + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".yellowFlower",Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".snowBlock", 	Block.blockRegistry.getNameForObject(Blocks.snow), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".ice", 		Block.blockRegistry.getNameForObject(Blocks.ice), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".snowLayer",	Block.blockRegistry.getNameForObject(Blocks.snow_layer), 	-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".netherrack", 	Block.blockRegistry.getNameForObject(Blocks.netherrack), 	-1, true, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".soulSand", 	Block.blockRegistry.getNameForObject(Blocks.soul_sand), 	-1, false, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".skull", 		Item.itemRegistry.getNameForObject(Items.skull), 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".web", 		Block.blockRegistry.getNameForObject(Blocks.web), 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, itemsCat + ".11", 			Item.itemRegistry.getNameForObject(Items.record_11), 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".yellowFlower",Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".snowBlock", 	Block.blockRegistry.getNameForObject(Blocks.snow), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".ice", 		Block.blockRegistry.getNameForObject(Blocks.ice), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".snowLayer",	Block.blockRegistry.getNameForObject(Blocks.snow_layer), 	-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".netherrack", 	Block.blockRegistry.getNameForObject(Blocks.netherrack), 	-1, true, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".soulSand", 	Block.blockRegistry.getNameForObject(Blocks.soul_sand), 	-1, false, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".skull", 		Item.itemRegistry.getNameForObject(Items.skull), 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".web", 		Block.blockRegistry.getNameForObject(Blocks.web), 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
+		SaveProperty(configFile, categoryName + ".11", 			Item.itemRegistry.getNameForObject(Items.record_11), 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
 	}
 }

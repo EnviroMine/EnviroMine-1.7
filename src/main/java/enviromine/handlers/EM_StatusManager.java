@@ -211,9 +211,9 @@ public class EM_StatusManager
 		
 		//TODO Added in Dimension overrides for Trackers
 		DimensionProperties dimensionProp = null;
-		if(EM_Settings.dimensionProperties.containsKey("" + entityLiving.worldObj.provider.dimensionId))
+		if(EM_Settings.dimensionProperties.containsKey(entityLiving.worldObj.provider.dimensionId))
 		{ 
-			dimensionProp = EM_Settings.dimensionProperties.get("" +entityLiving.worldObj.provider.dimensionId);
+			dimensionProp = EM_Settings.dimensionProperties.get(entityLiving.worldObj.provider.dimensionId);
 		}
 		
 		
@@ -264,13 +264,14 @@ public class EM_StatusManager
 						if(checkBiome != null)
 						{
 							BiomeProperties biomeOverride = null;
-							if(EM_Settings.biomeProperties.containsKey("" + checkBiome.biomeID))
+							if(EM_Settings.biomeProperties.containsKey(checkBiome.biomeID))
 							{
-								biomeOverride = EM_Settings.biomeProperties.get("" + checkBiome.biomeID);
+								biomeOverride = EM_Settings.biomeProperties.get(checkBiome.biomeID);
 							}
 							if(biomeOverride != null && biomeOverride.biomeOveride)
 							{
 								surBiomeTemps += biomeOverride.ambientTemp;
+								//System.out.print(biomeOverride.ambientTemp);
 							}
 							else
 							{
@@ -1145,9 +1146,9 @@ public class EM_StatusManager
 		 * 
 		 */
 		BiomeProperties biomeProp = null;
-		if(EM_Settings.biomeProperties.containsKey("" + biome.biomeID))
+		if(EM_Settings.biomeProperties.containsKey(biome.biomeID))
 		{
-			 biomeProp = EM_Settings.biomeProperties.get("" +  biome.biomeID);
+			 biomeProp = EM_Settings.biomeProperties.get(biome.biomeID);
 
 			 if(biomeProp != null && biomeProp.biomeOveride)
 				{

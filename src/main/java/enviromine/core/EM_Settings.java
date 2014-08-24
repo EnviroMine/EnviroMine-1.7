@@ -93,8 +93,8 @@ public class EM_Settings
 	public static HashMap<String,BlockProperties> blockProperties = new HashMap<String,BlockProperties>();
 	public static HashMap<Integer,EntityProperties> livingProperties = new HashMap<Integer,EntityProperties>();
 	public static HashMap<String,ItemProperties> itemProperties = new HashMap<String,ItemProperties>();
-	public static HashMap<String,BiomeProperties> biomeProperties = new HashMap<String,BiomeProperties>();
-	public static HashMap<String,DimensionProperties> dimensionProperties = new HashMap<String,DimensionProperties>();
+	public static HashMap<Integer,BiomeProperties> biomeProperties = new HashMap<Integer,BiomeProperties>();
+	public static HashMap<Integer,DimensionProperties> dimensionProperties = new HashMap<Integer,DimensionProperties>();
 	
 	public static HashMap<String,StabilityType> stabilityTypes = new HashMap<String,StabilityType>();
 	

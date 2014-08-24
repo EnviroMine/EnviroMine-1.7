@@ -22,7 +22,7 @@ public class BiomeProperties
 	
 	static String[] BOName;
 
-	static String biomeCat = "biomes";
+	public static String categoryName = "biomes";
 
 	public BiomeProperties(int id, boolean biomeOveride, String waterQuality, double ambientTemp, double tempRate, double sanityRate, double dehydrateRate)
 	{
@@ -38,7 +38,7 @@ public class BiomeProperties
 
 	public int getWaterQualityId()
 	{
-		System.out.println(this.waterQuality);
+		//System.out.println(this.waterQuality);
 
 		if(this.waterQuality.equalsIgnoreCase("dirty"))
 		{
@@ -55,11 +55,6 @@ public class BiomeProperties
 		}
 	}
 
-	public static String categoryName()
-	{
-		return "biomes";
-	}
-	
 	public static void setConfigNames()
 	{
 		
@@ -91,7 +86,7 @@ public class BiomeProperties
 		
 		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate);
 		
-		EM_Settings.biomeProperties.put("" + id, entry);;
+		EM_Settings.biomeProperties.put(id, entry);;
 		
 	}
 	
@@ -134,7 +129,7 @@ public class BiomeProperties
 		Configuration config = new Configuration(biomesFile, true);
 		config.load();
 		
-		String catName = biomeCat + "." + biomeArray.biomeName;
+		String catName = categoryName + "." + biomeArray.biomeName;
 		config.addCustomCategoryComment(catName, "");
 		
 		config.get(catName, BOName[0], biomeArray.biomeID, "Make sure if you change this id you also change it here.").getInt(biomeArray.biomeID);

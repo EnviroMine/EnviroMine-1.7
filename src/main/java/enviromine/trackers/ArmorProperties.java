@@ -28,7 +28,7 @@ public class ArmorProperties
 	/** Armor properties:<br>0 ({@link String}) Name<br>1 ({@link Double}) Temp - Night<br>2 ({@link Double}) Temp - Shade<br>3 ({@link Double}) Temp - Sun<br>4 ({@link Double}) Temp multiplyer - Night<br>5 ({@link Double}) Temp multiplyer - Shade<br>6 ({@link Double}) Temp multiplyer - Sun<br>7 ({@link Double}) Sanity<br>8 ({@link Double}) Air<br>9 ({@link Boolean}) Allow Camel Pack */
 	static String[] APName;
 	
-	static String armorCat = "armor";
+	public static String categoryName = "armor";
 	
 	public ArmorProperties(String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air, boolean allowCamelPack)
 	{
@@ -99,25 +99,25 @@ public class ArmorProperties
 	
 	public static void SaveDefaults(Configuration configFile)
 	{
-		SaveProperty(configFile, armorCat + ".helmetLeather", 	Item.itemRegistry.getNameForObject(Items.leather_helmet), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".plateLeather", 	Item.itemRegistry.getNameForObject(Items.leather_chestplate), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".legsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_leggings), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".bootsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_boots), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".helmetLeather", 	Item.itemRegistry.getNameForObject(Items.leather_helmet), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".plateLeather", 	Item.itemRegistry.getNameForObject(Items.leather_chestplate), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".legsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_leggings), 	1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".bootsLeather", 	Item.itemRegistry.getNameForObject(Items.leather_boots), 		1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0);
 		
-		SaveProperty(configFile, armorCat + ".helmetIron", 		Item.itemRegistry.getNameForObject(Items.iron_helmet), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".plateIron", 		Item.itemRegistry.getNameForObject(Items.iron_chestplate), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".legsIron", 		Item.itemRegistry.getNameForObject(Items.iron_leggings), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".bootsIron", 		Item.itemRegistry.getNameForObject(Items.iron_boots), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".helmetIron", 		Item.itemRegistry.getNameForObject(Items.iron_helmet), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".plateIron", 		Item.itemRegistry.getNameForObject(Items.iron_chestplate), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".legsIron", 		Item.itemRegistry.getNameForObject(Items.iron_leggings), 	-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".bootsIron", 		Item.itemRegistry.getNameForObject(Items.iron_boots), 		-0.5, 0.0, 2.5, 1.0, 1.0, 1.1, 0.0, 0.0);
 		
-		SaveProperty(configFile, armorCat + ".helmetGold", 		Item.itemRegistry.getNameForObject(Items.golden_helmet), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".plateGold", 		Item.itemRegistry.getNameForObject(Items.golden_chestplate), 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".legsGold", 		Item.itemRegistry.getNameForObject(Items.golden_leggings), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".bootsGold", 		Item.itemRegistry.getNameForObject(Items.golden_boots), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".helmetGold", 		Item.itemRegistry.getNameForObject(Items.golden_helmet), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".plateGold", 		Item.itemRegistry.getNameForObject(Items.golden_chestplate), 	0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".legsGold", 		Item.itemRegistry.getNameForObject(Items.golden_leggings), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".bootsGold", 		Item.itemRegistry.getNameForObject(Items.golden_boots), 		0.0, 0.0, 0.0, 1.0, 1.0, 1.2, 0.0, 0.0);
 		
-		SaveProperty(configFile, armorCat + ".helmetDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_helmet), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".plateDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_chestplate), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".legsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_leggings), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
-		SaveProperty(configFile, armorCat + ".bootsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_boots), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".helmetDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_helmet), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".plateDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_chestplate), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".legsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_leggings), 	0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
+		SaveProperty(configFile, categoryName + ".bootsDiamond", 	Item.itemRegistry.getNameForObject(Items.diamond_boots), 		0.0, 0.0, 0.0, 1.1, 1.0, 0.9, 0.0, 0.0);
 
 	}
 	
@@ -175,7 +175,7 @@ public class ArmorProperties
 		Configuration config = new Configuration(armorFile, true);
 		config.load();
 		
-		String catName = armorCat + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName());
+		String catName = categoryName + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName());
 		
 		config.addCustomCategoryComment(catName, "");
 		config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();

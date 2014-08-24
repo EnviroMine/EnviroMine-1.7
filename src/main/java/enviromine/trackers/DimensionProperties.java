@@ -33,7 +33,7 @@ public class DimensionProperties
 	
 	static String[] DMName;
 	
-	static String dimensionCat = "dimensions";
+	public static String categoryName = "dimensions";
 	
 	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, 	double sanityMultiplyer, boolean trackAirQuality, double airMulti, boolean trackHydration, double hydrationMulti, boolean trackTemp, double tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
 	{
@@ -52,11 +52,6 @@ public class DimensionProperties
 		this.weatherAffectsTemp = weatherAffectsTemp;
 		this.mineshaftGen = mineshaftGen;
 		this.sealevel = sealevel;
-	}
-	
-	public static String categoryName()
-	{
-		return "dimensions";
 	}
 	
 	public static void setConfigNames()
@@ -78,6 +73,7 @@ public class DimensionProperties
 		DMName[13] = "14.Generate Mineshafts";
 		DMName[14] = "15.Where is Sea Level";
 	}
+	
 	/**
 	 * Search thur Dimension List and add to Enviromine Config Files 
 	 */
@@ -132,7 +128,7 @@ public class DimensionProperties
 		Configuration config = new Configuration(dimensionFile, true);
 		config.load();
 		
-			String catName = categoryName() + "."  + dimension.getDimensionName().toLowerCase().trim();
+			String catName = categoryName + "."  + dimension.getDimensionName().toLowerCase().trim();
 			config.addCustomCategoryComment(catName, "");
 			
 
@@ -199,6 +195,6 @@ public class DimensionProperties
 		int sealevel = config.get(category, DMName[14], 65).getInt(65);
 		
 		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
-		EM_Settings.dimensionProperties.put("" + id, entry);
+		EM_Settings.dimensionProperties.put(id, entry);
 	}
 }

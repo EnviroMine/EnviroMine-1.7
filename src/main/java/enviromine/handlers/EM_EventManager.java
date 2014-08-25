@@ -139,7 +139,7 @@ public class EM_EventManager
 					EM_StatusManager.syncMultiplayerTracker(emTrack);
 				}
 			}
-		} else if(event.entity instanceof EntityFallingBlock && !(event.entity instanceof EntityPhysicsBlock) && !event.world.isRemote && event.world.getTotalWorldTime() > EM_PhysManager.worldStartTime + EM_Settings.worldDelay && chunkPhys)
+		} else if(event.entity instanceof EntityFallingBlock && EM_Settings.enablePhysics && !(event.entity instanceof EntityPhysicsBlock) && !event.world.isRemote && event.world.getTotalWorldTime() > EM_PhysManager.worldStartTime + EM_Settings.worldDelay && chunkPhys)
 		{
 			EntityFallingBlock oldSand = (EntityFallingBlock)event.entity;
 			NBTTagCompound oldTags = new NBTTagCompound();

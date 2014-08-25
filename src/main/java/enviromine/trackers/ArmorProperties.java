@@ -75,9 +75,9 @@ public class ArmorProperties
 		float air = (float)config.get(catagory, APName[8], 0.00).getDouble(0.00);
 		
 		Object tmp = Item.itemRegistry.getObject(name);
-		boolean allowCamelPack = false;
+		boolean allowCamelPack = true;
 		if (tmp instanceof ItemArmor && ((ItemArmor)tmp).armorType == 1) {
-			allowCamelPack = config.get(catagory, APName[9], false).getBoolean(false);
+			allowCamelPack = config.get(catagory, APName[9], true).getBoolean(true);
 		}
 		
 		ArmorProperties entry = new ArmorProperties(name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);

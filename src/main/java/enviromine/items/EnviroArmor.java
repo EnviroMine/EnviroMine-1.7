@@ -2,14 +2,15 @@ package enviromine.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.handlers.ObjectHandler;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmorTextureProvider
 {
@@ -88,4 +89,26 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			return false;
 		}
 	}
+	/*
+	@Override
+	public void onCreated(ItemStack armor, World p_77622_2_, EntityPlayer p_77622_3_) 
+	{
+		if(armor.getItem() == ObjectHandler.camelPack)
+		{
+		} else if(armor.getItem() == ObjectHandler.gasMask)
+		{
+			if (!armor.hasTagCompound())
+			{
+				armor.setTagCompound(new NBTTagCompound());
+			}
+			armor.getTagCompound().setInteger("gasMaskFill", 200);
+
+		} else if(armor.getItem() == ObjectHandler.hardHat)
+		{
+		} else
+		{
+		}
+		
+	}
+*/
 }

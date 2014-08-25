@@ -1,5 +1,9 @@
 package enviromine.handlers;
 
+import java.awt.Color;
+import java.io.File;
+import java.util.UUID;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -19,6 +23,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGlassBottle;
 import net.minecraft.item.ItemStack;
@@ -35,6 +40,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
@@ -53,15 +59,18 @@ import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 
+import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.client.ModelCamelPack;
+import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -71,13 +80,6 @@ import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-
-import java.awt.Color;
-import java.io.File;
-import java.util.UUID;
-
-import org.apache.logging.log4j.Level;
-import org.lwjgl.opengl.GL11;
 
 public class EM_EventManager
 {
@@ -94,6 +96,7 @@ public class EM_EventManager
 			}
 			
 			if (event.entity instanceof EntityPlayerMP) {
+				MinecraftForgeClient.registerItemRenderer((Item) ItemArmor.itemRegistry.getObject("minecraft:diamond_chestplate"), new ArmoredCamelPackRenderer());
 				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
 					EM_Settings.armorProperties.clear();
 					EM_Settings.blockProperties.clear();

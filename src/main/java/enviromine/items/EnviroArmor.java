@@ -25,7 +25,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 		//this.setTextureName("enviromine:camel_pack");
 		this.setNoRepair();
 	}
-	
+
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
 	{
@@ -89,7 +89,9 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			return false;
 		}
 	}
-	/*
+	
+	
+	
 	@Override
 	public void onCreated(ItemStack armor, World p_77622_2_, EntityPlayer p_77622_3_) 
 	{
@@ -102,7 +104,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 				armor.setTagCompound(new NBTTagCompound());
 			}
 			armor.getTagCompound().setInteger("gasMaskFill", 200);
-
+			
 		} else if(armor.getItem() == ObjectHandler.hardHat)
 		{
 		} else
@@ -110,5 +112,5 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 		}
 		
 	}
-*/
+
 }

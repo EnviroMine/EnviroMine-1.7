@@ -1153,12 +1153,12 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderPlayerEvent.Post event)
+	public void onRender(RenderPlayerEvent.Pre event)
 	{
 		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
 		if (plate != null && (plate.getItem() == ObjectHandler.camelPack || (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")))) {
 			//model = new ModelCamelPack();
-			
+			//System.out.println("Render");
 			GL11.glPushMatrix();
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			GL11.glRotatef(180F + event.entityLiving.renderYawOffset, 0F, 1F, 0F);
@@ -1192,6 +1192,11 @@ public class EM_EventManager
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
 				}
+			}else if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
+			{
+				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
+				int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
+				event.toolTip.add("Air Filters: " + disp + "%");
 			}
 		}
 	}

@@ -28,6 +28,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -54,6 +55,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -74,7 +76,6 @@ import enviromine.world.features.mineshaft.MineshaftBuilder;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.UUID;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
@@ -221,6 +222,25 @@ public class EM_EventManager
 		}
 		
 		Entity attacker = event.source.getEntity();
+		
+		if((event.source == DamageSource.fallingBlock || event.source == DamageSource.anvil) && event.entityLiving.getEquipmentInSlot(4) != null && event.entityLiving.getEquipmentInSlot(4).getItem() == ObjectHandler.hardHat)
+		{
+			ItemStack hardHat = event.entityLiving.getEquipmentInSlot(4);
+			int dur = (hardHat.getMaxDamage() + 1) - hardHat.getItemDamage();
+			int dam = MathHelper.ceiling_float_int(event.ammount);
+			event.setCanceled(true);
+			hardHat.damageItem(dam, event.entityLiving);
+			
+			if(dur >= dam)
+			{
+				event.entityLiving.worldObj.playSoundAtEntity(event.entityLiving, "dig.stone", 1.0F, 1.0F);
+				return;
+			} else
+			{
+				event.entityLiving.attackEntityFrom(event.source, dam - dur);
+				return;
+			}
+		}
 		
 		if(attacker != null)
 		{

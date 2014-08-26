@@ -823,7 +823,8 @@ public class EM_GuiEnviroMeters extends Gui
 			}
 			
 			// If Item is Damaged Render Breath onscreen
-			if(itemstack.getItemDamage() >= itemstack.getMaxDamage() - 1 && this.mc.gameSettings.thirdPersonView == 0)
+			//if(itemstack.getItemDamage() >= itemstack.getMaxDamage() - 1 && this.mc.gameSettings.thirdPersonView == 0)
+			if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && this.mc.gameSettings.thirdPersonView == 0)
 			{
 				this.mc.renderEngine.bindTexture(breathMaskResource);
 				enviromine.EnviroUtils.drawScreenOverlay(k, l, EnviroUtils.getColorFromRGBA(255, 255, 255, (int)alpha));

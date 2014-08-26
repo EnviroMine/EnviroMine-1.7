@@ -97,7 +97,11 @@ public class CamelPackIntegrationHandler implements IRecipe
 			if (isRemove)
 			{
 				ItemStack out = new ItemStack(ObjectHandler.camelPack);
-				out.setItemDamage(100 - armor.getTagCompound().getInteger("camelPackFill"));
+				// OLD out.setItemDamage(100 - armor.getTagCompound().getInteger("camelPackFill"));
+				out.setTagCompound(new NBTTagCompound());
+				out.getTagCompound().setInteger("camelPackFill", armor.getTagCompound().getInteger("camelPackFill"));
+				out.getTagCompound().setInteger("camelPackMax", armor.getTagCompound().getInteger("camelPackMax"));
+				
 				return out;
 			} else
 			{
@@ -105,8 +109,11 @@ public class CamelPackIntegrationHandler implements IRecipe
 				{
 					armor.setTagCompound(new NBTTagCompound());
 				}
-				armor.getTagCompound().setInteger("camelPackFill", 100 - pack.getItemDamage());
+				// OLD armor.getTagCompound().setInteger("camelPackFill", 100 - pack.getItemDamage());
 				
+				armor.getTagCompound().setInteger("camelPackFill", pack.getTagCompound().getInteger("camelPackFill"));
+				armor.getTagCompound().setInteger("camelPackMax", pack.getTagCompound().getInteger("camelPackMax"));
+
 				return armor;
 			}
 		}
@@ -148,10 +155,11 @@ public class CamelPackIntegrationHandler implements IRecipe
 				if (slot == null)
 				{
 					continue;
-				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
+				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill") && slot.getTagCompound().hasKey("camelPackMax"))
 				{
 					slot.stackSize++;
 					slot.getTagCompound().removeTag("camelPackFill");
+					slot.getTagCompound().removeTag("camelPackMax");
 				}
 			}
 		}

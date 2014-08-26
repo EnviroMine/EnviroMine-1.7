@@ -244,9 +244,12 @@ public class EM_StatusManager
 		}
 		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null )
 		{
-
+			//TODO Override DimensionProp
+			if(dimensionProp.override && dimensionProp.darkAffectSanity)
+			{
 			   sanityStartRate = -0.01F;
 			   sanityRate = -0.01F;
+			}
 		}
 		
 		for(int x = -range; x <= range; x++)

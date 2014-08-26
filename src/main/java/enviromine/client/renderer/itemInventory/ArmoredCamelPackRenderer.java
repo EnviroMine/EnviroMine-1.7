@@ -40,16 +40,19 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
     public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data) 
     {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        
+        GL11.glDisable(GL11.GL_LIGHTING); //Forge: Make sure that render states are reset, a renderEffect can derp them up.
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);     
         // ====================== Render item texture ======================
         IIcon icon = itemStack.getIconIndex();
         renderItem.renderIcon(0, 0, icon, 16, 16);
 
+        GL11.glDisable(GL11.GL_BLEND);
 		
 		if (itemStack != null && (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("camelPackFill"))) 
 		{
 			//model = new ModelCamelPack();
-			      
+			  
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			Minecraft.getMinecraft().renderEngine.bindTexture(camelpackOverlay);
@@ -69,6 +72,9 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
 			//  	String text = Integer.toString(itemStack.getTagCompound().getInteger("camelPackFill"));
 			//    fontRenderer.drawStringWithShadow(text, 1, 1, 0xFFFFFF);
 		}
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+
     }
 
 }

@@ -154,8 +154,32 @@ public class EnviroDataTracker
 		ItemStack helmet = trackedEntity.getEquipmentInSlot(4);
 		if(helmet != null && !isCreative)
 		{
-			if(helmet.getItem() == ObjectHandler.gasMask)
-			{
+			//if(helmet.getItem() == ObjectHandler.gasMask)
+		    //{
+				if(helmet.hasTagCompound() && helmet.getTagCompound().hasKey("gasMaskFill"))
+				{
+					NBTTagCompound tag = helmet.getTagCompound();
+					int gasMaskFill = tag.getInteger("gasMaskFill");
+					
+					if(gasMaskFill > 0 && airQuality <= 99F)
+					{
+						int airDrop = MathHelper.floor_float(enviroData[0]);
+						
+						if(enviroData[0] <= 0)
+						{
+							enviroData[0] = 0;
+							tag.setInteger("gasMaskFill", (gasMaskFill + airDrop));
+							//helmet.setItemDamage(helmet.getItemDamage() - airDrop);
+						} else
+						{
+							tag.setInteger("gasMaskFill", 0);
+							//helmet.setItemDamage(helmet.getMaxDamage());
+						}
+					}
+					
+				//}
+				//TODO Replacing Old Damage System
+				/*
 				if(helmet.getItemDamage() < helmet.getMaxDamage() && airQuality <= 99F)
 				{
 					int airDrop = MathHelper.floor_float(enviroData[0]);
@@ -170,7 +194,7 @@ public class EnviroDataTracker
 					{
 						helmet.setItemDamage(helmet.getMaxDamage());
 					}
-				}
+				}*/
 			}
 		}
 		
@@ -319,8 +343,10 @@ public class EnviroDataTracker
 		
 		if(plate != null && !isCreative)
 		{
-			if(plate.getItem() == ObjectHandler.camelPack)
-			{
+			//TODO Changed Camel packs to also read from NBT tags
+			//if(plate.getItem() == ObjectHandler.camelPack)
+			//{
+				/*
 				if(plate.getItemDamage() < plate.getMaxDamage() && hydration <= 99F - EM_Settings.hydrationMult)
 				{
 					plate.setItemDamage(plate.getItemDamage() + 1);
@@ -331,7 +357,9 @@ public class EnviroDataTracker
 						bodyTemp -= EM_Settings.tempMult/10F;
 					}
 				}
-			} else if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
+			} else*/
+				
+			if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
 			{
 				int fill = plate.getTagCompound().getInteger("camelPackFill");
 				if(fill > 0 && hydration <= 99F - EM_Settings.hydrationMult)

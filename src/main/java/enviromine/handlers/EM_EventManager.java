@@ -1195,7 +1195,8 @@ public class EM_EventManager
 			}else if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
 			{
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
-				int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
+				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
+				int disp = (i <= 0 ? 0 : i > 200 ? 100 : (int)(i/(max/100F)));
 				event.toolTip.add("Air Filters: " + disp + "%");
 			}
 		}

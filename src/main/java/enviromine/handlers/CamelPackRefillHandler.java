@@ -1,23 +1,20 @@
 package enviromine.handlers;
 
 import enviromine.core.EnviroMine;
-
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class CamelPackRefillHandler implements IRecipe
 {
-	public boolean fillBottle;
+	public boolean fillBottle = false;
 	public int packDamage;
 	public ArrayList<ItemStack> bottles = new ArrayList<ItemStack>();
 	public ItemStack pack;
@@ -57,12 +54,24 @@ public class CamelPackRefillHandler implements IRecipe
 				}
 			} else if(item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
-				fillBottle = false;
-				bottles.add(item);
+				if(bottles.size() > 0 && fillBottle)
+				{
+					return false;
+				} else
+				{
+					fillBottle = false;
+					bottles.add(item);
+				}
 			} else if(item.getItem() == Items.glass_bottle && bottles.size() == 0)
 			{
-				fillBottle = true;
-				bottles.add(item);
+				if(bottles.size() > 0 && !fillBottle)
+				{
+					return false;
+				} else
+				{
+					fillBottle = true;
+					bottles.add(item);
+				}
 			} else if(item != null)
 			{
 				return false;
@@ -136,7 +145,8 @@ public class CamelPackRefillHandler implements IRecipe
 		if(!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
 		{
 			return;
-		} else {
+		} else
+		{
 			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 			{
 				ItemStack slot = craftMatrix.getStackInSlot(i);

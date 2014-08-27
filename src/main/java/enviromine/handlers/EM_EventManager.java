@@ -1217,6 +1217,12 @@ public class EM_EventManager
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
 				}
+			}else if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
+			{
+				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
+				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
+				int disp = (i <= 0 ? 0 : i > 200 ? 100 : (int)(i/(max/100F)));
+				event.toolTip.add("Air Filters: " + disp + "%");
 			}
 		}
 	}

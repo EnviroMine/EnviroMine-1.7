@@ -70,10 +70,12 @@ public class GaskMaskRefillHandler implements IRecipe
 		} else if (maskFill + (filters.size() * 100) >= 300)
 		{
 			return false;
-		} else if (maskFill + 100 > mask.getTagCompound().getInteger("gasMaskMax"))
-		{
-			return false;
-		} else
+		} 
+		//else if (maskFill + 100 > 200)
+		//{
+		//	return false;
+		//}
+	    else
 		{
 			return hasMask && filters.size() >= 1;
 		}
@@ -84,7 +86,7 @@ public class GaskMaskRefillHandler implements IRecipe
 	{
 		this.matches(inv, null);
 		
-			if (maskFill < (filters.size() * 100))
+			if ((maskFill +(filters.size() * 100))  <= 200) //Max 200 
 			{
 					mask.getTagCompound().setInteger("gasMaskFill", (maskFill + (filters.size() * 100)));
 					return mask;

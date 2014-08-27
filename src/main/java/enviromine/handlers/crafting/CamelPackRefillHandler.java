@@ -88,7 +88,7 @@ public class CamelPackRefillHandler implements IRecipe
 					fillBottle = true;
 					bottles.add(item);
 				}
-			} else if (item != null)
+			} else
 			{
 				return false;
 			}

@@ -12,8 +12,8 @@ import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.encoders.IPacketEncoder;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 
@@ -35,26 +35,6 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 		}
 	}
 	
-	private <T> void addToMap(Map<String, T> map, Field field)
-	{
-		try
-		{
-			map.put(field.getName(), (T)field.get(null));
-		} catch (ClassCastException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		} catch (NullPointerException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
 	private void readFromSettings()
 	{
 		Field[] fields = EM_Settings.class.getFields();
@@ -64,51 +44,74 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 			ShouldOverride annotation = fields[i].getAnnotation(ShouldOverride.class);
 			if (annotation != null)
 			{
-				if (fields[i].getType() == String.class)
+				IPacketEncoder encoder;
+				String classPath = annotation.value();
+				if (Strings.isNullOrEmpty(classPath))
 				{
-					addToMap(strings, fields[i]);
-				} else if (fields[i].getType() == int.class)
-				{
-					addToMap(integers, fields[i]);
-				} else if (fields[i].getType() == boolean.class)
-				{
-					addToMap(booleans, fields[i]);
-				} else if (fields[i].getType() == float.class)
-				{
-					addToMap(floats, fields[i]);
-				} else
-				{
-					if (Strings.isNullOrEmpty(annotation.value()))
+					if (fields[i].getType() == String.class)
 					{
-						EnviroMine.logger.log(Level.ERROR, fields[i].getName() + " has an unkown type - skipping");
+						classPath = "enviromine.network.packet.encoders.StringEncoder";
+					} else if (fields[i].getType() == int.class)
+					{
+						classPath = "enviromine.network.packet.encoders.IntEncoder";
+					} else if (fields[i].getType() == boolean.class)
+					{
+						classPath = "enviromine.network.packet.encoders.BoolEncoder";
+					} else if (fields[i].getType() == float.class)
+					{
+						classPath = "enviromine.network.packet.encoders.FloatEncoder";
 					} else
 					{
-						try
-						{
-							Object obj = Class.forName(annotation.value()).newInstance();
-							if (obj instanceof IPacketEncoder)
-							{
-								IPacketEncoder encoder = (IPacketEncoder)obj;
-								
-								custom.put(annotation.value(), new String[]{fields[i].getName(), encoder.encode(fields[i].get(null))});
-							}
-						} catch (ClassNotFoundException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: " + annotation.value() + "is not a vaid class. (On field: " + fields[i].getName() + ")");
-						} catch (InstantiationException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-						} catch (IllegalAccessException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-						} catch (NullPointerException e)
-						{
-							EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-						}
+						EnviroMine.logger.log(Level.ERROR, fields[i].getName() + " has an unkown type - skipping");
 					}
+				}
+				
+				try
+				{
+					Object obj = Class.forName(classPath).newInstance();
+					if (obj instanceof IPacketEncoder)
+					{
+						encoder = (IPacketEncoder)obj;
+						
+						String[] strs = data.get(classPath);
+						if (strs != null) {
+							strs = appendArrayToArray(strs, new String[]{fields[i].getName(), encoder.encode(fields[i].get(null))});
+						} else {
+							strs = new String[]{fields[i].getName(), encoder.encode(fields[i].get(null))};
+						}
+						data.put(classPath, strs);
+					}
+				} catch (ClassNotFoundException e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Error encoding: " + classPath + " is not a vaid class. (On field: " + fields[i].getName() + ")");
+				} catch (InstantiationException e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
+				} catch (IllegalAccessException e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
+				} catch (NullPointerException e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
 				}
 			}
 		}
+	}
+	
+	private static <T> T[] appendArrayToArray(T[] array, T[] newArray)
+	{
+		Class clazz = array.getClass().getComponentType();
+		T[] temp = (T[])Array.newInstance(clazz, array.length+newArray.length);
+		for (int i = 0; i < array.length; i++)
+		{
+			temp[i] = array[i];
+		}
+		for (int i = 0; i < newArray.length; i++)
+		{
+			temp[array.length + i] = newArray[i];
+		}
+		
+		return temp;
 	}
 	
 	public static class Handler implements IMessageHandler<PacketAutoOverride, IMessage>

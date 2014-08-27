@@ -1,6 +1,5 @@
 package enviromine.network.packet.encoders;
 
-import enviromine.core.EM_Settings;
 import enviromine.trackers.ArmorProperties;
 
 import java.util.HashMap;
@@ -35,27 +34,29 @@ public class ArmorPropsEncoder<T> implements IPacketEncoder<HashMap<String, Armo
 	}
 	
 	@Override
-	public HashMap<String, ArmorProperties> decode(String str)
+	public HashMap<String, ArmorProperties> decode(String str, HashMap<String, ArmorProperties> current)
 	{
-		//HashMap<String, ArmorProperties> map = 
+		if (current == null) {
+			current = new HashMap<String, ArmorProperties>();
+		}
+		
 		String[] pairs = str.split(";");
 		for (String pair : pairs)
 		{
 			String[] split = pair.split(",");
 			String name = split[0];
 			boolean state = Boolean.parseBoolean(split[1]);
-			
-			if (EM_Settings.armorProperties.containsKey(name))
+			if (current.containsKey(name))
 			{
-				ArmorProperties prop = EM_Settings.armorProperties.get(name);
+				ArmorProperties prop = current.get(name);
 				prop.allowCamelPack = state;
-				EM_Settings.armorProperties.put(name, prop);
+				current.put(name, prop);
 			} else
 			{
-				EM_Settings.armorProperties.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, state));
+				current.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, state));
 			}
 		}
 		
-		return null;
+		return current;
 	}
 }

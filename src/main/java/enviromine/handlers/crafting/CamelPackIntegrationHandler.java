@@ -77,7 +77,7 @@ public class CamelPackIntegrationHandler implements IRecipe
 				} else {
 					return false;
 				}
-			} else if (item != null)
+			} else
 			{
 				return false;
 			}

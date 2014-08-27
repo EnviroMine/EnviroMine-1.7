@@ -19,7 +19,7 @@ public class CamelPackRefillHandler implements IRecipe
 {
 	public boolean fillBottle;
 	public boolean isArmor;
-	public int packDamage;
+	public int packFillCur;
 	public ArrayList<ItemStack> bottles = new ArrayList<ItemStack>();
 	public ItemStack pack;
 	
@@ -33,7 +33,7 @@ public class CamelPackRefillHandler implements IRecipe
 		
 		this.fillBottle = false;
 		this.isArmor = false;
-		this.packDamage = 0;
+		this.packFillCur = 0;
 		this.pack = null;
 		this.bottles.clear();
 		boolean hasPack = false;
@@ -45,7 +45,7 @@ public class CamelPackRefillHandler implements IRecipe
 			if (item == null)
 			{
 				continue;
-			} else if (item.getItem() == ObjectHandler.camelPack)
+			}else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill"))
 			{
 				if (hasPack)
 				{
@@ -53,18 +53,7 @@ public class CamelPackRefillHandler implements IRecipe
 				} else
 				{
 					pack = item.copy();
-					packDamage = item.getItemDamage();
-					hasPack = true;
-				}
-			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill"))
-			{
-				if (hasPack)
-				{
-					return false;
-				} else
-				{
-					pack = item.copy();
-					packDamage = 100 - item.getTagCompound().getInteger("camelPackFill");
+					packFillCur = item.getTagCompound().getInteger("camelPackFill");
 					hasPack = true;
 					isArmor = true;
 				}
@@ -94,13 +83,13 @@ public class CamelPackRefillHandler implements IRecipe
 			}
 		}
 		
-		if ((packDamage == 0 && !fillBottle) || !hasPack || pack == null)
+		if ((packFillCur == 100 && !fillBottle) || !hasPack || pack == null)
 		{
 			return false;
-		} else if (packDamage - (bottles.size() * 25) <= -25 && fillBottle == false)
+		} else if (packFillCur + (bottles.size() * 25) >= 125 && fillBottle == false)
 		{
 			return false;
-		} else if (packDamage + 25 > pack.getMaxDamage() && fillBottle == true)
+		} else if (packFillCur - 25 < 0 && fillBottle == true)
 		{
 			return false;
 		} else
@@ -129,29 +118,19 @@ public class CamelPackRefillHandler implements IRecipe
 				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
 			
-			if (packDamage > (bottles.size() * 25))
+			if ((packFillCur + (bottles.size() * 25)) <= 100)
 			{
-				if (isArmor)
-				{
-					pack.getTagCompound().setInteger("camelPackFill", 100 - (packDamage - (bottles.size() * 25)));
+					pack.getTagCompound().setInteger("camelPackFill", (packFillCur + (bottles.size() * 25)));
 					return pack;
-				} else
-				{
-					pack.setItemDamage(packDamage - (bottles.size() * 25));
-					return pack;
-				}
 			} else
 			{
-				if (isArmor)
-				{
+
 					pack.getTagCompound().setInteger("camelPackFill", 100);
 					return pack;
-				} else
-				{
-					return new ItemStack(ObjectHandler.camelPack);
-				}
+
 			}
 		}
+
 	}
 	
 	@Override
@@ -189,10 +168,6 @@ public class CamelPackRefillHandler implements IRecipe
 				if (slot == null)
 				{
 					continue;
-				} else if (slot.getItem() == ObjectHandler.camelPack)
-				{
-					slot.stackSize += 1;
-					slot.setItemDamage(slot.getItemDamage() + 25);
 				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
 				{
 					slot.stackSize += 1;

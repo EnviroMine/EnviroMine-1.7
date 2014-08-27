@@ -1221,7 +1221,7 @@ public class EM_EventManager
 			{
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
 				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
-				int disp = (i <= 0 ? 0 : i > 200 ? 100 : (int)(i/(max/100F)));
+				int disp = (i <= 0 ? 0 : i > max ? 100 : (int)(i/(max/100F)));
 				event.toolTip.add("Air Filters: " + disp + "%");
 			}
 		}

@@ -8,15 +8,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
-public class TileEntityElevatorBottomRenderer extends TileEntitySpecialRenderer
+public class TileEntityDavyLampRenderer extends TileEntitySpecialRenderer
 {
 	IModelCustom model;
 	ResourceLocation texture;
 	
-	public TileEntityElevatorBottomRenderer()
+	public TileEntityDavyLampRenderer()
 	{
-		model = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/bottomblockelevator.obj"));
-		texture = new ResourceLocation("enviromine", "textures/models/blocks/elevator_model.png");
+		model = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/davy_lamp.obj"));
+		texture = new ResourceLocation("enviromine", "textures/models/blocks/davy_lamp_model.png");
 	}
 	
 	@Override

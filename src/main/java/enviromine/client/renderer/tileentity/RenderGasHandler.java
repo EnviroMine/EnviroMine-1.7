@@ -1,19 +1,18 @@
-package enviromine.gases;
+package enviromine.client.renderer.tileentity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-
 import enviromine.blocks.BlockGas;
 import enviromine.handlers.ObjectHandler;
-
 import org.lwjgl.opengl.GL11;
 
 public class RenderGasHandler implements ISimpleBlockRenderingHandler
 {
+	private IIcon icon;
 	private Tessellator tessellator;
 	
 	@Override
@@ -76,6 +75,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		Block sideBlock;
 		
+		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : renderer.getBlockIcon(block);
 		int brightness = block.getMixedBrightnessForBlock(blockAccess, i, j, k);
 		tessellator = Tessellator.instance;
 		int color = block.colorMultiplier(blockAccess, i, j, k);
@@ -83,7 +83,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		float red = (float)((color >> 16) & 0xFF) / 255.0F;
 		float green = (float)((color >> 8) & 0xFF) / 255.0F;
 		float blue = (float)(color & 0xFF) / 255.0F;
-		float alpha = block.getOpacity(blockAccess, i, j, k);
+		float alpha = 1F;//block.getOpacity(blockAccess, i, j, k);
 		
 		if(alpha <= 0.1F)
 		{
@@ -296,7 +296,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 	
 	private void vertexAutoMap(double x, double y, double z, double u, double v)
 	{
-		//tessellator.addVertexWithUV(x, y, z, icon.getInterpolatedU(u * 16.0D), icon.getInterpolatedV(v * 16.0D)); //TODO
+		tessellator.addVertexWithUV(x, y, z, icon.getInterpolatedU(u * 16.0D), icon.getInterpolatedV(v * 16.0D));
 	}
 	
 	@Override

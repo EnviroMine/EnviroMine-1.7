@@ -1,15 +1,15 @@
 package enviromine;
 
+import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.logging.log4j.Level;
-
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockFlower;
@@ -27,7 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityPhysicsBlock extends EntityFallingBlock
+public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdditionalSpawnData
 {
 	
 	public boolean isAnvil2 = true;
@@ -370,6 +370,8 @@ public class EntityPhysicsBlock extends EntityFallingBlock
     protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
     	super.writeEntityToNBT(par1NBTTagCompound);
+    	par1NBTTagCompound.setByte("Tile", (byte)Block.getIdFromBlock(this.block));
+    	par1NBTTagCompound.setInteger("TileID", Block.getIdFromBlock(this.block));
         par1NBTTagCompound.setBoolean("HurtEntities2", this.isAnvil2);
         par1NBTTagCompound.setFloat("FallHurtAmount2", this.fallHurtAmount2);
         par1NBTTagCompound.setInteger("FallHurtMax2", this.fallHurtMax2);
@@ -382,7 +384,17 @@ public class EntityPhysicsBlock extends EntityFallingBlock
     @Override
     protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-    	super.writeEntityToNBT(par1NBTTagCompound);
+    	super.readEntityFromNBT(par1NBTTagCompound);
+
+        if (par1NBTTagCompound.hasKey("TileID", 99))
+        {
+            this.block = Block.getBlockById(par1NBTTagCompound.getInteger("TileID"));
+        }
+        else
+        {
+            this.block = Block.getBlockById(par1NBTTagCompound.getByte("Tile") & 255);
+        }
+        
         if (par1NBTTagCompound.hasKey("HurtEntities2"))
         {
             this.isAnvil2 = par1NBTTagCompound.getBoolean("HurtEntities2");
@@ -395,4 +407,20 @@ public class EntityPhysicsBlock extends EntityFallingBlock
         }
         this.isLandSlide = par1NBTTagCompound.getBoolean("Landslide");
     }
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		NBTTagCompound tags = new NBTTagCompound();
+		this.writeEntityToNBT(tags);
+		
+		ByteBufUtils.writeTag(buffer, tags);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		NBTTagCompound tags = ByteBufUtils.readTag(additionalData);
+		this.readEntityFromNBT(tags);
+	}
 }

@@ -2,20 +2,18 @@ package enviromine.client.gui;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-
 import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -125,6 +123,23 @@ public class EM_GuiEnviroMeters extends Gui
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
+		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
+		{
+			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getUniqueID());
+			
+			if(player != null)
+			{
+				tracker.trackedEntity = player;
+				tracker.isDisabled = false;
+				tracker.loadNBTTags();
+			} else
+			{
+				tracker.resetData();
+				EM_StatusManager.saveAndRemoveTracker(tracker);
+				tracker = null;
+			}
+		}
+		
 		if(tracker == null)
 		{
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
@@ -132,7 +147,7 @@ public class EM_GuiEnviroMeters extends Gui
 				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
 			}
-		} else if(tracker.isDisabled)
+		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
 		{
 			tracker = null;
 		} else

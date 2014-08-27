@@ -1312,6 +1312,7 @@ public class EM_StatusManager
 		while(iterator.hasNext())
 		{
 			EnviroDataTracker tracker = iterator.next();
+			tracker.isDisabled = true;
 			NBTTagCompound tags = tracker.trackedEntity.getEntityData();
 			tags.setFloat("ENVIRO_AIR", tracker.airQuality);
 			tags.setFloat("ENVIRO_HYD", tracker.hydration);

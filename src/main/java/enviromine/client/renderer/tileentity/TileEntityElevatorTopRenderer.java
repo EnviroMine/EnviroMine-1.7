@@ -16,7 +16,7 @@ public class TileEntityElevatorTopRenderer extends TileEntitySpecialRenderer
 	public TileEntityElevatorTopRenderer()
 	{
 		model = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/topblockelevator.obj"));
-		texture = new ResourceLocation("enviromine", "textures/blocks/elevator_model.png");
+		texture = new ResourceLocation("enviromine", "textures/models/blocks/elevator_model.png");
 	}
 	
 	@Override

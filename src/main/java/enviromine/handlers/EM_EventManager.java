@@ -1,9 +1,5 @@
 package enviromine.handlers;
 
-import java.awt.Color;
-import java.io.File;
-import java.util.UUID;
-
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -23,7 +19,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGlassBottle;
 import net.minecraft.item.ItemStack;
@@ -33,6 +28,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -40,8 +36,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -58,10 +55,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
-
-import org.apache.logging.log4j.Level;
-import org.lwjgl.opengl.GL11;
-
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -70,7 +64,6 @@ import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.client.ModelCamelPack;
-import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -80,6 +73,12 @@ import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.ItemProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
+import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
+import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 
 public class EM_EventManager
 {
@@ -96,7 +95,6 @@ public class EM_EventManager
 			}
 			
 			if (event.entity instanceof EntityPlayerMP) {
-				MinecraftForgeClient.registerItemRenderer((Item) ItemArmor.itemRegistry.getObject("minecraft:diamond_chestplate"), new ArmoredCamelPackRenderer());
 				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
 					EM_Settings.armorProperties.clear();
 					EM_Settings.blockProperties.clear();
@@ -224,6 +222,25 @@ public class EM_EventManager
 		}
 		
 		Entity attacker = event.source.getEntity();
+		
+		if((event.source == DamageSource.fallingBlock || event.source == DamageSource.anvil) && event.entityLiving.getEquipmentInSlot(4) != null && event.entityLiving.getEquipmentInSlot(4).getItem() == ObjectHandler.hardHat)
+		{
+			ItemStack hardHat = event.entityLiving.getEquipmentInSlot(4);
+			int dur = (hardHat.getMaxDamage() + 1) - hardHat.getItemDamage();
+			int dam = MathHelper.ceiling_float_int(event.ammount);
+			event.setCanceled(true);
+			hardHat.damageItem(dam, event.entityLiving);
+			
+			if(dur >= dam)
+			{
+				event.entityLiving.worldObj.playSoundAtEntity(event.entityLiving, "dig.stone", 1.0F, 1.0F);
+				return;
+			} else
+			{
+				event.entityLiving.attackEntityFrom(event.source, dam - dur);
+				return;
+			}
+		}
 		
 		if(attacker != null)
 		{
@@ -627,13 +644,21 @@ public class EM_EventManager
 			}
 		}
 		
-		if(biome.biomeName == BiomeGenBase.swampland.biomeName || biome.biomeName == BiomeGenBase.jungle.biomeName || biome.biomeName == BiomeGenBase.jungleHills.biomeName || y < 48 || looksBad)
+		ArrayList<Type> typeList = new ArrayList<Type>();
+		Type[] typeArray = BiomeDictionary.getTypesForBiome(biome);
+		for(int i = 0; i < typeArray.length; i++)
+		{
+			typeList.add(typeArray[i]);
+		}
+		
+		
+		if(typeList.contains(Type.SWAMP) || typeList.contains(Type.JUNGLE) || typeList.contains(Type.DEAD) || typeList.contains(Type.WASTELAND) || y < 48 || looksBad)
 		{
 			return 1;
-		} else if(biome.biomeName == BiomeGenBase.frozenOcean.biomeName || biome.biomeName == BiomeGenBase.ocean.biomeName || biome.biomeName == BiomeGenBase.beach.biomeName)
+		} else if(typeList.contains(Type.OCEAN) || typeList.contains(Type.BEACH))
 		{
 			return 2;
-		} else if(biome.biomeName == BiomeGenBase.icePlains.biomeName || biome.biomeName == BiomeGenBase.taiga.biomeName || biome.biomeName == BiomeGenBase.taigaHills.biomeName || biome.temperature < 0F || y > 127)
+		} else if(typeList.contains(Type.SNOWY) || typeList.contains(Type.CONIFEROUS) || biome.temperature < 0F || y > 127)
 		{
 			return 3;
 		} else
@@ -1153,12 +1178,12 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderPlayerEvent.Pre event)
+	public void onRender(RenderPlayerEvent.Post event)
 	{
 		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
 		if (plate != null && (plate.getItem() == ObjectHandler.camelPack || (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")))) {
 			//model = new ModelCamelPack();
-			//System.out.println("Render");
+			
 			GL11.glPushMatrix();
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			GL11.glRotatef(180F + event.entityLiving.renderYawOffset, 0F, 1F, 0F);
@@ -1192,12 +1217,6 @@ public class EM_EventManager
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
 				}
-			}else if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
-			{
-				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
-				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
-				int disp = (i <= 0 ? 0 : i > 200 ? 100 : (int)(i/(max/100F)));
-				event.toolTip.add("Air Filters: " + disp + "%");
 			}
 		}
 	}

@@ -38,11 +38,11 @@ public class BlockGas extends Block implements ITileEntityProvider
 	{
 		super(par2Material);
 		this.setTickRandomly(true);
-		igniteList.add("" + Blocks.flowing_lava);
-		igniteList.add("" + Blocks.lava);
-		igniteList.add("" + Blocks.torch);
-		igniteList.add("" + Blocks.lit_furnace);
-		igniteList.add("" + Blocks.fire);
+		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.flowing_lava));
+		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.lava));
+		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.torch));
+		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.lit_furnace));
+		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.fire));
 	}
 	
 	@Override
@@ -390,7 +390,10 @@ public class BlockGas extends Block implements ITileEntityProvider
 		for(int i = 0; i < dir.size(); i++)
 		{
 			int[] pos = dir.get(i);
-			if(igniteList.contains("" + world.getBlock(x + pos[0], y + pos[1], z + pos[2])))
+			Block block = world.getBlock(x + pos[0], y + pos[1], z + pos[2]);
+			int meta = world.getBlockMetadata(x + pos[0], y + pos[1], z + pos[2]);
+			
+			if(igniteList.contains("" + Block.blockRegistry.getNameForObject(block)) || igniteList.contains("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
 			{
 				return true;
 			} else
@@ -463,9 +466,11 @@ public class BlockGas extends Block implements ITileEntityProvider
 		return gasIcon;
 	}
 	
-	public void registerIcons(IIconRegister register)
+	@Override
+	public void registerBlockIcons(IIconRegister register)
 	{
 		this.gasIcon = register.registerIcon("enviromine:block_gas");
+		this.blockIcon = register.registerIcon("enviromine:block_gas");
 	}
 	
 	/**

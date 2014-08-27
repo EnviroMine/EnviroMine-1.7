@@ -10,14 +10,14 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.util.EnumHelper;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-
 import enviromine.EntityPhysicsBlock;
+import enviromine.blocks.BlockDavyLamp;
 import enviromine.blocks.BlockElevatorBottom;
 import enviromine.blocks.BlockElevatorTop;
 import enviromine.blocks.BlockGas;
+import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.blocks.tiles.TileEntityGas;
@@ -46,6 +46,7 @@ public class ObjectHandler
 	public static ItemArmor gasMask;
 	public static ItemArmor hardHat;
 	
+	public static Block davyLampBlock;
 	public static Block elevatorTop;
 	public static Block elevatorBottom;
 	public static Block gasBlock;
@@ -88,6 +89,8 @@ public class ObjectHandler
 		
 		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
 		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
+		
+		davyLampBlock = new BlockDavyLamp(Material.iron).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:davy_lamp_icon");
 	}
 	
 	public static void registerBlocks()
@@ -96,6 +99,7 @@ public class ObjectHandler
 		GameRegistry.registerBlock(fireGasBlock, "firegas");
 		GameRegistry.registerBlock(elevatorTop, "elevator_top");
 		GameRegistry.registerBlock(elevatorBottom, "elevator_bottom");
+		GameRegistry.registerBlock(davyLampBlock, "davy_lamp");
 	}
 	
 	public static void registerGases()
@@ -110,6 +114,9 @@ public class ObjectHandler
 		
 		GameRegistry.registerTileEntity(TileEntityElevatorTop.class, "enviromine.tile.elevator_top");
 		GameRegistry.registerTileEntity(TileEntityElevatorBottom.class, "enviromine.tile.elevator_bottom");
+		
+
+		GameRegistry.registerTileEntity(TileEntityDavyLamp.class, "enviromine.tile.davy_lamp");
 	}
 	
 	public static void registerRecipes()

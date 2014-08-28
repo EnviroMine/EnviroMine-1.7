@@ -13,15 +13,15 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-
 import enviromine.EnviroUtils;
 import enviromine.blocks.BlockGas;
+import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
-
 import java.awt.Color;
 import java.util.ArrayList;
+import org.apache.logging.log4j.Level;
 
 public class TileEntityGas extends TileEntity
 {
@@ -500,6 +500,16 @@ public class TileEntityGas extends TileEntity
 	{
 		if(this.gases.size() <= 0 || this.amount == 0)
 		{
+			return false;
+		}
+		
+		if(this.getBlockType() == Blocks.air)
+		{
+			EnviroMine.logger.log(Level.ERROR, "TileEntityGas has null block type!");
+			return false;
+		} else if(!(this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord) instanceof BlockGas))
+		{
+			EnviroMine.logger.log(Level.ERROR, "TileEntityGas has no block at position!");
 			return false;
 		}
 		

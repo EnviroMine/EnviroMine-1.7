@@ -25,8 +25,8 @@ public class EnviroAchievements
 	public static Achievement thatJustHappened; // Survive a gas fire
 	public static Achievement itsPitchBlack; 	// ???
 	public static Achievement tenSecondRule; 	// Eat rotten food
-	public static Achievement medicalMarvels; 	// Cure any infection/disease
-	public static Achievement suckItUpPrincess; // Attack & kill any hostile mob with one or more broken limbs
+	//public static Achievement medicalMarvels; 	// Cure any infection/disease
+	//public static Achievement suckItUpPrincess; // Attack & kill any hostile mob with one or more broken limbs
 	
 	public static void InitAchievements()
 	{
@@ -48,10 +48,10 @@ public class EnviroAchievements
 		itsPitchBlack =    new Achievement("enviromine.ItsPitchBlack",    "enviromine.ItsPitchBlack",     1, 2, Blocks.redstone_torch,                 boreToTheCore).registerStat();
 		tenSecondRule =    new Achievement("enviromine.TenSecondRule",    "enviromine.TenSecondRule",     2, 2, Items.rotten_flesh,                             null).registerStat();
 		
-		medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   -2, 3, Items.potionitem,                               null).registerStat();
-		suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", "enviromine.SuckItUpPrincess", -1, 3, Items.bone,               AchievementList.buildSword).registerStat();
+		//medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   -2, 3, Items.potionitem,                               null).registerStat();
+		//suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", "enviromine.SuckItUpPrincess", -1, 3, Items.bone,               AchievementList.buildSword).registerStat();
 		
-		page = new AchievementPage("EnviroMine", funwaysFault, mindOverMatter, proMiner, hardBoiled, ironArmy, tradingFavours, iNeededThat, winterIsComing, ohGodWhy, safetyFirst, boreToTheCore, intoTheDarkness, thatJustHappened, itsPitchBlack, tenSecondRule, medicalMarvels, suckItUpPrincess);
+		page = new AchievementPage("EnviroMine", funwaysFault, mindOverMatter, proMiner, hardBoiled, ironArmy, tradingFavours, iNeededThat, winterIsComing, ohGodWhy, safetyFirst, boreToTheCore, intoTheDarkness, thatJustHappened, itsPitchBlack, tenSecondRule/*, medicalMarvels, suckItUpPrincess*/);
 		AchievementPage.registerAchievementPage(page);
 	}
 }

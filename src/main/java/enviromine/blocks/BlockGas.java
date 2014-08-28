@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -15,19 +16,18 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.logging.log4j.Level;
 
 public class BlockGas extends Block implements ITileEntityProvider
 {
@@ -90,9 +90,10 @@ public class BlockGas extends Block implements ITileEntityProvider
 			
 			//gasTile.addGas(1, 10);
 			//gasTile.addGas(3, 50);
-			//gasTile.addGas(4, 100);
-			//gasTile.addGas(0, 2000);
-			gasTile.addGas(7, 100);
+			gasTile.addGas(4, 100); // METHANE
+			//gasTile.addGas(0, 2000); // FIRE
+			//gasTile.addGas(7, 100); // NUKE
+			gasTile.updateRender();
 		}
 	}
 	
@@ -180,13 +181,13 @@ public class BlockGas extends Block implements ITileEntityProvider
 	@Override
 	public int getRenderType()
 	{
-		return ObjectHandler.renderGasID;
+		return 0;//ObjectHandler.renderGasID;
 	}
 	
 	@Override
 	public boolean renderAsNormalBlock()
 	{
-		return false;
+		return true;//false;
 	}
 	
 	@Override
@@ -305,12 +306,13 @@ public class BlockGas extends Block implements ITileEntityProvider
 		{
 			TileEntityGas gasTile = (TileEntityGas)tile;
 			
-			/*if(gasTile.amount > 2048)
+			if(gasTile.amount >= 1000)
 			{
-				EnviroMine.logger.log(Level.SEVERE, "Too many gases inside one block! (amount > 1024)");
+				EnviroMine.logger.log(Level.ERROR, "Too many gases inside one block! (" + gasTile.amount + " / 1000)");
+				world.removeTileEntity(x, y, z);
 				world.setBlockToAir(x, y, z);
 				return;
-			}*/
+			}
 			
 			if(isTouchingIgnition(world, x, y, z) && this == ObjectHandler.gasBlock)
 			{
@@ -435,8 +437,17 @@ public class BlockGas extends Block implements ITileEntityProvider
 				TileEntityGas gasTile = (TileEntityGas)tile;
 				
 				gasTile.updateOpacity();
+				gasTile.updateColor();
 				gasTile.updateSize();
-				Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(x, y, z);
+				gasTile.updateRender();
+				
+				if(gasTile.amount > 1000)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Too many gases inside one block! (EARLY PASS) (" + gasTile.amount + " / 1000)");
+					world.removeTileEntity(x, y, z);
+					world.setBlock(x, y, z, Blocks.air);
+					return;
+				}
 			}
 		}
 	}
@@ -481,10 +492,10 @@ public class BlockGas extends Block implements ITileEntityProvider
 	{
 		return false;
 	}
-	
-    public int idDropped(int par1, Random par2Random, int par3)
+
+    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
-        return 0;
+        return null;
     }
     
     @Override

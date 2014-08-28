@@ -7,7 +7,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import enviromine.blocks.BlockGas;
+import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 public class RenderGasHandler implements ISimpleBlockRenderingHandler
@@ -75,6 +77,19 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		Block sideBlock;
 		
+		if(!(blockAccess.getBlock(i, j, k) instanceof BlockGas))
+		{
+			EnviroMine.logger.log(Level.WARN, "Trying to render gas without block at position!");
+			return true;
+		} else if(blockAccess.getTileEntity(i, j, k) == null)
+		{
+			EnviroMine.logger.log(Level.WARN, "Trying to render gas without tile at position!");
+			return true;
+		} else
+		{
+			EnviroMine.logger.log(Level.INFO, "Gas block & tile present. Should be able to render...");
+		}
+		
 		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : renderer.getBlockIcon(block);
 		int brightness = block.getMixedBrightnessForBlock(blockAccess, i, j, k);
 		tessellator = Tessellator.instance;
@@ -83,7 +98,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		float red = (float)((color >> 16) & 0xFF) / 255.0F;
 		float green = (float)((color >> 8) & 0xFF) / 255.0F;
 		float blue = (float)(color & 0xFF) / 255.0F;
-		float alpha = 1F;//block.getOpacity(blockAccess, i, j, k);
+		float alpha = 1F;//block.getOpacity(blockAccess, i, j, k); // Temporary override till rendering actually works.
 		
 		if(alpha <= 0.1F)
 		{

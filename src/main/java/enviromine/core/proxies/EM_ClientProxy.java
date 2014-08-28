@@ -88,7 +88,8 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public static void initRenderers()
 	{
 		ObjectHandler.renderGasID = RenderingRegistry.getNextAvailableRenderId();
-		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
+		RenderingRegistry.registerBlockHandler(ObjectHandler.renderGasID, new RenderGasHandler());
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityPhysicsBlock.class, new RenderFallingBlock());
 	
 		armoredCamelRenderers();

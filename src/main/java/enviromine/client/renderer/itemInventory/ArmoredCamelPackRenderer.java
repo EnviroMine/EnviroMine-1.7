@@ -48,8 +48,11 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
         renderItem.renderIcon(0, 0, icon, 16, 16);
 
         GL11.glDisable(GL11.GL_BLEND);
-		
-		if (itemStack != null && (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("camelPackFill"))) 
+		if(itemStack.getItem() == ObjectHandler.camelPack)
+		{
+	        renderFillBar(itemStack);
+		}
+		else if (itemStack != null && (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("camelPackFill"))) 
 		{
 			//model = new ModelCamelPack();
 			  
@@ -74,7 +77,7 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
 			//  	String text = Integer.toString(itemStack.getTagCompound().getInteger("camelPackFill"));
 			//    fontRenderer.drawStringWithShadow(text, 1, 1, 0xFFFFFF);
 		}
-
+		
 
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -83,7 +86,7 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
     
     public void renderFillBar(ItemStack itemStack)
     {
-    	int x = 13;
+    	int x = 2;
     	int y = 2;
     	int height = 10;
     	int width = 1;
@@ -104,9 +107,9 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
             Tessellator tessellator = Tessellator.instance;
             int l = 255 - k << 16 | k << 8;
             int i1 = (255 - k) / 4 << 16 | 16128;
-            this.renderQuad(tessellator, 0 + x, 1 + y, width+1, height, 0);
+            this.renderQuad(tessellator, 0 + x, 1 + y, width+1, height, EnviroUtils.getColorFromRGBA(172, 172, 172, 255));
             this.renderQuad(tessellator, 0 + x, 0 + y, width, height, EnviroUtils.getColorFromRGBA(42, 85, 210, k));
-            this.renderQuad(tessellator, 0 + x, 0 + y, width, height-j1, EnviroUtils.getColorFromRGBA(220, 3, 3, 255));
+            this.renderQuad(tessellator, 0 + x, 0 + y, width, height-j1, 0);
             //GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
             GL11.glEnable(GL11.GL_ALPHA_TEST);
             GL11.glEnable(GL11.GL_TEXTURE_2D);

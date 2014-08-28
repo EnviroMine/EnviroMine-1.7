@@ -108,7 +108,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 		 while(tmp.hasNext())
 		 {
 			 Object itemArmor = tmp.next();
-			 if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1 && (ItemArmor)itemArmor != ObjectHandler.camelPack) 
+			 if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1) 
 			 {
 				 cnt++;
 				 MinecraftForgeClient.registerItemRenderer((Item) itemArmor, new ArmoredCamelPackRenderer());				 

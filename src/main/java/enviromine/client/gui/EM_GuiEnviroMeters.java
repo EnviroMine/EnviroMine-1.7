@@ -814,6 +814,7 @@ public class EM_GuiEnviroMeters extends Gui
 					{
 						//ISound sound = null; //TODO ("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F)
 						//mc.getSoundHandler().playSound(sound);
+						Minecraft.getMinecraft().thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
 					}
 				}
 				return;

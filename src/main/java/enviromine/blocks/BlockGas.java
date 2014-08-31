@@ -66,7 +66,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		
 		if(world.scheduledUpdatesAreImmediate)
 		{
-			world.scheduleBlockUpdateWithPriority(i, j, k, this, this.tickRate(world), 0);
+			world.scheduleBlockUpdateWithPriority(i, j, k, this, this.tickRate(world), 1);
 		} else
 		{
 			world.scheduleBlockUpdate(i, j, k, this, this.tickRate(world));
@@ -181,13 +181,13 @@ public class BlockGas extends Block implements ITileEntityProvider
 	@Override
 	public int getRenderType()
 	{
-		return 0;//ObjectHandler.renderGasID;
+		return ObjectHandler.renderGasID;
 	}
 	
 	@Override
 	public boolean renderAsNormalBlock()
 	{
-		return true;//false;
+		return false;
 	}
 	
 	@Override
@@ -296,6 +296,8 @@ public class BlockGas extends Block implements ITileEntityProvider
 			return;
 		}
 		
+		boolean scheduleTick = false;
+		
 		TileEntity tile = world.getTileEntity(x, y, z);
 		
 		if(tile == null || !(tile instanceof TileEntityGas))
@@ -306,27 +308,30 @@ public class BlockGas extends Block implements ITileEntityProvider
 		{
 			TileEntityGas gasTile = (TileEntityGas)tile;
 			
-			if(gasTile.amount >= 1000)
+			/*if(gasTile.amount >= 10000)
 			{
-				EnviroMine.logger.log(Level.ERROR, "Too many gases inside one block! (" + gasTile.amount + " / 1000)");
+				EnviroMine.logger.log(Level.ERROR, "Too many gases inside one block! (" + gasTile.amount + " / 10000)");
 				world.removeTileEntity(x, y, z);
 				world.setBlockToAir(x, y, z);
 				return;
-			}
+			}*/
 			
 			if(isTouchingIgnition(world, x, y, z) && this == ObjectHandler.gasBlock)
 			{
 				if(gasTile.burnGases())
 				{
 					this.swtichIgnitionState(world, x, y, z);
+					return;
 				}
 			} else if(gasTile.getGasQuantity(0) >= 1 && this == ObjectHandler.gasBlock)
 			{
 				gasTile.burnGases();
 				this.swtichIgnitionState(world, x, y, z);
+				return;
 			} else if(gasTile.getGasQuantity(0) <= 0 && this == ObjectHandler.fireGasBlock)
 			{
 				this.swtichIgnitionState(world, x, y, z);
+				return;
 			}
 			
 			if(gasTile.gases.size() <= 0 || gasTile.amount <= 0)
@@ -338,27 +343,25 @@ public class BlockGas extends Block implements ITileEntityProvider
 				world.notifyBlocksOfNeighborChange(x, y, z, this);
 			} else if(gasTile.amount > 10)
 			{
-				if(world.scheduledUpdatesAreImmediate)
-				{
-					world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world), 0);
-				} else
-				{
-					world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-				}
+				scheduleTick = true;
 			}
 			
-			if(gasTile.getGasQuantity(0) > 20)
+			int fireNum = gasTile.getGasQuantity(0);
+			
+			if(fireNum > 20)
 			{
 				if(gasTile.firePressure >= 10)
 				{
+					scheduleTick = false;
 					world.setBlockToAir(x, y, z);
-					if(gasTile.getGasQuantity(0) > 80)
+					if(fireNum > 80)
 					{
 						world.newExplosion(null, x, y, z, 16F, true, true);
 					} else
 					{
-						world.newExplosion(null, x, y, z, gasTile.getGasQuantity(0)/5F, true, true);
+						world.newExplosion(null, x, y, z, fireNum/5F, true, true);
 					}
+					return;
 				} else
 				{
 					gasTile.firePressure += 1;
@@ -371,9 +374,22 @@ public class BlockGas extends Block implements ITileEntityProvider
 			if(gasTile.gases.size() <= 0 || gasTile.amount <= 0)
 			{
 				world.setBlockToAir(x, y, z);
+				scheduleTick = false;
+				return;
 			} else
 			{
 				gasTile.updateRender();
+			}
+		}
+		
+		if(scheduleTick)
+		{
+			if(world.scheduledUpdatesAreImmediate)
+			{
+				world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world), 1);
+			} else
+			{
+				world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
 			}
 		}
 	}
@@ -422,7 +438,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 	{
 		if(world.scheduledUpdatesAreImmediate)
 		{
-			world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world), 0);
+			world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world), 1);
 		} else
 		{
 			world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
@@ -440,14 +456,6 @@ public class BlockGas extends Block implements ITileEntityProvider
 				gasTile.updateColor();
 				gasTile.updateSize();
 				gasTile.updateRender();
-				
-				if(gasTile.amount > 1000)
-				{
-					EnviroMine.logger.log(Level.ERROR, "Too many gases inside one block! (EARLY PASS) (" + gasTile.amount + " / 1000)");
-					world.removeTileEntity(x, y, z);
-					world.setBlock(x, y, z, Blocks.air);
-					return;
-				}
 			}
 		}
 	}

@@ -16,6 +16,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 {
 	private IIcon icon;
 	private Tessellator tessellator;
+	private int verts;
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -76,33 +77,30 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		BlockGas block = (BlockGas)oBlock;
 		
 		Block sideBlock;
+		float sideAlpha;
 		
 		if(!(blockAccess.getBlock(i, j, k) instanceof BlockGas))
 		{
-			EnviroMine.logger.log(Level.WARN, "Trying to render gas without block at position!");
-			return true;
+			EnviroMine.logger.log(Level.ERROR, "Trying to render gas without block at position!");
+			return false;
 		} else if(blockAccess.getTileEntity(i, j, k) == null)
 		{
-			EnviroMine.logger.log(Level.WARN, "Trying to render gas without tile at position!");
-			return true;
-		} else
-		{
-			EnviroMine.logger.log(Level.INFO, "Gas block & tile present. Should be able to render...");
+			EnviroMine.logger.log(Level.ERROR, "Trying to render gas without tile at position!");
+			return false;
 		}
 		
 		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : renderer.getBlockIcon(block);
 		int brightness = block.getMixedBrightnessForBlock(blockAccess, i, j, k);
-		tessellator = Tessellator.instance;
 		int color = block.colorMultiplier(blockAccess, i, j, k);
 		
 		float red = (float)((color >> 16) & 0xFF) / 255.0F;
 		float green = (float)((color >> 8) & 0xFF) / 255.0F;
 		float blue = (float)(color & 0xFF) / 255.0F;
-		float alpha = 1F;//block.getOpacity(blockAccess, i, j, k); // Temporary override till rendering actually works.
+		float alpha = block.getOpacity(blockAccess, i, j, k);
 		
 		if(alpha <= 0.1F)
 		{
-			return true;
+			return false;
 		}
 		
 		double minX = 0D;
@@ -116,6 +114,9 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		double sideMinY;
 		double sideMaxY;
+
+		verts = 0;
+		tessellator = Tessellator.instance;
 		
 		tessellator.setBrightness(brightness);
 		tessellator.addTranslation((float)i, (float)j, (float)k);
@@ -124,7 +125,9 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 2))
 		{
 			sideBlock = blockAccess.getBlock(i, j, k - 1);
-			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
+			sideAlpha = sideBlock instanceof BlockGas? ((BlockGas)sideBlock).getOpacity(blockAccess, i, j, k - 1) : 0F;
+			
+			if(sideAlpha > 0.1F)
 			{
 				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i, j, k - 1);
 				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i, j, k - 1);
@@ -166,7 +169,9 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 3))
 		{
 			sideBlock = blockAccess.getBlock(i, j, k + 1);
-			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
+			sideAlpha = sideBlock instanceof BlockGas? ((BlockGas)sideBlock).getOpacity(blockAccess, i, j, k + 1) : 0F;
+			
+			if(sideAlpha > 0.1F)
 			{
 				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i, j, k + 1);
 				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i, j, k + 1);
@@ -207,82 +212,86 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 4))
 		{
 			sideBlock = blockAccess.getBlock(i - 1, j, k);
-			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
+			sideAlpha = sideBlock instanceof BlockGas? ((BlockGas)sideBlock).getOpacity(blockAccess, i - 1, j, k) : 0F;
+			
+			if(sideAlpha > 0.1F)
 			{
 				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i - 1, j, k);
 				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i - 1, j, k);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
-					vertexAutoMap(minX, minY, minZ, minZ, maxY);
-					vertexAutoMap(minX, maxY, minZ, minZ, minY);
-					vertexAutoMap(minX, maxY, maxZ, maxZ, minY);
-					vertexAutoMap(minX, minY, maxZ, maxZ, maxY);
+					vertexAutoMap(minX, minY, maxZ, minZ, maxY);
+					vertexAutoMap(minX, maxY, maxZ, minZ, minY);
+					vertexAutoMap(minX, maxY, minZ, maxZ, minY);
+					vertexAutoMap(minX, minY, minZ, maxZ, maxY);
 				} else
 				{
 					if(minY < sideMinY)
 					{
-						vertexAutoMap(minX, minY, minZ, minZ, sideMinY);
-						vertexAutoMap(minX, sideMinY, minZ, minZ, minY);
-						vertexAutoMap(minX, sideMinY, maxZ, maxZ, minY);
-						vertexAutoMap(minX, minY, maxZ, maxZ, sideMinY);
+						vertexAutoMap(minX, minY, maxZ, minZ, sideMinY);
+						vertexAutoMap(minX, sideMinY, maxZ, minZ, minY);
+						vertexAutoMap(minX, sideMinY, minZ, maxZ, minY);
+						vertexAutoMap(minX, minY, minZ, maxZ, sideMinY);
 					}
 					
 					if(maxY > sideMaxY)
 					{
-						vertexAutoMap(minX, sideMaxY, minZ, minZ, maxY);
-						vertexAutoMap(minX, maxY, minZ, minZ, sideMaxY);
-						vertexAutoMap(minX, maxY, maxZ, maxZ, sideMaxY);
-						vertexAutoMap(minX, sideMaxY, maxZ, maxZ, maxY);
+						vertexAutoMap(minX, sideMaxY, maxZ, minZ, maxY);
+						vertexAutoMap(minX, maxY, maxZ, minZ, sideMaxY);
+						vertexAutoMap(minX, maxY, minZ, maxZ, sideMaxY);
+						vertexAutoMap(minX, sideMaxY, minZ, maxZ, maxY);
 					}
 				}
 			} else
 			{
-				vertexAutoMap(minX, minY, minZ, minZ, maxY);
-				vertexAutoMap(minX, maxY, minZ, minZ, minY);
-				vertexAutoMap(minX, maxY, maxZ, maxZ, minY);
-				vertexAutoMap(minX, minY, maxZ, maxZ, maxY);
+				vertexAutoMap(minX, minY, maxZ, minZ, maxY);
+				vertexAutoMap(minX, maxY, maxZ, minZ, minY);
+				vertexAutoMap(minX, maxY, minZ, maxZ, minY);
+				vertexAutoMap(minX, minY, minZ, maxZ, maxY);
 			}
 		}
 		
 		if(block.shouldSideBeRendered(blockAccess, i, j, k, 5))
 		{
 			sideBlock = blockAccess.getBlock(i + 1, j, k);
-			if(sideBlock == ObjectHandler.gasBlock || sideBlock == ObjectHandler.fireGasBlock)
+			sideAlpha = sideBlock instanceof BlockGas? ((BlockGas)sideBlock).getOpacity(blockAccess, i + 1, j, k) : 0F;
+			
+			if(sideAlpha > 0.1F)
 			{
 				sideMinY = ((BlockGas)sideBlock).getMinY(blockAccess, i + 1, j, k);
 				sideMaxY = ((BlockGas)sideBlock).getMaxY(blockAccess, i + 1, j, k);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
-					vertexAutoMap(maxX, minY, maxZ, minZ, maxY);
-					vertexAutoMap(maxX, maxY, maxZ, minZ, minY);
-					vertexAutoMap(maxX, maxY, minZ, maxZ, minY);
-					vertexAutoMap(maxX, minY, minZ, maxZ, maxY);
+					vertexAutoMap(maxX, minY, minZ, minZ, maxY);
+					vertexAutoMap(maxX, maxY, minZ, minZ, minY);
+					vertexAutoMap(maxX, maxY, maxZ, maxZ, minY);
+					vertexAutoMap(maxX, minY, maxZ, maxZ, maxY);
 				} else
 				{
 					if(minY < sideMinY)
 					{
-						vertexAutoMap(maxX, minY, maxZ, minZ, sideMinY);
-						vertexAutoMap(maxX, sideMinY, maxZ, minZ, minY);
-						vertexAutoMap(maxX, sideMinY, minZ, maxZ, minY);
-						vertexAutoMap(maxX, minY, minZ, maxZ, sideMinY);
+						vertexAutoMap(maxX, minY, minZ, minZ, sideMinY);
+						vertexAutoMap(maxX, sideMinY, minZ, minZ, minY);
+						vertexAutoMap(maxX, sideMinY, maxZ, maxZ, minY);
+						vertexAutoMap(maxX, minY, maxZ, maxZ, sideMinY);
 					}
 					
 					if(maxY > sideMaxY)
 					{
-						vertexAutoMap(maxX, sideMaxY, maxZ, minZ, maxY);
-						vertexAutoMap(maxX, maxY, maxZ, minZ, sideMaxY);
-						vertexAutoMap(maxX, maxY, minZ, maxZ, sideMaxY);
-						vertexAutoMap(maxX, sideMaxY, minZ, maxZ, maxY);
+						vertexAutoMap(maxX, sideMaxY, minZ, minZ, maxY);
+						vertexAutoMap(maxX, maxY, minZ, minZ, sideMaxY);
+						vertexAutoMap(maxX, maxY, maxZ, maxZ, sideMaxY);
+						vertexAutoMap(maxX, sideMaxY, maxZ, maxZ, maxY);
 					}
 				}
 			} else
 			{
-				vertexAutoMap(maxX, minY, maxZ, minZ, maxY);
-				vertexAutoMap(maxX, maxY, maxZ, minZ, minY);
-				vertexAutoMap(maxX, maxY, minZ, maxZ, minY);
-				vertexAutoMap(maxX, minY, minZ, maxZ, maxY);
+				vertexAutoMap(maxX, minY, minZ, minZ, maxY);
+				vertexAutoMap(maxX, maxY, minZ, minZ, minY);
+				vertexAutoMap(maxX, maxY, maxZ, maxZ, minY);
+				vertexAutoMap(maxX, minY, maxZ, maxZ, maxY);
 			}
 		}
 		
@@ -305,13 +314,20 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		}
 		
 		tessellator.addTranslation((float)-i, (float)-j, (float)-k);
-		
-		return true;
+
+		if(verts <= 0)
+		{
+			return false;
+		} else
+		{
+			return true;
+		}
 	}
 	
 	private void vertexAutoMap(double x, double y, double z, double u, double v)
 	{
 		tessellator.addVertexWithUV(x, y, z, icon.getInterpolatedU(u * 16.0D), icon.getInterpolatedV(v * 16.0D));
+		verts += 1;
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package enviromine.handlers;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -17,6 +18,7 @@ import enviromine.blocks.BlockDavyLamp;
 import enviromine.blocks.BlockElevatorBottom;
 import enviromine.blocks.BlockElevatorTop;
 import enviromine.blocks.BlockGas;
+import enviromine.blocks.materials.MaterialGas;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
@@ -54,6 +56,8 @@ public class ObjectHandler
 	
 	public static int renderGasID;
 	
+	public static Material gasMat;
+	
 	public static void initItems()
 	{
 		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.badwater").setCreativeTab(EnviroMine.enviroTab);
@@ -83,9 +87,9 @@ public class ObjectHandler
 	
 	public static void initBlocks()
 	{
-		//elevator = new BlockElevator(EM_Settings.blockElevatorID, Material.iron);
-		gasBlock = new BlockGas(Material.air).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block");
-		fireGasBlock = new BlockGas(Material.air).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block").setLightLevel(1.0F);
+		gasMat = new MaterialGas(MapColor.airColor);
+		gasBlock = new BlockGas(gasMat).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block");
+		fireGasBlock = new BlockGas(gasMat).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block").setLightLevel(1.0F);
 		
 		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
 		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");

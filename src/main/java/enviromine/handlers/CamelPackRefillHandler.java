@@ -1,6 +1,7 @@
 package enviromine.handlers;
 
 import enviromine.core.EnviroMine;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
@@ -10,7 +11,6 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class CamelPackRefillHandler implements IRecipe
 {
@@ -108,17 +108,6 @@ public class CamelPackRefillHandler implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		if(!fillBottle)
-		{
-			Iterator<ItemStack> iterator = bottles.iterator();
-			
-			while(iterator.hasNext())
-			{
-				ItemStack bottle = iterator.next();
-				bottle.getItem().setContainerItem(Items.glass_bottle);
-			}
-		}
-		
 		if(fillBottle)
 		{
 			ItemStack newItem = new ItemStack(Items.potionitem);
@@ -142,10 +131,36 @@ public class CamelPackRefillHandler implements IRecipe
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
 		IInventory craftMatrix = event.craftMatrix;
-		if(!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
+		if(!craftMatrix.getInventoryName().equals("container.crafting"))
 		{
 			return;
-		} else
+		} else if(event.crafting.getItem() == EnviroMine.camelPack)
+		{
+			int bottleCount = 0;
+			
+			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
+			{
+				ItemStack slot = craftMatrix.getStackInSlot(i);
+				
+				if(slot == null)
+				{
+					continue;
+				} else if(slot.getItem() == Items.potionitem && slot.getItemDamage() == 0)
+				{
+					bottleCount++;
+				}
+			}
+			
+			if(bottleCount > 0)
+			{
+				if(!event.player.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle, bottleCount)))
+				{
+					EntityItem itemDrop = event.player.func_146097_a(new ItemStack(Items.glass_bottle, bottleCount), false, false);
+					itemDrop.delayBeforeCanPickup = 0;
+					event.player.joinEntityItemWithWorld(itemDrop);
+				}
+			}
+		} else if(event.crafting.getItem() == Items.potionitem)
 		{
 			for(int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 			{

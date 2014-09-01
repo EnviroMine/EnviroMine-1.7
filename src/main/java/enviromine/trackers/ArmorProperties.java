@@ -1,16 +1,17 @@
 package enviromine.trackers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.common.config.Configuration;
+
 import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 
 public class ArmorProperties
 {
@@ -128,7 +129,7 @@ public class ArmorProperties
 		
 		Iterator itemList = Item.itemRegistry.iterator();
 		Item theitem;
-		int armorCount = 0;
+		//int armorCount = 0;
 		
 		while(itemList.hasNext())
 		{
@@ -141,7 +142,7 @@ public class ArmorProperties
 				{
 					
 					DetectedArmorGen((ItemArmor)theitem, Names[0]);
-					armorCount += 1;
+					//armorCount += 1;
 				}
 			}
 

@@ -1,14 +1,12 @@
 package enviromine.core.proxies;
 
-import java.util.Iterator;
-import java.util.logging.Level;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -17,6 +15,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
@@ -29,9 +28,10 @@ import enviromine.client.renderer.tileentity.RenderGasHandler;
 import enviromine.client.renderer.tileentity.TileEntityDavyLampRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorBottomRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorTopRenderer;
-import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
+
+import java.util.Iterator;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
@@ -44,7 +44,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	@Override
 	public boolean isOpenToLAN()
 	{
-		if(Minecraft.getMinecraft().isIntegratedServerRunning())
+		if (Minecraft.getMinecraft().isIntegratedServerRunning())
 		{
 			return Minecraft.getMinecraft().getIntegratedServer().getPublic();
 		} else
@@ -90,31 +90,28 @@ public class EM_ClientProxy extends EM_CommonProxy
 		ObjectHandler.renderGasID = RenderingRegistry.getNextAvailableRenderId();
 		RenderingRegistry.registerBlockHandler(new RenderGasHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPhysicsBlock.class, new RenderFallingBlock());
-	
+		
 		armoredCamelRenderers();
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorTop.class, new TileEntityElevatorTopRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorBottom.class, new TileEntityElevatorBottomRenderer());
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDavyLamp.class, new TileEntityDavyLampRenderer());
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static void armoredCamelRenderers()
 	{
-		int cnt = 0;
-		 Iterator tmp = Item.itemRegistry.iterator();
-		 
-		 while(tmp.hasNext())
-		 {
-			 Object itemArmor = tmp.next();
-			 if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1 && (ItemArmor)itemArmor != ObjectHandler.camelPack) 
-			 {
-				 cnt++;
-				 MinecraftForgeClient.registerItemRenderer((Item) itemArmor, new ArmoredCamelPackRenderer());				 
-			 }	 
-		 }
+		Iterator tmp = Item.itemRegistry.iterator();
 		
+		while (tmp.hasNext())
+		{
+			Object itemArmor = tmp.next();
+			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1 && (ItemArmor)itemArmor != ObjectHandler.camelPack)
+			{
+				MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+			}
+		}
 	}
 	
 	@Override

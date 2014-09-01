@@ -1215,7 +1215,9 @@ public class EM_StatusManager
 	//TODO Dimension override for Multipliers
 		if(dimensionProp != null && dimensionProp.override)
 		{   
+			System.out.println(dimensionProp.airMulti);
 			quality = quality * (float) dimensionProp.airMulti;
+			System.out.println(quality);
 			riseSpeed = riseSpeed * (float) dimensionProp.tempMulti;
 			dropSpeed = dropSpeed * (float) dimensionProp.tempMulti;
 			sanityRate = sanityRate * (float) dimensionProp.sanityMultiplyer;

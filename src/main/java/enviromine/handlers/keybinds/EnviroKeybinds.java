@@ -1,14 +1,12 @@
 package enviromine.handlers.keybinds;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-
-import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
-import enviromine.client.gui.menu.EM_Gui_Menu;
+
+import org.lwjgl.input.Keyboard;
 
 public class EnviroKeybinds
 {

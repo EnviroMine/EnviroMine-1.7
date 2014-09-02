@@ -191,6 +191,7 @@ public class EM_ConfigHandler
 		EM_Settings.updateCheck = config.get(Configuration.CATEGORY_GENERAL, "Check For Updates", true).getBoolean(true);
 		EM_Settings.physBlockID = config.get(Configuration.CATEGORY_GENERAL, "Enviro Physics Entity ID", EntityRegistry.findGlobalUniqueEntityId()).getInt(EntityRegistry.findGlobalUniqueEntityId());
 		EM_Settings.villageAssist = config.get(Configuration.CATEGORY_GENERAL, "Enable villager assistance", true).getBoolean(true);
+		EM_Settings.limitCauldron = config.get(Configuration.CATEGORY_GENERAL, "Limit Cauldron Drinking", true).getBoolean(true);
 		
 		// Physics Settings
 		String PhySetCat = "Physics";

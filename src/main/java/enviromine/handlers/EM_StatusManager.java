@@ -40,8 +40,12 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -189,6 +193,7 @@ public class EM_StatusManager
 		}
 		
 		BiomeGenBase biome = chunk.getBiomeGenForWorldCoords(i & 15, k & 15, entityLiving.worldObj.getWorldChunkManager());
+		ArrayList<Type> bTypeList = new ArrayList<Type>(Arrays.asList(BiomeDictionary.getTypesForBiome(biome)));
 		
 		if(biome == null)
 		{
@@ -636,11 +641,12 @@ public class EM_StatusManager
 			if(biome.getEnableSnow())
 			{
 				bTemp -= 10F;
+				dropSpeed = 0.1F;
 			} else
 			{
 				bTemp -= 5F;
+				dropSpeed = 0.01F;
 			}
-			dropSpeed = 0.01F;
 		}
 		
 		List mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));
@@ -1064,7 +1070,7 @@ public class EM_StatusManager
 			dehydrateBonus += 0.1F;
 		}
 		
-		if(biome.biomeName == BiomeGenBase.hell.biomeName || nearLava || biome.rainfall == 0.0F)
+		if(bTypeList.contains(Type.NETHER) || nearLava || biome.rainfall == 0.0F)
 		{
 			riseSpeed = 0.005F;
 			dehydrateBonus += 0.05F;
@@ -1073,7 +1079,7 @@ public class EM_StatusManager
 				animalHostility = 1;
 			}
 			
-			if(biome.biomeName == BiomeGenBase.hell.biomeName && quality <= -0.1F)
+			if(bTypeList.contains(Type.NETHER) && quality <= -0.1F)
 			{
 				quality = -0.1F;
 			}

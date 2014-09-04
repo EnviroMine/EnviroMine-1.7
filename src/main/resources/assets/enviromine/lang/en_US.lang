@@ -93,3 +93,6 @@ deathmessage.enviromine.organfailure=%s died of organ failure
 deathmessage.enviromine.heatstroke=%s's brain was cooked by heatstroke
 deathmessage.enviromine.bleedout=%s bled out
 deathmessage.enviromine.gasfire=%s died in a gas fire
+
+updatemsg.enviromine.avalible=Update %s of EnviroMine is available
+updatemsg.enviromine.download=Download & Changelog:

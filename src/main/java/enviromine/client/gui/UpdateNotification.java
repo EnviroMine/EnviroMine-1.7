@@ -1,15 +1,21 @@
 package enviromine.client.gui;
 
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import org.apache.logging.log4j.Level;
 
 public class UpdateNotification
@@ -56,9 +62,9 @@ public class UpdateNotification
 			
 			if(verStat == -1)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Update " + version + " of EnviroMine is available"));
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "Download & Changelog:"));
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + EnumChatFormatting.BLUE + EnumChatFormatting.UNDERLINE + "https://github.com/Funwayguy/EnviroMine/wiki/Downloads"));
+				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.avalible", version).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.download"));
+				event.player.addChatMessage(new ChatComponentText("https://github.com/Funwayguy/EnviroMine/wiki/Downloads").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BLUE).setUnderlined(true)));
 				for(int i = 2; i < data.length; i++)
 				{
 					if(i > 5)

@@ -28,7 +28,7 @@ public class EnviroDamageSource extends DamageSource
 	{
 		if (!this.damageType.equals("thething"))
 		{
-			return new ChatComponentTranslation("deathmessage.enviromine."+this.damageType, new Object[]{par1EntityLivingBase.getCommandSenderName()});
+			return new ChatComponentTranslation("deathmessage.enviromine."+this.damageType, par1EntityLivingBase.getCommandSenderName());
 		}
 		return new ChatComponentText("");
 	}

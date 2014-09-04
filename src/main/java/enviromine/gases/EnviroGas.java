@@ -1,12 +1,15 @@
 package enviromine.gases;
 
 import java.awt.Color;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 public class EnviroGas
 {
 	public int gasID;
+	public float suffocation;
 	public float volitility;
 	public float density;
 	public String name;
@@ -23,6 +26,7 @@ public class EnviroGas
 		this.gasID = ID;
 		this.density = 0F;
 		this.name = name;
+		this.suffocation = 0F;
 		this.volitility = 0F;
 		this.color = Color.WHITE;
 		this.airDecay = 0;
@@ -53,6 +57,12 @@ public class EnviroGas
 		return this;
 	}
 	
+	public EnviroGas setSuffocation(float newSuff)
+	{
+		this.suffocation = newSuff;
+		return this;
+	}
+	
 	public EnviroGas setDecayRates(int airDecay, int normDecay, int randDecay, int adt, int ndt, int rdt)
 	{
 		this.airDecay = airDecay;
@@ -71,6 +81,17 @@ public class EnviroGas
 	
 	public void applyEffects(EntityLivingBase entityLiving, int amplifier)
 	{
+		if(entityLiving.worldObj.isRemote)
+		{
+			return;
+		}
+		
+		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entityLiving);
+		
+		if(tracker != null)
+		{
+			tracker.gasAirDiff -= (this.suffocation * amplifier)/10;
+		}
 	}
 	
 	public float getOpacity()

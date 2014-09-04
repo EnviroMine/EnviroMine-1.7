@@ -395,6 +395,16 @@ public class TileEntityGas extends TileEntity
 			}
 		}
 		gases.add(new int[]{id, addNum});
+		
+		if(id == 0)
+		{
+			if(this.getBlockType() == ObjectHandler.gasBlock)
+			{
+				this.burnGases();
+				((BlockGas)this.getBlockType()).swtichIgnitionState(this.getWorldObj(), this.xCoord, this.yCoord, this.zCoord);
+			}
+		}
+		
 		this.updateAmount();
 		this.updateColor();
 		this.updateOpacity();

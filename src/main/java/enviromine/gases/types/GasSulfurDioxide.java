@@ -17,21 +17,17 @@ public class GasSulfurDioxide extends EnviroGas
 		super(name, ID);
 		this.setColor(new Color(192, 192, 0, 0));
 		this.setDensity(3F);
+		this.setSuffocation(0.01F);
 	}
 	
 	@Override
 	public void applyEffects(EntityLivingBase entityLiving, int amplifier)
 	{
+		super.applyEffects(entityLiving, amplifier);
+		
 		if(entityLiving.worldObj.isRemote)
 		{
 			return;
-		}
-		
-		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entityLiving);
-		
-		if(tracker != null)
-		{
-			tracker.gasAirDiff -= 0.001F * amplifier;
 		}
 		
 		if(amplifier > 5 && entityLiving.getRNG().nextInt(100) == 0)

@@ -80,12 +80,12 @@ public class EnviroPotion extends Potion
 		
 		if(entityLiving.isPotionActive(hypothermia))
 		{
-			if(entityLiving.getActivePotionEffect(hypothermia).getDuration() == 0)
+			PotionEffect effect = entityLiving.getActivePotionEffect(hypothermia);
+			
+			if(effect.getDuration() == 0)
 			{
 				entityLiving.removePotionEffect(hypothermia.id);
 			}
-			
-			PotionEffect effect = entityLiving.getActivePotionEffect(hypothermia);
 			
 			if(effect.getAmplifier() >= 2 && entityLiving.getRNG().nextInt(2) == 0)
 			{

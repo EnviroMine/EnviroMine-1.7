@@ -84,3 +84,12 @@ options.enviromine.barPos.hydration=Hydration Bar
 options.enviromine.barPos.temprature=Temprature Bar
 options.enviromine.barPos.sanity=Sanity Bar
 options.enviromine.barPos.airQuality=Air Quality Bar
+
+deathmessage.enviromine.suffocate=%s suffocated to death
+deathmessage.enviromine.frostbite=%s froze to death
+deathmessage.enviromine.dehydrate=%s died of thirst
+deathmessage.enviromine.landslide=%s was crushed in a landslide
+deathmessage.enviromine.organfailure=%s died of organ failure
+deathmessage.enviromine.heatstroke=%s's brain was cooked by heatstroke
+deathmessage.enviromine.bleedout=%s bled out
+deathmessage.enviromine.gasfire=%s died in a gas fire

@@ -2,6 +2,7 @@ package enviromine;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 
@@ -25,36 +26,10 @@ public class EnviroDamageSource extends DamageSource
 	@Override
 	public IChatComponent func_151519_b(EntityLivingBase par1EntityLivingBase)
 	{
-		if(this.damageType == "suffocate")
+		if (!this.damageType.equals("thething"))
 		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" suffocated to death").toString());
-		} else if(this.damageType == "frostbite")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" froze to death").toString());
-		} else if(this.damageType == "dehydrate")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died of thirst").toString());
-		} else if(this.damageType == "landslide")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" was crushed in a landslide").toString());
-		} else if(this.damageType == "organfailure")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died of organ failure").toString());
-		} else if(this.damageType == "heatstroke")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append("'s brain was cooked by heatstroke").toString());
-		} else if(this.damageType == "bleedout")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" blead out").toString());
-		} else if(this.damageType == "gasfire")
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died in a gas fire").toString());
-		} else if(this.damageType == "thething")
-		{
-			return new ChatComponentText("");
-		} else
-		{
-			return new ChatComponentText(new StringBuilder().append(par1EntityLivingBase.getCommandSenderName()).append(" died from enviromental causes").toString());
+			return new ChatComponentTranslation("deathmessage.enviromine."+this.damageType, new Object[]{par1EntityLivingBase.getCommandSenderName()});
 		}
+		return new ChatComponentText("");
 	}
 }

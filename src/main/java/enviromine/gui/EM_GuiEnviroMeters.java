@@ -19,6 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 public class EM_GuiEnviroMeters extends Gui
@@ -100,14 +101,28 @@ public class EM_GuiEnviroMeters extends Gui
 			}
 		}
 		
+		if(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false)
+		{
+			tracker = null;
+		} else if(ticktimer == 1)
+		{
+			tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
+			
+			if(tracker == null)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Unable to get EnviroTracker for GUI!");
+				EnviroMine.logger.log(Level.ERROR, "Please report this to the mod developers!");
+			}
+		}
+		
 		if(tracker == null)
 		{
+			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
-				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
 			}
-		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
+		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker) || (EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 		{
 			tracker = null;
 		} else
@@ -546,7 +561,7 @@ public class EM_GuiEnviroMeters extends Gui
 			
 			//this.mc.renderEngine.bindTexture(new ResourceLocation("enviromine", guiResource));
 			
-			if(!tracker.trackedEntity.isEntityInsideOpaqueBlock() && !tracker.trackedEntity.isInsideOfMaterial(Material.water))
+			if(!tracker.trackedEntity.isEntityInsideOpaqueBlock() && !tracker.trackedEntity.isInsideOfMaterial(Material.water) && EM_Settings.allowTinting)
 			{
 				if(tracker.bodyTemp >= 39)
 				{

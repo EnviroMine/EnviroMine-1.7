@@ -85,6 +85,7 @@ public class EM_Settings
 	public static boolean villageAssist;
 	public static boolean minimalHud;
 	public static boolean limitCauldron;
+	public static boolean allowTinting;
 	
 	public static float convertToFarenheit(float num)
 	{

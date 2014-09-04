@@ -3,10 +3,12 @@
  */
 package enviromine.network.packet;
 
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -99,7 +101,29 @@ public class PacketEnviroMine implements IMessage
 			} else
 			{
 				EnviroMine.logger.log(Level.ERROR, "Failed to sync tracker for entity with UUID: " + data[1].trim());
-				EnviroMine.logger.log(Level.ERROR, "Stats may be inaccurate!");
+				
+				if(!(EM_Settings.enableAirQ || EM_Settings.enableBodyTemp || EM_Settings.enableHydrate || EM_Settings.enableSanity))
+				{
+					EnviroMine.logger.log(Level.ERROR, "Please change your settings to enable one or more status types");
+				} else
+				{
+					if(EnviroMine.proxy.isClient() && Minecraft.getMinecraft().thePlayer.getUniqueID().toString().equals(data[1].trim()))
+					{
+						EnviroMine.logger.log(Level.ERROR, "Attempting to create tracker for player...");
+						EnviroDataTracker emTrack = new EnviroDataTracker(Minecraft.getMinecraft().thePlayer);
+						EM_StatusManager.addToManager(emTrack);
+						
+						emTrack.airQuality = Float.valueOf(data[2]);
+						emTrack.bodyTemp = Float.valueOf(data[3]);
+						emTrack.hydration = Float.valueOf(data[4]);
+						emTrack.sanity = Float.valueOf(data[5]);
+						emTrack.airTemp = Float.valueOf(data[6]);
+						emTrack.prevAirQuality = emTrack.airQuality;
+						emTrack.prevBodyTemp = emTrack.bodyTemp;
+						emTrack.prevHydration = emTrack.hydration;
+						emTrack.prevSanity = emTrack.sanity;
+					}
+				}
 			}
 		}
 	}

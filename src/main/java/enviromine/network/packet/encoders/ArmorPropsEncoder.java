@@ -1,6 +1,6 @@
 package enviromine.network.packet.encoders;
 
-import enviromine.trackers.ArmorProperties;
+import enviromine.trackers.properties.ArmorProperties;
 
 import java.util.HashMap;
 import java.util.Iterator;

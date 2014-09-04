@@ -69,10 +69,10 @@ import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.PacketAutoOverride;
-import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
-import enviromine.trackers.ItemProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 import java.awt.Color;

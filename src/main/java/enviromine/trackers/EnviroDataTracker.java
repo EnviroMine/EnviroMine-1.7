@@ -25,6 +25,8 @@ import enviromine.client.gui.menu.UI_Settings;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

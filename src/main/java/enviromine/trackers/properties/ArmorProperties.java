@@ -1,4 +1,4 @@
-package enviromine.trackers;
+package enviromine.trackers.properties;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;

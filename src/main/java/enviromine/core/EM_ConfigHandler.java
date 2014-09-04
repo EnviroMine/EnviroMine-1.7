@@ -6,14 +6,14 @@ import net.minecraftforge.common.config.Property;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BiomeProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.DimensionProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.ItemProperties;
-import enviromine.trackers.RotProperties;
-import enviromine.trackers.StabilityType;
+import enviromine.trackers.properties.ArmorProperties;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.trackers.properties.RotProperties;
+import enviromine.trackers.properties.StabilityType;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -41,19 +41,20 @@ import com.google.common.base.Stopwatch;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
+
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BiomeProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.DimensionProperties;
-import enviromine.trackers.EntityProperties;
 import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.ItemProperties;
+import enviromine.trackers.properties.ArmorProperties;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
 
 public class EM_StatusManager
 {

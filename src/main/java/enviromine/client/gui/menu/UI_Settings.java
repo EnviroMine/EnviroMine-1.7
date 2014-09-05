@@ -246,20 +246,21 @@ public class UI_Settings {
 		} else {
 			EnviroMine.logger.info("Config load successful.");
 		}
+		/*
 		try {
 			NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
 
-			//HUDRegistry.readFromNBT(nbt.getCompoundTag("global"));
+			HUDRegistry.readFromNBT(nbt.getCompoundTag("global"));
 
-			/*
 			for (HudItem item : HUDRegistry.getHudItemList()) {
 				NBTTagCompound itemNBT = nbt.getCompoundTag(item.getName());
 				item.loadFromNBT(itemNBT);
-			}*/
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		*/
 		return true;
 	}
 

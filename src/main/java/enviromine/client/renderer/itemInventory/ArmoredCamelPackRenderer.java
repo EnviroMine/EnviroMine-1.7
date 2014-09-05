@@ -8,6 +8,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
+import enviromine.EnviroUtils;
+import enviromine.handlers.ObjectHandler;
+
 import org.lwjgl.opengl.GL11;
 
 public class ArmoredCamelPackRenderer implements IItemRenderer {
@@ -85,7 +88,7 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
 		int max = 100;
 		int disp = (i <= 0 ? 0 : i > max ? 100 : (int)(i/(max/100F)));
 
-            double currentFill = itemStack.getTagCompound().getInteger("camelPackFill");
+            //double currentFill = itemStack.getTagCompound().getInteger("camelPackFill");
             //int j1 = (int)Math.round(13.0D - disp * 13.0D);
             int j1 = (int)Math.round(((double)height/100) * disp);
             int k = (int)Math.round((255.0D/100) * disp);
@@ -96,8 +99,8 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
             GL11.glDisable(GL11.GL_ALPHA_TEST);
             GL11.glDisable(GL11.GL_BLEND);
             Tessellator tessellator = Tessellator.instance;
-            int l = 255 - k << 16 | k << 8;
-            int i1 = (255 - k) / 4 << 16 | 16128;
+            //int l = 255 - k << 16 | k << 8;
+            //int i1 = (255 - k) / 4 << 16 | 16128;
             this.renderQuad(tessellator, 0 + x, 1 + y, width+1, height, EnviroUtils.getColorFromRGBA(172, 172, 172, 255));
             this.renderQuad(tessellator, 0 + x, 0 + y, width, height, EnviroUtils.getColorFromRGBA(42, 85, 210, k));
             this.renderQuad(tessellator, 0 + x, 0 + y, width, height-j1, 0);

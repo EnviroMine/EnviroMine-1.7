@@ -2,7 +2,6 @@ package enviromine.client.gui.menu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
 
 public class EM_Gui_SoundOptions extends GuiScreen
@@ -38,11 +37,8 @@ public class EM_Gui_SoundOptions extends GuiScreen
 	@Override
 	public void actionPerformed(GuiButton par1GuiButton)
 	{
-
 		if(par1GuiButton.enabled)
 		{
-			int val = 0;
-			int where;
 			switch(par1GuiButton.id)
 			{
 				case 200:

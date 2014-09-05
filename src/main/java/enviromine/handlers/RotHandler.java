@@ -2,7 +2,8 @@ package enviromine.handlers;
 
 import enviromine.core.EM_Settings;
 import enviromine.items.RottenFood;
-import enviromine.trackers.RotProperties;
+import enviromine.trackers.properties.RotProperties;
+
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;

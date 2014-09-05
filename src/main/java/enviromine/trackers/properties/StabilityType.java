@@ -1,4 +1,4 @@
-package enviromine.trackers;
+package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.ArrayList;

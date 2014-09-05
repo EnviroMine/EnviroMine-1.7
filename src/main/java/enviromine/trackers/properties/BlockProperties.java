@@ -1,4 +1,4 @@
-package enviromine.trackers;
+package enviromine.trackers.properties;
 
 import net.minecraftforge.common.config.Configuration;
 

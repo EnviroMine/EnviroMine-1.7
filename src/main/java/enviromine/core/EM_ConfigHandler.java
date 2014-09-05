@@ -1,29 +1,21 @@
 package enviromine.core;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+
 import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.EnviroUtils;
-import enviromine.trackers.ArmorProperties;
-import enviromine.trackers.BiomeProperties;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.DimensionProperties;
-import enviromine.trackers.EntityProperties;
-import enviromine.trackers.ItemProperties;
-import enviromine.trackers.RotProperties;
-import enviromine.trackers.StabilityType;
+
+import enviromine.trackers.properties.ArmorProperties;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.trackers.properties.RotProperties;
+import enviromine.trackers.properties.StabilityType;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,8 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Level;
-
-import scala.Int;
 
 public class EM_ConfigHandler
 {

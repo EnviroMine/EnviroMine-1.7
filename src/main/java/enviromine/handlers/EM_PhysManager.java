@@ -4,8 +4,8 @@ import enviromine.EntityPhysicsBlock;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.trackers.BlockProperties;
-import enviromine.trackers.StabilityType;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.StabilityType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;

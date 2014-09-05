@@ -1,22 +1,14 @@
 package enviromine.client.renderer.itemInventory;
 
-import javax.swing.Icon;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
-
-import enviromine.EnviroUtils;
-import enviromine.handlers.ObjectHandler;
 
 public class ArmoredCamelPackRenderer implements IItemRenderer {
     
@@ -39,7 +31,6 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
     @Override
     public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data) 
     {
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         GL11.glDisable(GL11.GL_LIGHTING); //Forge: Make sure that render states are reset, a renderEffect can derp them up.
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_BLEND);     

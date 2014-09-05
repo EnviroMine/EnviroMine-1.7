@@ -10,8 +10,6 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 
-import enviromine.handlers.ObjectHandler;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -20,6 +18,7 @@ public class CamelPackRefillHandler implements IRecipe
 	public boolean fillBottle;
 	public boolean isArmor;
 	public int packFillCur;
+	public int packFillMax;
 	public ArrayList<ItemStack> bottles = new ArrayList<ItemStack>();
 	public ItemStack pack;
 	
@@ -34,6 +33,7 @@ public class CamelPackRefillHandler implements IRecipe
 		this.fillBottle = false;
 		this.isArmor = false;
 		this.packFillCur = 0;
+		this.packFillMax = 0;
 		this.pack = null;
 		this.bottles.clear();
 		boolean hasPack = false;
@@ -45,7 +45,7 @@ public class CamelPackRefillHandler implements IRecipe
 			if (item == null)
 			{
 				continue;
-			}else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill"))
+			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill"))
 			{
 				if (hasPack)
 				{
@@ -54,6 +54,7 @@ public class CamelPackRefillHandler implements IRecipe
 				{
 					pack = item.copy();
 					packFillCur = item.getTagCompound().getInteger("camelPackFill");
+					packFillMax = item.getTagCompound().getInteger("camelPackMax");
 					hasPack = true;
 					isArmor = true;
 				}
@@ -83,10 +84,10 @@ public class CamelPackRefillHandler implements IRecipe
 			}
 		}
 		
-		if ((packFillCur == 100 && !fillBottle) || !hasPack || pack == null)
+		if ((packFillCur == packFillMax && !fillBottle) || !hasPack || pack == null)
 		{
 			return false;
-		} else if (packFillCur + (bottles.size() * 25) >= 125 && fillBottle == false)
+		} else if (packFillCur + (bottles.size() * 25) >= packFillMax+25 && fillBottle == false)
 		{
 			return false;
 		} else if (packFillCur - 25 < 0 && fillBottle == true)
@@ -118,19 +119,18 @@ public class CamelPackRefillHandler implements IRecipe
 				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
 			
-			if ((packFillCur + (bottles.size() * 25)) <= 100)
+			if ((packFillCur + (bottles.size() * 25)) <= packFillMax)
 			{
-					pack.getTagCompound().setInteger("camelPackFill", (packFillCur + (bottles.size() * 25)));
-					return pack;
+				pack.getTagCompound().setInteger("camelPackFill", (packFillCur + (bottles.size() * 25)));
+				return pack;
 			} else
 			{
-
-					pack.getTagCompound().setInteger("camelPackFill", 100);
-					return pack;
-
+				
+				pack.getTagCompound().setInteger("camelPackFill", packFillMax);
+				return pack;
 			}
 		}
-
+		
 	}
 	
 	@Override

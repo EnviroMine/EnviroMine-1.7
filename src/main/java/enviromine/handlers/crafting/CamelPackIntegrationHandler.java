@@ -109,7 +109,6 @@ public class CamelPackIntegrationHandler implements IRecipe
 				{
 					armor.setTagCompound(new NBTTagCompound());
 				}
-				// OLD armor.getTagCompound().setInteger("camelPackFill", 100 - pack.getItemDamage());
 				
 				armor.getTagCompound().setInteger("camelPackFill", pack.getTagCompound().getInteger("camelPackFill"));
 				armor.getTagCompound().setInteger("camelPackMax", pack.getTagCompound().getInteger("camelPackMax"));
@@ -155,7 +154,7 @@ public class CamelPackIntegrationHandler implements IRecipe
 				if (slot == null)
 				{
 					continue;
-				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill") && slot.getTagCompound().hasKey("camelPackMax"))
+				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
 				{
 					slot.stackSize++;
 					slot.getTagCompound().removeTag("camelPackFill");

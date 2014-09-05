@@ -6,7 +6,7 @@ item.enviromine.badwater.name=Dirty Water Bottle
 item.enviromine.saltwater.name=Salt Water Bottle
 item.enviromine.coldwater.name=Cold Water Bottle
 item.enviromine.camelpack.name=Camel Pack
-item.enviromine.gasmask.name=Gas Mask
+item.enviromine.gasmask.name=Respirator
 item.enviromine.hardhat.name=Hard Hat
 item.enviromine.airfilter.name=Air Filter
 item.enviromine.rottenfood.name=Rotten Food
@@ -84,3 +84,15 @@ options.enviromine.barPos.hydration=Hydration Bar
 options.enviromine.barPos.temprature=Temprature Bar
 options.enviromine.barPos.sanity=Sanity Bar
 options.enviromine.barPos.airQuality=Air Quality Bar
+
+deathmessage.enviromine.suffocate=%s suffocated to death
+deathmessage.enviromine.frostbite=%s froze to death
+deathmessage.enviromine.dehydrate=%s died of thirst
+deathmessage.enviromine.landslide=%s was crushed in a landslide
+deathmessage.enviromine.organfailure=%s died of organ failure
+deathmessage.enviromine.heatstroke=%s's brain was cooked by heatstroke
+deathmessage.enviromine.bleedout=%s bled out
+deathmessage.enviromine.gasfire=%s died in a gas fire
+
+updatemsg.enviromine.avalible=Update %s of EnviroMine is available
+updatemsg.enviromine.download=Download & Changelog:

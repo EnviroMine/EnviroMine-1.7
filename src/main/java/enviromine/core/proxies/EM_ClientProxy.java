@@ -6,7 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -15,14 +14,13 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.Gui_EventManager;
-import enviromine.client.gui.menu.UI_Settings;
+import enviromine.client.gui.UI_Settings;
 import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.client.renderer.tileentity.RenderGasHandler;
 import enviromine.client.renderer.tileentity.TileEntityDavyLampRenderer;

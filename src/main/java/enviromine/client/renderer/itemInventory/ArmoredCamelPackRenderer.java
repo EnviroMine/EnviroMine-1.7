@@ -42,7 +42,7 @@ public class ArmoredCamelPackRenderer implements IItemRenderer {
         renderItem.renderIcon(0, 0, icon, 16, 16);
 
         GL11.glDisable(GL11.GL_BLEND);
-		if(itemStack.getItem() == ObjectHandler.camelPack)
+		if(itemStack.getItem() == ObjectHandler.camelPack  && (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("camelPackFill")))
 		{
 	        renderFillBar(itemStack);
 		}

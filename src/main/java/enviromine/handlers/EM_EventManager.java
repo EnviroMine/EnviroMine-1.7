@@ -1030,6 +1030,15 @@ public class EM_EventManager
 						{
 							tracker.sanity -= 1F;
 						}
+					} else if(item.getItem() == Items.potionitem)
+					{
+						tracker.hydration += 25;
+						if(tracker.hydration >= 100)
+						{
+							tracker.hydration = 100;
+						}
+							
+						
 					}
 				}
 			}

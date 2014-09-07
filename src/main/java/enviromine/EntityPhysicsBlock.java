@@ -94,6 +94,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 		this.fallHurtMax2 = 40;
 		this.fallHurtAmount2 = 2.0F;
 		this.block = block;
+		this.meta = meta;
 		
 		if(EM_Settings.entityFailsafe > 0 && !world.isRemote)
 		{
@@ -372,6 +373,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
     	super.writeEntityToNBT(par1NBTTagCompound);
     	par1NBTTagCompound.setByte("Tile", (byte)Block.getIdFromBlock(this.block));
     	par1NBTTagCompound.setInteger("TileID", Block.getIdFromBlock(this.block));
+    	par1NBTTagCompound.setByte("Data", (byte)this.meta);
         par1NBTTagCompound.setBoolean("HurtEntities2", this.isAnvil2);
         par1NBTTagCompound.setFloat("FallHurtAmount2", this.fallHurtAmount2);
         par1NBTTagCompound.setInteger("FallHurtMax2", this.fallHurtMax2);
@@ -394,6 +396,8 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
         {
             this.block = Block.getBlockById(par1NBTTagCompound.getByte("Tile") & 255);
         }
+        
+        this.meta = par1NBTTagCompound.getByte("Data") & 255;
         
         if (par1NBTTagCompound.hasKey("HurtEntities2"))
         {

@@ -650,7 +650,10 @@ public class EM_StatusManager
 		}
 		
 		//TODO Dimension Override  WeatherOverrides
-		if (dimensionProp != null && dimensionProp.override && !dimensionProp.weatherAffectsTemp) {System.out.println("Dont register rains");}
+		if (dimensionProp != null && dimensionProp.override && !dimensionProp.weatherAffectsTemp) 
+		{
+
+		}
 		else 
 		{
 			if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
@@ -663,16 +666,20 @@ public class EM_StatusManager
 		
 		} // Dimension Overrides End
 	
+		// 	Shade		
+		if(!entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && isDay && !entityLiving.worldObj.isRaining())
+		{
+			bTemp -= 2.5F;
+		}
+
 		//TODO Dimension Override  Day/Night Overrides
 		
-		if (dimensionProp != null && dimensionProp.override && !dimensionProp.dayNightTemp) { System.out.println("Dont register day/nights");}
+		if (dimensionProp != null && dimensionProp.override && !dimensionProp.dayNightTemp) 
+		{ 
+		
+		}
 		else 
 		{	
-			if(!entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && isDay && !entityLiving.worldObj.isRaining())
-			{
-				bTemp -= 2.5F;
-			}
-
 			if(!isDay && bTemp > 0F)
 			{
 				if(biome.rainfall == 0.0F)

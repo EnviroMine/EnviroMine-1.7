@@ -1,5 +1,6 @@
 package enviromine.client.gui.menu;
 
+import enviromine.client.gui.UI_Settings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;

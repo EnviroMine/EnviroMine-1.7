@@ -1,6 +1,7 @@
 package enviromine.handlers;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -17,12 +18,14 @@ import enviromine.blocks.BlockDavyLamp;
 import enviromine.blocks.BlockElevatorBottom;
 import enviromine.blocks.BlockElevatorTop;
 import enviromine.blocks.BlockGas;
+import enviromine.blocks.materials.MaterialGas;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.items.DavyLamp;
 import enviromine.items.EnviroArmor;
 import enviromine.items.EnviroItemBadWaterBottle;
 import enviromine.items.EnviroItemColdWaterBottle;
@@ -54,6 +57,8 @@ public class ObjectHandler
 	
 	public static int renderGasID;
 	
+	public static Material gasMat;
+	
 	public static void initItems()
 	{
 		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.badwater").setCreativeTab(EnviroMine.enviroTab);
@@ -83,14 +88,15 @@ public class ObjectHandler
 	
 	public static void initBlocks()
 	{
-		//elevator = new BlockElevator(EM_Settings.blockElevatorID, Material.iron);
-		gasBlock = new BlockGas(Material.air).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab);
-		fireGasBlock = new BlockGas(Material.air).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setLightLevel(1.0F);
+		gasMat = new MaterialGas(MapColor.airColor);
+		gasBlock = new BlockGas(gasMat).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block");
+		fireGasBlock = new BlockGas(gasMat).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block").setLightLevel(1.0F);
 		
 		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_top_icon");
 		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.elevator_bottom").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:elevator_bottom_icon");
 		
-		davyLampBlock = new BlockDavyLamp(Material.iron).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:davy_lamp_icon");
+		davyLampBlock = new BlockDavyLamp(Material.iron).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:davy_lamp");
+		davyLamp = new DavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);
 	}
 	
 	public static void registerBlocks()
@@ -99,7 +105,7 @@ public class ObjectHandler
 		GameRegistry.registerBlock(fireGasBlock, "firegas");
 		GameRegistry.registerBlock(elevatorTop, "elevator_top");
 		GameRegistry.registerBlock(elevatorBottom, "elevator_bottom");
-		GameRegistry.registerBlock(davyLampBlock, "davy_lamp");
+		GameRegistry.registerBlock(davyLampBlock, DavyLamp.class, "davy_lamp");
 	}
 	
 	public static void registerGases()
@@ -140,6 +146,8 @@ public class ObjectHandler
 		
 		GameRegistry.addRecipe(new ItemStack(elevatorTop), "xyx", "z z", "z z", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.redstone_lamp), 'z', new ItemStack(Blocks.iron_bars));
 		GameRegistry.addRecipe(new ItemStack(elevatorBottom), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
+		
+		GameRegistry.addRecipe(new ItemStack(davyLampBlock), " x ", "zyz", "xxx", 'x', new ItemStack(Items.gold_ingot), 'y', new ItemStack(Blocks.torch), 'z', new ItemStack(Blocks.glass_pane));
 	}
 	
 	//TODO Should Probably be be Removed Sounds.Json now controls this

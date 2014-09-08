@@ -21,6 +21,8 @@ public class GasHydrogenSulfide extends EnviroGas
 	@Override
 	public void applyEffects(EntityLivingBase entityLiving, int amplifier)
 	{
+		super.applyEffects(entityLiving, amplifier);
+		
 		if(entityLiving.worldObj.isRemote)
 		{
 			return;

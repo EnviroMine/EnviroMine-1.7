@@ -1,4 +1,4 @@
-package enviromine.client.gui.menu;
+package enviromine.client.gui;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +41,9 @@ public class UI_Settings {
 	public static int breathPause;
 	public static float breathVolume;
 	public static boolean minimalHud;
-
+	public static int screenWidth;
+	public static int screenHeight;
+	
 	@SideOnly(Side.CLIENT)
 	public static void loadSettings() {
 
@@ -73,6 +75,8 @@ public class UI_Settings {
 		prop.setProperty("breathPause", "" + breathPause);
 		prop.setProperty("breathVolume", "" + breathVolume);
 		prop.setProperty("minimalHud", "" + minimalHud);
+		prop.setProperty("screenWidth", "" + screenWidth);
+		prop.setProperty("screenHeight", "" + screenHeight);
 
 		WriteSettings(prop);
 	}
@@ -110,6 +114,10 @@ public class UI_Settings {
 			prop.setProperty("breathVolume", "0.75");
 		if (!prop.containsKey("minimalHud"))
 			prop.setProperty("minimalHud", "false");
+		if (!prop.containsKey("screenWidth"))
+			prop.setProperty("screenWidth", ""+Minecraft.getMinecraft().displayWidth);
+		if (!prop.containsKey("screenHeight"))
+			prop.setProperty("screenHeight", ""+Minecraft.getMinecraft().displayHeight);
 
 		WriteSettings(prop);
 		return prop;
@@ -189,6 +197,8 @@ public class UI_Settings {
 			waterBarPos = prop.getProperty("waterBarPos");
 			sanityBarPos = prop.getProperty("sanityBarPos");
 			oxygenBarPos = prop.getProperty("oxygenBarPos");
+			screenWidth = getInterger(prop.getProperty("screenWidth"));
+			screenHeight = getInterger(prop.getProperty("screenHeight"));
 
 		} catch (IOException ex) {
 			ex.printStackTrace();

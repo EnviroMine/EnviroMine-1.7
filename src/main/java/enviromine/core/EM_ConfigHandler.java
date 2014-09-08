@@ -155,7 +155,7 @@ public class EM_ConfigHandler
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 128, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(128);
-		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 512, "How many gases can be processed in a single pass").getInt(512);
+		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", -1, "How many gases can be processed in a single pass (-1 = infinite)").getInt(-1);
 		
 		// Potion ID's
 		EM_Settings.hypothermiaPotionID = -1;

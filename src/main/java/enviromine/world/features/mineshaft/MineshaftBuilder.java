@@ -474,7 +474,6 @@ public class MineshaftBuilder
 	
 	public static void saveBuilders(File file)
 	{
-		EnviroMine.logger.log(Level.INFO, "Saving Mineshaft Builders...");
 		try
 		{
 			if(!file.exists())
@@ -519,8 +518,6 @@ public class MineshaftBuilder
 	@SuppressWarnings("unchecked")
 	public static void loadBuilders(File file)
 	{
-		EnviroMine.logger.log(Level.INFO, "Loading Mineshaft Builders...");
-		
 		if(!file.exists())
 		{
 			return;

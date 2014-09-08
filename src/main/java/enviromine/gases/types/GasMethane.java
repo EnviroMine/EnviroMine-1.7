@@ -10,6 +10,6 @@ public class GasMethane extends EnviroGas
 		super(name, ID);
 		this.setColor(new Color(0, 255, 0, 0));
 		this.setDensity(1F);
-		this.setVolitility(10F);
+		this.setVolitility(10F, 0F, 2F);
 	}
 }

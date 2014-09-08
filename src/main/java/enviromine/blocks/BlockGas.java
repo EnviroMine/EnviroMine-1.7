@@ -16,6 +16,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EnviroUtils;
@@ -66,6 +67,23 @@ public class BlockGas extends Block implements ITileEntityProvider
 			world.setTileEntity(i, j, k, tile);
 		}
 		
+		if(this == ObjectHandler.fireGasBlock)
+		{
+			for(int dir = 0; dir < ForgeDirection.VALID_DIRECTIONS.length; dir++)
+			{
+				int xOff = ForgeDirection.VALID_DIRECTIONS[dir].offsetX + i;
+				int yOff = ForgeDirection.VALID_DIRECTIONS[dir].offsetY + j;
+				int zOff = ForgeDirection.VALID_DIRECTIONS[dir].offsetZ + k;
+				
+				Block sBlock = world.getBlock(xOff, yOff, zOff);
+				
+				if((sBlock.isFlammable(world, xOff, yOff, zOff, ForgeDirection.VALID_DIRECTIONS[dir].getOpposite()) && !(sBlock instanceof BlockGas)) || sBlock == Blocks.air)
+				{
+					world.setBlock(xOff, yOff, zOff, Blocks.fire, 0, 3);
+				}
+			}
+		}
+		
 		GasBuffer.scheduleUpdate(world, i, j, k, this);
 	}
 	
@@ -86,9 +104,9 @@ public class BlockGas extends Block implements ITileEntityProvider
 			
 			//gasTile.addGas(1, 10);
 			//gasTile.addGas(3, 50);
-			//gasTile.addGas(4, 100); // METHANE
+			gasTile.addGas(4, 100); // METHANE
 			//gasTile.addGas(0, 2000); // FIRE
-			gasTile.addGas(7, 10); // NUKE
+			//gasTile.addGas(7, 10); // NUKE
 			gasTile.updateRender();
 		}
 	}
@@ -212,7 +230,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		
 		if(opacity <= 0.1F)
 		{
-			return false;
+			return true;//false;
 		}
 		
 		int[] sideCoord = EnviroUtils.getAdjacentBlockCoordsFromSide(i, j, k, side);
@@ -617,6 +635,26 @@ public class BlockGas extends Block implements ITileEntityProvider
 		{
 			return new ArrayList<int[]>();
 		}
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(World p_149734_1_, int i, int j, int k, Random rand)
+    {
+    	if(this == ObjectHandler.fireGasBlock)
+    	{
+	        double d0 = (double)((float)i + 0.5F);
+	        double d1 = (double)((float)j + 0.5F);
+	        double d2 = (double)((float)k + 0.5F);
+	        
+    		for(int pass = 0; pass < 3; pass++)
+    		{
+		        double d3 = rand.nextDouble() - 0.5D;
+		        double d4 = rand.nextDouble() - 0.5D;
+		        
+		        p_149734_1_.spawnParticle("largesmoke", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+		        p_149734_1_.spawnParticle("flame", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+    		}
+    	}
     }
 	
 	public double getMinY(IBlockAccess blockAccess, int i, int j, int k)

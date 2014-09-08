@@ -271,6 +271,9 @@ public class TileEntityGas extends TileEntity
 		if(savedGases.length > 0)
 		{
 			gases = new ArrayList<int[]>();
+		} else
+		{
+			EnviroMine.logger.log(Level.ERROR, "GasTile loaded 0 gases, this should not happen!");
 		}
 		
 		for(int i = 0; i < savedGases.length; i++)
@@ -451,11 +454,12 @@ public class TileEntityGas extends TileEntity
 		for(int i = 0; i < gases.size(); i ++)
 		{
 			int[] gasArray = gases.get(i);
+			int fire = EnviroGasDictionary.gasList[gasArray[0]].getFire(gasArray[1], this.amount >= 10? 0 : 10 - this.amount);
 			float vol = EnviroGasDictionary.gasList[gasArray[0]].volitility;
 			if(vol > 0)
 			{
 				burntGases.add(gasArray);
-				fireSize += (int)(gasArray[1] * vol);
+				fireSize += fire;
 				didBurn = true;
 			}
 		}

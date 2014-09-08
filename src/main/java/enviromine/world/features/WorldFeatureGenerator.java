@@ -78,14 +78,12 @@ public class WorldFeatureGenerator implements IWorldGenerator
 			rY -= 1;
 		}
 		
-		ArrayList<Type> bTypes = new ArrayList<Type>(Arrays.asList(BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(rX, rZ))));
-		
 		if(world.getBlock(rX, rY, rZ) == Blocks.air)
 		{
 			Block bBlock = world.getBlock(rX, rY - 1, rZ);
 			if(rY < 16 && rY > 0)
 			{
-				if(bBlock.getMaterial() == Material.water && (bTypes.contains(Type.SWAMP) || bTypes.contains(Type.JUNGLE)))
+				if(bBlock.getMaterial() == Material.water)
 				{
 					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock, 0, 2);
 					TileEntity tile = world.getTileEntity(rX, rY, rZ);
@@ -96,9 +94,6 @@ public class WorldFeatureGenerator implements IWorldGenerator
 						gasTile.addGas(EnviroGasDictionary.hydrogenSulfide.gasID, 10);
 						//EnviroMine.logger.log(Level.INFO, "Generating hydrogen sulfide at (" + rX + "," + rY + "," + rZ + ")");
 					}
-				} else if(bBlock.getMaterial() == Material.water)
-				{
-					return;
 				} else if(bBlock.getMaterial() == Material.lava || bBlock.getMaterial() == Material.fire)
 				{
 					world.setBlock(rX, rY, rZ, ObjectHandler.gasBlock, 0, 2);

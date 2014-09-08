@@ -23,6 +23,7 @@ import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
+import enviromine.gases.GasBuffer;
 import enviromine.handlers.ObjectHandler;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -65,13 +66,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 			world.setTileEntity(i, j, k, tile);
 		}
 		
-		if(world.scheduledUpdatesAreImmediate)
-		{
-			world.scheduleBlockUpdateWithPriority(i, j, k, this, this.tickRate(world), 1);
-		} else
-		{
-			world.scheduleBlockUpdate(i, j, k, this, this.tickRate(world));
-		}
+		GasBuffer.scheduleUpdate(world, i, j, k, this);
 	}
 	
 	@Override
@@ -398,13 +393,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		
 		if(scheduleTick)
 		{
-			if(world.scheduledUpdatesAreImmediate)
-			{
-				world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world), 1);
-			} else
-			{
-				world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-			}
+			GasBuffer.scheduleUpdate(world, x, y, z, this);
 		}
 	}
 	
@@ -450,13 +439,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		if(world.scheduledUpdatesAreImmediate)
-		{
-			world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world), 1);
-		} else
-		{
-			world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-		}
+		GasBuffer.scheduleUpdate(world, x, y, z, this);
 		
 		if(world.isRemote && (block == ObjectHandler.gasBlock || block == ObjectHandler.fireGasBlock))
 		{

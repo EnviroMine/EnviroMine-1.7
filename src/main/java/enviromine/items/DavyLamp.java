@@ -34,6 +34,7 @@ public class DavyLamp extends ItemBlock
     /**
      * Gets an icon index based on an item's damage value
      */
+	@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {

@@ -38,7 +38,7 @@ public class BlockDavyLamp extends Block implements ITileEntityProvider
 	{
 		return meta;
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
@@ -75,7 +75,7 @@ public class BlockDavyLamp extends Block implements ITileEntityProvider
 	{
 		ItemStack stack = player.getEquipmentInSlot(0);
 		
-		if(stack != null && stack.getItem() == Items.flint_and_steel && world.getBlockMetadata(i, j, k) == 0)
+		if (stack != null && stack.getItem() == Items.flint_and_steel && world.getBlockMetadata(i, j, k) == 0)
 		{
 			stack.damageItem(1, player);
 			world.setBlockMetadataWithNotify(i, j, k, 1, 2);
@@ -86,17 +86,18 @@ public class BlockDavyLamp extends Block implements ITileEntityProvider
 	}
 	
 	/**
-     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, neighbor Block
-     */
+	 * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+	 * their own) Args: x, y, z, neighbor Block
+	 */
+	@Override
 	public void onNeighborBlockChange(World world, int i, int j, int k, Block block)
 	{
 		int state = world.getBlockMetadata(i, j, k);
 		int origState = state;
 		
-		if(origState > 0)
+		if (origState > 0)
 		{
-			for(int ii = 0; ii < 4; ii++)
+			for (int ii = 0; ii < 4; ii++)
 			{
 				int x = i + ForgeDirection.VALID_DIRECTIONS[ii].offsetX;
 				int y = j + ForgeDirection.VALID_DIRECTIONS[ii].offsetY;
@@ -104,68 +105,70 @@ public class BlockDavyLamp extends Block implements ITileEntityProvider
 				
 				Block bDir = world.getBlock(x, y, z);
 				
-				if(bDir instanceof BlockGas)
+				if (bDir instanceof BlockGas)
 				{
 					BlockGas bGas = (BlockGas)bDir;
 					ArrayList<int[]> gasList = bGas.getGasInfo(world, x, y, z);
 					
-					for(int jj = 0; jj < gasList.size(); jj++)
+					for (int jj = 0; jj < gasList.size(); jj++)
 					{
 						EnviroGas gasInfo = EnviroGasDictionary.gasList[gasList.get(jj)[0]];
-						if(gasInfo.volitility > 0)
+						if (gasInfo.volitility > 0)
 						{
 							state = 2;
 							break;
-						} else if(gasInfo.suffocation > 0)
+						} else if (gasInfo.suffocation > 0)
 						{
 							state = 0;
 						}
 					}
 					
-					if(state == 2)
+					if (state == 2)
 					{
 						break;
 					}
 				}
 			}
 			
-			if(state != origState)
+			if (state != origState)
 			{
 				world.setBlockMetadataWithNotify(i, j, k, state, 2);
 			}
 		}
 	}
-
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+	
+	/**
+	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+	 */
+	@Override
 	@SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, List tabList)
-    {
-        for (int i = 0; i < 3; ++i)
-        {
-        	tabList.add(new ItemStack(item, 1, i));
-        }
-    }
-
-    /**
-     * Gets the block's texture. Args: side, meta
-     */
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-    	if(meta == 1)
-    	{
-    		return this.litIcon;
-    	} else if(meta == 2)
-    	{
-    		return this.gasIcon;
-    	} else
-    	{
-            return this.blockIcon;
-    	}
-    }
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public void getSubBlocks(Item item, CreativeTabs tab, List tabList)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			tabList.add(new ItemStack(item, 1, i));
+		}
+	}
+	
+	/**
+	 * Gets the block's texture. Args: side, meta
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta)
+	{
+		if (meta == 1)
+		{
+			return this.litIcon;
+		} else if (meta == 2)
+		{
+			return this.gasIcon;
+		} else
+		{
+			return this.blockIcon;
+		}
+	}
 	
 	@Override
 	public void registerBlockIcons(IIconRegister register)

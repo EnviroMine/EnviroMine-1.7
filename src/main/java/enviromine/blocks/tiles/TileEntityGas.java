@@ -375,7 +375,7 @@ public class TileEntityGas extends TileEntity
 	
 	public void addGas(int id, int addNum)
 	{
-		if(addNum <= 0)
+		if(addNum <= 0 || !this.hasWorldObj())
 		{
 			return;
 		}

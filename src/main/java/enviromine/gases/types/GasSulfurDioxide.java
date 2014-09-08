@@ -1,14 +1,12 @@
 package enviromine.gases.types;
 
-import java.awt.Color;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 import enviromine.gases.EnviroGas;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.trackers.EnviroDataTracker;
+
+import java.awt.Color;
 
 public class GasSulfurDioxide extends EnviroGas
 {

@@ -8,7 +8,6 @@ import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -107,10 +106,12 @@ public class PacketEnviroMine implements IMessage
 					EnviroMine.logger.log(Level.ERROR, "Please change your settings to enable one or more status types");
 				} else
 				{
-					if(EnviroMine.proxy.isClient() && Minecraft.getMinecraft().thePlayer.getUniqueID().toString().equals(data[1].trim()))
+					EntityPlayer player = EM_StatusManager.findPlayer(UUID.fromString(data[1].trim()));
+					
+					if(EnviroMine.proxy.isClient() && player != null)
 					{
 						EnviroMine.logger.log(Level.ERROR, "Attempting to create tracker for player...");
-						EnviroDataTracker emTrack = new EnviroDataTracker(Minecraft.getMinecraft().thePlayer);
+						EnviroDataTracker emTrack = new EnviroDataTracker(player);
 						EM_StatusManager.addToManager(emTrack);
 						
 						emTrack.airQuality = Float.valueOf(data[2]);

@@ -156,6 +156,7 @@ public class EM_ConfigHandler
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 128, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(128);
 		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", -1, "How many gases can be processed in a single pass (-1 = infinite)").getInt(-1);
+		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", true, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(true);
 		
 		// Potion ID's
 		EM_Settings.hypothermiaPotionID = -1;

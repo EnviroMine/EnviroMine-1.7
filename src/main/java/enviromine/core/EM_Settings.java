@@ -81,6 +81,7 @@ public class EM_Settings
 	public static boolean renderGases = false;
 	public static int gasTickRate = 32; //GasFires are 4x faster than this
 	public static int gasPassLimit = -1;
+	public static boolean gasWaterLike = true;
 	
 	//World Gen
 	public static boolean shaftGen = true;

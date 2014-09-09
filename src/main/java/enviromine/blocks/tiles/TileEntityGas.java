@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import enviromine.EnviroUtils;
 import enviromine.blocks.BlockGas;
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
@@ -265,6 +266,11 @@ public class TileEntityGas extends TileEntity
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
+		
+		if(!par1NBTTagCompound.hasKey("GasArray"))
+		{
+			return;
+		}
 		
 		int[] savedGases = par1NBTTagCompound.getIntArray("GasArray");
 		
@@ -598,6 +604,8 @@ public class TileEntityGas extends TileEntity
 			return false;
 		}
 		
+		int gasMode = EM_Settings.gasWaterLike? 1 : 0;
+		
 		int vDir = j - this.yCoord;
 		
 		TileEntity tile = this.worldObj.getTileEntity(i, j, k);
@@ -625,7 +633,7 @@ public class TileEntityGas extends TileEntity
 		{
 			TileEntityGas gasTile = (TileEntityGas)tile;
 			
-			if(gasTile.amount + 1 >= this.amount && this.amount <= 10 && vDir == 0 && this.getBlockType() != ObjectHandler.fireGasBlock)
+			if(gasTile.amount + gasMode >= this.amount && this.amount <= 10 && vDir == 0 && this.getBlockType() != ObjectHandler.fireGasBlock)
 			{
 				return false;
 			} else if(vDir != 0 && this.amount <= 10 && gasTile.amount >= 10 && this.getBlockType() != ObjectHandler.fireGasBlock)

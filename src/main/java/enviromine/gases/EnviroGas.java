@@ -70,7 +70,7 @@ public class EnviroGas
 		}
 		
 		float ratio = (float)amount/(float)air;
-		int extra = (int)(this.volitility * amount) - amount;
+		int extra = Math.round(this.volitility * amount) - amount;
 		float midPoint = (this.UFL + this.LFL)/2F;
 		
 		if(ratio < this.LFL || ratio > this.UFL)

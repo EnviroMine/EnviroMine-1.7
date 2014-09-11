@@ -72,6 +72,7 @@ public class EnviroGas
 		float ratio = (float)amount/(float)air;
 		int extra = Math.round(this.volitility * amount) - amount;
 		float midPoint = (this.UFL + this.LFL)/2F;
+		float diff = midPoint - this.LFL;
 		
 		if(ratio < this.LFL || ratio > this.UFL)
 		{
@@ -81,7 +82,7 @@ public class EnviroGas
 			return amount;
 		} else
 		{
-			return amount + MathHelper.floor_float(extra * (1F - Math.abs(ratio - midPoint)));
+			return amount + MathHelper.floor_float(extra * (diff - Math.abs(ratio - midPoint)));
 		}
 	}
 	

@@ -279,7 +279,7 @@ public class TileEntityGas extends TileEntity
 			gases = new ArrayList<int[]>();
 		} else
 		{
-			EnviroMine.logger.log(Level.ERROR, "GasTile loaded 0 gases, this should not happen!");
+			//EnviroMine.logger.log(Level.ERROR, "GasTile loaded 0 gases, this should not happen!");
 		}
 		
 		for(int i = 0; i < savedGases.length; i++)
@@ -310,11 +310,24 @@ public class TileEntityGas extends TileEntity
 		}
 		
 		par1NBTTagCompound.setIntArray("GasArray", savedGases);
+		/*if(par1NBTTagCompound.getIntArray("GasArray").length <= 0)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to save gas array!");
+			EnviroMine.logger.log(Level.ERROR, "Gases: " + gases.size());
+			EnviroMine.logger.log(Level.ERROR, "Processed: " + index + "/" + this.amount);
+			EnviroMine.logger.log(Level.ERROR, "Side: " + (this.getWorldObj().isRemote? "Client" : "Server"));
+		}*/
 	}
 	
 	public void updateAmount()
 	{
+		int before = this.amount;
 		this.amount = getGasQuantity(-1);
+		
+		if(this.amount != before)
+		{
+			this.markDirty();
+		}
 	}
 	
 	public int getGasQuantity(int id)
@@ -589,6 +602,7 @@ public class TileEntityGas extends TileEntity
 		
 		if(changed)
 		{
+			//this.markDirty();
 			/*this.updateColor();
 			this.updateAmount();
 			this.updateOpacity();

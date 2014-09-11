@@ -34,18 +34,11 @@ public class BlockGas extends Block implements ITileEntityProvider
 {
 	public IIcon gasIcon;
 	public IIcon gasFireIcon;
-	public ArrayList<String> igniteList = new ArrayList<String>();
 	
 	public BlockGas(Material par2Material)
 	{
 		super(par2Material);
 		this.setTickRandomly(true);
-		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.flowing_lava));
-		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.lava));
-		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.torch));
-		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.lit_furnace));
-		igniteList.add("" + Block.blockRegistry.getNameForObject(ObjectHandler.fireGasBlock));
-		igniteList.add("" + Block.blockRegistry.getNameForObject(Blocks.fire));
 	}
 	
 	@Override
@@ -104,9 +97,9 @@ public class BlockGas extends Block implements ITileEntityProvider
 			
 			//gasTile.addGas(1, 10);
 			//gasTile.addGas(3, 50);
-			//gasTile.addGas(4, 100); // METHANE
+			gasTile.addGas(4, 100); // METHANE
 			//gasTile.addGas(0, 2000); // FIRE
-			gasTile.addGas(7, 100); // NUKE
+			//gasTile.addGas(7, 100); // NUKE
 			gasTile.updateRender();
 		}
 	}
@@ -432,7 +425,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 			Block block = world.getBlock(x + pos[0], y + pos[1], z + pos[2]);
 			int meta = world.getBlockMetadata(x + pos[0], y + pos[1], z + pos[2]);
 			
-			if(igniteList.contains("" + Block.blockRegistry.getNameForObject(block)) || igniteList.contains("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
+			if(ObjectHandler.igniteList.containsKey(block) && (ObjectHandler.igniteList.get(block).isEmpty() || ObjectHandler.igniteList.get(block).contains(meta)))
 			{
 				return true;
 			} else

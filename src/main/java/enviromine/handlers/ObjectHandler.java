@@ -1,5 +1,12 @@
 package enviromine.handlers;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.apache.logging.log4j.Level;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -8,15 +15,21 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enviromine.EntityPhysicsBlock;
+import enviromine.blocks.BlockBurningCoal;
 import enviromine.blocks.BlockDavyLamp;
 import enviromine.blocks.BlockElevatorBottom;
 import enviromine.blocks.BlockElevatorTop;
+import enviromine.blocks.BlockFireTorch;
+import enviromine.blocks.BlockFlammableCoal;
 import enviromine.blocks.BlockGas;
 import enviromine.blocks.materials.MaterialGas;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
@@ -34,6 +47,7 @@ import enviromine.items.RottenFood;
 
 public class ObjectHandler
 {
+	public static HashMap<Block, ArrayList<Integer>> igniteList = new HashMap<Block, ArrayList<Integer>>();
 	public static ArmorMaterial camelPackMaterial;
 	
 	public static Item badWaterBottle;
@@ -54,6 +68,9 @@ public class ObjectHandler
 	public static Block elevatorBottom;
 	public static Block gasBlock;
 	public static Block fireGasBlock;
+	
+	public static Block burningCoal;
+	public static Block fireTorch;
 	
 	public static int renderGasID;
 	
@@ -97,6 +114,11 @@ public class ObjectHandler
 		
 		davyLampBlock = new BlockDavyLamp(Material.iron).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:davy_lamp");
 		davyLamp = new DavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);
+
+		burningCoal = new BlockBurningCoal(Material.rock).setBlockName("enviromine.burningcoal").setCreativeTab(EnviroMine.enviroTab);
+		fireTorch = new BlockFireTorch().setTickRandomly(true).setBlockName("torch").setBlockTextureName("torch_on").setLightLevel(0.9375F).setCreativeTab(EnviroMine.enviroTab);
+		
+		replaceBlocks();
 	}
 	
 	public static void registerBlocks()
@@ -106,6 +128,8 @@ public class ObjectHandler
 		GameRegistry.registerBlock(elevatorTop, "elevator_top");
 		GameRegistry.registerBlock(elevatorBottom, "elevator_bottom");
 		GameRegistry.registerBlock(davyLampBlock, DavyLamp.class, "davy_lamp");
+		GameRegistry.registerBlock(fireTorch, "firetorch");
+		GameRegistry.registerBlock(burningCoal, "burningcoal");
 	}
 	
 	public static void registerGases()
@@ -150,6 +174,18 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(davyLampBlock), " x ", "zyz", "xxx", 'x', new ItemStack(Items.gold_ingot), 'y', new ItemStack(Blocks.torch), 'z', new ItemStack(Blocks.glass_pane));
 	}
 	
+	public static void LoadIgnitionSources()
+	{
+		igniteList.put(Blocks.flowing_lava, new ArrayList<Integer>());
+		igniteList.put(Blocks.lava, new ArrayList<Integer>());
+		igniteList.put(Blocks.torch, new ArrayList<Integer>());
+		igniteList.put(Blocks.lit_furnace, new ArrayList<Integer>());
+		igniteList.put(Blocks.fire, new ArrayList<Integer>());
+		igniteList.put(ObjectHandler.fireGasBlock, new ArrayList<Integer>());
+		igniteList.put(ObjectHandler.fireTorch, new ArrayList<Integer>());
+		igniteList.put(ObjectHandler.burningCoal, new ArrayList<Integer>());
+	}
+	
 	//TODO Should Probably be be Removed Sounds.Json now controls this
 	//@ForgeSubscribe
 	public void registerSounds(SoundLoadEvent event)
@@ -173,5 +209,132 @@ public class ObjectHandler
 		event.manager.addSound("enviromine:gag2.ogg");
 		event.manager.addSound("enviromine:gag3.ogg");
 		*/
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void replaceBlocks()
+	{
+		Field field = null; // Coal Block to replace
+		Field field3 = null; // FML GameData instance
+		Field field4 = null; // Block registry in GameData
+		Field field5 = null; // Item registry in GameData (Need this for ItemBlock linking)
+		Field modifiers = null;
+		
+		Block block = new BlockFlammableCoal();
+
+		try
+		{
+			field = Blocks.class.getDeclaredField("coal_ore");
+			field3 = GameData.class.getDeclaredField("mainData");
+			field4 = GameData.class.getDeclaredField("iBlockRegistry");
+			field5 = GameData.class.getDeclaredField("iItemRegistry");
+			modifiers = Field.class.getDeclaredField("modifiers");
+		} catch(NoSuchFieldException e)
+		{
+			try
+			{
+				field = Blocks.class.getDeclaredField("field_150365_q");
+				field3 = GameData.class.getDeclaredField("mainData");
+				field4 = GameData.class.getDeclaredField("iBlockRegistry");
+				field5 = GameData.class.getDeclaredField("iBlockRegistry");
+				modifiers = Field.class.getDeclaredField("modifiers");
+			} catch(NoSuchFieldException e1)
+			{
+				e.printStackTrace();
+				e1.printStackTrace();
+				return;
+			} catch(SecurityException e1)
+			{
+				e.printStackTrace();
+				e1.printStackTrace();
+				return;
+			}
+		} catch(SecurityException e)
+		{
+			try
+			{
+				field = Blocks.class.getDeclaredField("field_150365_q");
+				field3 = GameData.class.getDeclaredField("mainData");
+				field4 = GameData.class.getDeclaredField("iBlockRegistry");
+				field5 = GameData.class.getDeclaredField("iBlockRegistry");
+				modifiers = Field.class.getDeclaredField("modifiers");
+			} catch(NoSuchFieldException e1)
+			{
+				e.printStackTrace();
+				e1.printStackTrace();
+				return;
+			} catch(SecurityException e1)
+			{
+				e.printStackTrace();
+				e1.printStackTrace();
+				return;
+			}
+		}
+		
+		modifiers.setAccessible(true);
+		
+		try
+		{
+			modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+			modifiers.setInt(field3, field3.getModifiers() & ~Modifier.FINAL);
+			modifiers.setInt(field4, field4.getModifiers() & ~Modifier.FINAL);
+			modifiers.setInt(field5, field5.getModifiers() & ~Modifier.FINAL);
+		} catch(IllegalArgumentException e1)
+		{
+			e1.printStackTrace();
+			return;
+		} catch(IllegalAccessException e1)
+		{
+			e1.printStackTrace();
+			return;
+		}
+		
+		field.setAccessible(true);
+		field3.setAccessible(true);
+		field4.setAccessible(true);
+		field5.setAccessible(true);
+		
+		try
+		{
+			field.set(null, block);
+			
+			try
+			{
+				Method addRawObj = FMLControlledNamespacedRegistry.class.getDeclaredMethod("addObjectRaw", int.class, String.class, Object.class);
+				addRawObj.setAccessible(true);
+				addRawObj.invoke(((FMLControlledNamespacedRegistry<Item>)field5.get(field3.get(null))), 16, "minecraft:coal_ore", new ItemBlock(block));
+				addRawObj.invoke(((FMLControlledNamespacedRegistry<Block>)field4.get(field3.get(null))), 16, "minecraft:coal_ore", block);
+			} catch(NoSuchMethodException e)
+			{
+				e.printStackTrace();
+				return;
+			} catch(SecurityException e)
+			{
+				e.printStackTrace();
+				return;
+			} catch(InvocationTargetException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+		} catch(IllegalArgumentException e2)
+		{
+			e2.printStackTrace();
+			return;
+		} catch(IllegalAccessException e2)
+		{
+			e2.printStackTrace();
+			return;
+		}
+		
+		if(Blocks.coal_ore instanceof BlockFlammableCoal && Block.blockRegistry.getObject("coal_ore") instanceof BlockFlammableCoal)
+		{
+			EnviroMine.logger.log(Level.INFO, "Successfully replaced Coal Ore block");
+		} else
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to override vanilla Coal Ore block");
+		}
+
+		Blocks.fire.setFireInfo(Blocks.coal_ore, 60, 100);
 	}
 }

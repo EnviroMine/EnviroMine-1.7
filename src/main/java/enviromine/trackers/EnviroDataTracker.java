@@ -85,7 +85,7 @@ public class EnviroDataTracker
 		{
 			if(trackedEntity instanceof EntityPlayer)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(((EntityPlayer)trackedEntity).getUniqueID());
+				EntityPlayer player = EM_StatusManager.findPlayer(trackedEntity.getCommandSenderName());
 				
 				if(player == null)
 				{
@@ -550,6 +550,10 @@ public class EnviroDataTracker
 		if(tags.hasKey("ENVIRO_SAN"))
 		{
 			sanity = tags.getFloat("ENVIRO_SAN");
+		}
+		if(tags.hasKey("ENVIRO_ATP"))
+		{
+			airTemp = tags.getFloat("ENVIRO_ATP");
 		}
 	}
 	

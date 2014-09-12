@@ -86,7 +86,7 @@ public class EM_GuiEnviroMeters extends Gui
 		
 		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
 		{
-			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getUniqueID());
+			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getCommandSenderName());
 			
 			if(player != null)
 			{
@@ -106,7 +106,7 @@ public class EM_GuiEnviroMeters extends Gui
 			tracker = null;
 		} else if(ticktimer == 1)
 		{
-			tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
+			tracker = EM_StatusManager.lookupTracker(this.mc.thePlayer);
 			
 			if(tracker == null)
 			{
@@ -120,7 +120,7 @@ public class EM_GuiEnviroMeters extends Gui
 			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
-				tracker = EM_StatusManager.lookupTrackerFromUUID(this.mc.thePlayer.getUniqueID());
+				tracker = EM_StatusManager.lookupTracker(this.mc.thePlayer);
 			}
 		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker) || (EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 		{

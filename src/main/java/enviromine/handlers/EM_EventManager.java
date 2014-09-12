@@ -118,7 +118,7 @@ public class EM_EventManager
 				
 				if(event.entity instanceof EntityPlayer)
 				{
-					EnviroDataTracker oldTrack = EM_StatusManager.lookupTrackerFromUUID(((EntityPlayer)event.entity).getUniqueID());
+					EnviroDataTracker oldTrack = EM_StatusManager.lookupTracker((EntityLivingBase)event.entity);
 					if(oldTrack != null && (oldTrack.trackedEntity == null || (oldTrack.trackedEntity.isDead && oldTrack.trackedEntity.getHealth() <= 0F)))
 					{
 						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
@@ -165,7 +165,7 @@ public class EM_EventManager
 		{
 			if(event.entityLiving instanceof EntityPlayer && event.source == null)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(event.entity.getUniqueID());
+				EntityPlayer player = EM_StatusManager.findPlayer(event.entity.getCommandSenderName());
 				
 				if(player != null)
 				{
@@ -312,7 +312,7 @@ public class EM_EventManager
 			EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, event.x, event.y, event.z, true, "Normal");
 		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null && EnviroMine.proxy.isClient())
 		{
-			EnviroMine.instance.network.sendToServer(new PacketEnviroMine("ID:1," + event.entityPlayer.getUniqueID().toString()));
+			EnviroMine.instance.network.sendToServer(new PacketEnviroMine("ID:1," + event.entityPlayer.getCommandSenderName()));
 		}
 	}
 	
@@ -724,6 +724,7 @@ public class EM_EventManager
 					EM_StatusManager.addToManager(emTrack);
 					emTrack.loadNBTTags();
 					EM_StatusManager.syncMultiplayerTracker(emTrack);
+					tracker = emTrack;
 				} else
 				{
 					return;
@@ -834,6 +835,28 @@ public class EM_EventManager
 			if(attribute.getModifier(EM_FROST3_ID) != null && tracker.frostbiteLevel < 2)
 			{
 				attribute.removeModifier(attribute.getModifier(EM_FROST3_ID));
+			}
+		}
+		
+		if(event.entityLiving.isPotionActive(EnviroPotion.frostbite) && event.entityLiving.getActivePotionEffect(EnviroPotion.frostbite).getAmplifier() > 0 && event.entityLiving.isRiding())
+		{
+			event.entityLiving.setSprinting(false);
+			event.entityLiving.setJumping(false);
+			
+			if((event.entityLiving.lastTickPosY < event.entityLiving.posY || event.entityLiving.prevPosY < event.entityLiving.posY || event.entityLiving.motionY > 0) && event.entityLiving.isInWater())
+			{
+				double sinkSp = 0.2D;
+				Vec3 srcVec = Vec3.createVectorHelper(event.entityLiving.posX, event.entityLiving.lastTickPosY, event.entityLiving.posZ);
+				Vec3 desVec = srcVec.addVector(0D, -sinkSp, 0D);
+				MovingObjectPosition mop = event.entityLiving.worldObj.rayTraceBlocks(srcVec, desVec);
+				
+				if(mop == null)
+				{
+					event.entityLiving.lastTickPosY -= sinkSp;
+				}
+				
+				event.entityLiving.setPositionAndUpdate(event.entityLiving.posX, event.entityLiving.lastTickPosY, event.entityLiving.posZ);
+				event.entityLiving.motionY = -sinkSp;
 			}
 		}
 		
@@ -1101,7 +1124,9 @@ public class EM_EventManager
 		{
 			if(event.entityLiving.getActivePotionEffect(EnviroPotion.frostbite).getAmplifier() > 0)
 			{
-				event.entityLiving.motionY = 0;
+				event.entityLiving.motionY = -1D;
+				event.entityLiving.motionX = 0D;
+				event.entityLiving.motionZ = 0D;
 			}
 		}
 	}

@@ -14,7 +14,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import java.util.UUID;
 import org.apache.logging.log4j.Level;
 
 public class PacketEnviroMine implements IMessage
@@ -56,7 +55,7 @@ public class PacketEnviroMine implements IMessage
 		
 		private void emptyRightClick(String[] data)
 		{
-			EntityPlayer player = EM_StatusManager.findPlayer(UUID.fromString(data[1]));
+			EntityPlayer player = EM_StatusManager.findPlayer(data[1].trim());
 			
 			if(player != null)
 			{
@@ -84,7 +83,7 @@ public class PacketEnviroMine implements IMessage
 		private void trackerSync(String[] data)
 		{
 			
-			EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUUID(UUID.fromString(data[1]));
+			EnviroDataTracker tracker = EM_StatusManager.trackerList.get(data[1].trim());
 			
 			if(tracker != null)
 			{
@@ -99,14 +98,14 @@ public class PacketEnviroMine implements IMessage
 				tracker.airTemp = Float.valueOf(data[6]);
 			} else
 			{
-				EnviroMine.logger.log(Level.ERROR, "Failed to sync tracker for entity with UUID: " + data[1].trim());
+				EnviroMine.logger.log(Level.ERROR, "Failed to sync tracker for player " + data[1].trim());
 				
 				if(!(EM_Settings.enableAirQ || EM_Settings.enableBodyTemp || EM_Settings.enableHydrate || EM_Settings.enableSanity))
 				{
 					EnviroMine.logger.log(Level.ERROR, "Please change your settings to enable one or more status types");
 				} else
 				{
-					EntityPlayer player = EM_StatusManager.findPlayer(UUID.fromString(data[1].trim()));
+					EntityPlayer player = EM_StatusManager.findPlayer(data[1].trim());
 					
 					if(EnviroMine.proxy.isClient() && player != null)
 					{

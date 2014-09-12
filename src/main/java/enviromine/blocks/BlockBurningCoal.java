@@ -7,14 +7,20 @@ import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 import java.util.Random;
+import enviromine.blocks.tiles.TileEntityBurningCoal;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.gases.EnviroGasDictionary;
+import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockBurningCoal extends Block
+public class BlockBurningCoal extends Block implements ITileEntityProvider
 {
 	public BlockBurningCoal(Material mat)
 	{
@@ -36,6 +42,8 @@ public class BlockBurningCoal extends Block
 		super.updateTick(world, x, y, z, rand);
 
         world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world) + rand.nextInt(10));
+        
+        TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);
 
         int l = world.getBlockMetadata(x, y, z);
 		boolean flag1 = world.isBlockHighHumidity(x, y, z);
@@ -45,13 +53,48 @@ public class BlockBurningCoal extends Block
         {
             b0 = -50;
         }
-
-        this.tryCatchFire(world, x + 1, y, z, 300 + b0, rand, l, WEST );
+        
+        for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++)
+        {
+        	ForgeDirection fDir = ForgeDirection.VALID_DIRECTIONS[i];
+        	int xOff = fDir.offsetX + x;
+        	int yOff = fDir.offsetY + y;
+        	int zOff = fDir.offsetZ + z;
+        	int enco = 300 + b0 - (fDir == UP || fDir == DOWN? 50 : 0);
+        	
+        	this.tryCatchFire(world, xOff, yOff, zOff, enco, rand, l, fDir.getOpposite());
+        	
+        	if(world.rand.nextInt(6) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
+        	{
+        		if(world.getBlock(xOff, yOff, zOff) == Blocks.air)
+        		{
+        			world.setBlock(xOff, yOff, zOff, ObjectHandler.gasBlock);
+        		}
+        		TileEntity tile = world.getTileEntity(xOff, yOff, zOff);
+        		
+        		if(tile != null && tile instanceof TileEntityGas)
+        		{
+        			TileEntityGas gasTile = (TileEntityGas)tile;
+        			
+        			if(gasTile.amount < 10)
+        			{
+        				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, 1);
+        				coalTile.fuel--;
+        			}
+        		}
+        	}
+        	
+        	if(coalTile.fuel <= 0)
+        	{
+        		world.setBlock(x, y, z, Blocks.air);
+        	}
+        }
+        /*this.tryCatchFire(world, x + 1, y, z, 300 + b0, rand, l, WEST );
         this.tryCatchFire(world, x - 1, y, z, 300 + b0, rand, l, EAST );
         this.tryCatchFire(world, x, y - 1, z, 250 + b0, rand, l, UP   );
         this.tryCatchFire(world, x, y + 1, z, 250 + b0, rand, l, DOWN );
         this.tryCatchFire(world, x, y, z - 1, 300 + b0, rand, l, SOUTH);
-        this.tryCatchFire(world, x, y, z + 1, 300 + b0, rand, l, NORTH);
+        this.tryCatchFire(world, x, y, z + 1, 300 + b0, rand, l, NORTH);*/
 
         for (int i1 = x - 1; i1 <= x + 1; ++i1)
         {
@@ -168,4 +211,10 @@ public class BlockBurningCoal extends Block
         int newChance = world.getBlock(x, y, z).getFireSpreadSpeed(world, x, y, z, face);
         return (newChance > oldChance ? newChance : oldChance);
     }
+
+	@Override
+	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	{
+		return new TileEntityBurningCoal();
+	}
 }

@@ -32,6 +32,7 @@ import enviromine.blocks.BlockFireTorch;
 import enviromine.blocks.BlockFlammableCoal;
 import enviromine.blocks.BlockGas;
 import enviromine.blocks.materials.MaterialGas;
+import enviromine.blocks.tiles.TileEntityBurningCoal;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
@@ -141,6 +142,7 @@ public class ObjectHandler
 		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", EM_Settings.physBlockID);
 		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", EM_Settings.physBlockID, EnviroMine.instance, 64, 1, true);
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
+		GameRegistry.registerTileEntity(TileEntityBurningCoal.class, "enviromine.tile.burningcoal");
 		
 		GameRegistry.registerTileEntity(TileEntityElevatorTop.class, "enviromine.tile.elevator_top");
 		GameRegistry.registerTileEntity(TileEntityElevatorBottom.class, "enviromine.tile.elevator_bottom");

@@ -9,10 +9,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.util.EnumHelper;
+
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.BlockDavyLamp;
 import enviromine.blocks.BlockElevatorBottom;
@@ -148,30 +149,5 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(elevatorBottom), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
 		
 		GameRegistry.addRecipe(new ItemStack(davyLampBlock), " x ", "zyz", "xxx", 'x', new ItemStack(Items.gold_ingot), 'y', new ItemStack(Blocks.torch), 'z', new ItemStack(Blocks.glass_pane));
-	}
-	
-	//TODO Should Probably be be Removed Sounds.Json now controls this
-	//@ForgeSubscribe
-	public void registerSounds(SoundLoadEvent event)
-	{
-		/*
-		// You add them the same way as you add blocks.
-		System.out.println("Loading Sounds");
-		
-		event.manager.addSound("enviromine:gasmask.ogg");
-		
-		event.manager.addSound("enviromine:thingdistant.ogg");
-		event.manager.addSound("enviromine:thingkill.ogg");
-		
-		event.manager.addSound("enviromine:CaveIn.ogg");
-		
-		event.manager.addSound("enviromine:sizzle.ogg");
-		event.manager.addSound("enviromine:chill.ogg");
-		
-		//Random Heavy(Panic) Breathing
-		event.manager.addSound("enviromine:gag1.ogg");
-		event.manager.addSound("enviromine:gag2.ogg");
-		event.manager.addSound("enviromine:gag3.ogg");
-		*/
 	}
 }

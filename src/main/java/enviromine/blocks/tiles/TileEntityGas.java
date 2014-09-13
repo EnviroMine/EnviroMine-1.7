@@ -277,6 +277,8 @@ public class TileEntityGas extends TileEntity
 		{
 			this.addGas(savedGases[i], 1);
 		}
+		
+		System.out.println("Read NBTTag = " + par1NBTTagCompound.toString());
 	}
 	
 	@Override
@@ -301,6 +303,13 @@ public class TileEntityGas extends TileEntity
 		}
 		
 		par1NBTTagCompound.setIntArray("GasArray", savedGases);
+		String tmp = "{";
+		for (int i : savedGases) {
+			tmp += (tmp.equals("{") ? i : ", "+i);
+		}
+		tmp += "}";
+		System.out.println("savedGasses = " + tmp);
+		System.out.println("Written NBTTag = " + par1NBTTagCompound.toString());
 	}
 	
 	public void updateAmount()

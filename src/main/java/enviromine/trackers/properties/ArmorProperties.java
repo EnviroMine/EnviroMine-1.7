@@ -154,9 +154,7 @@ public class ArmorProperties
 	
 
 	private static void DetectedArmorGen(ItemArmor armor, String ModID)
-	{		//TODO REMOVE AFTER TESTING
-			//		File armorFile = new File(customPath + armor.getClass().getSimpleName() + ".cfg");
-		
+	{
 		String[] classpath = armor.getClass().getCanonicalName().toString().split("\\.");
 		
 		

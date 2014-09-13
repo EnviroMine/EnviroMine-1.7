@@ -43,9 +43,7 @@ public class DimensionProperties
 		this.darkAffectSanity = darkAffectSanity;
 		this.sanityMultiplyer = sanityMultiplyer;
 		this.trackAirQuality = trackAirQuality;
-		System.out.println("Setting multiplier to "+airMulti+" for "+id);
 		this.airMulti = airMulti;
-		System.out.println("Set multiplier to "+this.airMulti);
 		this.trackHydration = trackHydration;
 		this.hydrationMulti = hydrationMulti;
 		this.trackTemp = trackTemp;

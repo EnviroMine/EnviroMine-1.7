@@ -344,22 +344,6 @@ public class EnviroDataTracker
 		
 		if(plate != null && !isCreative)
 		{
-			//TODO Changed Camel packs to also read from NBT tags
-			//if(plate.getItem() == ObjectHandler.camelPack)
-			//{
-				/*
-				if(plate.getItemDamage() < plate.getMaxDamage() && hydration <= 99F - EM_Settings.hydrationMult)
-				{
-					plate.setItemDamage(plate.getItemDamage() + 1);
-					hydrate((float)EM_Settings.hydrationMult);
-					
-					if(bodyTemp >= 37F + EM_Settings.tempMult/10F)
-					{
-						bodyTemp -= EM_Settings.tempMult/10F;
-					}
-				}
-			} else*/
-				
 			if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
 			{
 				int fill = plate.getTagCompound().getInteger("camelPackFill");

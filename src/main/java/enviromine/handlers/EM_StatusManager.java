@@ -103,7 +103,7 @@ public class EM_StatusManager
 		String dataString = "";
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
-			dataString = ("ID:0," + tracker.trackedEntity.getEntityId() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
+			dataString = ("ID:0," + tracker.trackedEntity.getCommandSenderName() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
 		} else
 		{
 			return;

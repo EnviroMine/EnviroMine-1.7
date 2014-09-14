@@ -7,8 +7,10 @@ import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 import java.util.Random;
+import org.apache.logging.log4j.Level;
 import enviromine.blocks.tiles.TileEntityBurningCoal;
 import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
@@ -44,6 +46,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world) + rand.nextInt(10));
         
         TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);
+		EnviroMine.logger.log(Level.INFO, "Coal seam fire at (" + x + "," + y + "," + z + ") started tick with " + coalTile.fuel + " fuel.");
 
         int l = world.getBlockMetadata(x, y, z);
 		boolean flag1 = world.isBlockHighHumidity(x, y, z);
@@ -79,14 +82,17 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         			if(gasTile.amount < 10)
         			{
         				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, 1);
-        				coalTile.fuel--;
+        				coalTile.fuel -= 1;
+        				EnviroMine.logger.log(Level.INFO, "Coal seam fire at (" + x + "," + y + "," + z + ") has " + coalTile.fuel + " remaining fuel...");
         			}
         		}
         	}
         	
         	if(coalTile.fuel <= 0)
         	{
+				EnviroMine.logger.log(Level.INFO, "Coal seam fire at (" + x + "," + y + "," + z + ") burnt out");
         		world.setBlock(x, y, z, Blocks.air);
+        		return;
         	}
         }
         /*this.tryCatchFire(world, x + 1, y, z, 300 + b0, rand, l, WEST );

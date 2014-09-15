@@ -43,6 +43,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +116,7 @@ public class EM_StatusManager
 			EnviroMine.logger.log(Level.ERROR, "Tracker Sync data too long! Problems may occur client side while parsing!");
 		}
 		
-		EnviroMine.instance.network.sendToAll(new PacketEnviroMine(dataString));
+		EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(dataString), new TargetPoint(tracker.trackedEntity.dimension, tracker.trackedEntity.posX, tracker.trackedEntity.posY, tracker.trackedEntity.posZ, 128));
 	}
 	
 	public static EnviroDataTracker lookupTracker(EntityLivingBase entity)

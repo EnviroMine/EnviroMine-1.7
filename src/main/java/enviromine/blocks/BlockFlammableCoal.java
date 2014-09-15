@@ -1,5 +1,6 @@
 package enviromine.blocks;
 
+import enviromine.handlers.EM_PhysManager;
 import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
@@ -26,7 +27,7 @@ public class BlockFlammableCoal extends BlockOre
 			
 			if(ObjectHandler.igniteList.containsKey(block) && (ObjectHandler.igniteList.get(block).isEmpty() || ObjectHandler.igniteList.get(block).contains(meta)))
 			{
-				world.setBlock(x, y, z, ObjectHandler.burningCoal);
+				world.setBlock(x, y, z, ObjectHandler.burningCoal, 0, 3);
 				return;
 			}
 		}

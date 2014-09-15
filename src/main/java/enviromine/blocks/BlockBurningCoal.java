@@ -46,7 +46,6 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world) + rand.nextInt(10));
         
         TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);
-		EnviroMine.logger.log(Level.INFO, "Coal seam fire at (" + x + "," + y + "," + z + ") started tick with " + coalTile.fuel + " fuel.");
 
         int l = world.getBlockMetadata(x, y, z);
 		boolean flag1 = world.isBlockHighHumidity(x, y, z);
@@ -67,7 +66,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         	
         	this.tryCatchFire(world, xOff, yOff, zOff, enco, rand, l, fDir.getOpposite());
         	
-        	if(world.rand.nextInt(6) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
+        	if(world.rand.nextInt(5) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
         	{
         		if(world.getBlock(xOff, yOff, zOff) == Blocks.air)
         		{
@@ -83,14 +82,12 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         			{
         				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, 1);
         				coalTile.fuel -= 1;
-        				EnviroMine.logger.log(Level.INFO, "Coal seam fire at (" + x + "," + y + "," + z + ") has " + coalTile.fuel + " remaining fuel...");
         			}
         		}
         	}
         	
         	if(coalTile.fuel <= 0)
         	{
-				EnviroMine.logger.log(Level.INFO, "Coal seam fire at (" + x + "," + y + "," + z + ") burnt out");
         		world.setBlock(x, y, z, Blocks.air);
         		return;
         	}

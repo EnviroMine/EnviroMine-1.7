@@ -27,7 +27,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-import enviromine.EM_VillageMineshaft;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.core.commands.CommandPhysics;
@@ -45,6 +44,7 @@ import enviromine.trackers.properties.DimensionProperties;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
+import enviromine.world.features.mineshaft.EM_VillageMineshaft;
 
 @Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version)
 public class EnviroMine

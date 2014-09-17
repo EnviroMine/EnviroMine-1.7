@@ -1,4 +1,4 @@
-package enviromine;
+package enviromine.world.features.mineshaft;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

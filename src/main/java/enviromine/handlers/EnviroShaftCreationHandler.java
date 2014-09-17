@@ -4,7 +4,7 @@ import net.minecraft.world.gen.structure.StructureVillagePieces;
 
 import cpw.mods.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
 
-import enviromine.EM_VillageMineshaft;
+import enviromine.world.features.mineshaft.EM_VillageMineshaft;
 
 import java.util.List;
 import java.util.Random;

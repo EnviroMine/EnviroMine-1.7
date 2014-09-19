@@ -16,6 +16,7 @@ import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
+import enviromine.trackers.properties.DimensionProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class WorldFeatureGenerator implements IWorldGenerator
@@ -35,7 +36,16 @@ public class WorldFeatureGenerator implements IWorldGenerator
 			return;
 		}
 		
-		if(EM_Settings.oldMineGen)
+		DimensionProperties dimensionProp = null;
+		boolean allowMines = EM_Settings.oldMineGen;
+		
+		if(EM_Settings.dimensionProperties.containsKey(world.provider.dimensionId))
+		{ 
+			dimensionProp = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+			allowMines = dimensionProp.mineshaftGen;
+		}
+		
+		if(allowMines)
 		{
 			if(!disableMineScan)
 			{

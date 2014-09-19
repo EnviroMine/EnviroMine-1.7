@@ -54,7 +54,7 @@ options.enviromine.menu.title=Меню Enviromine
 options.enviromine.guiMainmenu.title=Главное меню EnviroMine
 options.enviromine.guiSetting.title=Графические настройки EnviroMine
 options.enviromine.guiBars.title=Настройки интерфейса EnviroMine
-options.enviromine.configSetting.title=Конфигурация Enviromine
+options.enviromine.configSetting.title=Конфигурация EnviroMine
 options.enviromine.guiBarPos.title=Позиции интерфейса EnviroMine
 options.enviromine.adminOptions.title=Настройки администратора
 options.enviromine.physics=Физика
@@ -90,8 +90,7 @@ deathmessage.enviromine.landslide=%s был раздавлен в результ
 deathmessage.enviromine.organfailure=%s умер от полиорганной недостаточности
 deathmessage.enviromine.heatstroke=Мозг %s был приготовлен в результате теплового удара
 deathmessage.enviromine.bleedout=%s истёк кровью
-deathmessage.enviromine.gasfire=%s погиб из-за газа
+deathmessage.enviromine.gasfire=%s погиб в результате утечки газа
 
 updatemsg.enviromine.avalible=Обновление %s EnviroMine доступно
 updatemsg.enviromine.download=Ссылка & изменения:
-

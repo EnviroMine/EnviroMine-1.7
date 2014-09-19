@@ -1,20 +1,18 @@
 language.name=Russian
-language.region=RU
-language.code=ru_RU
 
-item.badwater.name=Бутылка грязной воды
-item.saltwater.name=Бутылка солёной воды
-item.coldwater.name=Бутылка холодной воды
-item.camelpack.name=Бурдюк
-item.gasmask.name=Противогаз
-item.hardhat.name=Каска
-item.airfilter.name=Воздушный фильтр
-item.rottenfood.name=Испорченная руда
+item.enviromine.badwater.name=Бутылка грязной воды
+item.enviromine.saltwater.name=Бутылка солёной воды
+item.enviromine.coldwater.name=Бутылка холодной воды
+item.enviromine.camelpack.name=Бурдюк
+item.enviromine.gasmask.name=Противогаз
+item.enviromine.hardhat.name=Каска
+item.enviromine.airfilter.name=Воздушный фильтр
+item.enviromine.rottenfood.name=Испорченная еда
 
-tile.elevator_top.name=Верх лифта
-tile.elevator_bottom.name=Низ лифта
+tile.enviromine.elevator_top.name=Верх лифта
+tile.enviromine.elevator_bottom.name=Низ лифта
 
-itemGroup.enviroTab=EnviroMine
+itemGroup.enviromine.enviroTab=EnviroMine
 
 achievement.enviromine.FunwaysFault=Ошибка Funway
 achievement.enviromine.MindOverMatter=Разум важнее материи
@@ -51,3 +49,49 @@ achievement.enviromine.ItsPitchBlack.desc=???
 achievement.enviromine.TenSecondRule.desc=Съешьте испорченную еду
 achievement.enviromine.MedicalMarvels.desc=Вылечите любую инфекцию или заболевание
 achievement.enviromine.SuckItUpPrincess.desc=Убейте враждебного моба, когда у Вас сломана одна или более конечностей
+
+options.enviromine.menu.title=Меню Enviromine
+options.enviromine.guiMainmenu.title=Главное меню EnviroMine
+options.enviromine.guiSetting.title=Графические настройки EnviroMine
+options.enviromine.guiBars.title=Настройки интерфейса EnviroMine
+options.enviromine.configSetting.title=Конфигурация Enviromine
+options.enviromine.guiBarPos.title=Позиции интерфейса EnviroMine
+options.enviromine.adminOptions.title=Настройки администратора
+options.enviromine.physics=Физика
+options.enviromine.guiScaling=Размер интерфейса
+options.enviromine.guiOptions=Графические настройки
+options.enviromine.configSettings=Серверные настройки
+options.enviromine.customEditor=Пользовательский редактор
+options.enviromine.status=Текст статуса интерфейса
+options.enviromine.status.visible=Показан
+options.enviromine.status.hidden=Спрятан
+options.enviromine.minBars=Минималистичный интерфейс
+options.enviromine.minBars.on=Вкл
+options.enviromine.minBars.off=Выкл
+options.enviromine.debug=Текст отладки
+options.enviromine.debug.visible=Показан
+options.enviromine.debug.hidden=Спрятан
+options.enviromine.showIcons=Иконки интерфейса
+options.enviromine.showIcons.visible=Показаны
+options.enviromine.showIcons.hidden=Спрятаны
+options.enviromine.barPos=Позиции полосок
+options.enviromine.tempScale=Шкала температуры
+options.enviromine.tempScale.f=Фаренгейта
+options.enviromine.tempScale.c=Цельсия
+options.enviromine.barPos.hydration=Полоска увлажнения
+options.enviromine.barPos.temprature=Полоска температуры
+options.enviromine.barPos.sanity=Полоска здравомыслия
+options.enviromine.barPos.airQuality=Полоска качества воздуха
+
+deathmessage.enviromine.suffocate=%s задохнулся
+deathmessage.enviromine.frostbite=%s замёрз до смерти
+deathmessage.enviromine.dehydrate=%s умер от жажды
+deathmessage.enviromine.landslide=%s был раздавлен в результате оползня
+deathmessage.enviromine.organfailure=%s умер от полиорганной недостаточности
+deathmessage.enviromine.heatstroke=Мозг %s был приготовлен в результате теплового удара
+deathmessage.enviromine.bleedout=%s истёк кровью
+deathmessage.enviromine.gasfire=%s погиб из-за газа
+
+updatemsg.enviromine.avalible=Обновление %s EnviroMine доступно
+updatemsg.enviromine.download=Ссылка & изменения:
+

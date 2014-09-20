@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -14,6 +15,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevatorBottom;
@@ -42,7 +44,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	@Override
 	public boolean isOpenToLAN()
 	{
-		if(Minecraft.getMinecraft().isIntegratedServerRunning())
+		if (Minecraft.getMinecraft().isIntegratedServerRunning())
 		{
 			return Minecraft.getMinecraft().getIntegratedServer().getPublic();
 		} else
@@ -89,12 +91,12 @@ public class EM_ClientProxy extends EM_CommonProxy
 		RenderingRegistry.registerBlockHandler(ObjectHandler.renderGasID, new RenderGasHandler());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityPhysicsBlock.class, new RenderFallingBlock());
-	
+		
 		armoredCamelRenderers();
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorTop.class, new TileEntityElevatorTopRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElevatorBottom.class, new TileEntityElevatorBottomRenderer());
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDavyLamp.class, new TileEntityDavyLampRenderer());
 	}
 	
@@ -102,16 +104,15 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public static void armoredCamelRenderers()
 	{
 		Iterator tmp = Item.itemRegistry.iterator();
-		 
-		 while(tmp.hasNext())
-		 {
-			 Object itemArmor = tmp.next();
-			 if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1) 
-			 {
-				 MinecraftForgeClient.registerItemRenderer((Item) itemArmor, new ArmoredCamelPackRenderer());				 
-			 }	 
-		 }
 		
+		while (tmp.hasNext())
+		{
+			Object itemArmor = tmp.next();
+			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1)
+			{
+				MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+			}
+		}
 	}
 	
 	@Override

@@ -1193,7 +1193,7 @@ public class EM_EventManager
 	public void onRender(RenderPlayerEvent.Post event)
 	{
 		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
-		if (plate != null && (plate.getItem() == ObjectHandler.camelPack || (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")))) {
+		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))) {
 			//model = new ModelCamelPack();
 			
 			GL11.glPushMatrix();
@@ -1213,8 +1213,9 @@ public class EM_EventManager
 		if(event.itemStack != null && event.itemStack.hasTagCompound())
 		{
 			if (event.itemStack.getTagCompound().hasKey("camelPackFill")) {
-				int i = event.itemStack.getTagCompound().getInteger("camelPackFill");
-				int disp = (i <= 0 ? 0 : i > 100 ? 100 : (int)((i/100F)*100));
+				float fill = event.itemStack.getTagCompound().getInteger("camelPackFill");
+				float max = event.itemStack.getTagCompound().getInteger("camelPackMax");
+				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)((fill/max)*100));
 				event.toolTip.add("Camel pack: " + disp + "%");
 			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
 			{

@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.EnumHelper;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -140,7 +141,6 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(Blocks.mycelium), "xyx", "yzy", "xyx", 'z', new ItemStack(Blocks.grass), 'y', new ItemStack(Blocks.brown_mushroom_block), 'x', new ItemStack(rottenFood, 1));
 		GameRegistry.addRecipe(new ItemStack(Blocks.dirt, 1), "xxx", "xxx", "xxx", 'x', new ItemStack(rottenFood, 1));
 		
-		GameRegistry.addRecipe(new ItemStack(camelPack, 1, camelPack.getMaxDamage()), "xxx", "xyx", "xxx", 'x', new ItemStack(Items.leather), 'y', new ItemStack(Items.glass_bottle));
 		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xyx", "xzx", "xyx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Blocks.wool), 'z', new ItemStack(Items.coal, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(gasMask, 1), "xxx", "xzx", "yxy", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(airFilter), 'z', new ItemStack(Blocks.glass_pane));
 		GameRegistry.addRecipe(new ItemStack(hardHat, 1), "xyx", "xzx", 'x', new ItemStack(Blocks.wool, 1, 4), 'y', new ItemStack(Blocks.redstone_lamp), 'z', new ItemStack(Items.iron_helmet, 1, 0));
@@ -149,5 +149,17 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(elevatorBottom), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
 		
 		GameRegistry.addRecipe(new ItemStack(davyLampBlock), " x ", "zyz", "xxx", 'x', new ItemStack(Items.gold_ingot), 'y', new ItemStack(Blocks.torch), 'z', new ItemStack(Blocks.glass_pane));
+		
+		ItemStack camelStack = new ItemStack(camelPack);
+		camelStack.setTagCompound(new NBTTagCompound());
+		camelStack.getTagCompound().setInteger("camelPackFill", 0);
+		camelStack.getTagCompound().setInteger("camelPackMax", 100);
+		camelStack.getTagCompound().setBoolean("isCamelPack", true);
+		camelStack.getTagCompound().setString("camelPath", Item.itemRegistry.getNameForObject(camelPack));
+		GameRegistry.addRecipe(camelStack, "xxx", "xyx", "xxx", 'x', new ItemStack(Items.leather), 'y', new ItemStack(Items.glass_bottle));
+		
+		ItemStack camelStack2 = camelStack.copy();
+		camelStack2.getTagCompound().setInteger("camelPackFill", 25);
+		GameRegistry.addRecipe(camelStack2, "xxx", "xyx", "xxx", 'x', new ItemStack(Items.leather), 'y', new ItemStack(Items.potionitem, 1, 0));
 	}
 }

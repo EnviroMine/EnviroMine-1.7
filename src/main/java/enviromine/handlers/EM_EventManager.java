@@ -1213,10 +1213,15 @@ public class EM_EventManager
 		if(event.itemStack != null && event.itemStack.hasTagCompound())
 		{
 			if (event.itemStack.getTagCompound().hasKey("camelPackFill")) {
-				float fill = event.itemStack.getTagCompound().getInteger("camelPackFill");
-				float max = event.itemStack.getTagCompound().getInteger("camelPackMax");
-				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)((fill/max)*100));
-				event.toolTip.add("Camel pack: " + disp + "%");
+				int fill = event.itemStack.getTagCompound().getInteger("camelPackFill");
+				int max = event.itemStack.getTagCompound().getInteger("camelPackMax");
+				if (fill > max) {
+					fill = max;
+					event.itemStack.getTagCompound().setInteger("camelPackFill", fill);
+				}
+				
+				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)(((float)fill/(float)max)*100));
+				event.toolTip.add("Camel pack: " + disp + "% ("+fill+"/"+max+")");
 			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
 			{
 				double rotDate = event.itemStack.getTagCompound().getLong("EM_ROT_DATE");

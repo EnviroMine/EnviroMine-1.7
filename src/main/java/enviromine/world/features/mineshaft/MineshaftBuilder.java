@@ -1,15 +1,19 @@
 package enviromine.world.features.mineshaft;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
-
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.world.features.WorldFeatureGenerator;
-
+import enviromine.world.features.mineshaft.designers.MineDesigner;
+import enviromine.world.features.mineshaft.designers.MineDesignerComb;
+import enviromine.world.features.mineshaft.designers.MineDesignerFeather;
+import enviromine.world.features.mineshaft.designers.MineDesignerGrid;
+import enviromine.world.features.mineshaft.designers.MineDesignerRandomized;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -23,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
-
 import org.apache.logging.log4j.Level;
 
 public class MineshaftBuilder
@@ -53,18 +56,19 @@ public class MineshaftBuilder
 	 * If the cliff side is above sea level then immediately build downward stair segments until it is under sea level before building the main shaft.
 	 */
 	
+	public static ArrayList<MineDesigner> designers = new ArrayList<MineDesigner>();
 	public static HashMap<String, Integer> scannedGrids = new HashMap<String, Integer>();
 	public static ArrayList<MineshaftBuilder> pendingBuilders = new ArrayList<MineshaftBuilder>();
 	public HashMap<String, ArrayList<MineSegment>> segmentMap = new HashMap<String, ArrayList<MineSegment>>();
 	
-	World world;
-	Random rand;
-	int origX = 0;
-	int origZ = 0;
-	int origY = 0;
-	int rot = 0;
+	public World world;
+	public Random rand;
+	public int origX = 0;
+	public int origZ = 0;
+	public int origY = 0;
+	public int rot = 0;
 	
-	int decayAmount;
+	public int decayAmount = 0;
 	WeightedRandomChestContent[] loot;
 	
 	public MineshaftBuilder(World world, int originX, int originZ, int dir)
@@ -73,7 +77,7 @@ public class MineshaftBuilder
 		this.rand = world.rand;
 		this.origX = originX;
 		this.origZ = originZ;
-		this.origY = world.getChunkFromBlockCoords(originX, originZ).getHeightValue(originX%16, originZ%16);
+		this.origY = world.getTopSolidOrLiquidBlock(originX, originZ);
 		this.rot = dir%4;
 		
 		this.setupLoot();
@@ -147,17 +151,27 @@ public class MineshaftBuilder
 								tmpBuilder.setRandom(random);
 								if(world.provider.dimensionId == 0)
 								{
-									if(tmpBuilder.startOldGridDesign())
+									if(tmpBuilder.BuildAbandonedMine())
 									{
 										pendingBuilders.add(tmpBuilder);
-										foundBuilders += 1;
+										tmpBuilder.CheckAndBuildAll();
+										
+										if(pendingBuilders.contains(tmpBuilder))
+										{
+											foundBuilders += 1;
+										}
 									}
 								} else if(world.provider.dimensionId == EM_Settings.caveDimID)
 								{
 									if(tmpBuilder.startCaveDesign())
 									{
 										pendingBuilders.add(tmpBuilder);
-										foundBuilders += 1;
+										tmpBuilder.CheckAndBuildAll();
+										
+										if(pendingBuilders.contains(tmpBuilder))
+										{
+											foundBuilders += 1;
+										}
 									}
 								}
 							}
@@ -210,13 +224,53 @@ public class MineshaftBuilder
 		return this.segmentMap.size() <= 0;
 	}
 	
-	public boolean startOldGridDesign()
+	public void CheckAndBuildAll()
+	{
+		String[] keys = this.segmentMap.keySet().toArray(new String[segmentMap.size()]);
+		
+		
+		for(int i = this.segmentMap.size() - 1; i >= 0 ; i--)
+		{
+			ArrayList<MineSegment> chunkSegments = this.segmentMap.get(keys[i]);
+			
+			for(int j = chunkSegments.size() - 1; j >= 0; j--)
+			{
+				MineSegment segment = chunkSegments.get(j);
+				
+				if(segment.allChunksLoaded())
+				{
+					if(segment.canBuild())
+					{
+						segment.build();
+					}
+					chunkSegments.remove(j);
+				}
+			}
+			
+			if(chunkSegments.size() <= 0)
+			{
+				segmentMap.remove(i);
+			}
+		}
+		
+		if(segmentMap.size() <= 0)
+		{
+			pendingBuilders.remove(this);
+			if(scannedGrids.containsKey("" + (this.origX/1024) + "," + (this.origZ/1024) + "," + world.provider.dimensionId))
+			{
+				int remBuilders = scannedGrids.get("" + (this.origX/1024) + "," + (this.origZ/1024) + "," + world.provider.dimensionId);
+				scannedGrids.put("" + (this.origX/1024) + "," + (this.origZ/1024) + "," + world.provider.dimensionId, remBuilders - 1);
+			}
+		}
+	}
+	
+	public boolean BuildAbandonedMine()
 	{
 		//Old grid design is made here. Each segment must call 'linkChunksToBuilder()' to ensure it will be built when the chunks are loaded
 		//DO NOT call .build() in this function, it may cause additional chunks to be force loaded.
 		//Any segment that already has all chunks loaded should not be added to the segment map.
 		
-		if(!this.world.getBlock(origX, origY - 1, origX).isNormalCube() || origY < 48)
+		if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < 48)
 		{
 			return false;
 		}
@@ -253,7 +307,17 @@ public class MineshaftBuilder
 			}
 		}
 		
-		this.DesignGridMine(3 + this.rand.nextInt(7), this.rand.nextInt(64) + 64, this.rand.nextInt(64) + 64, chunkY);
+		//this.DesignGridMine(3 + this.rand.nextInt(7), this.rand.nextInt(64) + 64, this.rand.nextInt(64) + 64, chunkY);
+		
+		if(designers.size() > 0)
+		{
+			EnviroMine.logger.log(Level.INFO, "Designing new mine...");
+			designers.get(this.rand.nextInt(designers.size())).StartDesign(this, this.rand.nextInt(64) + 64, chunkY, 3 + this.rand.nextInt(7));
+		} else
+		{
+			EnviroMine.logger.log(Level.WARN, "Unable to construct a mineshaft! No designs registered!");
+			return false;
+		}
 		
 		if(this.segmentMap.size() > 0)
 		{
@@ -265,126 +329,20 @@ public class MineshaftBuilder
 		}
 	}
 	
+	/**
+	 * Post-phoned till a later update...
+	 * @return
+	 */
 	public boolean startCaveDesign()
 	{
-		//Cave design is made here. Each segment must call 'linkChunksToBuilder()' to ensure it will be built when the chunks are loaded
-		//DO NOT call .build() in this function, it may cause additional chunks to be force loaded.
-		//Any segment that already has all chunks loaded should not be added to the segment map.
-		
 		return true;
 	}
 	
-	public boolean startRandomDesign()
-	{
-		//Random design is made here. Each segment must call 'linkChunksToBuilder()' to ensure it will be built when the chunks are loaded
-		//DO NOT call .build() in this function, it may cause additional chunks to be force loaded.
-		//Any segment that already has all chunks loaded should not be added to the segment map.
-		
-		return true;
-	}
-	
-	public void BuildCombMine(int interval)
-	{
-		int length = rand.nextInt(128) + 128;
-		
-		for(int i = 0; i <= length; i++)
-		{
-			new MineSegmentNormal(this.world, this.xOffset(i * 4, 0), this.yOffset(0), this.zOffset(i * 4, 0), this.rot, this, true).build();
-			
-			if(i%(interval + 1) == 0)
-			{
-				int lWidth = rand.nextInt(8) + 8;
-				
-				for(int il = 1; il <= lWidth; il++)
-				{
-					new MineSegmentNormal(this.world, this.xOffset(i * 4, il * 4), this.yOffset(0), this.zOffset(i * 4, il * 4), this.rot, this, true).build();
-				}
-			}
-		}
-	}
-	
-	public void BuildFeatherMine(int interval)
-	{
-		int length = rand.nextInt(16) + 16;
-		
-		for(int i = 0; i <= length; i++)
-		{
-			new MineSegmentNormal(this.world, this.xOffset(i * 4, 0), this.yOffset(0), this.zOffset(i * 4, 0), this.rot, this, true).build();
-			
-			if(i%(interval + 1) == 0)
-			{
-				int lWidth = rand.nextInt(4) + 4;
-				int rWidth = (rand.nextInt(4) + 4) * -1;
-				
-				for(int il = 1; il <= lWidth; il++)
-				{
-					new MineSegmentNormal(this.world, this.xOffset(i * 4, il * 4), this.yOffset(0), this.zOffset(i * 4, il * 4), this.rot, this, true).build();
-				}
-				
-				for(int ir = -1; ir >= rWidth; ir--)
-				{
-					new MineSegmentNormal(this.world, this.xOffset(i * 4, ir * 4), this.yOffset(0), this.zOffset(i * 4, ir * 4), this.rot, this, true).build();
-				}
-			}
-		}
-	}
-	
-	public void DesignGridMine(int gridSize, int gridL, int gridW, int mineDepth)
-	{
-		if(gridSize < 0)
-		{
-			return;
-		}
-		
-		int skew = 0;
-		
-		for(int i = -((gridL/2) - (gridL/2)%(gridSize+1)); i < gridL/2; i += gridSize + 1)
-		{
-			for(int j = -(gridW/2); j < gridW/2; j++)
-			{
-				if(i == 0 && j == 0)
-				{
-					continue;
-				}
-				
-				if(i == 0)
-				{
-					skew = 0;
-				} else if(j%(gridSize+1) == 0)
-				{
-					skew = rand.nextInt(3) - 1;
-				}
-				
-				MineSegment segment = new MineSegmentNormal(this.world, this.xOffset(i * 4 + skew * 4, j * 4), mineDepth, this.zOffset(i * 4 + skew * 4, j * 4), this.rot, this, true);
-				segment.setDecay(decayAmount);
-				segment.linkChunksToBuilder();
-			}
-		}
-		
-		for(int i = -((gridW/2) - (gridW/2)%(gridSize+1)); i < gridW/2; i += gridSize + 1)
-		{
-			for(int j = -(gridL/2); j < gridL/2; j++)
-			{
-				if(i == 0 && j == 0)
-				{
-					continue;
-				}
-				
-				if(i == 0)
-				{
-					skew = 0;
-				} else if(j%(gridSize+1) == 0)
-				{
-					skew = rand.nextInt(3) - 1;
-				}
-				
-				MineSegment segment = new MineSegmentNormal(this.world, this.xOffset(j * 4 + skew * 4, i * 4), mineDepth, this.zOffset(j * 4 + skew * 4, i * 4), this.rot, this, true);
-				segment.setDecay(decayAmount);
-				segment.linkChunksToBuilder();
-			}
-		}
-	}
-	
+	/**
+	 * Post-phoned till a later update...
+	 * @param type
+	 * @return
+	 */
 	public MineSegment GetSegmentFromID(SegmentType type)
 	{
 		return null;
@@ -584,5 +542,13 @@ public class MineshaftBuilder
 		STAIR_UP,
 		STAIR_DOWN,
 		STOPE,
+	}
+	
+	static
+	{
+		designers.add(new MineDesignerGrid());
+		designers.add(new MineDesignerFeather());
+		designers.add(new MineDesignerComb());
+		designers.add(new MineDesignerRandomized());
 	}
 }

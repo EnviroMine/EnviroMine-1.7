@@ -35,15 +35,18 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
      */
     public void onBlockAdded(World p_149726_1_, int p_149726_2_, int p_149726_3_, int p_149726_4_)
     {
-        p_149726_1_.scheduleBlockUpdate(p_149726_2_, p_149726_3_, p_149726_4_, this, this.tickRate(p_149726_1_) + p_149726_1_.rand.nextInt(10));
+        p_149726_1_.scheduleBlockUpdateWithPriority(p_149726_2_, p_149726_3_, p_149726_4_, this, this.tickRate(p_149726_1_) + p_149726_1_.rand.nextInt(10), 0);
     }
 	
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		super.updateTick(world, x, y, z, rand);
-
-        world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world) + rand.nextInt(10));
+		
+		if(!world.scheduledUpdatesAreImmediate)
+		{
+			world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + rand.nextInt(10), 0);
+		}
         
         TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);
 
@@ -88,7 +91,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         	
         	if(coalTile.fuel <= 0)
         	{
-        		world.setBlock(x, y, z, Blocks.air);
+        		world.setBlock(x, y, z, Blocks.air, 0, 2);
         		return;
         	}
         }

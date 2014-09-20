@@ -279,7 +279,7 @@ public class TileEntityGas extends TileEntity
 		
 		if(savedGases.length <= 0)
 		{
-			EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gases, this should not happen!");
+			//EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gases, this should not happen!");
 			return;
 		}
 		
@@ -298,16 +298,16 @@ public class TileEntityGas extends TileEntity
 		
 		if(this.amount <= 0)
 		{
-			EnviroMine.logger.log(Level.WARN, "TileEntityGas attempted to save " + this.gases.size() + " gases (Amount: " + this.amount + ", Pos: {" + xCoord + "," + yCoord + "," + zCoord + "})");
+			//EnviroMine.logger.log(Level.WARN, "TileEntityGas attempted to save " + this.gases.size() + " gases (Amount: " + this.amount + ", Pos: {" + xCoord + "," + yCoord + "," + zCoord + "})");
 			
 			if(!par1NBTTagCompound.hasKey("GasArray"))
 			{
-				EnviroMine.logger.log(Level.WARN, "Cancelling...");
+				//EnviroMine.logger.log(Level.WARN, "Cancelling...");
 				return;
 			}
 		} else
 		{
-			EnviroMine.logger.log(Level.WARN, "TileEntityGas successfully saved " + this.gases.size() + " gases (Amount: " + this.amount + ")");
+			//EnviroMine.logger.log(Level.WARN, "TileEntityGas successfully saved " + this.gases.size() + " gases (Amount: " + this.amount + ")");
 		}
 		
 		int[] savedGases = new int[this.amount];
@@ -342,7 +342,7 @@ public class TileEntityGas extends TileEntity
 		
 		if(this.amount != before)
 		{
-			EnviroMine.logger.log(Level.INFO, "GasTile amount updated: " + this.amount + ", Pos: {" + xCoord + "," + yCoord + "," + zCoord + "}");
+			//EnviroMine.logger.log(Level.INFO, "GasTile amount updated: " + this.amount + ", Pos: {" + xCoord + "," + yCoord + "," + zCoord + "}");
 			this.markDirty();
 		}
 	}

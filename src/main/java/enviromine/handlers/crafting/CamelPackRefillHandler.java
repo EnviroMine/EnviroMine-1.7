@@ -87,7 +87,7 @@ public class CamelPackRefillHandler implements IRecipe
 		if ((packFillCur == packFillMax && !fillBottle) || !hasPack || pack == null)
 		{
 			return false;
-		} else if (packFillCur + (bottles.size() * 25) >= packFillMax+25 && fillBottle == false)
+		} else if (packFillCur + (bottles.size() * 25) >= packFillMax + 25 && fillBottle == false)
 		{
 			return false;
 		} else if (packFillCur - 25 < 0 && fillBottle == true)
@@ -125,7 +125,6 @@ public class CamelPackRefillHandler implements IRecipe
 				return pack;
 			} else
 			{
-				
 				pack.getTagCompound().setInteger("camelPackFill", packFillMax);
 				return pack;
 			}

@@ -83,14 +83,14 @@ options.enviromine.barPos.temprature=体温条
 options.enviromine.barPos.sanity=神智条
 options.enviromine.barPos.airQuality=氧气条
 
-deathmessage.enviromine.suffocate=%s 窒息而死
-deathmessage.enviromine.frostbite=%s 冻死了
-deathmessage.enviromine.dehydrate=%s 渴死了
-deathmessage.enviromine.landslide=%s 死于滑坡
-deathmessage.enviromine.organfailure=%s 死于器官衰竭
-deathmessage.enviromine.heatstroke=%s 的大脑因中暑而烤熟了
-deathmessage.enviromine.bleedout=%s 流血而死
-deathmessage.enviromine.gasfire=%s 死于气体火灾
+deathmessage.enviromine.suffocate=%s窒息而死
+deathmessage.enviromine.frostbite=%s冻死了
+deathmessage.enviromine.dehydrate=%s渴死了
+deathmessage.enviromine.landslide=%s死于滑坡
+deathmessage.enviromine.organfailure=%s死于器官衰竭
+deathmessage.enviromine.heatstroke=%s的大脑因中暑而烤熟了
+deathmessage.enviromine.bleedout=%s流血而死
+deathmessage.enviromine.gasfire=%s死于气体火灾
 
 updatemsg.enviromine.avalible=EnviroMine可用更新版本 %s
-updatemsg.enviromine.download=下载 & 更新日志:
+updatemsg.enviromine.download=下载&更新日志:

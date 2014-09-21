@@ -131,6 +131,13 @@ public class EM_Settings
 	/** Whether or not this overridden with server settings */
 	public static boolean isOverridden = false;
 	
+	public static boolean enableQuakes = true;
+	public static boolean quakePhysics = true;
+	public static int quakeRarity = 100;
+	public static int quakeDelay = 10;
+	public static int quakeMode = 2;
+	public static int quakeSpeed = 2;
+	
 	public static float convertToFarenheit(float num)
 	{
 		return((num * (9 / 5)) + 32F);

@@ -96,7 +96,7 @@ public class CamelPackIntegrationHandler implements IRecipe
 		{
 			if (isRemove)
 			{
-				Object obj = Item.itemRegistry.getObject(armor.getTagCompound().getString("camelPath"));
+				Object obj = Item.itemRegistry.getObject(armor.getTagCompound().getString("packName"));
 				if (obj instanceof Item) {
 					ItemStack out = new ItemStack((Item)obj);
 					
@@ -104,7 +104,6 @@ public class CamelPackIntegrationHandler implements IRecipe
 					out.getTagCompound().setInteger("camelPackFill", armor.getTagCompound().getInteger("camelPackFill"));
 					out.getTagCompound().setInteger("camelPackMax", armor.getTagCompound().getInteger("camelPackMax"));
 					out.getTagCompound().setBoolean("isCamelPack", true);
-					out.getTagCompound().setString("camelPath", armor.getTagCompound().getString("camelPath"));
 					
 					return out;
 				}
@@ -117,7 +116,7 @@ public class CamelPackIntegrationHandler implements IRecipe
 				
 				armor.getTagCompound().setInteger("camelPackFill", pack.getTagCompound().getInteger("camelPackFill"));
 				armor.getTagCompound().setInteger("camelPackMax", pack.getTagCompound().getInteger("camelPackMax"));
-				armor.getTagCompound().setString("camelPath", pack.getTagCompound().getString("camelPath"));
+				armor.getTagCompound().setString("packName", Item.itemRegistry.getNameForObject(pack.getItem()));
 				
 				return armor;
 			}
@@ -161,7 +160,7 @@ public class CamelPackIntegrationHandler implements IRecipe
 					slot.stackSize++;
 					slot.getTagCompound().removeTag("camelPackFill");
 					slot.getTagCompound().removeTag("camelPackMax");
-					slot.getTagCompound().removeTag("camelPath");
+					slot.getTagCompound().removeTag("packName");
 				}
 			}
 		}

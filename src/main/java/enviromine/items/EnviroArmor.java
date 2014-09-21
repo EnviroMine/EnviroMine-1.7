@@ -3,7 +3,6 @@ package enviromine.items;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -114,7 +113,8 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				armor.getTagCompound().setInteger("camelPackFill", 100-armor.getItemDamage());
+				int meta = armor.getItemDamage() > 0 ? 100-armor.getItemDamage() : 0;
+				armor.getTagCompound().setInteger("camelPackFill", meta);
 				armor.setItemDamage(0);
 			}
 			if (!armor.getTagCompound().hasKey("camelPackMax"))
@@ -124,10 +124,6 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			if (!armor.getTagCompound().hasKey("isCamelPack"))
 			{
 				armor.getTagCompound().setBoolean("isCamelPack", true);
-			}
-			if (!armor.getTagCompound().hasKey("camelPath"))
-			{
-				armor.getTagCompound().setString("camelPath", Item.itemRegistry.getNameForObject(armor.getItem()));
 			}
 		} else if (armor.getItem() == ObjectHandler.gasMask)
 		{
@@ -161,11 +157,17 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				armor.getTagCompound().setInteger("camelPackFill", 100);
+				int meta = armor.getItemDamage() > 0 ? 100-armor.getItemDamage() : 0;
+				armor.getTagCompound().setInteger("camelPackFill", meta);
+				armor.setItemDamage(0);
 			}
 			if (!armor.getTagCompound().hasKey("camelPackMax"))
 			{
 				armor.getTagCompound().setInteger("camelPackMax", 100);
+			}
+			if (!armor.getTagCompound().hasKey("isCamelPack"))
+			{
+				armor.getTagCompound().setBoolean("isCamelPack", true);
 			}
 		} else if (armor.getItem() == ObjectHandler.gasMask)
 		{

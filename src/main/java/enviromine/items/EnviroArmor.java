@@ -114,7 +114,8 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				armor.getTagCompound().setInteger("camelPackFill", 100);
+				armor.getTagCompound().setInteger("camelPackFill", 100-armor.getItemDamage());
+				armor.setItemDamage(0);
 			}
 			if (!armor.getTagCompound().hasKey("camelPackMax"))
 			{

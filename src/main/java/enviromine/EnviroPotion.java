@@ -35,11 +35,11 @@ public class EnviroPotion extends Potion
 	
 	public static void RegisterPotions()
 	{
-		EnviroPotion.frostbite = ((EnviroPotion)new EnviroPotion(EM_Settings.frostBitePotionID, true, 8171462).setPotionName("potion.frostbite")).setIconIndex(0, 0);
-		EnviroPotion.dehydration = ((EnviroPotion)new EnviroPotion(EM_Settings.dehydratePotionID, true, 3035801).setPotionName("potion.dehydration")).setIconIndex(1, 0);
-		EnviroPotion.insanity = ((EnviroPotion)new EnviroPotion(EM_Settings.insanityPotionID, true, 5578058).setPotionName("potion.insanity")).setIconIndex(2, 0);
-		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, EnviroUtils.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.heatstroke")).setIconIndex(3, 0);
-		EnviroPotion.hypothermia = ((EnviroPotion)new EnviroPotion(EM_Settings.hypothermiaPotionID, true, 8171462).setPotionName("potion.hypothermia")).setIconIndex(4, 0);
+		EnviroPotion.frostbite = ((EnviroPotion)new EnviroPotion(EM_Settings.frostBitePotionID, true, 8171462).setPotionName("potion.enviromine.frostbite")).setIconIndex(0, 0);
+		EnviroPotion.dehydration = ((EnviroPotion)new EnviroPotion(EM_Settings.dehydratePotionID, true, 3035801).setPotionName("potion.enviromine.dehydration")).setIconIndex(1, 0);
+		EnviroPotion.insanity = ((EnviroPotion)new EnviroPotion(EM_Settings.insanityPotionID, true, 5578058).setPotionName("potion.enviromine.insanity")).setIconIndex(2, 0);
+		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, EnviroUtils.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.enviromine.heatstroke")).setIconIndex(3, 0);
+		EnviroPotion.hypothermia = ((EnviroPotion)new EnviroPotion(EM_Settings.hypothermiaPotionID, true, 8171462).setPotionName("potion.enviromine.hypothermia")).setIconIndex(4, 0);
 	}
 	
 	public static void checkAndApplyEffects(EntityLivingBase entityLiving)
@@ -119,6 +119,9 @@ public class EnviroPotion extends Potion
 						EntityItem item = entityLiving.entityDropItem(entityLiving.getHeldItem(), 0.0F);
 						item.delayBeforeCanPickup = 40;
 						entityLiving.setCurrentItemOrArmor(0, null);
+					
+						entityLiving.worldObj.playSoundAtEntity(entityLiving, "enviromine:shiver", 1f, 1f);
+						 
 					}
 				}
 			}

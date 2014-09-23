@@ -9,6 +9,12 @@ item.enviromine.hardhat.name=Hard Hat
 item.enviromine.airfilter.name=Air Filter
 item.enviromine.rottenfood.name=Rotten Food
 
+potion.enviromine.frostbite=Frostbite
+potion.enviromine.dehydration=Dehydration
+potion.enviromine.insanity=Insanity
+potion.enviromine.heatstroke=Heatstroke
+potion.enviromine.hypothermia=Hypothermia
+
 tile.enviromine.elevator_top.name=Elevator Top
 tile.enviromine.elevator_bottom.name=Elevator Bottom
 

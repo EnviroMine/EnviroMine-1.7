@@ -11,6 +11,12 @@ item.hardhat.name=Каска
 item.airfilter.name=Воздушный фильтр
 item.rottenfood.name=Испорченная руда
 
+potion.enviromine.frostbite=Frostbite
+potion.enviromine.dehydration=Dehydration
+potion.enviromine.insanity=Insanity
+potion.enviromine.heatstroke=Heatstroke
+potion.enviromine.hypothermia=Hypothermia
+
 tile.elevator_top.name=Верх лифта
 tile.elevator_bottom.name=Низ лифта
 

@@ -10,10 +10,8 @@ public class ClientQuake extends Earthquake
 	
 	public ClientQuake(int d, int i, int k, int l, int w, float a)
 	{
-		super(null, i, k, l, w, 0);
-		pendingQuakes.remove(this);
+		super(null, i, k, l, w, 0, a, false);
 		clientQuakes.add(this);
-		this.markRavine(a);
 		duration = 6000L;
 	}
 	

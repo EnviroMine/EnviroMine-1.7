@@ -3,6 +3,7 @@ package enviromine.world;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -11,6 +12,15 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
 import enviromine.network.packet.PacketEnviroMine;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -52,6 +62,29 @@ public class Earthquake
 			
 			if(!(this instanceof ClientQuake))
 			{
+				int size = length > width? length/2 : width/2;
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+			}
+		}
+	}
+	
+	public Earthquake(World world, int i, int k, int l, int w, int m, float a, boolean save)
+	{
+		this.posX = i;
+		this.posZ = k;
+		this.length = l;
+		this.width = w;
+		this.mode = m;
+		
+		if(world != null)
+		{
+			this.world = world;
+			this.angle = MathHelper.clamp_float(a, -2F, 2F);
+			this.markRavine(angle);
+			
+			if(save)
+			{
+				pendingQuakes.add(this);
 				int size = length > width? length/2 : width/2;
 				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 			}
@@ -139,6 +172,8 @@ public class Earthquake
 			int y = pos[1];
 			int z = pos[2];
 			
+			boolean removed = false;
+			
 			for(int yy = y; yy >= 1; yy--)
 			{
 				if((world.getBlock(x, yy, z).getMaterial() == Material.lava && yy > 10) || world.getBlock(x, yy, z).getMaterial() == Material.water || world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.clay || world.getBlock(x, yy, z).getMaterial() == Material.sand || world.getBlock(x, yy, z).getMaterial() == Material.ground || world.getBlock(x, yy, z).getMaterial() == Material.grass || (yy <= 10 && world.getBlock(x, yy, z).getMaterial() == Material.air))
@@ -148,33 +183,38 @@ public class Earthquake
 						world.setBlock(x, yy, z, Blocks.flowing_lava);
 						//System.out.println("Placed lava at (" + x + "," + yy + "," + z + ")");
 						
-						if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
-						{
-							EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
-						}
-						
 						if(yy == y)
 						{
+							if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
+							{
+								EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
+							}
+							
 							ravineMask.set(0, new int[]{x, y + EM_Settings.quakeSpeed, z});
-							return true;
+							removed =  true;
 						}
 					} else
 					{
 						world.setBlockToAir(x, yy, z);
 						//System.out.println("Placed air at (" + x + "," + yy + "," + z + ")");
 						
-						if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
-						{
-							EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
-						}
-						
 						if(yy == y)
 						{
+							if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
+							{
+								EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
+							}
+							
 							ravineMask.set(0, new int[]{x, y + EM_Settings.quakeSpeed, z});
-							return true;
+							removed =  true;
 						}
 					}
 				}
+			}
+			
+			if(removed)
+			{
+				return true;
 			}
 			
 			if(world.getTopSolidOrLiquidBlock(x, z) < 16 || world.canBlockSeeTheSky(x, y, z))
@@ -209,6 +249,8 @@ public class Earthquake
 				int y = pos[1];
 				int z = pos[2];
 				
+				boolean removed = false;
+				
 				if(y > passY)
 				{
 					continue;
@@ -223,33 +265,38 @@ public class Earthquake
 							world.setBlock(x, yy, z, Blocks.flowing_lava);
 							//System.out.println("Placed lava at (" + x + "," + yy + "," + z + ")");
 							
-							if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
-							{
-								EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
-							}
-							
 							if(yy == y)
 							{
+								if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
+								{
+									EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
+								}
+								
 								ravineMask.set(i, new int[]{x, y + EM_Settings.quakeSpeed, z});
-								return true;
+								removed =  true;
 							}
 						} else
 						{
 							world.setBlockToAir(x, yy, z);
 							//System.out.println("Placed air at (" + x + "," + yy + "," + z + ")");
 							
-							if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
-							{
-								EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
-							}
-							
 							if(yy == y)
 							{
+								if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
+								{
+									EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
+								}
+								
 								ravineMask.set(i, new int[]{x, y + EM_Settings.quakeSpeed, z});
-								return true;
+								removed =  true;
 							}
 						}
 					}
+				}
+				
+				if(removed)
+				{
+					return true;
 				}
 				
 				Chunk chunk = world.getChunkFromBlockCoords(x, z);
@@ -361,5 +408,114 @@ public class Earthquake
 				EnviroMine.logger.log(Level.INFO, "Earthquake spawned at (" + posX + "," + posZ + ")");
 			}
 		}
+	}
+
+	public static void saveQuakes(File file)
+	{
+		try
+		{
+			if(!file.exists())
+			{
+				file.createNewFile();
+			}
+			
+			FileOutputStream fos = new FileOutputStream(file);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			
+			ArrayList<float[]> savedQuakes = new ArrayList<float[]>();
+			
+			for(int i = 0; i < pendingQuakes.size(); i++)
+			{
+				Earthquake quake = pendingQuakes.get(i);
+				float[] entry = new float[7];
+				entry[0] = quake.world.provider.dimensionId;
+				entry[1] = quake.posX;
+				entry[2] = quake.posZ;
+				entry[3] = quake.length;
+				entry[4] = quake.width;
+				entry[5] = quake.mode;
+				entry[6] = quake.angle;
+				//entry[7] = quake.passY;
+				
+				savedQuakes.add(entry);
+			}
+			
+			oos.writeObject(savedQuakes);
+			
+			oos.close();
+			bos.close();
+			fos.close();
+		} catch(FileNotFoundException e)
+		{
+			EnviroMine.logger.log(Level.WARN, "Failed to save Earthquakes: FileNotFoundException");
+			e.printStackTrace();
+		} catch(IOException e)
+		{
+			EnviroMine.logger.log(Level.WARN, "Failed to save Earthquakes: IOException!");
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void loadQuakes(File file)
+	{
+		if(!file.exists())
+		{
+			return;
+		} else
+		{
+			try
+			{
+				FileInputStream fis = new FileInputStream(file);
+				BufferedInputStream bis = new BufferedInputStream(fis);
+				ObjectInputStream ois = new ObjectInputStream(bis);
+				
+				ArrayList<float[]> loadedQuakes = (ArrayList<float[]>)ois.readObject();
+				
+				for(int i = 0; i < loadedQuakes.size(); i++)
+				{
+					float[] qData = loadedQuakes.get(i);
+					
+					int d = (int)qData[0];
+					World world = MinecraftServer.getServer().worldServerForDimension(d);
+					int x = (int)qData[1];
+					int y = (int)qData[2];
+					int l = (int)qData[3];
+					int w = (int)qData[4];
+					int m = (int)qData[5];
+					float a = qData[6];
+					
+					new Earthquake(world, x, y, l, w, m, a, true);
+				}
+				
+				ois.close();
+				bis.close();
+				fis.close();
+			} catch(FileNotFoundException e)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: FileNotFoundException");
+				e.printStackTrace();
+			} catch(IOException e)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: IOException!");
+				e.printStackTrace();
+			} catch(ClassCastException e)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: ClassCastException! (file format error)");
+				e.printStackTrace();
+			} catch(ClassNotFoundException e)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: ClassNotFoundException! (file format error)");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void Reset()
+	{
+		pendingQuakes.clear();
+		clientQuakes.clear();
+		lastTickDay = 0;
 	}
 }

@@ -75,6 +75,7 @@ import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
+import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 import java.awt.Color;
 import java.io.File;
@@ -1113,6 +1114,7 @@ public class EM_EventManager
 			}
 			
 			MineshaftBuilder.loadBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
+			Earthquake.loadQuakes(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroEarthquakes"));
 		}
 	}
 	
@@ -1134,7 +1136,9 @@ public class EM_EventManager
 				if(EM_Settings.worldDir != null)
 				{
 					MineshaftBuilder.saveBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
+					Earthquake.saveQuakes(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroEarthquakes"));
 				}
+				Earthquake.Reset();;
 				MineshaftBuilder.clearBuilders();
 				GasBuffer.reset();
 				

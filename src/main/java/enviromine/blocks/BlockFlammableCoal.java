@@ -1,6 +1,5 @@
 package enviromine.blocks;
 
-import enviromine.handlers.EM_PhysManager;
 import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;

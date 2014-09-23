@@ -1,6 +1,5 @@
 package enviromine.blocks;
 
-import org.apache.logging.log4j.Level;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -11,11 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import enviromine.blocks.tiles.TileEntityElevatorTop;
-import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.TeleportHandler;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class BlockElevatorTop extends Block implements ITileEntityProvider
 {
@@ -35,22 +31,6 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 	{
 		if(player.isSneaking())
 		{
-			if(!world.isRemote)
-			{
-				EnviroMine.logger.log(Level.INFO, "Building mine...");
-				MineshaftBuilder tmpBuilder = new MineshaftBuilder(world, i, k, 0);
-				tmpBuilder.decayAmount = world.rand.nextInt(10);
-				tmpBuilder.setRandom(world.rand);
-				tmpBuilder.BuildAbandonedMine();
-				if(tmpBuilder.segmentMap.size() <= 0)
-				{
-					EnviroMine.logger.log(Level.WARN, "Nothing was built!");
-				} else
-				{
-					MineshaftBuilder.pendingBuilders.add(tmpBuilder);
-					tmpBuilder.CheckAndBuildAll();
-				}
-			}
 			return true;
 		}
 		

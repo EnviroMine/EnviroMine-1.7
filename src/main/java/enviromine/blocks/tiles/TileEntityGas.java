@@ -279,7 +279,7 @@ public class TileEntityGas extends TileEntity
 		
 		if(savedGases.length <= 0)
 		{
-			EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gases, this should not happen!", new Exception());
+			//EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gases, this should not happen!", new Exception());
 			return;
 		}
 		
@@ -354,7 +354,7 @@ public class TileEntityGas extends TileEntity
 	
 	public void updateRender()
 	{
-		if(this.worldObj == null)
+		if(this.worldObj == null || gases.size() <= 0)
 		{
 			return;
 		}
@@ -401,7 +401,7 @@ public class TileEntityGas extends TileEntity
 		this.writeToNBT(tags);
 		if(this.amount <= 0)
 		{
-			EnviroMine.logger.log(Level.WARN, "Sent data packet for TileEntityGas with 0 gases!", new Exception());
+			//EnviroMine.logger.log(Level.WARN, "Sent data packet for TileEntityGas with 0 gases!", new Exception());
 		}
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tags);
 	}

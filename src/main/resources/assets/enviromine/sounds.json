@@ -15,8 +15,13 @@
 		"gag1",
 		"gag2",
 		"gag3"
-	]
-   }
+	]},
+	
+	"shiver": {"category": "player","sounds": [{"name": "shiver","stream": false}]},
+	
+	"earthquake": {"category": "master","sounds": [{"name": "earthquake","stream": false}]},
+   
+	"heartbeat": {"category": "player","sounds": [{"name": "heartbeat","stream": false}]}
    
 }
 

@@ -55,12 +55,10 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
@@ -68,18 +66,17 @@ import enviromine.client.ModelCamelPack;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
 import enviromine.network.packet.PacketAutoOverride;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
-
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -1115,6 +1112,7 @@ public class EM_EventManager
 					MineshaftBuilder.saveBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
 				}
 				MineshaftBuilder.clearBuilders();
+				GasBuffer.reset();
 				
 				EM_Settings.worldDir = null;
 			}

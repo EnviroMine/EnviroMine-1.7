@@ -155,8 +155,6 @@ public class EnviroDataTracker
 		ItemStack helmet = trackedEntity.getEquipmentInSlot(4);
 		if(helmet != null && !isCreative)
 		{
-			//if(helmet.getItem() == ObjectHandler.gasMask)
-		    //{
 				if(helmet.hasTagCompound() && helmet.getTagCompound().hasKey("gasMaskFill"))
 				{
 					NBTTagCompound tag = helmet.getTagCompound();
@@ -170,32 +168,11 @@ public class EnviroDataTracker
 						{
 							enviroData[0] = 0;
 							tag.setInteger("gasMaskFill", (gasMaskFill + airDrop));
-							//helmet.setItemDamage(helmet.getItemDamage() - airDrop);
 						} else
 						{
 							tag.setInteger("gasMaskFill", 0);
-							//helmet.setItemDamage(helmet.getMaxDamage());
 						}
 					}
-					
-				//}
-				//TODO Replacing Old Damage System
-				/*
-				if(helmet.getItemDamage() < helmet.getMaxDamage() && airQuality <= 99F)
-				{
-					int airDrop = MathHelper.floor_float(enviroData[0]);
-					
-					enviroData[0] -= helmet.getMaxDamage() - helmet.getItemDamage();
-					
-					if(enviroData[0] <= 0)
-					{
-						enviroData[0] = 0;
-						helmet.setItemDamage(helmet.getItemDamage() - airDrop);
-					} else
-					{
-						helmet.setItemDamage(helmet.getMaxDamage());
-					}
-				}*/
 			}
 		}
 		
@@ -393,8 +370,7 @@ public class EnviroDataTracker
 				trackedEntity.attackEntityFrom(EnviroDamageSource.suffocate, 4.0F);
 				
 				trackedEntity.worldObj.playSoundAtEntity(trackedEntity, "enviromine:gag", 1f, 1f);
-				//mc.sndManager.playSound("enviromine:gag", (float)trackedEntity.posX, (float)trackedEntity.posY, (float)trackedEntity.posZ, EM_Settings.breathVolume, 1.0F);
-			}
+     		}
 			
 			if(airQuality <= 10F)
 			{
@@ -443,9 +419,8 @@ public class EnviroDataTracker
 					trackedEntity.addPotionEffect(new PotionEffect(EnviroPotion.hypothermia.id, 200, 0));
 				}
 				
-				if (this.side.isClient()) {
-					System.out.println("Check:" + Minecraft.getSystemTime() +"-"+ chillPrevTime +"="+(Minecraft.getSystemTime() - chillPrevTime));
-					
+				if (this.side.isClient()) 
+				{
 					playSoundWithTimeCheck(17000, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
 			}

@@ -1,7 +1,6 @@
 package enviromine.trackers;
 
-import java.util.ArrayList;
-import java.util.Random;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
@@ -14,20 +13,30 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
 public class Hallucination
 {
 	public EntityLiving falseEntity;
+	public EntityPlayer overriding;
 	public String falseSound;
 	public int x;
 	public int y;
 	public int z;
 	public int time;
 	public static int maxTime = 60;
+	private Type type = Type.NORMAL;
 	public static ArrayList<Hallucination> list = new ArrayList<Hallucination>();
+	public static HashMap<String, Hallucination> players = new HashMap<String, Hallucination>();
 	
 	@SuppressWarnings("unchecked")
 	public Hallucination(EntityLivingBase entityLiving)
 	{
+		System.out.println("Creating hallucination");
 		if(!(entityLiving instanceof EntityPlayer))
 		{
 			return;
@@ -35,11 +44,19 @@ public class Hallucination
 		
 		Random rand = entityLiving.getRNG();
 		
-		x = (int)(entityLiving.posX + rand.nextInt(20) - 10);
-		y = (int)(entityLiving.posY + rand.nextInt(2) - 1);
-		z = (int)(entityLiving.posZ + rand.nextInt(20) - 10);
+		if (rand.nextInt(10) == 0 || true) {
+			this.overriding = this.findPlayer(entityLiving);
+			if (this.overriding != null) {
+				this.type = Type.OVERRIDE;
+				System.out.println("Overriding player "+this.overriding.getCommandSenderName());
+			}
+		}
+		
+		x = (int)(this.type == Type.NORMAL ? (entityLiving.posX + rand.nextInt(20) - 10) : this.overriding.posX);
+		y = (int)(this.type == Type.NORMAL ? (entityLiving.posY + rand.nextInt(2) - 1) : this.overriding.posY);
+		z = (int)(this.type == Type.NORMAL ? (entityLiving.posZ + rand.nextInt(20) - 10) : this.overriding.posZ);
 
-		BiomeGenBase biome = entityLiving.worldObj.getBiomeGenForCoords(MathHelper.floor_double(entityLiving.posX), MathHelper.floor_double(entityLiving.posZ));
+		BiomeGenBase biome = entityLiving.worldObj.getBiomeGenForCoords(MathHelper.floor_double(x), MathHelper.floor_double(z));
 		
 		ArrayList<SpawnListEntry> spawnList = (ArrayList<SpawnListEntry>)biome.getSpawnableList(EnumCreatureType.monster);
 		
@@ -74,12 +91,58 @@ public class Hallucination
 			return;
 		}
 		list.add(this);
+		if (this.type == Type.OVERRIDE) {
+			players.put(entityLiving.getCommandSenderName(), this);
+		}
 		
 		if(falseEntity.worldObj.isRemote && falseEntity instanceof EntityLiving)
 		{
 			//Minecraft.getMinecraft().sndManager.playSound(falseSound, x, y, z, 1.0F, 1.0F);
 			falseEntity.getEntityData().setBoolean("EM_Hallucination", true);
 			((EntityLiving)falseEntity).playLivingSound();
+		}
+	}
+	
+	private EntityPlayer findPlayer(EntityLivingBase entity)
+	{
+		List<EntityPlayer> players = getPlayerList(entity);
+		if (players.size() > 0) {
+			return players.get(entity.getRNG().nextInt(players.size()));
+		} else {
+			return null;
+		}
+	}
+	
+	private List<EntityPlayer> getPlayerList(EntityLivingBase entity)
+	{
+		List<EntityPlayer> players = new ArrayList<EntityPlayer>();
+		Iterator ite = entity.worldObj.loadedEntityList.iterator();
+		
+		while (ite.hasNext())
+		{
+			Entity e = (Entity)ite.next();
+			if (e instanceof EntityPlayer && !e.getCommandSenderName().equals(entity.getCommandSenderName()) && !isPlayerSeenWrong(e.getCommandSenderName())) {
+				players.add((EntityPlayer)e);
+			}
+		}
+		
+		return players;
+	}
+	
+	public void doOverride()
+	{
+		if (this.type == Type.OVERRIDE) {
+			this.falseEntity.setPositionAndRotation(this.overriding.posX, this.overriding.posY, this.overriding.posZ, this.overriding.rotationYaw, this.overriding.rotationPitch);
+		}
+	}
+	
+	public void finish() {
+		switch (this.type) {
+			case OVERRIDE:
+				players.remove(this.overriding.getCommandSenderName());
+			case NORMAL:
+				this.falseEntity.setDead();
+				list.remove(this);
 		}
 	}
 	
@@ -93,7 +156,7 @@ public class Hallucination
 				if(subject.time >= maxTime)
 				{
 					subject.time += 1;
-					subject.falseEntity.setDead();
+					subject.finish();
 				} else
 				{
 					subject.time += 1;
@@ -129,5 +192,20 @@ public class Hallucination
 			int l = creature.worldObj.getSavedLightValue(EnumSkyBlock.Block, i, j, k);
 			return l <= creature.getRNG().nextInt(8);
 		}
+	}
+	
+	public static boolean isPlayerSeenWrong(String username) {
+		return players.containsKey(username);
+	}
+	
+	public static void renderOverride(EntityPlayer player)
+	{
+		Hallucination hal = players.get(player.getCommandSenderName());
+		hal.doOverride();
+	}
+	
+	private static enum Type {
+		NORMAL,
+		OVERRIDE
 	}
 }

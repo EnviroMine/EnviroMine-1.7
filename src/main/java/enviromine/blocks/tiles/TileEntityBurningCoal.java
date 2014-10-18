@@ -15,6 +15,7 @@ public class TileEntityBurningCoal extends TileEntity
 		this.fuel = 1000;
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tags)
     {
 		super.readFromNBT(tags);
@@ -22,6 +23,7 @@ public class TileEntityBurningCoal extends TileEntity
 		tags.setInteger("Fuel", fuel);
     }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tags)
     {
 		super.writeToNBT(tags);
@@ -33,8 +35,9 @@ public class TileEntityBurningCoal extends TileEntity
     }
 
     /**
-     * Overriden in a sign to provide the text.
+     * Overridden in a sign to provide the text.
      */
+	@Override
     public Packet getDescriptionPacket()
     {
     	NBTTagCompound tags = new NBTTagCompound();

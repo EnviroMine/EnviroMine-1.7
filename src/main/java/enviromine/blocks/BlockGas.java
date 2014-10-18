@@ -17,20 +17,21 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.gases.GasBuffer;
 import enviromine.handlers.ObjectHandler;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
-import org.apache.logging.log4j.Level;
 
 public class BlockGas extends Block implements ITileEntityProvider
 {
@@ -568,6 +569,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		return false;
 	}
 
+	@Override
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
         return null;
@@ -632,6 +634,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		}
     }
     
+    @Override
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World p_149734_1_, int i, int j, int k, Random rand)
     {

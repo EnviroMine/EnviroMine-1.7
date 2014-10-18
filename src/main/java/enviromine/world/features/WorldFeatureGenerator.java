@@ -1,23 +1,23 @@
 package enviromine.world.features;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
+
 import cpw.mods.fml.common.IWorldGenerator;
+
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class WorldFeatureGenerator implements IWorldGenerator
 {

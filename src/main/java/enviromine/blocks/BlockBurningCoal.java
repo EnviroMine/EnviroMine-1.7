@@ -31,6 +31,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
      */
+	@Override
     public void onBlockAdded(World p_149726_1_, int p_149726_2_, int p_149726_3_, int p_149726_4_)
     {
         p_149726_1_.scheduleBlockUpdateWithPriority(p_149726_2_, p_149726_3_, p_149726_4_, this, this.tickRate(p_149726_1_) + p_149726_1_.rand.nextInt(10), 0);

@@ -23,6 +23,7 @@ public class BlockFireTorch extends BlockTorch
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
      */
+	@Override
     public void onBlockAdded(World p_149726_1_, int p_149726_2_, int p_149726_3_, int p_149726_4_)
     {
         p_149726_1_.scheduleBlockUpdate(p_149726_2_, p_149726_3_, p_149726_4_, this, this.tickRate(p_149726_1_) + p_149726_1_.rand.nextInt(10));

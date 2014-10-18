@@ -22,6 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.gases.GasBuffer;
@@ -29,6 +30,7 @@ import enviromine.handlers.ObjectHandler;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.logging.log4j.Level;
 
 public class BlockGas extends Block implements ITileEntityProvider
 {
@@ -97,9 +99,9 @@ public class BlockGas extends Block implements ITileEntityProvider
 			
 			//gasTile.addGas(1, 10);
 			//gasTile.addGas(3, 50);
-			gasTile.addGas(4, 100); // METHANE
+			//gasTile.addGas(4, 100); // METHANE
 			//gasTile.addGas(0, 2000); // FIRE
-			//gasTile.addGas(7, 100); // NUKE
+			gasTile.addGas(7, 100); // NUKE
 			gasTile.updateRender();
 		}
 	}
@@ -533,7 +535,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World world, int i)
 	{
-		TileEntityGas tile = new TileEntityGas(world);
+		TileEntityGas tile = new TileEntityGas();
 		return tile;
 	}
 	

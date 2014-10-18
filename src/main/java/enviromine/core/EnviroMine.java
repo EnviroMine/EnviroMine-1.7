@@ -130,6 +130,7 @@ public class EnviroMine
 			ArmorProperties.SearchForModdedArmors();
 		}
 		
+		ObjectHandler.LoadIgnitionSources();
 		DimensionProperties.SearchForDimensions();
 		BiomeProperties.SearchForBiomes();
 		

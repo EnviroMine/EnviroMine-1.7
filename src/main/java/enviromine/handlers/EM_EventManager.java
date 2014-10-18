@@ -15,6 +15,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -27,6 +28,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
@@ -62,6 +64,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
+import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.client.ModelCamelPack;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
@@ -72,6 +75,7 @@ import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
+import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 import java.awt.Color;
 import java.io.File;
@@ -722,7 +726,12 @@ public class EM_EventManager
 		
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			IInventory invo = (IInventory)((EntityPlayer)event.entityLiving).inventory;
+			InventoryPlayer invo = (InventoryPlayer)((EntityPlayer)event.entityLiving).inventory;
+			AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(event.entityLiving.posX - 0.5D, event.entityLiving.posY - 0.5D, event.entityLiving.posZ - 0.5D, event.entityLiving.posX + 0.5D, event.entityLiving.posY + 0.5D, event.entityLiving.posZ + 0.5D).expand(2D, 2D, 2D);
+			if(event.entityLiving.worldObj.getEntitiesWithinAABB(TileEntityGas.class, boundingBox).size() <= 0)
+			{
+				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 2, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 1);
+			}
 			RotHandler.rotInvo(event.entityLiving.worldObj, invo);
 		}
 		
@@ -1042,6 +1051,22 @@ public class EM_EventManager
 		}
 	}
 	
+	public void ReplaceInvoItems(IInventory invo, Item fItem, int fDamage, Item rItem, int rDamage)
+	{
+		for(int i = 0; i < invo.getSizeInventory(); i++)
+		{
+			ItemStack stack = invo.getStackInSlot(i);
+			
+			if(stack != null)
+			{
+				if(stack.getItem() == fItem && (stack.getItemDamage() == fDamage || fDamage <= -1))
+				{
+					invo.setInventorySlotContents(i, new ItemStack(rItem, stack.stackSize, fDamage <= -1? stack.getItemDamage() : rDamage));
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void onJump(LivingJumpEvent event)
 	{
@@ -1089,6 +1114,7 @@ public class EM_EventManager
 			}
 			
 			MineshaftBuilder.loadBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
+			Earthquake.loadQuakes(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroEarthquakes"));
 		}
 	}
 	
@@ -1110,7 +1136,9 @@ public class EM_EventManager
 				if(EM_Settings.worldDir != null)
 				{
 					MineshaftBuilder.saveBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
+					Earthquake.saveQuakes(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroEarthquakes"));
 				}
+				Earthquake.Reset();;
 				MineshaftBuilder.clearBuilders();
 				GasBuffer.reset();
 				

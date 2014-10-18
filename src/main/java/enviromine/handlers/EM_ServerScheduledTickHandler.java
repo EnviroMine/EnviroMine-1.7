@@ -1,5 +1,6 @@
 package enviromine.handlers;
 
+import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import enviromine.core.EM_Settings;
@@ -14,12 +15,19 @@ public class EM_ServerScheduledTickHandler
 		
 		if(tick.side.isServer())
 		{
-			Earthquake.updateEarthquakes();
 			GasBuffer.update();
 			
 			if(EM_Settings.enablePhysics)
 			{
 				EM_PhysManager.updateSchedule();
+			}
+			
+			Earthquake.updateEarthquakes();
+			
+			if(EM_Settings.enableQuakes && tick.world.getTotalWorldTime()%24000 < 100 && MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L) != Earthquake.lastTickDay && tick.world.provider.dimensionId == 0)
+			{
+				Earthquake.lastTickDay = MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L);
+				Earthquake.TickDay(tick.world);
 			}
 		}
 	}

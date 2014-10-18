@@ -11,9 +11,9 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureMineshaftPieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
-
 import java.util.List;
 import java.util.Random;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_VillageMineshaft extends StructureVillagePieces.Village
 {
@@ -97,23 +97,47 @@ public class EM_VillageMineshaft extends StructureVillagePieces.Village
 			this.customPlaceBlockAtCurrentPosition(par1World, Blocks.ladder, var4, 2, ladderDepth, 1, par3StructureBoundingBox);
 		}
 		
-		for(int sectionHeight = 0; sectionHeight < shaftTop - 8; sectionHeight += 8)
+		MineshaftBuilder mineBuilder = new MineshaftBuilder(par1World, this.getXWithOffset(0, 0), this.getYWithOffset(shaftTop), this.getZWithOffset(0, 0), this.coordBaseMode);
+		mineBuilder.setRandom(par2Random);
+		mineBuilder.decayAmount = 0;
+		if(MineshaftBuilder.designers.size() > 0)
 		{
-			if(par2Random.nextInt(10) == 0 || sectionHeight == 0)
+			MineshaftBuilder.designers.get(par1World.rand.nextInt(MineshaftBuilder.designers.size())).StartDesign(mineBuilder, 64, this.getYWithOffset(0), 3);
+			if(mineBuilder.segmentMap.size() > 0)
 			{
-				if(sectionHeight != 0)
+				MineshaftBuilder.pendingBuilders.add(mineBuilder);
+				mineBuilder.CheckAndBuildAll();
+			}
+		} else // Start fallback designer
+		{
+			for(int sectionHeight = 0; sectionHeight < shaftTop - 8; sectionHeight += 8)
+			{
+				if(par2Random.nextInt(10) == 0 || sectionHeight == 0)
 				{
-					this.customFillWithBlocks(par1World, par3StructureBoundingBox, 1, sectionHeight - 1, 1, 3, sectionHeight - 1, 3, Blocks.planks, Blocks.planks, false);
-					this.customPlaceBlockAtCurrentPosition(par1World, Blocks.ladder, var4, 2, sectionHeight - 1, 1, par3StructureBoundingBox);
+					if(sectionHeight != 0)
+					{
+						this.customFillWithBlocks(par1World, par3StructureBoundingBox, 1, sectionHeight - 1, 1, 3, sectionHeight - 1, 3, Blocks.planks, Blocks.planks, false);
+						this.customPlaceBlockAtCurrentPosition(par1World, Blocks.ladder, var4, 2, sectionHeight - 1, 1, par3StructureBoundingBox);
+					}
+					
+					genSegmentsAtCurrentHeight(par1World, par2Random, par3StructureBoundingBox, 0, sectionHeight, 0);
 				}
-				
-				genSegmentsAtCurrentHeight(par1World, par2Random, par3StructureBoundingBox, 0, sectionHeight, 0);
 			}
 		}
 		
 		return true;
 	}
 	
+	/**
+	 * Used only as a fall back in the event the MineshaftBuilder has no available designers. Can crash game if shaft passes under a second village (happens often in flatland maps)
+	 * @param par1World
+	 * @param par2Random
+	 * @param par3StructureBoundingBox
+	 * @param par4
+	 * @param par5
+	 * @param par6
+	 */
+	@Deprecated
 	protected void genSegmentsAtCurrentHeight(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4, int par5, int par6)
 	{
 		// --- Generate Segments --- //

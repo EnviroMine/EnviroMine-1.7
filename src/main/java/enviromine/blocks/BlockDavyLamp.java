@@ -97,7 +97,7 @@ public class BlockDavyLamp extends Block implements ITileEntityProvider
 		
 		if (origState > 0)
 		{
-			for (int ii = 0; ii < 4; ii++)
+			for (int ii = 0; ii < ForgeDirection.VALID_DIRECTIONS.length; ii++)
 			{
 				int x = i + ForgeDirection.VALID_DIRECTIONS[ii].offsetX;
 				int y = j + ForgeDirection.VALID_DIRECTIONS[ii].offsetY;

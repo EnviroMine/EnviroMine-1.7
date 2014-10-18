@@ -4,6 +4,7 @@ import java.awt.Color;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EnviroGas
@@ -11,6 +12,8 @@ public class EnviroGas
 	public int gasID;
 	public float suffocation;
 	public float volitility;
+	public float UFL; // Upper Flammability Limit (0-1)
+	public float LFL; // Lower Flammability Limit (0-1)
 	public float density;
 	public String name;
 	public Color color;
@@ -51,10 +54,36 @@ public class EnviroGas
 		return this;
 	}
 	
-	public EnviroGas setVolitility(float newVol)
+	public EnviroGas setVolitility(float newVol, float lowerLimit, float upperLimit)
 	{
+		this.LFL = lowerLimit;
+		this.UFL = upperLimit;
 		this.volitility = newVol;
 		return this;
+	}
+	
+	public int getFire(int amount, int air)
+	{
+		if(this.volitility <= 0)
+		{
+			return 0;
+		}
+		
+		float ratio = (float)amount/(float)air;
+		int extra = Math.round(this.volitility * amount) - amount;
+		float midPoint = (this.UFL + this.LFL)/2F;
+		float diff = midPoint - this.LFL;
+		
+		if(ratio < this.LFL || ratio > this.UFL)
+		{
+			return 1;
+		} else if(ratio == this.LFL || ratio == this.UFL)
+		{
+			return amount;
+		} else
+		{
+			return amount + MathHelper.floor_float(extra * (diff - Math.abs(ratio - midPoint)));
+		}
 	}
 	
 	public EnviroGas setSuffocation(float newSuff)

@@ -71,26 +71,9 @@ public class GasBuffer
 			gasCutoff = EM_Settings.gasPassLimit;
 		}
 		
-		if(EM_Settings.gasPassLimit < fireCutoff && EM_Settings.gasPassLimit > -1)
+		if(EM_Settings.gasPassLimit/4 < fireCutoff && EM_Settings.gasPassLimit > -1)
 		{
-			fireCutoff = EM_Settings.gasPassLimit;
-		}
-		
-		if(curTick%(EM_Settings.gasTickRate/4) == 0)
-		{
-			for(int i = fireCutoff; i >= 0; i--)
-			{
-				int[] entry = fireBuffer.get(i);
-				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
-				
-				if(world != null && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
-				{
-					Block block = world.getBlock(entry[1], entry[2], entry[3]);
-					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 1);
-				}
-				
-				fireBuffer.remove(i);
-			}
+			fireCutoff = EM_Settings.gasPassLimit/4;
 		}
 		
 		if(curTick%EM_Settings.gasTickRate == 0)
@@ -103,10 +86,27 @@ public class GasBuffer
 				if(world != null && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
 				{
 					Block block = world.getBlock(entry[1], entry[2], entry[3]);
-					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 1);
+					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 0);
 				}
 				
 				gasBuffer.remove(i);
+			}
+		}
+		
+		if(curTick%(EM_Settings.gasTickRate/4) == 0)
+		{
+			for(int i = fireCutoff; i >= 0; i--)
+			{
+				int[] entry = fireBuffer.get(i);
+				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
+				
+				if(world != null && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
+				{
+					Block block = world.getBlock(entry[1], entry[2], entry[3]);
+					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 0);
+				}
+				
+				fireBuffer.remove(i);
 			}
 		}
 	}

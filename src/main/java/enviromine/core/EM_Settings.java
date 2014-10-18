@@ -80,7 +80,8 @@ public class EM_Settings
 	//Gases
 	public static boolean renderGases = false;
 	public static int gasTickRate = 32; //GasFires are 4x faster than this
-	public static int gasPassLimit = 512;
+	public static int gasPassLimit = -1;
+	public static boolean gasWaterLike = true;
 	
 	//World Gen
 	public static boolean shaftGen = true;
@@ -129,6 +130,13 @@ public class EM_Settings
 	
 	/** Whether or not this overridden with server settings */
 	public static boolean isOverridden = false;
+	
+	public static boolean enableQuakes = true;
+	public static boolean quakePhysics = true;
+	public static int quakeRarity = 100;
+	public static int quakeDelay = 10;
+	public static int quakeMode = 2;
+	public static int quakeSpeed = 2;
 	
 	public static float convertToFarenheit(float num)
 	{

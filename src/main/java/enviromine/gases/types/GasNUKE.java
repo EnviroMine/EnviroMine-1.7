@@ -9,7 +9,7 @@ public class GasNUKE extends EnviroGas
 	{
 		super(name, ID);
 		this.setColor(new Color(255, 0, 0, 255));
-		this.setVolitility(1000F);
+		this.setVolitility(1000F, 0F, 1F);
 		this.setDensity(100F);
 	}
 }

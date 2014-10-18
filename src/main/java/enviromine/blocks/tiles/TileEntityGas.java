@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import enviromine.EnviroUtils;
 import enviromine.blocks.BlockGas;
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
@@ -36,6 +37,8 @@ public class TileEntityGas extends TileEntity
 	
 	public boolean preReqRender = true;
 	public boolean curReqRender = true;
+	
+	public int ticks = 0;
 	
 	public TileEntityGas()
 	{
@@ -266,19 +269,32 @@ public class TileEntityGas extends TileEntity
 	{
 		super.readFromNBT(par1NBTTagCompound);
 		
+		if(!par1NBTTagCompound.hasKey("GasArray"))
+		{
+			EnviroMine.logger.log(Level.ERROR, "GasTile missing NBT 'GasArray', this should not happen!", new Exception());
+			return;
+		}
+		
 		int[] savedGases = par1NBTTagCompound.getIntArray("GasArray");
 		
-		if(savedGases.length > 0)
+		if(savedGases.length <= 0)
 		{
-			gases = new ArrayList<int[]>();
+			EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gases, this should not happen!", new Exception());
+			return;
 		}
+		
+		gases = new ArrayList<int[]>();
 		
 		for(int i = 0; i < savedGases.length; i++)
 		{
 			this.addGas(savedGases[i], 1);
 		}
 		
-		System.out.println("Read NBTTag = " + par1NBTTagCompound.toString());
+		if(gases.size() <= 0)
+		{
+			EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gas units but no gases were actually added!", new Exception());
+			return;
+		}
 	}
 	
 	@Override
@@ -286,10 +302,7 @@ public class TileEntityGas extends TileEntity
 	{
 		super.writeToNBT(par1NBTTagCompound);
 		
-		this.updateAmount();
-		
-		int[] savedGases = new int[this.amount];
-		int index = 0;
+		ArrayList<Integer> savedGases = new ArrayList<Integer>();
 		
 		for(int i = 0; i < gases.size(); i++)
 		{
@@ -297,24 +310,31 @@ public class TileEntityGas extends TileEntity
 			
 			for(int j = 0; j < gasArray[1]; j++)
 			{
-				savedGases[index] = gasArray[0];
-				index++;
+				savedGases.add(gasArray[0]);
 			}
 		}
 		
-		par1NBTTagCompound.setIntArray("GasArray", savedGases);
-		String tmp = "{";
-		for (int i : savedGases) {
-			tmp += (tmp.equals("{") ? i : ", "+i);
+		int[] savedArray = new int[savedGases.size()];
+		
+		for(int i = 0; i < savedGases.size(); i++)
+		{
+			savedArray[i] = savedGases.get(i);
 		}
-		tmp += "}";
-		System.out.println("savedGasses = " + tmp);
-		System.out.println("Written NBTTag = " + par1NBTTagCompound.toString());
+		
+		par1NBTTagCompound.setIntArray("GasArray", savedArray);
 	}
 	
 	public void updateAmount()
 	{
+		ticks++;
+		int before = this.amount;
 		this.amount = getGasQuantity(-1);
+		
+		if(this.amount != before)
+		{
+			//EnviroMine.logger.log(Level.INFO, "GasTile amount updated: " + this.amount + ", Pos: {" + xCoord + "," + yCoord + "," + zCoord + "}");
+			this.markDirty();
+		}
 	}
 	
 	public int getGasQuantity(int id)
@@ -377,14 +397,18 @@ public class TileEntityGas extends TileEntity
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		NBTTagCompound nbttagcompound = new NBTTagCompound();
-		this.writeToNBT(nbttagcompound);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbttagcompound);
+		NBTTagCompound tags = new NBTTagCompound();
+		this.writeToNBT(tags);
+		if(this.amount <= 0)
+		{
+			EnviroMine.logger.log(Level.WARN, "Sent data packet for TileEntityGas with 0 gases!", new Exception());
+		}
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tags);
 	}
 	
 	public void addGas(int id, int addNum)
 	{
-		if(addNum <= 0 || !this.hasWorldObj())
+		if(addNum <= 0)
 		{
 			return;
 		}
@@ -405,7 +429,7 @@ public class TileEntityGas extends TileEntity
 		}
 		gases.add(new int[]{id, addNum});
 		
-		if(id == 0)
+		if(id == 0 && this.hasWorldObj())
 		{
 			if(this.getBlockType() == ObjectHandler.gasBlock)
 			{
@@ -460,11 +484,12 @@ public class TileEntityGas extends TileEntity
 		for(int i = 0; i < gases.size(); i ++)
 		{
 			int[] gasArray = gases.get(i);
+			int fire = EnviroGasDictionary.gasList[gasArray[0]].getFire(gasArray[1], this.amount >= 10? 0 : 10 - this.amount);
 			float vol = EnviroGasDictionary.gasList[gasArray[0]].volitility;
 			if(vol > 0)
 			{
 				burntGases.add(gasArray);
-				fireSize += (int)(gasArray[1] * vol);
+				fireSize += fire;
 				didBurn = true;
 			}
 		}
@@ -588,6 +613,7 @@ public class TileEntityGas extends TileEntity
 		
 		if(changed)
 		{
+			//this.markDirty();
 			/*this.updateColor();
 			this.updateAmount();
 			this.updateOpacity();
@@ -602,6 +628,8 @@ public class TileEntityGas extends TileEntity
 		{
 			return false;
 		}
+		
+		int gasMode = EM_Settings.gasWaterLike? 1 : 0;
 		
 		int vDir = j - this.yCoord;
 		
@@ -630,7 +658,7 @@ public class TileEntityGas extends TileEntity
 		{
 			TileEntityGas gasTile = (TileEntityGas)tile;
 			
-			if(gasTile.amount + 1 >= this.amount && this.amount <= 10 && vDir == 0 && this.getBlockType() != ObjectHandler.fireGasBlock)
+			if(gasTile.amount + gasMode >= this.amount && this.amount <= 10 && vDir == 0 && this.getBlockType() != ObjectHandler.fireGasBlock)
 			{
 				return false;
 			} else if(vDir != 0 && this.amount <= 10 && gasTile.amount >= 10 && this.getBlockType() != ObjectHandler.fireGasBlock)
@@ -851,9 +879,6 @@ public class TileEntityGas extends TileEntity
 	@Override
 	public void onDataPacket(NetworkManager netManager, S35PacketUpdateTileEntity packet)
 	{
-		if(packet.func_148853_f() == 0)
-		{
-			this.readFromNBT(packet.func_148857_g());
-		}
+		this.readFromNBT(packet.func_148857_g());
 	}
 }

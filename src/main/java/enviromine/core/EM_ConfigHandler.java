@@ -155,7 +155,8 @@ public class EM_ConfigHandler
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", true).getBoolean(true);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 128, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(128);
-		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 512, "How many gases can be processed in a single pass").getInt(512);
+		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", -1, "How many gases can be processed in a single pass (-1 = infinite)").getInt(-1);
+		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", true, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(true);
 		
 		// Potion ID's
 		EM_Settings.hypothermiaPotionID = -1;
@@ -186,6 +187,22 @@ public class EM_ConfigHandler
 		EM_Settings.genArmorConfigs = config.get(ConSetCat, "Generate Armor Configs", true, "Will attempt to find and generate blank configs for any custom armors loaded before EnviroMine.").getBoolean(true);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		
+		// Earthquake
+		String EarSetCat = "Earthquakes";
+		EM_Settings.enableQuakes = config.get(EarSetCat, "Enable Earthquakes", true).getBoolean(true);
+		EM_Settings.quakePhysics = config.get(EarSetCat, "Triggers Physics", true, "Can cause major lag at times (Requires main physics to be enabled)").getBoolean(true);
+		EM_Settings.quakeRarity = config.get(EarSetCat, "Rarity", 100).getInt(100);
+		EM_Settings.quakeMode = config.get(EarSetCat, "Mode", 2, "Changes how quakes are created (-1 = random, 0 = wave normal, 1 = centre normal, 2 = centre tear, 3 = wave tear)").getInt(2);
+		EM_Settings.quakeDelay = config.get(EarSetCat, "Tick delay", 10).getInt(10);
+		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", 2).getInt(2);
+		if(EM_Settings.quakeRarity <= 0)
+		{
+			EM_Settings.quakeRarity = 1;
+		}
+		if(EM_Settings.quakeSpeed <= 0)
+		{
+			EM_Settings.quakeSpeed = 1;
+		}
 		
 		// REMOVE OLD Settings if they exist
 		// Sound

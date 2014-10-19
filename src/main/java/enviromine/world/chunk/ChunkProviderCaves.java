@@ -66,7 +66,6 @@ public class ChunkProviderCaves implements IChunkProvider
 	double[] noiseData3;
 	double[] noiseData4;
 	double[] noiseData5;
-	private static final String __OBFID = "CL_00000392";
 	
 	{
 		netherCaveGenerator = TerrainGen.getModdedMapGen(netherCaveGenerator, CAVE);

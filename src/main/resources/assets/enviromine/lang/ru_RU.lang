@@ -9,6 +9,12 @@ item.enviromine.hardhat.name=Каска
 item.enviromine.airfilter.name=Воздушный фильтр
 item.enviromine.rottenfood.name=Испорченная еда
 
+potion.enviromine.frostbite=Обморожение
+potion.enviromine.dehydration=Обезвоживание
+potion.enviromine.insanity=Безумие
+potion.enviromine.heatstroke=Тепловой удар
+potion.enviromine.hypothermia=Гипотермия
+
 tile.enviromine.elevator_top.name=Верх лифта
 tile.enviromine.elevator_bottom.name=Низ лифта
 

@@ -3,13 +3,13 @@ package enviromine.handlers;
 import enviromine.core.EM_Settings;
 import enviromine.items.RottenFood;
 import enviromine.trackers.properties.RotProperties;
-
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class RotHandler
@@ -62,6 +62,8 @@ public class RotHandler
 	
 	public static void rotInvo(World world, IInventory inventory)
 	{
+		boolean flag = false;
+		
 		for(int i = 0; i < inventory.getSizeInventory(); i++)
 		{
 			ItemStack slotItem = inventory.getStackInSlot(i);
@@ -73,8 +75,14 @@ public class RotHandler
 				if(rotItem != slotItem)
 				{
 					inventory.setInventorySlotContents(i, rotItem);
+					flag = true;
 				}
 			}
+		}
+		
+		if(flag && inventory instanceof TileEntity)
+		{
+			((TileEntity)inventory).markDirty();
 		}
 	}
 }

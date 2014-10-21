@@ -4,18 +4,36 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
-
 import enviromine.EnviroDamageSource;
 import enviromine.core.EM_Settings;
 import enviromine.trackers.EnviroDataTracker;
-
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
 public class HandlingTheThing
 {
+	public static Calendar date = Calendar.getInstance();
+	
 	public static void stalkPlayer(EntityPlayer player)
 	{
+		boolean flag = false;
+		
+		// Check if Halloween or Friday 13th. Guarantees attack if true!
+		if((date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 31) || (date.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && date.get(Calendar.DAY_OF_MONTH) == 13))
+		{
+			flag = true;
+		}
+		
+		if(!player.getEntityData().getBoolean("EM_THING_TARGET") && !flag)
+		{
+			if(player.worldObj.rand.nextInt(100000) == 0) // If you are REALLY unlucky you will be attacked at any time!
+			{
+				player.getEntityData().setBoolean("EM_THING_TARGET", true);
+			}
+			return;
+		}
+		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(player.getCommandSenderName());
 		int i = MathHelper.floor_double(player.posX);
 		int j = MathHelper.floor_double(player.posY);
@@ -36,7 +54,7 @@ public class HandlingTheThing
 		
 		if(player.worldObj.getBlockLightValue(i, j, k) == 0 && !player.capabilities.isCreativeMode && player.dimension == EM_Settings.caveDimID && !player.isPotionActive(Potion.nightVision))
 		{
-			if(getWitnesses(player) <= 0)
+			if(hasWitnesses(player))
 			{
 				darkness += deathSpeed;
 			}
@@ -72,10 +90,8 @@ public class HandlingTheThing
 		}
 	}
 	
-	public static int getWitnesses(EntityPlayer victim)
+	public static boolean hasWitnesses(EntityPlayer victim)
 	{
-		int count = 0;
-		
 		List players = victim.worldObj.getEntitiesWithinAABB(EntityPlayer.class, victim.boundingBox.expand(128, 128, 128));
 		
 		Iterator iterator = players.iterator();
@@ -91,10 +107,10 @@ public class HandlingTheThing
 			
 			if(witness.canEntityBeSeen(victim))
 			{
-				count++;
+				return true;
 			}
 		}
 		
-		return count;
+		return false;
 	}
 }

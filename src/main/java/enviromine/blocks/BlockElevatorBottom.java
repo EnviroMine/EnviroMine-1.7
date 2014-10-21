@@ -99,7 +99,7 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+        return ObjectHandler.renderSpecialID;
 	}
 	
 	//It's not an opaque cube, so you need this.
@@ -120,6 +120,6 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		this.blockIcon = register.registerIcon("enviromine:elevator_bottom_icon");
+		this.blockIcon = register.registerIcon("iron_block");
 	}
 }

@@ -14,8 +14,10 @@ import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,9 +33,33 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
      */
-    public void onBlockAdded(World p_149726_1_, int p_149726_2_, int p_149726_3_, int p_149726_4_)
+    public void onBlockAdded(World world, int x, int y, int z)
     {
-        p_149726_1_.scheduleBlockUpdateWithPriority(p_149726_2_, p_149726_3_, p_149726_4_, this, this.tickRate(p_149726_1_) + p_149726_1_.rand.nextInt(10), 0);
+        world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + world.rand.nextInt(10), 0);
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    {
+    	double f = 0.125;
+        AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
+        
+        if(bounds != null)
+        {
+        	return bounds.contract(f, f, f);
+        } else
+        {
+        	return null;
+        }
+    }
+    
+    /**
+     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     */
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    {
+    	entity.setFire(10);
     }
 	
 	@Override
@@ -144,33 +170,33 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         }
 	}
 	
-    private void tryCatchFire(World p_149841_1_, int p_149841_2_, int p_149841_3_, int p_149841_4_, int p_149841_5_, Random p_149841_6_, int p_149841_7_, ForgeDirection face)
+    private void tryCatchFire(World world, int x, int y, int z, int p_149841_5_, Random random, int chance, ForgeDirection face)
     {
-        int j1 = p_149841_1_.getBlock(p_149841_2_, p_149841_3_, p_149841_4_).getFlammability(p_149841_1_, p_149841_2_, p_149841_3_, p_149841_4_, face);
+        int j1 = world.getBlock(x, y, z).getFlammability(world, x, y, z, face);
 
-        if (p_149841_6_.nextInt(p_149841_5_) < j1)
+        if (random.nextInt(p_149841_5_) < j1)
         {
-            boolean flag = p_149841_1_.getBlock(p_149841_2_, p_149841_3_, p_149841_4_) == Blocks.tnt;
+            boolean flag = world.getBlock(x, y, z) == Blocks.tnt;
 
-            if (p_149841_6_.nextInt(p_149841_7_ + 10) < 5 && !p_149841_1_.canLightningStrikeAt(p_149841_2_, p_149841_3_, p_149841_4_))
+            if (random.nextInt(chance + 10) < 5 && !world.canLightningStrikeAt(x, y, z))
             {
-                int k1 = p_149841_7_ + p_149841_6_.nextInt(5) / 4;
+                int k1 = chance + random.nextInt(5) / 4;
 
                 if (k1 > 15)
                 {
                     k1 = 15;
                 }
 
-                p_149841_1_.setBlock(p_149841_2_, p_149841_3_, p_149841_4_, Blocks.fire, k1, 3);
+                world.setBlock(x, y, z, Blocks.fire, k1, 3);
             }
             else
             {
-                p_149841_1_.setBlockToAir(p_149841_2_, p_149841_3_, p_149841_4_);
+                world.setBlockToAir(x, y, z);
             }
 
             if (flag)
             {
-                Blocks.tnt.onBlockDestroyedByPlayer(p_149841_1_, p_149841_2_, p_149841_3_, p_149841_4_, 1);
+                Blocks.tnt.onBlockDestroyedByPlayer(world, x, y, z, 1);
             }
         }
     }
@@ -178,23 +204,23 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     /**
      * Gets the highest chance of a neighbor block encouraging this block to catch fire
      */
-    private int getChanceOfNeighborsEncouragingFire(World p_149845_1_, int p_149845_2_, int p_149845_3_, int p_149845_4_)
+    private int getChanceOfNeighborsEncouragingFire(World world, int x, int y, int z)
     {
         byte b0 = 0;
 
-        if (!p_149845_1_.isAirBlock(p_149845_2_, p_149845_3_, p_149845_4_))
+        if (!world.isAirBlock(x, y, z))
         {
             return 0;
         }
         else
         {
             int l = b0;
-            l = this.getChanceToEncourageFire(p_149845_1_, p_149845_2_ + 1, p_149845_3_, p_149845_4_, l, WEST );
-            l = this.getChanceToEncourageFire(p_149845_1_, p_149845_2_ - 1, p_149845_3_, p_149845_4_, l, EAST );
-            l = this.getChanceToEncourageFire(p_149845_1_, p_149845_2_, p_149845_3_ - 1, p_149845_4_, l, UP   );
-            l = this.getChanceToEncourageFire(p_149845_1_, p_149845_2_, p_149845_3_ + 1, p_149845_4_, l, DOWN );
-            l = this.getChanceToEncourageFire(p_149845_1_, p_149845_2_, p_149845_3_, p_149845_4_ - 1, l, SOUTH);
-            l = this.getChanceToEncourageFire(p_149845_1_, p_149845_2_, p_149845_3_, p_149845_4_ + 1, l, NORTH);
+            l = this.getChanceToEncourageFire(world, x + 1, y, z, l, WEST );
+            l = this.getChanceToEncourageFire(world, x - 1, y, z, l, EAST );
+            l = this.getChanceToEncourageFire(world, x, y - 1, z, l, UP   );
+            l = this.getChanceToEncourageFire(world, x, y + 1, z, l, DOWN );
+            l = this.getChanceToEncourageFire(world, x, y, z - 1, l, SOUTH);
+            l = this.getChanceToEncourageFire(world, x, y, z + 1, l, NORTH);
             return l;
         }
     }

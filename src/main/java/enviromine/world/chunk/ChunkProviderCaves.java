@@ -4,7 +4,6 @@ import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.Ev
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE;
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE;
 import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.NETHER_LAVA;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
@@ -26,11 +25,10 @@ import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
-
 import java.util.List;
 import java.util.Random;
+import enviromine.handlers.ObjectHandler;
 
 public class ChunkProviderCaves implements IChunkProvider
 {
@@ -532,7 +530,7 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(Blocks.coal_ore, 13, Blocks.stone);
+		 worldgenminable = new WorldGenMinable(ObjectHandler.flammableCoal, 13, Blocks.stone);
 		 for (k1 = 0; k1 < 32; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);

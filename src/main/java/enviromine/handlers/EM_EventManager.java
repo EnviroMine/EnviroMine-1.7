@@ -1248,7 +1248,9 @@ public class EM_EventManager
 				
 				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)(((float)fill/(float)max)*100));
 				event.toolTip.add("Camel pack: " + disp + "% ("+fill+"/"+max+")");
-			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
+			}
+			
+			if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
 			{
 				double rotDate = event.itemStack.getTagCompound().getLong("EM_ROT_DATE");
 				double rotTime = event.itemStack.getTagCompound().getLong("EM_ROT_TIME");
@@ -1261,7 +1263,9 @@ public class EM_EventManager
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
 				}
-			}else if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
+			}
+			
+			if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
 			{
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
 				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");

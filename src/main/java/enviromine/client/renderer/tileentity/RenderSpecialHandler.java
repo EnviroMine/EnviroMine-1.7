@@ -60,7 +60,6 @@ public class RenderSpecialHandler implements ISimpleBlockRenderingHandler
 	{
 		blockToTile.put(ObjectHandler.esky, new TileEntityEsky());
 		blockToTile.put(ObjectHandler.freezer, new TileEntityFreezer());
-		blockToTile.put(ObjectHandler.elevatorBottom, new TileEntityElevatorBottom());
-		blockToTile.put(ObjectHandler.elevatorTop, new TileEntityElevatorTop());
+		blockToTile.put(ObjectHandler.elevator, new TileEntityElevator());
 	}
 }

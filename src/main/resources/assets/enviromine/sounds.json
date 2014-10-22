@@ -1,27 +1,113 @@
 {
-   "gasmask": {"category": "master", "sounds": [{"name": "gasmask","stream": false}]},
+  "gasmask": {
+    "category": "player",
+    "sounds": [
+      "gasmask"
+    ]
+  },
+ 
+  "thingkill": {
+    "category": "player",
+    "sounds": [
+      "thingkill"
+    ]
+  },
    
-   "thingdistant": {"category": "master","sounds": [{"name": "thingdistant","stream": false}]},
-   "thingkill": {"category": "master","sounds": [{"name": "thingkill","stream": false}]},
+  "cave_in": {
+    "category": "block",
+    "sounds": [
+      "cave_in"
+    ]
+  },
    
-   "CaveIn": {"category": "master","sounds": [{"name": "CaveIn","stream": false}]},
+  "sizzle": {
+    "category": "player",
+    "sounds": [
+      "sizzle"
+    ]
+  },
    
-   "sizzle": {"category": "player","sounds": [{"name": "sizzle","stream": false}]},
+  "chill": {
+    "category": "player",
+    "sounds": [
+      "chill"
+    ]
+  },
    
-   "chill": {"category": "player","sounds": [{"name": "chill","stream": false}]},
-   
-   "gag": {"category": "player",
-   "sounds": [
-		"gag1",
-		"gag2",
-		"gag3"
-	]},
+  "enviromine.gag": {
+    "category": "player",
+    "sounds": [
+      "gag1",
+      "gag2",
+      "gag3"
+    ]
+  },
 	
-	"shiver": {"category": "player","sounds": [{"name": "shiver","stream": false}]},
+	"shiver": {
+    "category": "player",
+    "sounds": [
+      "shiver"
+    ]
+  },
 	
-	"earthquake": {"category": "master","sounds": [{"name": "earthquake","stream": false}]},
+	"earthquake": {
+    "category": "master",
+    "sounds": [
+      "earthquake"
+    ]
+  },
    
-	"heartbeat": {"category": "player","sounds": [{"name": "heartbeat","stream": false}]}
+	"heartbeat": {
+    "category": "player",
+    "sounds": [
+      "heartbeat"
+    ]
+  },
+  
+  "gas_ignite": {
+    "category": "block",
+    "sounds": [
+      "gas_ignite1",
+      "gas_ignite2",
+      "gas_ignite3",
+      "gas_ignite4"
+    ]
+  },
    
+	"cave_ambience": {
+    "category": "music",
+    "sounds": [
+      "cave_ambience1",
+      "cave_ambience2",
+      {
+        "name": "cave_ambience3",
+        "stream": "true"
+      },
+      {
+        "name": "cave_ambience4",
+        "stream": "true"
+      }
+    ]
+  },
+  
+  "eerie": {
+    "category": "master",
+    "sounds": [
+      "eerie1",
+      "eerie2",
+      "eerie3"
+    ]
+  },
+  
+  "whispers": {
+    "category": "master",
+    "sounds": [
+      "whispers1",
+      "whispers2",
+      "whispers3",
+      "whispers4",
+      "whispers5"
+    ]
+  }
 }
 

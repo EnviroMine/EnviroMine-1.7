@@ -1,26 +1,32 @@
 package enviromine.blocks;
 
+import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import enviromine.blocks.tiles.TileEntityElevatorBottom;
+import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.TeleportHandler;
 
-public class BlockElevatorBottom extends Block implements ITileEntityProvider
+public class BlockElevator extends Block implements ITileEntityProvider
 {
-	public BlockElevatorBottom(Material par2Material)
+	public BlockElevator(Material par2Material)
 	{
 		super(par2Material);
 		this.setHardness(5.0F);
 		this.setStepSound(Block.soundTypeMetal);
+		this.setLightLevel(1F);
 	}
 	
 	/**
@@ -44,16 +50,15 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		if(world.getBlock(i, j + 1, k) != ObjectHandler.elevatorTop)
+		int meta = world.getBlockMetadata(i, j, k)%2;
+		
+		if(!(meta == 0 && world.getBlock(i, j - 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j - 1, k) == 1) && !(meta == 1 && world.getBlock(i, j + 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j + 1, k) == 0))
 		{
-			if (player.inventory.getCurrentItem().getItem() == Item.getItemFromBlock(ObjectHandler.elevatorTop)) {
-				return false;
-			}
 			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
 			return true;
 		}
 		
-		if(j > 9 && player.dimension == 0)
+		if(j > 10 - meta && player.dimension == 0)
 		{
 			player.addChatMessage(new ChatComponentText("Elevator must be built near bedrock."));
 			return true;
@@ -70,29 +75,60 @@ public class BlockElevatorBottom extends Block implements ITileEntityProvider
 		
 		if(player.dimension == -3)
 		{
-			player.setPosition(i + 0.5D, j, k + 0.5D);
+			player.setPosition(i + 0.5D, j - 1, k + 0.5D);
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, new TeleportHandler(playerMP.mcServer.worldServerForDimension(0)));
 			world.setBlockToAir(i, j, k);
-			world.setBlockToAir(i, j + 1, k);
+			if(meta == 0)
+			{
+				world.setBlockToAir(i, j - 1, k);
+			} else
+			{
+				world.setBlockToAir(i, j + 1, k);
+			}
 		} else if(player.dimension == 0)
 		{
-			player.setPosition(i + 0.5D, j, k + 0.5D);
+			player.setPosition(i + 0.5D, j - 1, k + 0.5D);
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, -3, new TeleportHandler(playerMP.mcServer.worldServerForDimension(-3)));
 			world.setBlockToAir(i, j, k);
-			world.setBlockToAir(i, j + 1, k);
+			if(meta == 0)
+			{
+				world.setBlockToAir(i, j - 1, k);
+			} else
+			{
+				world.setBlockToAir(i, j + 1, k);
+			}
 		} else
 		{
 			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));
 		}
-		
-		return false;
+		return true;
 	}
 	
 	//Make sure you set this as your TileEntity class relevant for the block!
 	@Override
 	public TileEntity createNewTileEntity(World world, int i)
 	{
-		return new TileEntityElevatorBottom();
+		return new TileEntityElevator();
+	}
+	
+	/**
+	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public void getSubBlocks(Item item, CreativeTabs tab, List tabList)
+	{
+		for (int i = 0; i < 2; ++i)
+		{
+			tabList.add(new ItemStack(item, 1, i));
+		}
+	}
+	
+	@Override
+	public int damageDropped(int meta)
+	{
+		return meta;
 	}
 	
 	//You don't want the normal render type, or it wont render properly.

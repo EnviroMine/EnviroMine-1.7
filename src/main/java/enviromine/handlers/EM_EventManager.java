@@ -1,9 +1,14 @@
 package enviromine.handlers;
 
+import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,6 +44,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -57,6 +63,8 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -77,12 +85,6 @@ import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-import java.awt.Color;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
-import org.apache.logging.log4j.Level;
-import org.lwjgl.opengl.GL11;
 
 public class EM_EventManager
 {
@@ -1211,6 +1213,17 @@ public class EM_EventManager
 		{
 			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
 			event.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onMusicPlay(PlaySoundEvent17 event)
+	{
+		if(Minecraft.getMinecraft().thePlayer != null && event.category == SoundCategory.MUSIC && Minecraft.getMinecraft().thePlayer.dimension == EM_Settings.caveDimID)
+		{
+			// Replaces background music with cave ambience in the cave dimension
+			event.result = PositionedSoundRecord.func_147673_a(new ResourceLocation("enviromine", "cave_ambience"));
 		}
 	}
 	

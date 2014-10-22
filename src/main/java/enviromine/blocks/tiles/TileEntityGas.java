@@ -354,7 +354,7 @@ public class TileEntityGas extends TileEntity
 	
 	public void updateRender()
 	{
-		if(this.worldObj == null || gases.size() <= 0)
+		if(this.worldObj == null || gases.size() <= 0 || !(this.getBlockType() instanceof BlockGas))
 		{
 			return;
 		}

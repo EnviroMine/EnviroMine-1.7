@@ -42,8 +42,7 @@ public class ObjectHandler
 	public static ItemArmor hardHat;
 	
 	public static Block davyLampBlock;
-	public static Block elevatorTop;
-	public static Block elevatorBottom;
+	public static Block elevator;
 	public static Block gasBlock;
 	public static Block fireGasBlock;
 	
@@ -92,11 +91,10 @@ public class ObjectHandler
 		gasBlock = new BlockGas(gasMat).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block");
 		fireGasBlock = new BlockGas(gasMat).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block").setLightLevel(1.0F);
 		
-		elevatorTop = new BlockElevatorTop(Material.iron).setBlockName("enviromine.elevator_top").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("iron_block");
-		elevatorBottom = new BlockElevatorBottom(Material.iron).setBlockName("enviromine.elevator_bottom").setCreativeTab(EnviroMine.enviroTab);
+		elevator = new BlockElevator(Material.iron).setBlockName("enviromine.elevator").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("iron_block");
 		
 		davyLampBlock = new BlockDavyLamp(Material.iron).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab);
-		davyLamp = new DavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);
+		davyLamp = new ItemDavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);
 		
 		flammableCoal = new BlockFlammableCoal();
 		burningCoal = new BlockBurningCoal(Material.rock).setBlockName("enviromine.burningcoal").setCreativeTab(EnviroMine.enviroTab);
@@ -109,9 +107,8 @@ public class ObjectHandler
 	{
 		GameRegistry.registerBlock(gasBlock, "gas");
 		GameRegistry.registerBlock(fireGasBlock, "firegas");
-		GameRegistry.registerBlock(elevatorTop, "elevator_top");
-		GameRegistry.registerBlock(elevatorBottom, "elevator_bottom");
-		GameRegistry.registerBlock(davyLampBlock, DavyLamp.class, "davy_lamp");
+		GameRegistry.registerBlock(elevator, ItemElevator.class, "elevator");
+		GameRegistry.registerBlock(davyLampBlock, ItemDavyLamp.class, "davy_lamp");
 		GameRegistry.registerBlock(fireTorch, "firetorch");
 		GameRegistry.registerBlock(burningCoal, "burningcoal");
 		GameRegistry.registerBlock(flammableCoal, "flammablecoal");
@@ -134,8 +131,7 @@ public class ObjectHandler
 		GameRegistry.registerTileEntity(TileEntityBurningCoal.class, "enviromine.tile.burningcoal");
 		GameRegistry.registerTileEntity(TileEntityEsky.class, "enviromine.tile.esky");
 		
-		GameRegistry.registerTileEntity(TileEntityElevatorTop.class, "enviromine.tile.elevator_top");
-		GameRegistry.registerTileEntity(TileEntityElevatorBottom.class, "enviromine.tile.elevator_bottom");
+		GameRegistry.registerTileEntity(TileEntityElevator.class, "enviromine.tile.elevator");
 		
 
 		GameRegistry.registerTileEntity(TileEntityDavyLamp.class, "enviromine.tile.davy_lamp");
@@ -164,8 +160,8 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xyx", "xzx", "xpx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'p', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),'z', new ItemStack(Items.coal, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xpx", "xzx", "xyx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'p', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),'z', new ItemStack(Items.coal, 1, 1));
 		
-		GameRegistry.addRecipe(new ItemStack(elevatorTop), "xyx", "z z", "z z", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.redstone_lamp), 'z', new ItemStack(Blocks.iron_bars));
-		GameRegistry.addRecipe(new ItemStack(elevatorBottom), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
+		GameRegistry.addRecipe(new ItemStack(elevator, 1, 0), "xyx", "z z", "z z", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.redstone_lamp), 'z', new ItemStack(Blocks.iron_bars));
+		GameRegistry.addRecipe(new ItemStack(elevator, 1, 1), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
 		
 		GameRegistry.addRecipe(new ItemStack(davyLampBlock), " x ", "zyz", "xxx", 'x', new ItemStack(Items.gold_ingot), 'y', new ItemStack(Blocks.torch), 'z', new ItemStack(Blocks.glass_pane));
 	}

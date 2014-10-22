@@ -332,6 +332,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 				if(gasTile.burnGases())
 				{
 					//this.swtichIgnitionState(world, x, y, z);
+		            world.playSoundEffect(x, y, z, "enviromine:gas_ignite", 1.0F, (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
 					return;
 				}
 			} else if(fireNum >= 1 && this == ObjectHandler.gasBlock)
@@ -612,6 +613,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 					if(gasTile.getBlockType() == ObjectHandler.fireGasBlock)
 					{
 						((BlockGas)gasTile.getBlockType()).swtichIgnitionState(world, x + pos[0], y + pos[1], z + pos[2]);
+			            world.playSoundEffect(x, y, z, "enviromine:gas_ignite", 1.0F, (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
 					}
 				}
 			}

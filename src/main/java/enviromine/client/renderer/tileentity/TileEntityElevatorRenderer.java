@@ -8,14 +8,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
-public class TileEntityElevatorBottomRenderer extends TileEntitySpecialRenderer
+public class TileEntityElevatorRenderer extends TileEntitySpecialRenderer
 {
-	IModelCustom model;
+	IModelCustom modelTop;
+	IModelCustom modelBottom;
 	ResourceLocation texture;
 	
-	public TileEntityElevatorBottomRenderer()
+	public TileEntityElevatorRenderer()
 	{
-		model = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/bottomblockelevator.obj"));
+		modelTop = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/topblockelevator.obj"));
+		modelBottom = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/bottomblockelevator.obj"));
 		texture = new ResourceLocation("enviromine", "textures/models/blocks/elevator_model.png");
 	}
 	
@@ -25,7 +27,13 @@ public class TileEntityElevatorBottomRenderer extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
         Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-        model.renderAll();
+        if(tileentity.getBlockMetadata()%2 == 0)
+        {
+        	modelTop.renderAll();
+        } else
+        {
+        	modelBottom.renderAll();
+        }
         GL11.glPopMatrix();
 	}
 }

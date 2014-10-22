@@ -1,21 +1,27 @@
 package enviromine.blocks;
 
+import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import enviromine.blocks.tiles.TileEntityElevatorTop;
+import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.TeleportHandler;
 
-public class BlockElevatorTop extends Block implements ITileEntityProvider
+public class BlockElevator extends Block implements ITileEntityProvider
 {
-	public BlockElevatorTop(Material par2Material)
+	public BlockElevator(Material par2Material)
 	{
 		super(par2Material);
 		this.setHardness(5.0F);
@@ -44,13 +50,15 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		if(world.getBlock(i, j - 1, k) != ObjectHandler.elevatorBottom)
+		int meta = world.getBlockMetadata(i, j, k)%2;
+		
+		if(!(meta == 0 && world.getBlock(i, j - 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j - 1, k) == 1) && !(meta == 1 && world.getBlock(i, j + 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j + 1, k) == 0))
 		{
 			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
 			return true;
 		}
 		
-		if(j > 10 && player.dimension == 0)
+		if(j > 10 - meta && player.dimension == 0)
 		{
 			player.addChatMessage(new ChatComponentText("Elevator must be built near bedrock."));
 			return true;
@@ -70,13 +78,25 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 			player.setPosition(i + 0.5D, j - 1, k + 0.5D);
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, new TeleportHandler(playerMP.mcServer.worldServerForDimension(0)));
 			world.setBlockToAir(i, j, k);
-			world.setBlockToAir(i, j - 1, k);
+			if(meta == 0)
+			{
+				world.setBlockToAir(i, j - 1, k);
+			} else
+			{
+				world.setBlockToAir(i, j + 1, k);
+			}
 		} else if(player.dimension == 0)
 		{
 			player.setPosition(i + 0.5D, j - 1, k + 0.5D);
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, -3, new TeleportHandler(playerMP.mcServer.worldServerForDimension(-3)));
 			world.setBlockToAir(i, j, k);
-			world.setBlockToAir(i, j - 1, k);
+			if(meta == 0)
+			{
+				world.setBlockToAir(i, j - 1, k);
+			} else
+			{
+				world.setBlockToAir(i, j + 1, k);
+			}
 		} else
 		{
 			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));
@@ -88,14 +108,34 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World world, int i)
 	{
-		return new TileEntityElevatorTop();
+		return new TileEntityElevator();
+	}
+	
+	/**
+	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public void getSubBlocks(Item item, CreativeTabs tab, List tabList)
+	{
+		for (int i = 0; i < 2; ++i)
+		{
+			tabList.add(new ItemStack(item, 1, i));
+		}
+	}
+	
+	@Override
+	public int damageDropped(int meta)
+	{
+		return meta;
 	}
 	
 	//You don't want the normal render type, or it wont render properly.
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+        return ObjectHandler.renderSpecialID;
 	}
 	
 	//It's not an opaque cube, so you need this.
@@ -116,6 +156,6 @@ public class BlockElevatorTop extends Block implements ITileEntityProvider
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		this.blockIcon = register.registerIcon("enviromine:elevator_top_icon");
+		this.blockIcon = register.registerIcon("iron_block");
 	}
 }

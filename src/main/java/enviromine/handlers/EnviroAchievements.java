@@ -42,7 +42,7 @@ public class EnviroAchievements
 		ohGodWhy =         new Achievement("enviromine.OhGodWhy",         "enviromine.OhGodWhy",          1, 1, Items.record_11,            AchievementList.diamonds).registerStat();
 		safetyFirst =      new Achievement("enviromine.SafetyFirst",      "enviromine.SafetyFirst",       2, 1, ObjectHandler.hardHat,        AchievementList.portal).registerStat();
 		
-		boreToTheCore =    new Achievement("enviromine.BoreToTheCore",    "enviromine.BoreToTheCore",    -2, 2, ObjectHandler.elevatorTop,    AchievementList.portal).registerStat();
+		boreToTheCore =    new Achievement("enviromine.BoreToTheCore",    "enviromine.BoreToTheCore",    -2, 2, ObjectHandler.elevator,    AchievementList.portal).registerStat();
 		intoTheDarkness =  new Achievement("enviromine.IntoTheDarkness",  "enviromine.IntoTheDarkness",  -1, 2, Blocks.torch,                          boreToTheCore).registerStat();
 		thatJustHappened = new Achievement("enviromine.ThatJustHappened", "enviromine.ThatJustHappened",  0, 2, Blocks.fire,                                    null).registerStat();
 		itsPitchBlack =    new Achievement("enviromine.ItsPitchBlack",    "enviromine.ItsPitchBlack",     1, 2, Blocks.redstone_torch,                 boreToTheCore).registerStat();

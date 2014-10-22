@@ -1,9 +1,14 @@
 package enviromine.handlers;
 
+import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,6 +44,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -57,6 +63,8 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -77,12 +85,6 @@ import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-import java.awt.Color;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
-import org.apache.logging.log4j.Level;
-import org.lwjgl.opengl.GL11;
 
 public class EM_EventManager
 {
@@ -1216,6 +1218,17 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
+	public void onMusicPlay(PlaySoundEvent17 event)
+	{
+		if(Minecraft.getMinecraft().thePlayer != null && event.category == SoundCategory.MUSIC && Minecraft.getMinecraft().thePlayer.dimension == EM_Settings.caveDimID)
+		{
+			// Replaces background music with cave ambience in the cave dimension
+			event.result = PositionedSoundRecord.func_147673_a(new ResourceLocation("enviromine", "cave_ambience"));
+		}
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onRender(RenderPlayerEvent.Post event)
 	{
 		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
@@ -1248,7 +1261,9 @@ public class EM_EventManager
 				
 				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)(((float)fill/(float)max)*100));
 				event.toolTip.add("Camel pack: " + disp + "% ("+fill+"/"+max+")");
-			} else if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
+			}
+			
+			if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
 			{
 				double rotDate = event.itemStack.getTagCompound().getLong("EM_ROT_DATE");
 				double rotTime = event.itemStack.getTagCompound().getLong("EM_ROT_TIME");
@@ -1261,7 +1276,9 @@ public class EM_EventManager
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
 				}
-			}else if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
+			}
+			
+			if(event.itemStack.getTagCompound().hasKey("gasMaskFill"))
 			{
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
 				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");

@@ -1,34 +1,31 @@
 package enviromine.items;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-public class DavyLamp extends ItemBlock
+public class ItemElevator extends ItemBlock
 {
-	public String[] lampNames = new String[]{"off", "lit", "gas"};
-	
-	public DavyLamp(Block block)
+	public ItemElevator(Block block)
 	{
 		super(block);
 		this.setHasSubtypes(true);
-		this.setUnlocalizedName("enviromine.davy_lamp");
+		this.setUnlocalizedName("enviromine.elevator");
 	}
 	
 	@Override
 	public int getMetadata(int damageValue)
 	{
-		return damageValue%3;
+		return damageValue%2;
 	}
 	
 	@Override
-	public String getUnlocalizedName(ItemStack itemstack)
+	public String getUnlocalizedName(ItemStack stack)
 	{
-		return getUnlocalizedName() + "." + lampNames[itemstack.getItemDamage()%3];
+		return this.getUnlocalizedName() + (stack.getItemDamage()%2 == 0? "_top" : "_bottom");
 	}
 
     /**

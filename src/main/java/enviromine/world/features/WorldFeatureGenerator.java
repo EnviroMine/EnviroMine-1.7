@@ -68,11 +68,30 @@ public class WorldFeatureGenerator implements IWorldGenerator
 			}
 		}
 		
+		ReplaceCoal(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+		
 		if(EM_Settings.gasGen)
 		{
-			for(int i = 25; i >= 0; i--)
+			for(int i = 8; i >= 0; i--)
 			{
 				GenGasPocket(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+			}
+		}
+	}
+	
+	public void ReplaceCoal(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+	{
+		for(int i = 0; i < 16; i++)
+		{
+			for(int j = 0; j < 256; j++)
+			{
+				for(int k = 0; k < 16; k++)
+				{
+					if(world.getBlock(i, j, k) == Blocks.coal_ore)
+					{
+						world.setBlock(i, j, k, ObjectHandler.flammableCoal);
+					}
+				}
 			}
 		}
 	}

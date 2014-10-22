@@ -49,8 +49,8 @@ public class TeleportHandler extends Teleporter
 			if(par1Entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer)par1Entity;
-				ItemStack itemTop = new ItemStack(ObjectHandler.elevatorTop, 1);
-				ItemStack itemBot = new ItemStack(ObjectHandler.elevatorBottom, 1);
+				ItemStack itemTop = new ItemStack(ObjectHandler.elevator, 1, 0);
+				ItemStack itemBot = new ItemStack(ObjectHandler.elevator, 1, 1);
 				if(!player.inventory.addItemStackToInventory(itemTop))
 				{
 					EntityItem entityitem = new EntityItem(this.worldServerInstance, player.posX, player.posY, player.posZ, itemTop);
@@ -71,7 +71,7 @@ public class TeleportHandler extends Teleporter
 	@Override
 	public boolean placeInExistingPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
 	{
-		short short1 = 0;
+		short short1 = 1;
 		double d3 = -1.0D;
 		int i = 0;
 		int j = 0;
@@ -107,10 +107,10 @@ public class TeleportHandler extends Teleporter
 					
 					for (int i2 = 127 - 1; i2 >= 0; --i2)
 					{
-						if (this.worldServerInstance.getBlock(k1, i2, l1) == ObjectHandler.elevatorBottom && this.worldServerInstance.getBlock(k1, i2 + 1, l1) == ObjectHandler.elevatorTop)
+						if (this.worldServerInstance.getBlock(k1, i2, l1) == ObjectHandler.elevator && this.worldServerInstance.getBlockMetadata(k1, i2, l1) == 1 && this.worldServerInstance.getBlock(k1, i2 + 1, l1) == ObjectHandler.elevator && this.worldServerInstance.getBlockMetadata(k1, i2 + 1, l1) == 0)
 						{
 							breakLoop = true;
-							while (this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevatorBottom || this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevatorTop)
+							while (this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevator)
 							{
 								--i2;
 							}
@@ -159,7 +159,7 @@ public class TeleportHandler extends Teleporter
 			d4 = (double)k + 0.5D;
 			
 			par1Entity.motionX = par1Entity.motionY = par1Entity.motionZ = 0.0D;
-			par1Entity.setLocationAndAngles(d8, d9, d4, par1Entity.rotationYaw, par1Entity.rotationPitch);
+			par1Entity.setLocationAndAngles(d8, d9 + 0.1D, d4, par1Entity.rotationYaw, par1Entity.rotationPitch);
 			return true;
 		}
 		else
@@ -246,8 +246,8 @@ public class TeleportHandler extends Teleporter
 			}
 		}
 		
-		this.worldServerInstance.setBlock(i, j + 1, k, ObjectHandler.elevatorTop);
-		this.worldServerInstance.setBlock(i, j, k, ObjectHandler.elevatorBottom);
+		this.worldServerInstance.setBlock(i, j + 1, k, ObjectHandler.elevator, 0, 2);
+		this.worldServerInstance.setBlock(i, j, k, ObjectHandler.elevator, 1, 2);
 		
 		return true;
 	}

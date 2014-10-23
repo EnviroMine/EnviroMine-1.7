@@ -1,6 +1,7 @@
 package enviromine.blocks.tiles;
 
 import enviromine.blocks.BlockFreezer;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -236,6 +237,7 @@ public class TileEntityFreezer extends TileEntity implements IInventory
     /**
      * Called when a client event is received with the event number and argument, see World.sendClientEvent
      */
+	@Override
     public boolean receiveClientEvent(int p_145842_1_, int p_145842_2_)
     {
         if (p_145842_1_ == 1)

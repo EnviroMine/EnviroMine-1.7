@@ -1,6 +1,7 @@
 package enviromine.blocks;
 
 import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGasDictionary;
@@ -25,6 +27,7 @@ public class BlockFlammableCoal extends BlockOre
 		this.setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setBlockName("oreCoal").setBlockTextureName("coal_ore");
 	}
 	
+	@Override
 	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
         return Items.coal;
@@ -47,6 +50,7 @@ public class BlockFlammableCoal extends BlockOre
     /**
      * Returns the quantity of items to drop on block destruction.
      */
+	@Override
     public int quantityDropped(Random p_149745_1_)
     {
         return 1;
@@ -107,6 +111,7 @@ public class BlockFlammableCoal extends BlockOre
 		}
 	}
 	
+	@Override
     public int damageDropped(int p_149692_1_)
     {
         return 0;

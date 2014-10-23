@@ -1,10 +1,13 @@
 package enviromine.blocks;
 
 import java.util.Random;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import enviromine.blocks.tiles.TileEntityFreezer;
 import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
@@ -32,6 +35,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
     /**
      * Called upon block activation (right click on the block.)
      */
+	@Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_)
     {
         if (world.isRemote)
@@ -55,6 +59,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
      * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
      * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
      */
+	@Override
     public boolean isOpaqueCube()
     {
         return false;
@@ -63,6 +68,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
     /**
      * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
+	@Override
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -71,6 +77,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
     /**
      * The type of render function that is called for this block
      */
+	@Override
     public int getRenderType()
     {
         return ObjectHandler.renderSpecialID;
@@ -79,6 +86,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
     /**
      * Called when the block is placed in the world.
      */
+	@Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
     {
         Block block = world.getBlock(x, y, z - 1);
@@ -144,6 +152,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
         }
     }
 
+	@Override
     public void breakBlock(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, Block p_149749_5_, int p_149749_6_)
     {
         TileEntityFreezer tileentitychest = (TileEntityFreezer)p_149749_1_.getTileEntity(p_149749_2_, p_149749_3_, p_149749_4_);
@@ -196,6 +205,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
 		return new TileEntityFreezer();
 	}
 
+	@Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister p_149651_1_)
     {

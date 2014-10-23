@@ -117,23 +117,23 @@ public class GaskMaskRefillHandler implements IRecipe
 			return;
 		}
 		
-		this.matches((InventoryCrafting)craftMatrix, event.player.worldObj);
-		
-		if (!craftMatrix.getInventoryName().equals("container.crafting"))
-		{
-			return;
-		} else
-		{
-			for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
+		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj)) {
+			if (!craftMatrix.getInventoryName().equals("container.crafting"))
 			{
-				ItemStack slot = craftMatrix.getStackInSlot(i);
-				
-				if (slot == null)
+				return;
+			} else
+			{
+				for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 				{
-					continue;
-				}else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("gasMaskFill"))
-				{
-					slot.stackSize -= 1;
+					ItemStack slot = craftMatrix.getStackInSlot(i);
+					
+					if (slot == null)
+					{
+						continue;
+					}else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("gasMaskFill"))
+					{
+						slot.stackSize -= 1;
+					}
 				}
 			}
 		}

@@ -16,7 +16,6 @@ import java.util.Iterator;
 public class CamelPackRefillHandler implements IRecipe
 {
 	public boolean fillBottle;
-	public boolean isArmor;
 	public int packFillCur;
 	public int packFillMax;
 	public ArrayList<ItemStack> bottles = new ArrayList<ItemStack>();
@@ -31,7 +30,6 @@ public class CamelPackRefillHandler implements IRecipe
 		}
 		
 		this.fillBottle = false;
-		this.isArmor = false;
 		this.packFillCur = 0;
 		this.packFillMax = 0;
 		this.pack = null;
@@ -56,7 +54,6 @@ public class CamelPackRefillHandler implements IRecipe
 					packFillCur = item.getTagCompound().getInteger("camelPackFill");
 					packFillMax = item.getTagCompound().getInteger("camelPackMax");
 					hasPack = true;
-					isArmor = true;
 				}
 			} else if (item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
@@ -153,24 +150,24 @@ public class CamelPackRefillHandler implements IRecipe
 			return;
 		}
 		
-		this.matches((InventoryCrafting)craftMatrix, event.player.worldObj);
-		
-		if (!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
-		{
-			return;
-		} else
-		{
-			for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
+		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj)) {
+			if (!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
 			{
-				ItemStack slot = craftMatrix.getStackInSlot(i);
-				
-				if (slot == null)
+				return;
+			} else
+			{
+				for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 				{
-					continue;
-				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
-				{
-					slot.stackSize += 1;
-					slot.getTagCompound().setInteger("camelPackFill", slot.getTagCompound().getInteger("camelPackFill") - 25);
+					ItemStack slot = craftMatrix.getStackInSlot(i);
+					
+					if (slot == null)
+					{
+						continue;
+					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
+					{
+						slot.stackSize += 1;
+						slot.getTagCompound().setInteger("camelPackFill", slot.getTagCompound().getInteger("camelPackFill") - 25);
+					}
 				}
 			}
 		}

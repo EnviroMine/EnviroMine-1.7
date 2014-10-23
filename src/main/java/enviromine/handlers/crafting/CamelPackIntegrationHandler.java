@@ -145,22 +145,22 @@ public class CamelPackIntegrationHandler implements IRecipe
 			return;
 		}
 		
-		this.matches((InventoryCrafting)craftMatrix, event.player.worldObj);
-		
-		if (isRemove) {
-			for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
-			{
-				ItemStack slot = craftMatrix.getStackInSlot(i);
-				
-				if (slot == null)
+		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj)) {
+			if (isRemove) {
+				for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
 				{
-					continue;
-				} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
-				{
-					slot.stackSize++;
-					slot.getTagCompound().removeTag("camelPackFill");
-					slot.getTagCompound().removeTag("camelPackMax");
-					slot.getTagCompound().removeTag("packName");
+					ItemStack slot = craftMatrix.getStackInSlot(i);
+					
+					if (slot == null)
+					{
+						continue;
+					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
+					{
+						slot.stackSize++;
+						slot.getTagCompound().removeTag("camelPackFill");
+						slot.getTagCompound().removeTag("camelPackMax");
+						slot.getTagCompound().removeTag("packName");
+					}
 				}
 			}
 		}

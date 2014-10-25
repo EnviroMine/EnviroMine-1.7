@@ -5,10 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.sound.PlaySoundEvent17;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 import enviromine.handlers.ObjectHandler;
 

@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import enviromine.blocks.tiles.TileEntityElevator;
@@ -28,6 +29,12 @@ public class BlockElevator extends Block implements ITileEntityProvider
 		this.setStepSound(Block.soundTypeMetal);
 		this.setLightLevel(1F);
 	}
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    {
+    	return null;
+    }
 	
 	/**
 	 * Called upon block activation (right click on the block.)
@@ -75,7 +82,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 		
 		if(player.dimension == -3)
 		{
-			player.setPosition(i + 0.5D, j - 1, k + 0.5D);
+			player.setLocationAndAngles((double)i + 0.5D, j - 1 + meta, (double)k + 0.5D, player.rotationYaw, player.rotationPitch);
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, new TeleportHandler(playerMP.mcServer.worldServerForDimension(0)));
 			world.setBlockToAir(i, j, k);
 			if(meta == 0)
@@ -87,7 +94,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			}
 		} else if(player.dimension == 0)
 		{
-			player.setPosition(i + 0.5D, j - 1, k + 0.5D);
+			player.setLocationAndAngles((double)i + 0.5D, j - 1 + meta, (double)k + 0.5D, player.rotationYaw, player.rotationPitch);
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, -3, new TeleportHandler(playerMP.mcServer.worldServerForDimension(-3)));
 			world.setBlockToAir(i, j, k);
 			if(meta == 0)

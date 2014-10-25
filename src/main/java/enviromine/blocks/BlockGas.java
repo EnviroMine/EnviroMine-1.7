@@ -226,7 +226,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 		
 		if(opacity <= 0.1F)
 		{
-			return true;//false;
+			return false;
 		}
 		
 		int[] sideCoord = EnviroUtils.getAdjacentBlockCoordsFromSide(i, j, k, side);

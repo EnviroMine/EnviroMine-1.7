@@ -96,7 +96,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		float red = (float)((color >> 16) & 0xFF) / 255.0F;
 		float green = (float)((color >> 8) & 0xFF) / 255.0F;
 		float blue = (float)(color & 0xFF) / 255.0F;
-		float alpha = 1F;//block.getOpacity(blockAccess, i, j, k);
+		float alpha = block.getOpacity(blockAccess, i, j, k);
 		
 		if(alpha <= 0.1F)
 		{

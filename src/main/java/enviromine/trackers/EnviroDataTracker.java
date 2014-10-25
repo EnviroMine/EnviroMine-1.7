@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -25,7 +26,6 @@ import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -55,6 +55,7 @@ public class EnviroDataTracker
 	public int itemUse = 0;
 	
 	public int frostbiteLevel = 0;
+	public boolean frostIrreversible = false;
 	
 	public boolean brokenLeg = false;
 	public boolean brokenArm = false;
@@ -425,7 +426,7 @@ public class EnviroDataTracker
 				}
 			}
 			
-			if(((timeBelow10 >= 120 && enableFrostbite) || (frostbiteLevel >= 1 && enableFrostbite)))
+			if(enableFrostbite && (timeBelow10 >= 120 || (frostbiteLevel >= 1 && frostIrreversible)))
 			{
 				if(timeBelow10 >= 240 || frostbiteLevel >= 2)
 				{
@@ -445,10 +446,25 @@ public class EnviroDataTracker
 					}
 				}
 				
+				// If frostbite is treated before this time then you can save your limbs!
+				if(timeBelow10 > 360 && !frostIrreversible)
+				{
+					frostIrreversible = true;
+					
+					if(trackedEntity instanceof EntityPlayer)
+					{
+						((EntityPlayer)trackedEntity).addChatComponentMessage(new ChatComponentText("The flesh in your limbs have gone rock hard!"));
+						((EntityPlayer)trackedEntity).addChatComponentMessage(new ChatComponentText("Your condition is now permanent!"));
+					}
+				}
+				
 				
 				if (this.side.isClient()) {
 					playSoundWithTimeCheck(1700, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
+			} else if(!frostIrreversible || !enableFrostbite)
+			{
+				frostbiteLevel = 0;
 			}
 			
 			if(bodyTemp >= 45F && enviroData[2] == 1)

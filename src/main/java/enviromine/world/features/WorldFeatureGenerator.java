@@ -81,9 +81,11 @@ public class WorldFeatureGenerator implements IWorldGenerator
 	
 	public void ReplaceCoal(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+		
 		for(int i = 0; i < 16; i++)
 		{
-			for(int j = 0; j < 256; j++)
+			for(int j = 0; j < (dProps != null? dProps.sealevel : 64) * 0.75F; j++)
 			{
 				for(int k = 0; k < 16; k++)
 				{

@@ -81,9 +81,10 @@ public class GasBuffer
 			for(int i = gasCutoff; i >= 0; i--)
 			{
 				int[] entry = gasBuffer.get(i);
+				
 				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
 				
-				if(world != null && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
+				if(world != null && world.getChunkProvider().chunkExists(entry[1] >> 4, entry[3] >> 4) && world.getChunkFromBlockCoords(entry[1], entry[3]).isChunkLoaded && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
 				{
 					Block block = world.getBlock(entry[1], entry[2], entry[3]);
 					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 0);

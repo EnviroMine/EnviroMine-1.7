@@ -8,6 +8,7 @@ import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.DimensionProperties;
 import enviromine.world.features.WorldFeatureGenerator;
 import enviromine.world.features.mineshaft.designers.MineDesigner;
 import enviromine.world.features.mineshaft.designers.MineDesignerComb;
@@ -270,12 +271,15 @@ public class MineshaftBuilder
 		//DO NOT call .build() in this function, it may cause additional chunks to be force loaded.
 		//Any segment that already has all chunks loaded should not be added to the segment map.
 		
-		if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < 48)
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(this.world.provider.dimensionId);
+		int seaLvl = dProps != null? dProps.sealevel : 64;
+		
+		if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < seaLvl * 0.75F || seaLvl < 24)
 		{
 			return false;
 		}
 		
-		int mineDepth = 32 - (this.rand.nextInt(5)*4);
+		int mineDepth = 12 + (seaLvl > 32? (this.rand.nextInt(5)*4) : 4 * this.rand.nextInt((seaLvl-12)/4));
 		int chunkY = origY;
 		
 		if(chunkY%4 != 0)

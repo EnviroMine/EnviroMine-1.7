@@ -10,7 +10,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -171,9 +170,9 @@ public class TeleportHandler extends Teleporter
 	@Override
 	public boolean makePortal(Entity par1Entity)
 	{
-		int i = MathHelper.floor_double(par1Entity.posX);
+		int i = (int)(MathHelper.floor_double(par1Entity.posX) + Math.signum(par1Entity.posX < 0? par1Entity.posX : 0));
 		int j = 5;//MathHelper.floor_double(par1Entity.posY);
-		int k = MathHelper.floor_double(par1Entity.posZ);
+		int k = (int)(MathHelper.floor_double(par1Entity.posZ) + Math.signum(par1Entity.posZ < 0? par1Entity.posZ : 0));
 		boolean clearSpace = false;
 		
 		if(this.worldServerInstance.provider.dimensionId == -3)
@@ -222,17 +221,17 @@ public class TeleportHandler extends Teleporter
 					{
 						if(y == j - 1)
 						{
-							if(!this.worldServerInstance.getBlock(x, y, z).isNormalCube());
+							if(!this.worldServerInstance.getBlock(x, y, z).isOpaqueCube());
 							{
-								this.worldServerInstance.setBlock(x, y, z, Blocks.planks);
+								this.worldServerInstance.setBlock(x, y, z, Blocks.cobblestone);
 								
 								if(x != i && z != k)
 								{
 									int supY = y - 1;
 									
-									while(!this.worldServerInstance.getBlock(x, supY, z).isNormalCube() && supY >= 0)
+									while(!this.worldServerInstance.getBlock(x, supY, z).isOpaqueCube() && supY >= 0)
 									{
-										this.worldServerInstance.setBlock(x, supY, z, Blocks.fence);
+										this.worldServerInstance.setBlock(x, supY, z, Blocks.cobblestone_wall);
 										supY -= 1;
 									}
 								}

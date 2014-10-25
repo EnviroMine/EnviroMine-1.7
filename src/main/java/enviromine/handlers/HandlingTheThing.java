@@ -45,6 +45,10 @@ public class HandlingTheThing
 				player.getEntityData().setBoolean("EM_THING_TARGET", true);
 			}
 			return;
+		} else
+		{
+			// If you get this Achievement you're going to have a bad time :P
+			player.addStat(EnviroAchievements.itsPitchBlack, 1);
 		}
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(player.getCommandSenderName());

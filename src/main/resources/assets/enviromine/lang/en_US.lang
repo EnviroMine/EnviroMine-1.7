@@ -17,6 +17,8 @@ potion.enviromine.hypothermia=Hypothermia
 
 tile.enviromine.elevator_top.name=Elevator Top
 tile.enviromine.elevator_bottom.name=Elevator Bottom
+tile.enviromine.esky.name=Esky
+tile.enviromine.freezer.name=Freezer
 
 itemGroup.enviromine.enviroTab=EnviroMine
 

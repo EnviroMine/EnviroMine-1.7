@@ -15,11 +15,14 @@ import java.util.Iterator;
 
 public class CamelPackRefillHandler implements IRecipe
 {
-	public boolean fillBottle;
+	public boolean emptyPack;
 	public int packFillCur;
 	public int packFillMax;
 	public ArrayList<ItemStack> bottles = new ArrayList<ItemStack>();
+	public ArrayList<ItemStack> buckets = new ArrayList<ItemStack>();
 	public ItemStack pack;
+	private static final int bottleFill = 25;
+	private static final int bucketFill = 75;
 	
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
@@ -29,11 +32,12 @@ public class CamelPackRefillHandler implements IRecipe
 			return false;
 		}
 		
-		this.fillBottle = false;
+		this.emptyPack = false;
 		this.packFillCur = 0;
 		this.packFillMax = 0;
 		this.pack = null;
 		this.bottles.clear();
+		this.buckets.clear();
 		boolean hasPack = false;
 		
 		for (int i = inv.getSizeInventory() - 1; i >= 0; i--)
@@ -57,23 +61,43 @@ public class CamelPackRefillHandler implements IRecipe
 				}
 			} else if (item.getItem() == Items.potionitem && item.getItemDamage() == 0)
 			{
-				if (bottles.size() > 0 && fillBottle)
+				if (bottles.size() > 0 && emptyPack)
 				{
 					return false;
 				} else
 				{
-					fillBottle = false;
+					emptyPack = false;
 					bottles.add(item);
 				}
 			} else if (item.getItem() == Items.glass_bottle && bottles.size() == 0)
 			{
-				if (bottles.size() > 0 && !fillBottle)
+				if (bottles.size() > 0 && !emptyPack)
 				{
 					return false;
 				} else
 				{
-					fillBottle = true;
+					emptyPack = true;
 					bottles.add(item);
+				}
+			} else if (item.getItem() == Items.water_bucket)
+			{
+				if (buckets.size() > 0 && emptyPack)
+				{
+					return false;
+				} else
+				{
+					emptyPack = false;
+					buckets.add(item);
+				}
+			} else if (item.getItem() == Items.bucket && buckets.size() == 0)
+			{
+				if (buckets.size() > 0 && !emptyPack)
+				{
+					return false;
+				} else
+				{
+					emptyPack = true;
+					buckets.add(item);
 				}
 			} else
 			{
@@ -81,19 +105,30 @@ public class CamelPackRefillHandler implements IRecipe
 			}
 		}
 		
-		if ((packFillCur == packFillMax && !fillBottle) || !hasPack || pack == null)
+		//Double checking everything is good.
+		if ((packFillCur == packFillMax && !emptyPack) || !hasPack || pack == null)
 		{
 			return false;
-		} else if (packFillCur + (bottles.size() * 25) >= packFillMax + 25 && fillBottle == false)
+		} else if (bottles.size() >= 0 || buckets.size() >= 0)
 		{
-			return false;
-		} else if (packFillCur - 25 < 0 && fillBottle == true)
-		{
-			return false;
-		} else
-		{
-			return hasPack && bottles.size() >= 1;
+			if (emptyPack)
+			{
+				if (bottles.size() >= 1 && buckets.size() >= 1)
+				{
+					return false;
+				} else if (bottles.size() >= 1 && packFillCur < bottleFill)
+				{
+					return false;
+				} else if (buckets.size() >= 1 && packFillCur < bucketFill)
+				{
+					return false;
+				}
+			} else if (packFillCur == packFillMax) {
+				return false;
+			}
 		}
+		
+		return hasPack && (bottles.size() >= 1 || buckets.size() >= 1);
 	}
 	
 	@Override
@@ -101,10 +136,16 @@ public class CamelPackRefillHandler implements IRecipe
 	{
 		this.matches(inv, null);
 		
-		if (fillBottle)
+		if (emptyPack)
 		{
-			ItemStack newItem = new ItemStack(Items.potionitem);
-			newItem.setItemDamage(0);
+			ItemStack newItem;
+			if (bottles.size() >= 1)
+			{
+				newItem = new ItemStack(Items.potionitem, 1, 0);
+			} else
+			{
+				newItem = new ItemStack(Items.water_bucket);
+			}
 			return newItem;
 		} else
 		{
@@ -116,9 +157,11 @@ public class CamelPackRefillHandler implements IRecipe
 				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
 			
-			if ((packFillCur + (bottles.size() * 25)) <= packFillMax)
+			int attemptedFill = (packFillCur + (bottles.size() * bottleFill) + (buckets.size() * bucketFill));
+			
+			if (attemptedFill <= packFillMax)
 			{
-				pack.getTagCompound().setInteger("camelPackFill", (packFillCur + (bottles.size() * 25)));
+				pack.getTagCompound().setInteger("camelPackFill", attemptedFill);
 				return pack;
 			} else
 			{
@@ -150,8 +193,9 @@ public class CamelPackRefillHandler implements IRecipe
 			return;
 		}
 		
-		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj)) {
-			if (!craftMatrix.getInventoryName().equals("container.crafting") || !fillBottle)
+		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj))
+		{
+			if (!craftMatrix.getInventoryName().equals("container.crafting") || !emptyPack)
 			{
 				return;
 			} else
@@ -166,7 +210,7 @@ public class CamelPackRefillHandler implements IRecipe
 					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
 					{
 						slot.stackSize += 1;
-						slot.getTagCompound().setInteger("camelPackFill", slot.getTagCompound().getInteger("camelPackFill") - 25);
+						slot.getTagCompound().setInteger("camelPackFill", slot.getTagCompound().getInteger("camelPackFill") - (bottles.size() >= 1 ? bottleFill : bucketFill));
 					}
 				}
 			}

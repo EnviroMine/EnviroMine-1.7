@@ -3,7 +3,9 @@
  */
 package enviromine.network.packet;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,9 +15,6 @@ import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.world.ClientQuake;
-import io.netty.buffer.ByteBuf;
-import java.util.UUID;
-import org.apache.logging.log4j.Level;
 
 public class PacketEnviroMine implements IMessage
 {
@@ -56,7 +55,7 @@ public class PacketEnviroMine implements IMessage
 		
 		private void emptyRightClick(String[] data)
 		{
-			EntityPlayer player = EM_StatusManager.findPlayer(UUID.fromString(data[1]));
+			EntityPlayer player = EM_StatusManager.findPlayer(data[1]);
 			
 			if(player != null)
 			{
@@ -87,7 +86,7 @@ public class PacketEnviroMine implements IMessage
 		private void trackerSync(String[] data)
 		{
 			
-			EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUUID(UUID.fromString(data[1]));
+			EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(data[1]);
 			
 			if(tracker != null)
 			{

@@ -102,7 +102,7 @@ public class EnviroDataTracker
 		{
 			if(trackedEntity instanceof EntityPlayer)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(trackedEntity.getUniqueID());
+				EntityPlayer player = EM_StatusManager.findPlayer(trackedEntity.getCommandSenderName());
 				
 				if(player == null)
 				{

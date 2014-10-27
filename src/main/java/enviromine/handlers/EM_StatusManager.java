@@ -3,8 +3,6 @@ package enviromine.handlers;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -36,12 +34,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
-
 import com.google.common.base.Stopwatch;
-
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.client.gui.EM_GuiEnviroMeters;
@@ -64,7 +58,7 @@ public class EM_StatusManager
 	{
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
-			trackerList.put("" + tracker.trackedEntity.getUniqueID().toString(), tracker);
+			trackerList.put("" + tracker.trackedEntity.getCommandSenderName(), tracker);
 		} else
 		{
 			trackerList.put("" + tracker.trackedEntity.getEntityId(), tracker);
@@ -104,7 +98,7 @@ public class EM_StatusManager
 		String dataString = "";
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
-			dataString = ("ID:0," + tracker.trackedEntity.getUniqueID().toString() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
+			dataString = ("ID:0," + tracker.trackedEntity.getCommandSenderName() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
 		} else
 		{
 			return;
@@ -118,9 +112,9 @@ public class EM_StatusManager
 	{
 		if(entity instanceof EntityPlayer)
 		{
-			if(trackerList.containsKey("" + entity.getUniqueID().toString()))
+			if(trackerList.containsKey("" + entity.getCommandSenderName()))
 			{
-				return trackerList.get("" + entity.getUniqueID().toString());
+				return trackerList.get("" + entity.getCommandSenderName());
 			} else
 			{
 				return null;
@@ -137,14 +131,9 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EnviroDataTracker lookupTrackerFromUUID(UUID uuid)
-	{
-		return trackerList.get(uuid.toString());
-	}
-	
 	public static EnviroDataTracker lookupTrackerFromUsername(String username)
 	{
-		EntityLivingBase entity = null;
+		/*EntityLivingBase entity = null;
 		
 		if (FMLCommonHandler.instance().getSide().isClient()) {
 			entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
@@ -155,14 +144,21 @@ public class EM_StatusManager
 				if (entity != null) { break; }
 			}
 		}
-		return lookupTracker(entity);
+		return lookupTracker(entity);*/
+		if(trackerList.containsKey(username))
+		{
+			return trackerList.get(username);
+		} else
+		{
+			return null;
+		}
 	}
 	
 	private static Stopwatch timer = Stopwatch.createUnstarted();
 	
 	public static float[] getSurroundingData(EntityLivingBase entityLiving, int range)
 	{
-		if(EnviroMine.proxy.isClient() && entityLiving.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()) && !timer.isRunning())
+		if(EnviroMine.proxy.isClient() && entityLiving.getCommandSenderName().equals(Minecraft.getMinecraft().thePlayer.getCommandSenderName()) && !timer.isRunning())
 		{
 			timer.start();
 		}
@@ -1242,7 +1238,7 @@ public class EM_StatusManager
 		data[6] = animalHostility;
 		data[7] = sanityRate * (float)EM_Settings.sanityMult;
 		
-		if(EnviroMine.proxy.isClient() && entityLiving.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()) && timer.isRunning())
+		if(EnviroMine.proxy.isClient() && entityLiving.getCommandSenderName().equals(Minecraft.getMinecraft().thePlayer.getCommandSenderName()) && timer.isRunning())
 		{
 			timer.stop();
 			EM_GuiEnviroMeters.DB_timer = timer.toString();
@@ -1267,7 +1263,7 @@ public class EM_StatusManager
 			tracker.isDisabled = true;
 			if(tracker.trackedEntity instanceof EntityPlayer)
 			{
-				trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+				trackerList.remove(tracker.trackedEntity.getCommandSenderName());
 			} else
 			{
 				trackerList.remove("" + tracker.trackedEntity.getEntityId());
@@ -1287,7 +1283,7 @@ public class EM_StatusManager
 			tags.setFloat("ENVIRO_SAN", tracker.sanity);
 			if(tracker.trackedEntity instanceof EntityPlayer)
 			{
-				trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+				trackerList.remove(tracker.trackedEntity.getCommandSenderName());
 			} else
 			{
 				trackerList.remove("" + tracker.trackedEntity.getEntityId());
@@ -1350,7 +1346,7 @@ public class EM_StatusManager
 				tracker.isDisabled = true;
 				if(tracker.trackedEntity instanceof EntityPlayer)
 				{
-					trackerList.remove(tracker.trackedEntity.getUniqueID().toString());
+					trackerList.remove(tracker.trackedEntity.getCommandSenderName());
 				} else
 				{
 					trackerList.remove("" + tracker.trackedEntity.getEntityId());
@@ -1378,7 +1374,7 @@ public class EM_StatusManager
 		}
 	}
 	
-	public static EntityPlayer findPlayer(UUID uuid)
+	public static EntityPlayer findPlayer(String username)
 	{
 		World[] worlds = new World[1];
 		
@@ -1402,7 +1398,7 @@ public class EM_StatusManager
 			{
 				continue;
 			}
-			EntityPlayer player = worlds[i].func_152378_a(uuid);
+			EntityPlayer player = worlds[i].getPlayerEntityByName(username);
 			
 			if(player != null)
 			{

@@ -153,7 +153,7 @@ public class EM_EventManager
 				
 				if(event.entity instanceof EntityPlayer)
 				{
-					EnviroDataTracker oldTrack = EM_StatusManager.lookupTrackerFromUUID(event.entity.getUniqueID());
+					EnviroDataTracker oldTrack = EM_StatusManager.lookupTrackerFromUsername(event.entity.getCommandSenderName());
 					if(oldTrack != null)
 					{
 						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
@@ -198,7 +198,7 @@ public class EM_EventManager
 		{
 			if(event.entityLiving instanceof EntityPlayer && event.source == null)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(event.entityLiving.getUniqueID());
+				EntityPlayer player = EM_StatusManager.findPlayer(event.entityLiving.getCommandSenderName());
 				
 				if(player != null)
 				{

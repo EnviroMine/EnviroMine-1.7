@@ -127,7 +127,7 @@ public class EM_GuiEnviroMeters extends Gui
 		
 		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
 		{
-			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getUniqueID());
+			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getCommandSenderName());
 			
 			if(player != null)
 			{

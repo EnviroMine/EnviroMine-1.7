@@ -24,7 +24,7 @@ import enviromine.core.EnviroMine;
 @SideOnly(Side.CLIENT)
 public class UI_Settings {
 
-	public static String enviroSettingsFile = "em_options.txt";
+	public static String enviroSettingsFile = "UI_Settings";
 
 	public static boolean ShowGuiIcons = true;
 	public static float guiScale = 1.0F;
@@ -71,49 +71,20 @@ public class UI_Settings {
 	public static void readFromNBT(NBTTagCompound nbt)
 	{
 	
-		if(nbt.hasKey("ShowGuiIcons")) ShowGuiIcons = nbt.getBoolean("ShowGuiIcons");
-			else nbt.setBoolean("ShowGuiIcons", true); 
-		
-		if(nbt.hasKey("ShowGuiIcons")) guiScale = nbt.getFloat("guiScale");
-			else nbt.setFloat("guiScale", 1.0F);
-	    	
-		if(nbt.hasKey("sweatParticals")) sweatParticals = nbt.getBoolean("sweatParticals");
-			else nbt.setBoolean("sweatParticals", true);
-    	
-		if(nbt.hasKey("insaneParticals")) insaneParticals = nbt.getBoolean("insaneParticals");
-			else  nbt.setBoolean("insaneParticals", true);
-		
-		if(nbt.hasKey("useFarenheit")) useFarenheit = nbt.getBoolean("useFarenheit");
-			else nbt.setBoolean("useFarenheit", false);
-	    	
-		if(nbt.hasKey(" heatBarPos")) heatBarPos = nbt.getString("heatBarPos");
-			else  nbt.setString("heatBarPos", "Bottom_Left"); 
-	    	
-		if(nbt.hasKey("waterBarPos")) waterBarPos = nbt.getString("waterBarPos");
-			else 	nbt.setString("waterBarPos",  "Bottom_Left"); 
-		     
-		if(nbt.hasKey("sanityBarPos")) sanityBarPos = nbt.getString("sanityBarPos");
-			else  nbt.setString("sanityBarPos", "Bottom_Right");  
-	    	
-		if(nbt.hasKey("oxygenBarPos")) oxygenBarPos = nbt.getString("oxygenBarPos"); 
-			else  nbt.setString("oxygenBarPos", "Bottom_Right"); 
-	    	
-		if(nbt.hasKey("ShowText")) ShowText = nbt.getBoolean("ShowText");
-			else nbt.setBoolean("ShowText", false);
-	    	
-		if(nbt.hasKey("ShowDebug")) ShowDebug = nbt.getBoolean("ShowDebug");
-			else nbt.setBoolean("ShowDebug", false);
-    	
-		if(nbt.hasKey("breathSound"))breathSound = nbt.getBoolean("breathSound");
-			else nbt.setBoolean("breathSound", true);
-		
-		if(nbt.hasKey("breathPause")) breathPause = nbt.getInteger("breathPause");
-			else nbt.setInteger("breathPause", 300);
-				
-		if(nbt.hasKey("breathVolume")) breathVolume = nbt.getFloat("breathVolume");
-			else nbt.setFloat("breathVolume", .75F);
-				
-		if(nbt.hasKey("minimalHud")) minimalHud = nbt.getBoolean("minimalHud"); 
-			else nbt.setBoolean("minimalHud", false);
+		ShowGuiIcons = nbt.getBoolean("ShowGuiIcons");
+		guiScale = nbt.getFloat("guiScale");
+		sweatParticals = nbt.getBoolean("sweatParticals");
+		insaneParticals = nbt.getBoolean("insaneParticals");
+		useFarenheit = nbt.getBoolean("useFarenheit");
+		heatBarPos = nbt.getString("heatBarPos");
+		waterBarPos = nbt.getString("waterBarPos");
+		sanityBarPos = nbt.getString("sanityBarPos");
+		oxygenBarPos = nbt.getString("oxygenBarPos"); 
+		ShowText = nbt.getBoolean("ShowText");
+		ShowDebug = nbt.getBoolean("ShowDebug");
+		breathSound = nbt.getBoolean("breathSound");
+		breathPause = nbt.getInteger("breathPause");
+		breathVolume = nbt.getFloat("breathVolume");
+		minimalHud = nbt.getBoolean("minimalHud"); 
 	}
 }

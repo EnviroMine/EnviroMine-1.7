@@ -49,7 +49,17 @@ public class RotHandler
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())
 			{
-				ItemStack rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);
+				ItemStack rotStack;
+				if(rotProps != null && Item.itemRegistry.getObject(rotProps.rotID) != null)
+				{
+					rotStack = new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
+				} else if(item.getItem() == Items.beef || item.getItem() == Items.chicken || item.getItem() == Items.porkchop || item.getItem() == Items.fish || item.getItem() == Items.cooked_beef || item.getItem() == Items.cooked_chicken || item.getItem() == Items.cooked_porkchop || item.getItem() == Items.cooked_fished)
+				{
+					rotStack = new ItemStack(Items.rotten_flesh, item.stackSize);
+				} else
+				{
+					rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);
+				}
 				rotStack.setStackDisplayName("Rotten " + item.getDisplayName());
 				return rotStack;
 			} else

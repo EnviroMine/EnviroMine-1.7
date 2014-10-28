@@ -2,7 +2,6 @@ package enviromine.client.gui;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -14,14 +13,14 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EnviroUtils;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
@@ -105,7 +104,10 @@ public class EM_GuiEnviroMeters extends Gui
 		int scaledheight = scaleRes.getScaledHeight();
 		
 		// Rend Mask Overlays
-		RenderOverlays(scaledwidth, scaledheight);
+		if(UI_Settings.overlay)
+		{
+			RenderOverlays(scaledwidth, scaledheight);
+		}
 		
 		// GUI Scaling Code 
 		GL11.glPushMatrix(); // Isolate this GUI from the vanilla GUI
@@ -142,14 +144,26 @@ public class EM_GuiEnviroMeters extends Gui
 			}
 		}
 		
+		if(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false)
+		{
+			
+		} else if(ticktimer == 1)
+		{
+			tracker = EM_StatusManager.lookupTrackerFromUsername(Minecraft.getMinecraft().thePlayer.getCommandSenderName());
+			if(tracker == null)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Failed to get EnviroTracker for GUI!");
+			}
+		}
+		
 		if(tracker == null)
 		{
+			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
-				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
 			}
-		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
+		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker) || (EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 		{
 			tracker = null;
 		} else

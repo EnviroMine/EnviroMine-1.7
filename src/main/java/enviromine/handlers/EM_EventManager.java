@@ -741,7 +741,24 @@ public class EM_EventManager
 		
 		if(tracker == null)
 		{
-			return;
+			if((!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN()) && (EM_Settings.enableAirQ || EM_Settings.enableBodyTemp || EM_Settings.enableHydrate || EM_Settings.enableSanity))
+			{
+				if(event.entityLiving instanceof EntityPlayer || (EM_Settings.trackNonPlayer && EnviroDataTracker.isLegalType(event.entityLiving)))
+				{
+					EnviroMine.logger.log(Level.ERROR, "Server lost track of player! Attempting to re-sync...");
+					EnviroDataTracker emTrack = new EnviroDataTracker((EntityLivingBase)event.entity);
+					EM_StatusManager.addToManager(emTrack);
+					emTrack.loadNBTTags();
+					EM_StatusManager.syncMultiplayerTracker(emTrack);
+					tracker = emTrack;
+				} else
+				{
+					return;
+				}
+			} else
+			{
+				return;
+			}
 		}
 		
 		EM_StatusManager.updateTracker(tracker);

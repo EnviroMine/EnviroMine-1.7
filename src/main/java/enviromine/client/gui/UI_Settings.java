@@ -43,6 +43,7 @@ public class UI_Settings {
 	public static boolean minimalHud;
 	public static int screenWidth;
 	public static int screenHeight;
+	public static boolean overlay;
 	
 	@SideOnly(Side.CLIENT)
 	public static void loadSettings() {

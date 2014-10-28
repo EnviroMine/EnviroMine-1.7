@@ -21,7 +21,6 @@ import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.BlockMobSpawner;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.BlockPortal;
-import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockSign;
 import net.minecraft.block.BlockWeb;
 import net.minecraft.block.material.Material;
@@ -235,7 +234,7 @@ public class EM_PhysManager
 			
 			validSlideType = blockProps.slides || ((waterLogged || touchingWater) && blockProps.wetSlide);
 			isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
-		} else if(block instanceof BlockSand || ((block == Blocks.dirt || block == Blocks.snow) && (waterLogged || touchingWater)))
+		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow) && (waterLogged || touchingWater)))
 		{
 			if(block instanceof BlockAnvil)
 			{
@@ -249,7 +248,7 @@ public class EM_PhysManager
 		
 		if(validSlideType && EM_Settings.enableLandslide)
 		{
-			if(!(block instanceof BlockSand) && blockData[4] >= 1)
+			if(!(block instanceof BlockFalling) && blockData[4] >= 1)
 			{
 				return;
 			}
@@ -270,7 +269,7 @@ public class EM_PhysManager
 			
 			if(emptyBelow)
 			{
-				if(!(block instanceof BlockSand) && !usedSlidePositions.contains("" + pos[0] + "," + pos[2]))
+				if(!(block instanceof BlockFalling) && !usedSlidePositions.contains("" + pos[0] + "," + pos[2]))
 				{
 					//usedSlidePositions.add("" + pos[0] + "," + pos[2]);
 					EntityPhysicsBlock physBlock = new EntityPhysicsBlock(world, pos[0] + 0.5, pos[1] + 0.5, pos[2] + 0.5, slideBlock, slideMeta, false);
@@ -941,7 +940,7 @@ public class EM_PhysManager
 			}
 		} else
 		{
-			if(!(block instanceof BlockMobSpawner) && !(block instanceof BlockLadder) && !(block instanceof BlockWeb) && !(block instanceof BlockGlowstone) && !(block instanceof BlockSign) && !(block instanceof BlockBed) && !(block instanceof BlockDoor) && !(block instanceof BlockAnvil) && !(block instanceof BlockGravel) && !(block instanceof BlockSand) && !(block instanceof BlockPortal) && !(block instanceof BlockEndPortal) && !(block == Blocks.end_stone) && !(block instanceof BlockEndPortalFrame) && !(block.getMaterial() == Material.vine) && !blockNotSolid(world, x, y, z, false) && block.getBlockHardness(world, x, y, z) != -1F)
+			if(!(block instanceof BlockMobSpawner) && !(block instanceof BlockLadder) && !(block instanceof BlockWeb) && !(block instanceof BlockGlowstone) && !(block instanceof BlockSign) && !(block instanceof BlockBed) && !(block instanceof BlockDoor) && !(block instanceof BlockAnvil) && !(block instanceof BlockGravel) && !(block instanceof BlockFalling) && !(block instanceof BlockPortal) && !(block instanceof BlockEndPortal) && !(block == Blocks.end_stone) && !(block instanceof BlockEndPortalFrame) && !(block.getMaterial() == Material.vine) && !blockNotSolid(world, x, y, z, false) && block.getBlockHardness(world, x, y, z) != -1F)
 			{
 				int stabNum = getDefaultStabilityType(block);
 				

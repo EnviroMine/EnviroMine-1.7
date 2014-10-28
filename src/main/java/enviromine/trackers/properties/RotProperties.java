@@ -7,7 +7,7 @@ public class RotProperties
 {
 	public String name;
 	public int meta;
-	public int rotID;
+	public String rotID;
 	public int rotMeta;
 	public double days;
 	
@@ -15,7 +15,7 @@ public class RotProperties
 	
 	public static String categoryName = "spoiling";
 	
-	public RotProperties(String name, int meta, int rotID, int rotMeta, double days)
+	public RotProperties(String name, int meta, String rotID, int rotMeta, double days)
 	{
 		this.name = name;
 		this.meta = meta;
@@ -39,7 +39,7 @@ public class RotProperties
 		config.addCustomCategoryComment(category, "");
 		String name = config.get(category, RPName[0], "").getString();
 		int meta = config.get(category, RPName[1], -1).getInt(-1);
-		int rotID = config.get(category, RPName[2], 0).getInt(0);
+		String rotID = config.get(category, RPName[2], 0).getString();
 		int rotMeta = config.get(category, RPName[3], 0).getInt(0);
 		double DTR = config.get(category, RPName[4], 0.00).getDouble(0.00);
 		

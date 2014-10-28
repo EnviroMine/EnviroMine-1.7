@@ -1,10 +1,11 @@
 package enviromine.client.gui.menu;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
-
 import enviromine.core.EnviroMine;
 
 public class EM_Gui_Menu extends GuiScreen
@@ -20,10 +21,12 @@ public class EM_Gui_Menu extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		GuiButton serverSettings = new GuiButton(100, this.width / 2 - 83, this.height / 6 + 98 - 6, 166, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
-		GuiButton customEditor =  new GuiButton(100, this.width / 2 - 83, this.height / 6 + 122 - 6, 166, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
+		GuiButton serverSettings = new GuiButton(100, this.width / 2 - 90, this.height / 6 + 98 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
+		GuiButton customEditor =  new GuiButton(100, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
 		
-		if(!EnviroMine.proxy.isClient() && MinecraftServer.getServer().getConfigurationManager().func_152607_e(mc.thePlayer.getGameProfile()) || EnviroMine.proxy.isClient() )
+		// The old if statement would never work, GUIs are never run server side and mc.thePlayer is not accessible to server side functions - Funwayguy
+		EntityPlayerMP playerMP = mc.getIntegratedServer().isServerRunning()? MinecraftServer.getServer().getConfigurationManager().func_152612_a(mc.thePlayer.getCommandSenderName()) : null;
+		if(playerMP != null && playerMP.getGameProfile() != null && MinecraftServer.getServer().getConfigurationManager().func_152596_g(playerMP.getGameProfile()))
 		{
 			serverSettings.enabled = true;
 			customEditor.enabled = true;
@@ -34,16 +37,16 @@ public class EM_Gui_Menu extends GuiScreen
 			customEditor.enabled = false;			
 		}
 		
-		serverSettings.enabled = false;
-		customEditor.enabled = false;	
+		//serverSettings.enabled = false;
+		//customEditor.enabled = false;	
 		
 		serverSettings.visible = true;
 		customEditor.visible = true;			
 	
-		this.buttonList.add(new GuiButton(101, this.width / 2 - 75, this.height / 6 + 50 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
+		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 50 - 6, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
 		this.buttonList.add(serverSettings);
 		this.buttonList.add(customEditor);
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.back")));
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.done")));
 		
 		
 	}

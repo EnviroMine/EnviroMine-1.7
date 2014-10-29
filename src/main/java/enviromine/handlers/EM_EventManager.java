@@ -18,6 +18,8 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -70,6 +72,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
@@ -193,6 +196,60 @@ public class EM_EventManager
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event)
 	{
+		if(event.entityLiving instanceof EntityPlayer)
+		{
+			if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_WINTER"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_WINTER");
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_CAVE_DIST"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_CAVE_DIST");
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_SAFETY"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_SAFETY");
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_MIND_MAT"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_MIND_MAT");
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_THAT"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_THAT");
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_BOILED"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_BOILED");
+			}
+		}
+		
+		if(event.entityLiving instanceof EntityMob && event.source.getEntity() != null && event.source.getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)event.source.getEntity();
+			
+			if(player.isPotionActive(EnviroPotion.insanity) && player.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2)
+			{
+				int val = player.getEntityData().getInteger("EM_MIND_MAT") + 1;
+				player.getEntityData().setInteger("EM_MIND_MAT", val);
+				
+				if(val >= 5)
+				{
+					player.addStat(EnviroAchievements.mindOverMatter, 1);
+				}
+			}
+		}
+		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.entityLiving);
 		if(tracker != null)
 		{
@@ -246,6 +303,21 @@ public class EM_EventManager
 				event.entityLiving.attackEntityFrom(event.source, dam - dur);
 				return;
 			}
+		}
+		
+		if(event.source == DamageSource.fallingBlock && event.entityLiving instanceof EntityPlayer)
+		{
+			event.entityLiving.getEntityData().setLong("EM_SAFETY", event.entityLiving.worldObj.getTotalWorldTime());
+		}
+		
+		if(event.source == EnviroDamageSource.gasfire && event.entityLiving instanceof EntityPlayer)
+		{
+			event.entityLiving.getEntityData().setLong("EM_THAT", event.entityLiving.worldObj.getTotalWorldTime());
+		}
+		
+		if(event.entityLiving instanceof EntityPlayer && event.entityLiving.getEntityData().hasKey("EM_MIND_MAT"))
+		{
+			event.entityLiving.getEntityData().removeTag("EM_MIND_MAT");
 		}
 		
 		if(attacker != null)
@@ -358,6 +430,16 @@ public class EM_EventManager
 			return;
 		}
 		
+		if(event.target instanceof EntityIronGolem && event.entityPlayer.getEquipmentInSlot(0) != null)
+		{
+			ItemStack stack = event.entityLiving.getEquipmentInSlot(0);
+			
+			if(stack.getItem() == Items.name_tag && stack.getDisplayName().toLowerCase().equals("siyliss"))
+			{
+				event.entityPlayer.addStat(EnviroAchievements.ironArmy, 1);
+			}
+		}
+		
 		if(!EM_Settings.foodSpoiling)
 		{
 			return;
@@ -409,6 +491,7 @@ public class EM_EventManager
 								}
 								
 								player.addChatMessage(new ChatComponentText("An eerie shiver travels down your spine"));
+								player.addStat(EnviroAchievements.ohGodWhy, 1);
 							}
 						}
 					}
@@ -735,6 +818,94 @@ public class EM_EventManager
 				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 2, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 1);
 			}
 			RotHandler.rotInvo(event.entityLiving.worldObj, invo);
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_SAFETY"))
+			{
+				if(event.entityLiving.worldObj.getTotalWorldTime() - event.entityLiving.getEntityData().getLong("EM_SAFETY") >= 1000L)
+				{
+					((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.funwaysFault, 1);
+				}
+			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_THAT"))
+			{
+				if(event.entityLiving.worldObj.getTotalWorldTime() - event.entityLiving.getEntityData().getLong("EM_THAT") >= 1000L)
+				{
+					((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.thatJustHappened, 1);
+				}
+			}
+			
+			if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID && event.entityLiving.getEntityData().hasKey("EM_CAVE_DIST"))
+			{
+				int[] prePos = event.entityLiving.getEntityData().getIntArray("EM_CAVE_DIST");
+				int distance = MathHelper.floor_double(event.entityLiving.getDistance(prePos[0], prePos[1], prePos[2]));
+				
+				if(distance > prePos[3])
+				{
+					prePos[3] = distance;
+					event.entityLiving.getEntityData().setIntArray("EM_CAVE_DIST", prePos);
+				}
+			}
+			
+			if(!event.entityLiving.isPotionActive(EnviroPotion.hypothermia) && !event.entityLiving.isPotionActive(EnviroPotion.frostbite) && event.entityLiving.worldObj.getBiomeGenForCoords(MathHelper.floor_double(event.entityLiving.posX), MathHelper.floor_double(event.entityLiving.posZ)).getEnableSnow())
+			{
+				if(event.entityLiving.getEntityData().hasKey("EM_WINTER"))
+				{
+					if(event.entityLiving.worldObj.getTotalWorldTime() - event.entityLiving.getEntityData().getLong("EM_WINTER") > 24000L * 7)
+					{
+						((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.winterIsComing, 1);
+						event.entityLiving.getEntityData().removeTag("EM_WINTER");
+					}
+				} else
+				{
+					event.entityLiving.getEntityData().setLong("EM_WINTER", event.entityLiving.worldObj.getTotalWorldTime());
+				}
+			} else if(event.entityLiving.getEntityData().hasKey("EM_WINTER"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_WINTER");
+			}
+			
+			if(event.entityLiving.isPotionActive(EnviroPotion.heatstroke) && event.entityLiving.getActivePotionEffect(EnviroPotion.heatstroke).getAmplifier() >= 2)
+			{
+				event.entityLiving.getEntityData().setBoolean("EM_BOILED", true);
+			} else if(event.entityLiving.getEntityData().getBoolean("EM_BOILED") && !event.entityLiving.isPotionActive(EnviroPotion.heatstroke))
+			{
+				((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.hardBoiled, 1);
+				event.entityLiving.getEntityData().removeTag("EM_BOILED");
+			} else if(event.entityLiving.getEntityData().hasKey("EM_BOILED"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_BOILED");
+			}
+			
+			if(EM_Settings.enableAirQ && EM_Settings.enableBodyTemp && EM_Settings.enableHydrate && EM_Settings.enableSanity && EM_Settings.enableLandslide && EM_Settings.enablePhysics && EM_Settings.enableQuakes)
+			{
+				int seaLvl = 48;
+				
+				if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID)
+				{
+					seaLvl = 256;
+				} else if(EM_Settings.dimensionProperties.containsKey(event.entityLiving.worldObj.provider.dimensionId))
+				{
+					seaLvl = MathHelper.ceiling_double_int(EM_Settings.dimensionProperties.get(event.entityLiving.worldObj.provider.dimensionId).sealevel * 0.75F);
+				}
+				
+				if(event.entityLiving.posY < seaLvl)
+				{
+					long time = event.entityLiving.getEntityData().getLong("EM_MINE_TIME");
+					long date = event.entityLiving.getEntityData().getLong("EM_MINE_DATE");
+					time += event.entityLiving.worldObj.getTotalWorldTime() - date;
+					event.entityLiving.getEntityData().setLong("EM_MINE_DATE", event.entityLiving.worldObj.getTotalWorldTime());
+					event.entityLiving.getEntityData().setLong("EM_MINE_TIME", time);
+					
+					if(time > 24000L * 3L)
+					{
+						((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.proMiner, 1);
+					}
+				}
+			} else if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+			}
 		}
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.entityLiving);

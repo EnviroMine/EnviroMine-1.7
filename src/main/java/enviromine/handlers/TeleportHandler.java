@@ -13,6 +13,7 @@ import net.minecraft.world.WorldServer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import enviromine.core.EM_Settings;
 
 public class TeleportHandler extends Teleporter
 {
@@ -175,7 +176,7 @@ public class TeleportHandler extends Teleporter
 		int k = (int)(MathHelper.floor_double(par1Entity.posZ) + Math.signum(par1Entity.posZ < 0? par1Entity.posZ : 0));
 		boolean clearSpace = false;
 		
-		if(this.worldServerInstance.provider.dimensionId == -3)
+		if(this.worldServerInstance.provider.dimensionId == EM_Settings.caveDimID)
 		{
 			for(int checkH = 120; checkH >= 32; checkH--)
 			{

@@ -759,10 +759,12 @@ public class EM_StatusManager
 				{
 					if(villager.getProfession() == 2) // Priest
 					{
-						if(sBoost < 1F)
+						if(sBoost < 5F)
 						{
-							sBoost = 1F;
+							sBoost = 5F;
 						}
+						
+						((EntityPlayer)entityLiving).addStat(EnviroAchievements.tradingFavours, 1);
 					} else if(villager.getProfession() == 0 && isDay) // Farmer
 					{
 						if(tracker.hydration < 50F)
@@ -776,6 +778,8 @@ public class EM_StatusManager
 							entityLiving.worldObj.playSoundAtEntity(entityLiving, "random.drink", 1.0F, 1.0F);
 							villager.playSound("mob.villager.yes", 1.0F, 1.0F);
 							villager.getEntityData().setLong("Enviro_Assist_Time", worldTime);
+							
+							((EntityPlayer)entityLiving).addStat(EnviroAchievements.tradingFavours, 1);
 						}
 					} else if(villager.getProfession() == 4 && isDay) // Butcher
 					{
@@ -786,6 +790,8 @@ public class EM_StatusManager
 							entityLiving.worldObj.playSoundAtEntity(entityLiving, "random.burp", 0.5F, entityLiving.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 							villager.playSound("mob.villager.yes", 1.0F, 1.0F);
 							villager.getEntityData().setLong("Enviro_Assist_Time", worldTime);
+							
+							((EntityPlayer)entityLiving).addStat(EnviroAchievements.tradingFavours, 1);
 						}
 					}
 				}

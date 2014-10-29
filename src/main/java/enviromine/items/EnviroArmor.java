@@ -8,10 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
+import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.ObjectHandler;
 
 public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmorTextureProvider
@@ -147,7 +146,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	}
 	
 	@Override
-	public void onCreated(ItemStack armor, World p_77622_2_, EntityPlayer p_77622_3_)
+	public void onCreated(ItemStack armor, World world, EntityPlayer player)
 	{
 		if (armor.getItem() == ObjectHandler.camelPack)
 		{
@@ -180,10 +179,9 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			
 		} else if (armor.getItem() == ObjectHandler.hardHat)
 		{
+			player.addStat(EnviroAchievements.safetyFirst, 1);
 		} else
 		{
 		}
-		
 	}
-	
 }

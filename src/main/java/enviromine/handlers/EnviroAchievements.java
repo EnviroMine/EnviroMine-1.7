@@ -10,21 +10,22 @@ public class EnviroAchievements
 {
 	public static AchievementPage page;
 	
-	public static Achievement funwaysFault; 	// Survive a cave in
-	public static Achievement mindOverMatter; 	// Kill 5 mobs with Insanity III without getting hit
-	public static Achievement proMiner; 		// 1 Hour total mining time (with physics & all effects)
-	public static Achievement hardBoiled; 		// Survive Heat Stroke III
-	public static Achievement ironArmy; 		// Name an iron golem Siyliss
-	public static Achievement tradingFavours; 	// Receive villager assistance
-	public static Achievement iNeededThat; 		// Fumble a tool under Frostbite I
-	public static Achievement winterIsComing; 	// Survive 7 days in the snow without getting Hypothermia
-	public static Achievement ohGodWhy; 		// Play disk 11
-	public static Achievement safetyFirst; 		// Craft a hardhat
-	public static Achievement boreToTheCore; 	// Enter the cave dimension
-	public static Achievement intoTheDarkness; 	// Travel 1K from cave entrance and make it back alive
-	public static Achievement thatJustHappened; // Survive a gas fire
-	public static Achievement itsPitchBlack; 	// ???
-	public static Achievement tenSecondRule; 	// Eat rotten food
+	// @ == Done
+	public static Achievement funwaysFault; 	//@ Survive a cave in
+	public static Achievement mindOverMatter; 	//@ Kill 5 mobs with Insanity III without getting hit
+	public static Achievement proMiner; 		//@ 1 Hour total mining time (with physics & all effects)
+	public static Achievement hardBoiled; 		//@ Survive Heat Stroke III
+	public static Achievement ironArmy; 		//@ Name an iron golem Siyliss
+	public static Achievement tradingFavours; 	//@ Receive villager assistance
+	public static Achievement iNeededThat; 		//@ Fumble a tool under Frostbite I
+	public static Achievement winterIsComing; 	//@ Survive 7 days in the snow without getting Hypothermia
+	public static Achievement ohGodWhy; 		//@ Play disk 11
+	public static Achievement safetyFirst; 		//@ Craft a hardhat
+	public static Achievement boreToTheCore; 	//@ Enter the cave dimension
+	public static Achievement intoTheDarkness; 	//@ Travel 1K from cave entrance and make it back alive
+	public static Achievement thatJustHappened; //@ Survive a gas fire
+	public static Achievement itsPitchBlack; 	//@ ???
+	public static Achievement tenSecondRule; 	//@ Eat rotten food
 	//public static Achievement medicalMarvels; 	// Cure any infection/disease
 	//public static Achievement suckItUpPrincess; // Attack & kill any hostile mob with one or more broken limbs
 	
@@ -42,11 +43,11 @@ public class EnviroAchievements
 		ohGodWhy =         new Achievement("enviromine.OhGodWhy",         "enviromine.OhGodWhy",          1, 1, Items.record_11,            AchievementList.diamonds).registerStat();
 		safetyFirst =      new Achievement("enviromine.SafetyFirst",      "enviromine.SafetyFirst",       2, 1, ObjectHandler.hardHat,        AchievementList.portal).registerStat();
 		
-		boreToTheCore =    new Achievement("enviromine.BoreToTheCore",    "enviromine.BoreToTheCore",    -2, 2, ObjectHandler.elevator,    AchievementList.portal).registerStat();
+		boreToTheCore =    new Achievement("enviromine.BoreToTheCore",    "enviromine.BoreToTheCore",    -2, 2, ObjectHandler.elevator,       AchievementList.portal).registerStat();
 		intoTheDarkness =  new Achievement("enviromine.IntoTheDarkness",  "enviromine.IntoTheDarkness",  -1, 2, Blocks.torch,                          boreToTheCore).registerStat();
 		thatJustHappened = new Achievement("enviromine.ThatJustHappened", "enviromine.ThatJustHappened",  0, 2, Blocks.fire,                                    null).registerStat();
 		itsPitchBlack =    new Achievement("enviromine.ItsPitchBlack",    "enviromine.ItsPitchBlack",     1, 2, Blocks.redstone_torch,                 boreToTheCore).registerStat();
-		tenSecondRule =    new Achievement("enviromine.TenSecondRule",    "enviromine.TenSecondRule",     2, 2, Items.rotten_flesh,                             null).registerStat();
+		tenSecondRule =    new Achievement("enviromine.TenSecondRule",    "enviromine.TenSecondRule",     2, 2, ObjectHandler.rottenFood,                       null).registerStat();
 		
 		//medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   -2, 3, Items.potionitem,                               null).registerStat();
 		//suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", "enviromine.SuckItUpPrincess", -1, 3, Items.bone,               AchievementList.buildSword).registerStat();

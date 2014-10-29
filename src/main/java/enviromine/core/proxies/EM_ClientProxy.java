@@ -18,11 +18,13 @@ import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.*;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.Gui_EventManager;
+import enviromine.client.gui.SaveController;
 import enviromine.client.gui.UI_Settings;
 import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.client.renderer.tileentity.*;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
+
 import java.util.Iterator;
 
 public class EM_ClientProxy extends EM_CommonProxy
@@ -72,7 +74,8 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		super.init(event);
 		EnviroKeybinds.Init();
-		UI_Settings.loadSettings();
+		SaveController.saveConfig("UI_Settings");
+			
 		initRenderers();
 	}
 	

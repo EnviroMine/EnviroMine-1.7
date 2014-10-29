@@ -2,6 +2,7 @@ package enviromine.client.gui.menu;
 
 import java.util.ArrayList;
 
+import enviromine.client.gui.SaveController;
 import enviromine.client.gui.UI_Settings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -94,7 +95,7 @@ public class EM_Gui_Bars extends GuiScreen
 	@Override
 	public void onGuiClosed() 
 	{
-	    UI_Settings.saveSettings();	
+	    SaveController.saveConfig("UI_Settings");
 	}
 	
 	@Override

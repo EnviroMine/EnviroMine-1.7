@@ -15,8 +15,8 @@ public class EnviroKeybinds
 	
 	public static void Init()
 	{
-		reloadConfig = new KeyBinding("key.enviromine.reload", Keyboard.KEY_L, "key.categories.enviromine");
-		addRemove = new KeyBinding("key.enviromine.addremove", Keyboard.KEY_K, "key.categories.enviromine");
+		reloadConfig = new KeyBinding("Reload Configs", Keyboard.KEY_K, "EnviroMine");
+		addRemove = new KeyBinding("Add/Remove Custom Config", Keyboard.KEY_J, "EnviroMine");
 		
 		ClientRegistry.registerKeyBinding(reloadConfig);
 		ClientRegistry.registerKeyBinding(addRemove);

@@ -121,6 +121,8 @@ public class EM_Settings
 	public static int entityFailsafe;
 	public static boolean villageAssist;
 	public static boolean minimalHud;
+	public static boolean limitCauldron;
+	public static boolean allowTinting;
 	
 	public static int caveDimID = -3;
 	public static int caveBiomeID = 23;

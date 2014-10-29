@@ -1,0 +1,96 @@
+language.name=Italian
+
+item.enviromine.badwater.name=Ampolla d'acqua sporca
+item.enviromine.saltwater.name=Ampolla d'acqua salata
+item.enviromine.coldwater.name=Ampolla d'acqua fredda
+item.enviromine.camelpack.name=Zaino disidratante
+item.enviromine.gasmask.name=Maschera antigas
+item.enviromine.hardhat.name=Casco di sicurezza
+item.enviromine.airfilter.name=Filtro d'aria
+item.enviromine.rottenfood.name=Cibo marcio
+
+tile.enviromine.elevator_top.name=Ascensore superiore
+tile.enviromine.elevator_bottom.name=Ascensore inferiore
+
+itemGroup.enviromine.enviroTab=EnviroMine
+
+achievement.enviromine.FunwaysFault=Colpa di Funway
+achievement.enviromine.MindOverMatter=Mentre sopra motivo
+achievement.enviromine.ProMiner=Scavatore Pro
+achievement.enviromine.HardBoiled=Uovo sodo
+achievement.enviromine.IronArmy=Armata di ferro
+achievement.enviromine.TradingFavours=Favori commerciali
+achievement.enviromine.INeededThat=Mi serve quello
+achievement.enviromine.WinterIsComing=L'inverno sta arrivando
+achievement.enviromine.OhGodWhy=Oh mio Dio perchè?
+achievement.enviromine.SafetyFirst=Prima la sicurezza
+achievement.enviromine.BoreToTheCore=Trivella al nucleo
+achievement.enviromine.IntoTheDarkness=Nell'oscurità
+achievement.enviromine.ThatJustHappened=E' successo così...
+achievement.enviromine.ItsPitchBlack=Nero come il carbone
+achievement.enviromine.TenSecondRule=Regola dei 10 secondi
+achievement.enviromine.MedicalMarvels=Mircoli medici
+achievement.enviromine.SuckItUpPrincess=Smettila di piagnucolare
+
+achievement.enviromine.FunwaysFault.desc=Sopravvivi in una caverna in
+achievement.enviromine.MindOverMatter.desc=Uccidi 5 mobs ostili con Insanity III
+achievement.enviromine.ProMiner.desc=Fai un'ora di attività mineraria senza morire (con fisiche e tutti gli effetti)
+achievement.enviromine.HardBoiled.desc=Sopravvivi un Heat Stroke III
+achievement.enviromine.IronArmy.desc=Nomina un Golem di ferro Siyliss
+achievement.enviromine.TradingFavours.desc=Ricevi assistenza da un villico
+achievement.enviromine.INeededThat.desc=Usa un attrezzo con Frostbite I
+achievement.enviromine.WinterIsComing.desc=Sopravvivi 7 giorni nella neve senza Hypothermia
+achievement.enviromine.OhGodWhy.desc=Gioca 11
+achievement.enviromine.SafetyFirst.desc=Crea un Casco di sicurezza
+achievement.enviromine.BoreToTheCore.desc=Entra nella Dimensione caverna
+achievement.enviromine.IntoTheDarkness.desc=Viaggia 1 Km nella Dimensione caverna e ritorna vivo
+achievement.enviromine.ThatJustHappened.desc=Sopravvivi un fuoco causato da gas
+achievement.enviromine.ItsPitchBlack.desc=???
+achievement.enviromine.TenSecondRule.desc=Mangia del cibo marcio
+achievement.enviromine.MedicalMarvels.desc=Cura un'infezione o una malattia
+achievement.enviromine.SuckItUpPrincess.desc=Uccidi un mob con uno o più arti rotti
+
+options.enviromine.menu.title=Enviromine Menu
+options.enviromine.guiMainmenu.title=EnviroMine Menu principale
+options.enviromine.guiSetting.title=EnviroMine Grafica
+options.enviromine.guiBars.title=EnviroMine Impostazioni Hud
+options.enviromine.configSetting.title=Enviromine Impostazioni Config
+options.enviromine.guiBarPos.title=EnviroMine Posizione Hud
+options.enviromine.adminOptions.title=Opzioni Admin
+options.enviromine.physics=Leggi della fisica
+options.enviromine.guiScaling=Scala Hud
+options.enviromine.guiOptions=Opzioni video
+options.enviromine.configSettings=Impostazioni Server
+options.enviromine.customEditor=Editor personalizzato
+options.enviromine.status=Testo stato Hud
+options.enviromine.status.visible=Mostra
+options.enviromine.status.hidden=Nascondi
+options.enviromine.minBars=Hud Minimalista
+options.enviromine.minBars.on=On
+options.enviromine.minBars.off=Off
+options.enviromine.debug=Testo di Debug
+options.enviromine.debug.visible=Mostra
+options.enviromine.debug.hidden=Nascondi
+options.enviromine.showIcons=Icone Hud
+options.enviromine.showIcons.visible=Mostra
+options.enviromine.showIcons.hidden=Nascondi
+options.enviromine.barPos=Posizione della barra
+options.enviromine.tempScale=Temp Scale
+options.enviromine.tempScale.f=Fahrenheit
+options.enviromine.tempScale.c=Celsius
+options.enviromine.barPos.hydration=Barra idratazione
+options.enviromine.barPos.temprature=Barra temperatura
+options.enviromine.barPos.sanity=Barra sanità
+options.enviromine.barPos.airQuality=Barra qualità dell'aria
+
+deathmessage.enviromine.suffocate=%s è soffocato
+deathmessage.enviromine.frostbite=%s è congelato fino alla morte
+deathmessage.enviromine.dehydrate=%s è morto di sete
+deathmessage.enviromine.landslide=%s è morto in una frana
+deathmessage.enviromine.organfailure=%s è morto d'infarto
+deathmessage.enviromine.heatstroke=Il cervello di %s è cotto da un colpo di calore von einem Hitzschlag gebraten
+deathmessage.enviromine.bleedout=%s è morto dissanguato
+deathmessage.enviromine.gasfire=%s è morto in un incendio
+
+updatemsg.enviromine.avalible=E' avviabile l'aggiornamento % di EnviroMine
+updatemsg.enviromine.download=Download & Changelog:

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+
 import enviromine.blocks.BlockEsky;
 
 public class TileEntityEsky extends TileEntity implements IInventory
@@ -236,6 +237,7 @@ public class TileEntityEsky extends TileEntity implements IInventory
     /**
      * Called when a client event is received with the event number and argument, see World.sendClientEvent
      */
+	@Override
     public boolean receiveClientEvent(int p_145842_1_, int p_145842_2_)
     {
         if (p_145842_1_ == 1)

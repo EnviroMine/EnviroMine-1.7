@@ -6,11 +6,14 @@ import static net.minecraftforge.common.util.ForgeDirection.NORTH;
 import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
+
 import java.util.Random;
+
 import enviromine.blocks.tiles.TileEntityBurningCoal;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -33,6 +36,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
      */
+	@Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
         world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + world.rand.nextInt(10), 0);

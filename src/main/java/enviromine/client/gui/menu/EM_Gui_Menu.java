@@ -1,11 +1,11 @@
 package enviromine.client.gui.menu;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
+
 import enviromine.core.EnviroMine;
 
 public class EM_Gui_Menu extends GuiScreen

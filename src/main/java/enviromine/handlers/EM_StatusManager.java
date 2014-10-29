@@ -581,7 +581,7 @@ public class EM_StatusManager
 			}
 		}
 		
-		if(entityLiving.posY > dimensionProp.sealevel * 0.75 && !entityLiving.worldObj.provider.isHellWorld)
+		if(dimensionProp != null && entityLiving.posY > dimensionProp.sealevel * 0.75 && !entityLiving.worldObj.provider.isHellWorld)
 		{
 			quality = 2F;
 		}

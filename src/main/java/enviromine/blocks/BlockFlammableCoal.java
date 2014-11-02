@@ -78,7 +78,7 @@ public class BlockFlammableCoal extends BlockOre
     {
     	super.harvestBlock(world, player, i, j, k, meta);
     	
-    	if(EM_Settings.gasGen && world.rand.nextBoolean())
+    	if(world.rand.nextBoolean())
     	{
     		world.setBlock(i, j, k, ObjectHandler.gasBlock);
     		TileEntity tile = world.getTileEntity(i, j, k);

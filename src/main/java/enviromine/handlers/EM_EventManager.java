@@ -84,6 +84,8 @@ import enviromine.gases.GasBuffer;
 import enviromine.network.packet.PacketAutoOverride;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.world.Earthquake;
@@ -582,11 +584,13 @@ public class EM_EventManager
 						item = new ItemStack(newItem);
 						item.stackSize = 1;
 						item.setItemDamage(0);
-					} else
-					{
-						EntityItem itemDrop = player.entityDropItem(new ItemStack(newItem, 1, 0), 0F);
-						itemDrop.delayBeforeCanPickup = 0;
-					}
+						player.setCurrentItemOrArmor(0, item);
+					} else if (!player.inventory.addItemStackToInventory(new ItemStack(newItem)))
+                    {
+                        player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
+                    }
+
+                    
 					
 					event.setCanceled(true);
 				}
@@ -714,10 +718,19 @@ public class EM_EventManager
 	public static int getWaterType(World world, int x, int y, int z)
 	{
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+		int seaLvl = dProps != null? dProps.sealevel : 64;
 		
 		if(biome == null)
 		{
 			return 0;
+		}
+		
+		BiomeProperties bProps = EM_Settings.biomeProperties.get(biome.biomeID);
+		
+		if(bProps != null && bProps.getWaterQualityId() != -1)
+		{
+			return bProps.getWaterQualityId();
 		}
 		
 		int waterColour = biome.getWaterColorMultiplier();
@@ -741,13 +754,13 @@ public class EM_EventManager
 		}
 		
 		
-		if(typeList.contains(Type.SWAMP) || typeList.contains(Type.JUNGLE) || typeList.contains(Type.DEAD) || typeList.contains(Type.WASTELAND) || y < 48 || looksBad)
+		if(typeList.contains(Type.SWAMP) || typeList.contains(Type.JUNGLE) || typeList.contains(Type.DEAD) || typeList.contains(Type.WASTELAND) || y < (float)seaLvl/0.75F || looksBad)
 		{
 			return 1;
 		} else if(typeList.contains(Type.OCEAN) || typeList.contains(Type.BEACH))
 		{
 			return 2;
-		} else if(typeList.contains(Type.SNOWY) || typeList.contains(Type.CONIFEROUS) || biome.temperature < 0F || y > 127)
+		} else if(typeList.contains(Type.SNOWY) || typeList.contains(Type.CONIFEROUS) || biome.temperature < 0F || y > seaLvl * 2)
 		{
 			return 3;
 		} else
@@ -1046,11 +1059,11 @@ public class EM_EventManager
 			ItemStack item = null;
 			int itemUse = 0;
 			
-			if(((EntityPlayer)event.entityLiving).isPlayerSleeping() && tracker != null)
+			if(((EntityPlayer)event.entityLiving).isPlayerSleeping() && tracker != null && !event.entityLiving.worldObj.isDaytime())
 			{
 				tracker.sleepState = "Asleep";
 				tracker.lastSleepTime = (int)event.entityLiving.worldObj.getWorldInfo().getWorldTime() % 24000;
-			} else if(tracker != null)
+			} else if(tracker != null && event.entityLiving.worldObj.isDaytime())
 			{
 				int relitiveTime = (int)event.entityLiving.worldObj.getWorldInfo().getWorldTime() % 24000;
 				

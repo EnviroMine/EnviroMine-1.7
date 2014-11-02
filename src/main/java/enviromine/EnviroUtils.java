@@ -271,7 +271,6 @@ public class EnviroUtils
 	{
 		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
 		return newName;
-		
 	}
 	
 	public static float convertToFarenheit(float num)

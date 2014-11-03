@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,6 +23,7 @@ import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
+import enviromine.world.ClientQuake;
 
 public class EM_GuiEnviroMeters extends Gui
 {
@@ -45,9 +45,6 @@ public class EM_GuiEnviroMeters extends Gui
 	private static int ticktimer = 1;
 	private static boolean blink = false;
 	
-	EntityRenderer preRender = null;
-	RenderCameraShake camShake = null;
-	
 	public static EnviroDataTracker tracker = null;
 	
 	public EM_GuiEnviroMeters(Minecraft mc, IResourceManager resManager)
@@ -60,20 +57,31 @@ public class EM_GuiEnviroMeters extends Gui
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent.Post event)
 	{
-		if(this.camShake == null)
-		{
-			this.camShake = new RenderCameraShake(this.mc, this.resourceManager);
-		}
-		
-		if(this.mc.entityRenderer != camShake)
-		{
-			this.preRender = this.mc.entityRenderer;
-			this.mc.entityRenderer = camShake;
-		}
-		
 		if(event.type != ElementType.HELMET || event.isCancelable())
 		{
 			return;
+		}
+
+		mc.thePlayer.yOffset = 1.62F;
+		if(ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer) > 0)
+		{
+			if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()))
+			{
+				return;
+			}
+			
+			float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
+			
+			double shakeSpeed = 2D * shakeMult;
+			float offsetY = 0.2F * shakeMult;
+			
+			double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
+			
+			mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
+			mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);
+			mc.thePlayer.cameraYaw = (float)(Math.sin(shake) * offsetY/4F);
+			
+			//super.updateCameraAndRender(partialTick);
 		}
 		
 		// count gui ticks

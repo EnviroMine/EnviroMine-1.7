@@ -1,0 +1,22 @@
+mkdir -p ./wiki
+
+cd ./wiki
+
+# Clone wiki
+git clone git@github.com:Funwayguy/EnviroMine.wiki.git ./
+
+#Replace old build with new one
+grep -lR -e "<${build_text}>.*</${build_text}>" * | xargs sed -i "s/<${build_text}>.*<\/${build_text}>/<${build_text}>$ver_num<\/${build_text}>/g"
+
+#Replace old date with new one
+grep -lR -e "<${date_text}>.*</${date_text}>" * | xargs sed -i "s/<${date_text}>.*<\/${date_text}>/<${date_text}>${cur_date}<\/${date_text}>/g"
+
+#Replace old link with new one
+grep -lR -e "\[downloads\-1\.7\]:.*" * | xargs sed -i "s/\[downloads\-1\.7\]:.*/\[downloads\-1\.7\]: ${download_link}/g"
+
+#Commit the new page
+git add .
+git commit -m "Updated version"
+git push -u origin master
+
+cd ../

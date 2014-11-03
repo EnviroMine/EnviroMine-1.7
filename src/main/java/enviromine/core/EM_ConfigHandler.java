@@ -471,7 +471,7 @@ public class EM_ConfigHandler
 			} else
 			{
 
-				config.addCustomCategoryComment(nameULCat, classname + ":" + name);
+				//config.addCustomCategoryComment(nameULCat, classname + ":" + name);
 					int metadata = (Integer)data[1];
 					BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
 				returnValue = "Saved";

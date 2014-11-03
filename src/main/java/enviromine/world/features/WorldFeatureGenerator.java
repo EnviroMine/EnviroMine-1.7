@@ -85,7 +85,7 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		
 		for(int i = 0; i < 16; i++)
 		{
-			for(int j = 0; j < (dProps != null? dProps.sealevel : 64) * 0.75F; j++)
+			for(int j = 0; j < (dProps != null? (float)dProps.sealevel : 64F) * 0.75F; j++)
 			{
 				for(int k = 0; k < 16; k++)
 				{

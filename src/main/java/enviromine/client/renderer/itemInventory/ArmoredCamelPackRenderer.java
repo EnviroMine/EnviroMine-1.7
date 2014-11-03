@@ -44,7 +44,10 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 		GL11.glEnable(GL11.GL_BLEND);
 		// ====================== Render item texture ======================
 		IIcon icon = itemStack.getIconIndex();
-		renderItem.renderIcon(0, 0, icon, 16, 16);
+		if(icon != null)
+		{
+			renderItem.renderIcon(0, 0, icon, 16, 16);
+		}
 		
 		GL11.glDisable(GL11.GL_BLEND);
 		if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("isCamelPack"))

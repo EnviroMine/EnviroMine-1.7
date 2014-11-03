@@ -108,7 +108,7 @@ public class AddRemoveCustom
 						
 						Block block = Minecraft.getMinecraft().thePlayer.worldObj.getBlock(blockX, blockY, blockZ);
 						int blockMeta = Minecraft.getMinecraft().thePlayer.worldObj.getBlockMetadata(blockX, blockY, blockZ);
-						String blockULName = block.getUnlocalizedName();
+						String blockULName = Block.blockRegistry.getNameForObject(block);
 						String blockName = block.getLocalizedName();
 						
 						//blockULName = EnviroUtils.replaceULN(blockULName);
@@ -135,13 +135,4 @@ public class AddRemoveCustom
 			}
 		}
 	}
-	
-	//public static String replaceULN(String unlocalizedName)
-	//{
-	//	String newName = unlocalizedName.replaceAll("\\.+", "\\_");
-	//	return newName;
-		
-	//}
-	
-	
 }

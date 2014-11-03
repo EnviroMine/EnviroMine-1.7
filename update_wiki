@@ -11,8 +11,11 @@ grep -lR -e "<${build_text}>.*</${build_text}>" * | xargs sed -i "s/<${build_tex
 #Replace old date with new one
 grep -lR -e "<${date_text}>.*</${date_text}>" * | xargs sed -i "s/<${date_text}>.*<\/${date_text}>/<${date_text}>${cur_date}<\/${date_text}>/g"
 
-#Replace old link with new one
+#Replace old download link with new one
 grep -lR -e "\[downloads\-1\.7\]:.*" * | xargs sed -i "s/\[downloads\-1\.7\]:.*/\[downloads\-1\.7\]: ${download_link}/g"
+
+#Replace old build link with new one
+grep -lR -e "\[build\-1\.7\]:.*" * | xargs sed -i "s/\[build\-1\.7\]:.*/\[build\-1\.7\]: ${build_link}/g"
 
 #Commit the new page
 git add .

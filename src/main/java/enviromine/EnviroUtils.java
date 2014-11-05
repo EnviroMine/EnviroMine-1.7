@@ -3,18 +3,19 @@ package enviromine;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.nio.ByteOrder;
-
+import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -310,15 +311,39 @@ public class EnviroUtils
 		
 	}
 	
+	/*
+	 * This isn't accurate enough to 
+	 */
 	public static String getBiomeWater(BiomeGenBase biome)
 	{
-		if(biome.biomeName == BiomeGenBase.swampland.biomeName || biome.biomeName == BiomeGenBase.jungle.biomeName || biome.biomeName == BiomeGenBase.jungleHills.biomeName)
+		int waterColour = biome.getWaterColorMultiplier();
+		boolean looksBad = false;
+		
+		if(waterColour != 16777215)
+		{
+			Color bColor = new Color(waterColour);
+			
+			if(bColor.getRed() < 200 || bColor.getGreen() < 200 || bColor.getBlue() < 200)
+			{
+				looksBad = true;
+			}
+		}
+		
+		ArrayList<Type> typeList = new ArrayList<Type>();
+		Type[] typeArray = BiomeDictionary.getTypesForBiome(biome);
+		for(int i = 0; i < typeArray.length; i++)
+		{
+			typeList.add(typeArray[i]);
+		}
+		
+		
+		if(typeList.contains(Type.SWAMP) || typeList.contains(Type.JUNGLE) || typeList.contains(Type.DEAD) || typeList.contains(Type.WASTELAND) || looksBad)
 		{
 			return "dirty";
-		} else if(biome.biomeName == BiomeGenBase.frozenOcean.biomeName || biome.biomeName == BiomeGenBase.ocean.biomeName || biome.biomeName == BiomeGenBase.beach.biomeName)
+		} else if(typeList.contains(Type.OCEAN) || typeList.contains(Type.BEACH))
 		{
-			return "salt";
-		} else if(biome.biomeName == BiomeGenBase.icePlains.biomeName || biome.biomeName == BiomeGenBase.taiga.biomeName || biome.biomeName == BiomeGenBase.taigaHills.biomeName || biome.temperature < 0F)
+			return "salty";
+		} else if(typeList.contains(Type.SNOWY) || typeList.contains(Type.CONIFEROUS) || biome.temperature < 0F)
 		{
 			return "cold";
 		} else

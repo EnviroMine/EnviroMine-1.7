@@ -105,6 +105,8 @@ public class ObjectHandler
 		fireTorch = new BlockFireTorch().setTickRandomly(true).setBlockName("torch").setBlockTextureName("torch_on").setLightLevel(0.9375F).setCreativeTab(EnviroMine.enviroTab);
 		esky = new BlockEsky(Material.iron).setBlockName("enviromine.esky").setCreativeTab(EnviroMine.enviroTab);
 		freezer = new BlockFreezer(Material.iron).setBlockName("enviromine.freezer").setCreativeTab(EnviroMine.enviroTab);
+		
+		Blocks.redstone_torch.setLightLevel(0.9375F);
 	}
 	
 	public static void registerBlocks()
@@ -121,6 +123,9 @@ public class ObjectHandler
 		
 		// Must be done after registration
 		Blocks.fire.setFireInfo(flammableCoal, 60, 100);
+		
+		// Ore Dictionary Stuffs
+		OreDictionary.registerOre("oreCoal", flammableCoal);
 	}
 	
 	public static void registerGases()
@@ -134,6 +139,7 @@ public class ObjectHandler
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
 		GameRegistry.registerTileEntity(TileEntityBurningCoal.class, "enviromine.tile.burningcoal");
 		GameRegistry.registerTileEntity(TileEntityEsky.class, "enviromine.tile.esky");
+		GameRegistry.registerTileEntity(TileEntityFreezer.class, "enviromine.tile.freezer");
 		
 		GameRegistry.registerTileEntity(TileEntityElevator.class, "enviromine.tile.elevator");
 		
@@ -168,6 +174,10 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(elevator, 1, 1), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));
 		
 		GameRegistry.addRecipe(new ItemStack(davyLampBlock), " x ", "zyz", "xxx", 'x', new ItemStack(Items.gold_ingot), 'y', new ItemStack(Blocks.torch), 'z', new ItemStack(Blocks.glass_pane));
+		GameRegistry.addShapelessRecipe(new ItemStack(davyLampBlock, 1, 1), new ItemStack(davyLampBlock, 1, 0), new ItemStack(Items.flint_and_steel));
+		GameRegistry.addShapelessRecipe(new ItemStack(davyLampBlock, 1, 1), new ItemStack(davyLampBlock, 1, 0), new ItemStack(Blocks.torch));
+		GameRegistry.addShapelessRecipe(new ItemStack(davyLampBlock, 1, 1), new ItemStack(davyLampBlock, 1, 0), new ItemStack(fireTorch));
+		
 		GameRegistry.addRecipe(new ItemStack(esky), "xxx", "yzy", "yyy", 'x', new ItemStack(Blocks.snow), 'y', new ItemStack(Items.dye, 1, 4), 'z', new ItemStack(Blocks.chest));
 		GameRegistry.addRecipe(new ItemStack(freezer), "xyx", "yzy", "xyx", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.ice), 'z', new ItemStack(esky));
 		GameRegistry.addRecipe(new ItemStack(freezer), "xyx", "yzy", "xyx", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.packed_ice), 'z', new ItemStack(esky));

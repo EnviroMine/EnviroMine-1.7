@@ -392,6 +392,12 @@ public class EM_EventManager
 			if(item.getItem() instanceof ItemBlock && !event.entityPlayer.worldObj.isRemote)
 			{
 				int adjCoords[] = EnviroUtils.getAdjacentBlockCoordsFromSide(event.x, event.y, event.z, event.face);
+				
+				if(item.getItem() == Item.getItemFromBlock(Blocks.torch))
+				{
+					TorchReplaceHandler.ScheduleReplacement(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2]);
+				}
+				
 				EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2], true, "Normal");
 			} else if(item.getItem() == Items.glass_bottle && !event.entityPlayer.worldObj.isRemote)
 			{
@@ -830,6 +836,15 @@ public class EM_EventManager
 			{
 				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 2, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 1);
 			}
+			
+			/*if(EM_Settings.torchesBurn)
+			{
+				ReplaceInvoItems(invo, Item.getItemFromBlock(Blocks.torch), 0, Item.getItemFromBlock(ObjectHandler.fireTorch), 0);
+			} else
+			{
+				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.fireTorch), 0, Item.getItemFromBlock(Blocks.torch), 0);
+			}*/
+			
 			RotHandler.rotInvo(event.entityLiving.worldObj, invo);
 			
 			if(event.entityLiving.getEntityData().hasKey("EM_SAFETY"))

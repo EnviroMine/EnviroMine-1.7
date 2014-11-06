@@ -104,7 +104,7 @@ public class PacketServerOverride implements IMessage
 		{
 			if (data.size() <= 1)
 			{
-				EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000!");
+				EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000! ("+info.length()+")");
 				return;
 			} else
 			{
@@ -117,7 +117,7 @@ public class PacketServerOverride implements IMessage
 						break;
 					} else if (data.size() <= 1)
 					{
-						EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000!");
+						EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000! ("+info.length()+")");
 						return;
 					} else
 					{

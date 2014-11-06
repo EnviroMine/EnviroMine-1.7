@@ -7,13 +7,17 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
+import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.encoders.IPacketEncoder;
 
 import io.netty.buffer.ByteBuf;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -105,6 +109,22 @@ public class PacketServerOverride implements IMessage
 			if (data.size() <= 1)
 			{
 				EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000! ("+info.length()+")");
+				if (info.length() <= 10000) {
+					EnviroMine.logger.log(Level.ERROR, "Packet data:\n"+info);
+				} else {
+					EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file...");
+					
+					try
+					{
+						FileWriter writer = new FileWriter(EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt");
+						writer.write(info);
+						writer.close();
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				
 				return;
 			} else
 			{
@@ -118,6 +138,21 @@ public class PacketServerOverride implements IMessage
 					} else if (data.size() <= 1)
 					{
 						EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000! ("+info.length()+")");
+						if (info.length() <= 10000) {
+							EnviroMine.logger.log(Level.ERROR, "Packet data:\n"+info);
+						} else {
+							EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file...");
+							
+							try
+							{
+								FileWriter writer = new FileWriter(EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt");
+								writer.write(info);
+								writer.close();
+							} catch (IOException e)
+							{
+								e.printStackTrace();
+							}
+						}
 						return;
 					} else
 					{
@@ -134,6 +169,12 @@ public class PacketServerOverride implements IMessage
 		}
 		
 		ByteBufUtils.writeUTF8String(buf, info);
+	}
+	
+	private String getFormattedDate()
+	{
+		Calendar c = Calendar.getInstance();
+		return c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"_"+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
 	}
 	
 	public static class Handler implements IMessageHandler<PacketServerOverride, IMessage>

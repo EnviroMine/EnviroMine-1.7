@@ -72,6 +72,11 @@ public class RotHandler
 	
 	public static void rotInvo(World world, IInventory inventory)
 	{
+		if(inventory == null || inventory.getSizeInventory() <= 0)
+		{
+			return;
+		}
+		
 		boolean flag = false;
 		
 		for(int i = 0; i < inventory.getSizeInventory(); i++)

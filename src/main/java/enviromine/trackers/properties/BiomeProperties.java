@@ -94,26 +94,16 @@ public class BiomeProperties
 	
 	public static void SearchForBiomes()
 	{
-
 		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
 		
-		for(int p = 0; p <= BiomeArray.length - 1 && BiomeArray[p] != null; p++)
+		for(int p = 0; p < BiomeArray.length; p++)
 		{
 			if(BiomeArray[p] == null)
 			{
 				continue;
 			}
 			
-			String[] modname = BiomeArray[p].getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
-			{
-				BiomeSaveConfig(BiomeArray[p], "Defaults");
-			}
-			else
-			{
-				BiomeSaveConfig(BiomeArray[p], modname[0]);
-			}
+			BiomeSaveConfig(BiomeArray[p], "Biomes");
 		}
 	}
 	

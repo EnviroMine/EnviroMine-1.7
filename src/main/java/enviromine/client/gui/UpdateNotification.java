@@ -33,7 +33,8 @@ public class UpdateNotification
 		
 		hasChecked = true;
 		
-		if(EM_Settings.Version == "FWG_EM_VER")
+		// DO NOT CHANGE THIS!
+		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
 		{
 			event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!"));
 			return;

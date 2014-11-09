@@ -53,7 +53,7 @@ public class EM_PhysManager
 	public static HashMap<String, Long> chunkDelay = new HashMap<String, Long>();
 	
 	public static int currentTime = 0;
-	public static int debugInterval = 15;
+	public static int debugInterval = 30;
 	public static int debugTime = 0;
 	public static int debugUpdatesCaptured = 0;
 	private static Stopwatch timer = Stopwatch.createUnstarted();

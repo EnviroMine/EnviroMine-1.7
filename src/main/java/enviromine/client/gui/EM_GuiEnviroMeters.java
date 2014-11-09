@@ -636,6 +636,10 @@ public class EM_GuiEnviroMeters extends Gui
 	public static String DB_physTimer = "";
 	public static int DB_physUpdates = 0;
 	public static int DB_physBuffer = 0;
+	public static String DB_gasTimer = "";
+	public static int DB_gasUpdates = 0;
+	public static int DB_gasBuffer = 0;
+	public static int DB_gasfireBuffer = 0;
 	
 	public static String DB_biomeName = "";
 	public static int DB_biomeID = 0;
@@ -680,7 +684,7 @@ public class EM_GuiEnviroMeters extends Gui
 			Minecraft.getMinecraft().fontRenderer.drawString("Air Quality Rate: " + DB_airquality + "%", 10, 10 * 5, 16777215);
 			Minecraft.getMinecraft().fontRenderer.drawString("Dehydration Rate: " + DB_dehydrateRate + "%", 10, 10 * 6, 16777215);
 			Minecraft.getMinecraft().fontRenderer.drawString("Status Update Speed: " + DB_timer, 10, 10 * 8, 16777215);
-			Minecraft.getMinecraft().fontRenderer.drawString("The Thing: " + tracker.trackedEntity.getEntityData().getInteger("EM_THING"), 10, 10 * 12, 16777215);
+			//Minecraft.getMinecraft().fontRenderer.drawString("The Thing: " + tracker.trackedEntity.getEntityData().getInteger("EM_THING"), 10, 10 * 12, 16777215);
 		} catch(NullPointerException e)
 		{
 			
@@ -692,6 +696,11 @@ public class EM_GuiEnviroMeters extends Gui
 			Minecraft.getMinecraft().fontRenderer.drawString("No. Physics Updates: " + DB_physUpdates, 10, 10 * 10, 16777215);
 			Minecraft.getMinecraft().fontRenderer.drawString("No. Buffered Updates: " + DB_physBuffer, 10, 10 * 11, 16777215);
 		}
+		
+		Minecraft.getMinecraft().fontRenderer.drawString("Gas Update Speed: " + DB_gasTimer, 10, 10 * 12, 16777215);
+		Minecraft.getMinecraft().fontRenderer.drawString("No. Gas Updates: " + DB_gasUpdates, 10, 10 * 13, 16777215);
+		Minecraft.getMinecraft().fontRenderer.drawString("No. Buffered Normal Gas Updates: " + DB_gasBuffer, 10, 10 * 14, 16777215);
+		Minecraft.getMinecraft().fontRenderer.drawString("No. Buffered Burning Gas Updates: " + DB_gasfireBuffer, 10, 10 * 15, 16777215);
 	}
 	
 	public void RenderOverlays(int width, int height)

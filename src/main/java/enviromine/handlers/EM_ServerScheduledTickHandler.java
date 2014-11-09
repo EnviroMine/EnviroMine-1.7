@@ -22,6 +22,8 @@ public class EM_ServerScheduledTickHandler
 				EM_PhysManager.updateSchedule();
 			}
 			
+			TorchReplaceHandler.UpdatePass();
+			
 			Earthquake.updateEarthquakes();
 			
 			if(EM_Settings.enableQuakes && tick.world.getTotalWorldTime()%24000 < 100 && MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L) != Earthquake.lastTickDay && tick.world.provider.dimensionId == 0)

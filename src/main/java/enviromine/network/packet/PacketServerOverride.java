@@ -112,11 +112,12 @@ public class PacketServerOverride implements IMessage
 				if (info.length() <= 10000) {
 					EnviroMine.logger.log(Level.ERROR, "Packet data:\n"+info);
 				} else {
-					EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file...");
+					String name = EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt";
+					EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file "+name);
 					
 					try
 					{
-						FileWriter writer = new FileWriter(EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt");
+						FileWriter writer = new FileWriter(name);
 						writer.write(info);
 						writer.close();
 					} catch (IOException e)
@@ -141,11 +142,12 @@ public class PacketServerOverride implements IMessage
 						if (info.length() <= 10000) {
 							EnviroMine.logger.log(Level.ERROR, "Packet data:\n"+info);
 						} else {
-							EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file...");
+							String name = EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt";
+							EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file "+name);
 							
 							try
 							{
-								FileWriter writer = new FileWriter(EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt");
+								FileWriter writer = new FileWriter(name);
 								writer.write(info);
 								writer.close();
 							} catch (IOException e)

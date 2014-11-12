@@ -21,6 +21,7 @@ import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
 import enviromine.blocks.tiles.TileEntityFreezer;
+import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
 import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.SaveController;
@@ -31,6 +32,7 @@ import enviromine.client.renderer.tileentity.TileEntityDavyLampRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorRenderer;
 import enviromine.client.renderer.tileentity.TileEntityEskyRenderer;
 import enviromine.client.renderer.tileentity.TileEntityFreezerRenderer;
+import enviromine.client.renderer.tileentity.ventilation.TileEntityVentSmallRenderer;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
 
@@ -105,6 +107,9 @@ public class EM_ClientProxy extends EM_CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDavyLamp.class, new TileEntityDavyLampRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEsky.class, new TileEntityEskyRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFreezer.class, new TileEntityFreezerRenderer());
+		
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFan.class, new TileEntityFanRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVentSmall.class, new TileEntityVentSmallRenderer());
 	}
 	
 	@SideOnly(Side.CLIENT)

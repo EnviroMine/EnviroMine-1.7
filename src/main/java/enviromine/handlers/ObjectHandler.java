@@ -1,8 +1,5 @@
 package enviromine.handlers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -20,12 +17,37 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import enviromine.EntityPhysicsBlock;
-import enviromine.blocks.*;
+import enviromine.blocks.BlockBurningCoal;
+import enviromine.blocks.BlockDavyLamp;
+import enviromine.blocks.BlockElevator;
+import enviromine.blocks.BlockEsky;
+import enviromine.blocks.BlockFireTorch;
+import enviromine.blocks.BlockFlammableCoal;
+import enviromine.blocks.BlockFreezer;
+import enviromine.blocks.BlockGas;
 import enviromine.blocks.materials.MaterialGas;
-import enviromine.blocks.tiles.*;
+import enviromine.blocks.tiles.TileEntityBurningCoal;
+import enviromine.blocks.tiles.TileEntityDavyLamp;
+import enviromine.blocks.tiles.TileEntityElevator;
+import enviromine.blocks.tiles.TileEntityEsky;
+import enviromine.blocks.tiles.TileEntityFreezer;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.blocks.tiles.ventilation.TileEntityFan;
+import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
+import enviromine.blocks.ventilation.BlockFan;
+import enviromine.blocks.ventilation.BlockVentSmall;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.items.*;
+import enviromine.items.EnviroArmor;
+import enviromine.items.EnviroItemBadWaterBottle;
+import enviromine.items.EnviroItemColdWaterBottle;
+import enviromine.items.EnviroItemSaltWaterBottle;
+import enviromine.items.ItemDavyLamp;
+import enviromine.items.ItemElevator;
+import enviromine.items.RottenFood;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ObjectHandler
 {
@@ -56,6 +78,9 @@ public class ObjectHandler
 	
 	public static Block esky;
 	public static Block freezer;
+	
+	public static Block fan;
+	public static Block ventSmall;
 	
 	public static int renderGasID;
 	public static int renderSpecialID;
@@ -106,6 +131,9 @@ public class ObjectHandler
 		esky = new BlockEsky(Material.iron).setBlockName("enviromine.esky").setCreativeTab(EnviroMine.enviroTab);
 		freezer = new BlockFreezer(Material.iron).setBlockName("enviromine.freezer").setCreativeTab(EnviroMine.enviroTab);
 		
+		fan = new BlockFan().setBlockName("enviromine.fan").setCreativeTab(EnviroMine.enviroTab);
+		ventSmall = new BlockVentSmall(Material.iron).setBlockName("enviromine.pipe_small").setCreativeTab(EnviroMine.enviroTab);
+		
 		Blocks.redstone_torch.setLightLevel(0.9375F);
 	}
 	
@@ -120,6 +148,8 @@ public class ObjectHandler
 		GameRegistry.registerBlock(flammableCoal, "flammablecoal");
 		GameRegistry.registerBlock(esky, "esky");
 		GameRegistry.registerBlock(freezer, "freezer");
+		GameRegistry.registerBlock(fan, "fan");
+		GameRegistry.registerBlock(ventSmall, "vent_small");
 		
 		// Must be done after registration
 		Blocks.fire.setFireInfo(flammableCoal, 60, 100);
@@ -136,15 +166,16 @@ public class ObjectHandler
 	{
 		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", EM_Settings.physBlockID);
 		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", EM_Settings.physBlockID, EnviroMine.instance, 64, 1, true);
+		
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
 		GameRegistry.registerTileEntity(TileEntityBurningCoal.class, "enviromine.tile.burningcoal");
 		GameRegistry.registerTileEntity(TileEntityEsky.class, "enviromine.tile.esky");
 		GameRegistry.registerTileEntity(TileEntityFreezer.class, "enviromine.tile.freezer");
-		
 		GameRegistry.registerTileEntity(TileEntityElevator.class, "enviromine.tile.elevator");
-		
-
 		GameRegistry.registerTileEntity(TileEntityDavyLamp.class, "enviromine.tile.davy_lamp");
+		
+		GameRegistry.registerTileEntity(TileEntityFan.class, "enviromine.tile.fan");
+		GameRegistry.registerTileEntity(TileEntityVentSmall.class, "enviromine.tile.pipe_small");
 	}
 	
 	public static void registerRecipes()
@@ -161,14 +192,13 @@ public class ObjectHandler
 		GameRegistry.addRecipe(new ItemStack(Blocks.mycelium), "xyx", "yzy", "xyx", 'z', new ItemStack(Blocks.grass), 'y', new ItemStack(Blocks.brown_mushroom_block), 'x', new ItemStack(rottenFood, 1));
 		GameRegistry.addRecipe(new ItemStack(Blocks.dirt, 1), "xxx", "xxx", "xxx", 'x', new ItemStack(rottenFood, 1));
 		
-		
 		GameRegistry.addRecipe(new ItemStack(gasMask, 1), "xxx", "xzx", "yxy", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(airFilter), 'z', new ItemStack(Blocks.glass_pane));
 		GameRegistry.addRecipe(new ItemStack(hardHat, 1), "xyx", "xzx", 'x', new ItemStack(Items.dye, 1, 11), 'y', new ItemStack(Blocks.redstone_lamp), 'z', new ItemStack(Items.iron_helmet, 1, 0));
-
+		
 		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xyx", "xzx", "xyx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'z', new ItemStack(Items.coal, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xyx", "xzx", "xyx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'z', new ItemStack(Items.coal, 1, 1));
-		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xyx", "xzx", "xpx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'p', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),'z', new ItemStack(Items.coal, 1, 1));
-		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xpx", "xzx", "xyx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'p', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),'z', new ItemStack(Items.coal, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xyx", "xzx", "xpx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'p', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'z', new ItemStack(Items.coal, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(airFilter, 1), "xpx", "xzx", "xyx", 'x', new ItemStack(Items.iron_ingot), 'y', new ItemStack(Items.paper), 'p', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'z', new ItemStack(Items.coal, 1, 1));
 		
 		GameRegistry.addRecipe(new ItemStack(elevator, 1, 0), "xyx", "z z", "z z", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.redstone_lamp), 'z', new ItemStack(Blocks.iron_bars));
 		GameRegistry.addRecipe(new ItemStack(elevator, 1, 1), "z z", "xyx", "www", 'x', new ItemStack(Blocks.iron_block), 'y', new ItemStack(Blocks.furnace), 'z', new ItemStack(Blocks.iron_bars), 'w', new ItemStack(Items.diamond_pickaxe));

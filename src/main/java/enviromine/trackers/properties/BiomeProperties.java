@@ -33,25 +33,27 @@ public class BiomeProperties
 		this.tempRate = tempRate;
 		this.sanityRate = sanityRate;
 		this.dehydrateRate = dehydrateRate;
-		
 	}
 
 	public int getWaterQualityId()
 	{
 		//System.out.println(this.waterQuality);
 
-		if(this.waterQuality.equalsIgnoreCase("dirty"))
+		if(this.waterQuality.trim().equalsIgnoreCase("dirty"))
 		{
 			return 1;
-		} else if(this.waterQuality.equalsIgnoreCase("salty"))
+		} else if(this.waterQuality.trim().equalsIgnoreCase("salty"))
 		{
 			return 2;
-		} else if(this.waterQuality.equalsIgnoreCase("cold"))
+		} else if(this.waterQuality.trim().equalsIgnoreCase("cold"))
 		{
 			return 3;
-		} else 
+		} else if(this.waterQuality.trim().equalsIgnoreCase("clean"))
 		{
 			return 0;
+		} else
+		{
+			return -1;
 		}
 	}
 
@@ -92,21 +94,16 @@ public class BiomeProperties
 	
 	public static void SearchForBiomes()
 	{
-
 		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
 		
-		for(int p = 0; p <= BiomeArray.length - 1 && BiomeArray[p] != null; p++)
+		for(int p = 0; p < BiomeArray.length; p++)
 		{
-			String[] modname = BiomeArray[p].getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
+			if(BiomeArray[p] == null)
 			{
-				BiomeSaveConfig(BiomeArray[p], "Defaults");
+				continue;
 			}
-			else
-			{
-				BiomeSaveConfig(BiomeArray[p], modname[0]);
-			}
+			
+			BiomeSaveConfig(BiomeArray[p], "Biomes");
 		}
 	}
 	

@@ -7,8 +7,10 @@ import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 import java.util.Random;
+import enviromine.core.EM_Settings;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,6 +21,12 @@ public class BlockFireTorch extends BlockTorch
 	{
 		super();
 	}
+	
+	@Override
+    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
+    {
+		return Item.getItemFromBlock(Blocks.torch);
+    }
 
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
@@ -32,6 +40,10 @@ public class BlockFireTorch extends BlockTorch
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
+		if(!EM_Settings.torchesBurn)
+		{
+			world.setBlock(x, y, z, Blocks.torch, world.getBlockMetadata(x, y, z), 2);
+		}
 		super.updateTick(world, x, y, z, rand);
 
         world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world) + rand.nextInt(10));

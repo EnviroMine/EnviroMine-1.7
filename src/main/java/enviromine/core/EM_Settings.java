@@ -123,6 +123,7 @@ public class EM_Settings
 	public static boolean minimalHud;
 	public static boolean limitCauldron;
 	public static boolean allowTinting;
+	public static boolean torchesBurn;
 	
 	public static int caveDimID = -3;
 	public static int caveBiomeID = 23;

@@ -138,6 +138,7 @@ public class EM_ConfigHandler
 		EM_Settings.villageAssist = config.get(Configuration.CATEGORY_GENERAL, "Enable villager assistance", true).getBoolean(true);
 		EM_Settings.foodSpoiling = config.get(Configuration.CATEGORY_GENERAL, "Enable food spoiling", true).getBoolean(true);
 		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7D).getDouble(7D);
+		EM_Settings.torchesBurn = config.get(Configuration.CATEGORY_GENERAL, "Torches burn", true).getBoolean(true);
 		
 		// Physics Settings
 		String PhySetCat = "Physics";
@@ -471,7 +472,7 @@ public class EM_ConfigHandler
 			} else
 			{
 
-				config.addCustomCategoryComment(nameULCat, classname + ":" + name);
+				//config.addCustomCategoryComment(nameULCat, classname + ":" + name);
 					int metadata = (Integer)data[1];
 					BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
 				returnValue = "Saved";

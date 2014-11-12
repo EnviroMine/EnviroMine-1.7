@@ -59,13 +59,13 @@ public class EM_Gui_GuiSettings extends GuiScreen
 
 		tempScalebutton.displayString = I18n.format("options.enviromine.tempScale", new Object[0]) + ": " + I18n.format("options.enviromine.tempScale."+ (UI_Settings.useFarenheit == true ? "f" : "c" ), new Object[0]);
 			this.buttonList.add(tempScalebutton);
-		showstatusbutton.displayString =I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine.status."+ (UI_Settings.ShowText == true || UI_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
+		showstatusbutton.displayString =I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.ShowText == true || UI_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showstatusbutton);
-		showdebugbutton.displayString =I18n.format("options.enviromine.debug", new Object[0]) + ": " + I18n.format("options.enviromine.debug."+ (UI_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
+		showdebugbutton.displayString =I18n.format("options.enviromine.debug", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showdebugbutton);
-		showiconsbutton.displayString =I18n.format("options.enviromine.showIcons", new Object[0]) + ": " + I18n.format("options.enviromine.showIcons."+ (UI_Settings.ShowGuiIcons == true || UI_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
+		showiconsbutton.displayString =I18n.format("options.enviromine.showIcons", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.ShowGuiIcons == true || UI_Settings.minimalHud == true ? "visible" : "hidden" ), new Object[0]);
 			this.buttonList.add(showiconsbutton);
-		minbarsbutton.displayString = I18n.format("options.enviromine.minBars", new Object[0]) + ": " + I18n.format("options.enviromine.minBars."+ (UI_Settings.minimalHud == true ? "on" : "off" ), new Object[0]);
+		minbarsbutton.displayString = I18n.format("options.enviromine.minBars", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.minimalHud == true ? "on" : "off" ), new Object[0]);
 			this.buttonList.add(minbarsbutton);
 	
 			this.buttonList.add(new GuiButton(157, this.width / 2 + 2, this.height / 6 + 30 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.barPos") +"..."));
@@ -108,7 +108,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
 					break;
 				case 150:
 					UI_Settings.ShowDebug = !UI_Settings.ShowDebug; 
-						par1GuiButton.displayString =I18n.format("options.enviromine.debug", new Object[0]) + ": " + I18n.format("options.enviromine.debug."+ (UI_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
+						par1GuiButton.displayString =I18n.format("options.enviromine.debug", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.ShowDebug == true ? "visible" : "hidden" ), new Object[0]);
 					break;
 				case 151:
 					UI_Settings.useFarenheit = !UI_Settings.useFarenheit;
@@ -116,27 +116,27 @@ public class EM_Gui_GuiSettings extends GuiScreen
 					break;
 				case 152:
 					UI_Settings.insaneParticals = !UI_Settings.insaneParticals;
-						par1GuiButton.displayString = I18n.format("options.enviromine.insaneParticles", new Object[0]) + ": " + I18n.format("options.enviromine.insaneParticles."+ (UI_Settings.insaneParticals == true ? "on" : "off" ), new Object[0]);
+						par1GuiButton.displayString = I18n.format("options.enviromine.insaneParticles", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.insaneParticals == true ? "on" : "off" ), new Object[0]);
 					break;
 				case 154:
 					UI_Settings.ShowGuiIcons = !UI_Settings.ShowGuiIcons;
-						par1GuiButton.displayString =I18n.format("options.enviromine.showIcons", new Object[0]) + ": " + I18n.format("options.enviromine.showIcons."+ (UI_Settings.ShowGuiIcons == true ? "visible" : "hidden" ), new Object[0]);
+						par1GuiButton.displayString =I18n.format("options.enviromine.showIcons", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.ShowGuiIcons == true ? "visible" : "hidden" ), new Object[0]);
 					break;
 				case 156:
 					UI_Settings.ShowText = !UI_Settings.ShowText;
-						par1GuiButton.displayString =I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine.status."+ (UI_Settings.ShowText == true ? "visible" : "hidden" ), new Object[0]);
+						par1GuiButton.displayString =I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.ShowText == true ? "visible" : "hidden" ), new Object[0]);
 					break;
 				case 157:
 					this.mc.displayGuiScreen(new EM_Gui_Bars(this));
 					break;
 				case 158:
 					UI_Settings.minimalHud = !UI_Settings.minimalHud;
-						par1GuiButton.displayString = I18n.format("options.enviromine.minBars", new Object[0]) + ": " + I18n.format("options.enviromine.minBars."+ (UI_Settings.minimalHud == true ? "on" : "off" ), new Object[0]);
+						par1GuiButton.displayString = I18n.format("options.enviromine.minBars", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.minimalHud == true ? "on" : "off" ), new Object[0]);
 					this.mc.displayGuiScreen(new EM_Gui_GuiSettings(this.parentGuiScreen));	
 					break;
 				case 159:
 					UI_Settings.sweatParticals = !UI_Settings.sweatParticals;
-						par1GuiButton.displayString = I18n.format("options.enviromine.sweatParticles", new Object[0]) + ": " + I18n.format("options.enviromine.sweatParticles."+ (UI_Settings.sweatParticals == true ? "on" : "off" ), new Object[0]);
+						par1GuiButton.displayString = I18n.format("options.enviromine.sweatParticles", new Object[0]) + ": " + I18n.format("options.enviromine."+ (UI_Settings.sweatParticals == true ? "on" : "off" ), new Object[0]);
 					break;
 			}
 		}

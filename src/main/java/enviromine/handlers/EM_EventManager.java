@@ -45,6 +45,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
@@ -1433,17 +1434,10 @@ public class EM_EventManager
 	}
 	
 	/* Client only events */
-	@SideOnly(Side.CLIENT)
-	ModelCamelPack model;
-	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
 	{
-		if (model == null) {
-			model = new ModelCamelPack();
-		}
-		
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
 			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
@@ -1464,18 +1458,14 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderPlayerEvent.Post event)
+	public void onRender(RenderLivingEvent.Post event)
 	{
-		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
+		ItemStack plate = event.entity.getEquipmentInSlot(3);
 		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))) {
-			//model = new ModelCamelPack();
-			
 			GL11.glPushMatrix();
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			GL11.glRotatef(180F + event.entityLiving.renderYawOffset, 0F, 1F, 0F);
-			GL11.glEnable(GL11.GL_BLEND);
-			model.render(event.entity, 0, 0, 0, 0, 0, .06325f);
-			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glRotatef(180F + event.entity.renderYawOffset, 0F, 1F, 0F);
+			ModelCamelPack.RenderPack(event.entity, 0, 0, 0, 0, 0, .06325f);
 			GL11.glPopMatrix();
 		}
 	}

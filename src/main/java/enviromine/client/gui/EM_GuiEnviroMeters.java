@@ -121,7 +121,7 @@ public class EM_GuiEnviroMeters extends Gui
 		GL11.glPushMatrix(); // Isolate this GUI from the vanilla GUI
 		float scale = UI_Settings.guiScale;
 		
-		double translate = new BigDecimal(String.valueOf(1 / scale)).setScale(3, RoundingMode.HALF_UP).doubleValue();
+		double translate = new BigDecimal(String.valueOf(1F / scale)).setScale(3, RoundingMode.HALF_UP).doubleValue();
 		
 		GL11.glScalef((float)scale, (float)scale, (float)scale);
 		

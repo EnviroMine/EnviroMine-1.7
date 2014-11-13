@@ -8,11 +8,11 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBurningCoal extends TileEntity
 {
-	public int fuel = 1000;
+	public int fuel = 100000;
 	
 	public TileEntityBurningCoal()
 	{
-		this.fuel = 1000;
+		this.fuel = 100000;
 	}
 	
 	@Override

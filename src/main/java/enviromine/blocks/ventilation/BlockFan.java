@@ -68,4 +68,10 @@ public class BlockFan extends BlockVentBase
 	{
 		return new TileEntityFan();
 	}
+
+	@Override
+	public void updateBounds(TileEntity te)
+	{
+		//TODO
+	}
 }

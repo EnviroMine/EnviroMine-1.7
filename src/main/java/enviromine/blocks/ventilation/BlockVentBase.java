@@ -7,11 +7,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import enviromine.blocks.tiles.ventilation.IVentTileBase;
 import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
 import enviromine.util.Coords;
+
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public abstract class BlockVentBase extends Block implements ITileEntityProvider
 {
@@ -43,13 +49,30 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 		
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			Coords tmp = coords.getCoordsInDir(dir);
-			if (tmp.getBlock() instanceof BlockVentBase) {
-				TileEntityVentBase tevb = ((TileEntityVentBase)tmp.getTileEntity());
+			Coords pos = coords.getCoordsInDir(dir);
+			if (pos.hasTileEntity())
+			{
+				TileEntity tileEntity = pos.getTileEntity();
+				
+				IVentTileBase ivtb = null;
+				
+				if (tileEntity instanceof IVentTileBase) {
+					ivtb = (IVentTileBase)tileEntity;
+				} else if (tileEntity instanceof TileMultipart) {
+					TMultiPart part = ((TileMultipart)tileEntity).jPartList().get(0);
+					if (part instanceof IVentTileBase) {
+						ivtb = (IVentTileBase)part;
+					}
+				}
+				
+				if (ivtb == null) {
+					continue;
+				}
+				
 				if (removed) {
-					tevb.calculateConnections(dir);
+					ivtb.calculateConnections(dir);
 				} else {
-					tevb.calculateConnections();
+					ivtb.calculateConnections();
 				}
 			}
 		}
@@ -64,17 +87,18 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 	}
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		this.onChanged(true, new Coords(world, x, y, z));
-		super.breakBlock(world, x, y, z, block, meta);
+		((TileEntityVentBase)new Coords(world, x, y, z).getTileEntity()).calculateConnections();
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
 	{
-		//((TileEntityVentBase)new Coords(world, x, y, z).getTileEntity()).calculateConnections();
+		this.updateBounds(blockAccess.getTileEntity(x, y, z));
 	}
+	
+	public abstract void updateBounds(TileEntity te);
 	
 	public int getFacing(Coords coords, EntityLivingBase entity)
 	{

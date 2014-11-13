@@ -56,6 +56,10 @@ public class Coords
 	public void setBlockWithMetadata(Block block, int meta) {
 		this.world.setBlock(this.x, this.y, this.z, block, meta, 2);
 	}
+	/** */
+	public boolean isBlockSideSolid(ForgeDirection dir) {
+		return this.getBlock().isSideSolid(this.world, this.x, this.y, this.z, dir);
+	}
 	/** Sets the block at this location to air */
 	public void setAir() {
 		this.world.setBlockToAir(this.x, this.y, this.z);
@@ -84,24 +88,21 @@ public class Coords
 		te.validate();
 		return te;
 	}
+	/** Marks the block as requiring an update */
+	public void markForUpdate(boolean requireServer) {
+		if (!requireServer || !this.world.isRemote) {
+			this.world.markBlockForUpdate(this.x, this.y, this.z);
+		}
+	}
 	
-	/** 0 == y--<br>
-	 * 1 == y++<br>
-	 * 2 == z--<br>
-	 * 3 == z++<br>
-	 * 4 == x--<br>
-	 * 5 == x++<br>
-	 */
 	public Coords getCoordsInDir(ForgeDirection dir)
 	{
 		return new Coords(this.world, x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
 	}
 	
-	/**  */
 	public Coords getCoordsOppositeDir(ForgeDirection dir)
 	{
-		dir = dir.getOpposite();
-		return new Coords(this.world, x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
+		return this.getCoordsInDir(dir.getOpposite());
 	}
 	
 	@Override

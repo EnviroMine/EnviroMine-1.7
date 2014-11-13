@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
+import enviromine.blocks.tiles.ventilation.IVentTileBase;
 
 public class ModelVentSmall extends ModelBase
 {
@@ -57,7 +57,7 @@ public class ModelVentSmall extends ModelBase
 		}
 	}
 	
-	public void renderAll(TileEntityVentSmall te, float scale)
+	public void renderAll(IVentTileBase te, float scale)
 	{
 		//this.initModel();
 		

@@ -11,11 +11,13 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.ventilation.BlockVentBase;
 import enviromine.util.Coords;
 import enviromine.util.Utils;
 
-public class TileEntityVentBase extends TileEntity
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
+
+public class TileEntityVentBase extends TileEntity implements IVentTileBase
 {
 	/** The air temperature in this pipe */
 	protected int airTemp = 12;
@@ -29,7 +31,7 @@ public class TileEntityVentBase extends TileEntity
 	protected float repair;
 	
 	/** The sides that are connected to other pipes */
-	private ForgeDirection[] connections;
+	private ForgeDirection[] connections = new ForgeDirection[0];
 	
 	@Override
 	public void updateEntity()
@@ -37,31 +39,31 @@ public class TileEntityVentBase extends TileEntity
 		super.updateEntity();
 	}
 	
+	@Override
 	public int getTemp()
 	{
 		return this.airTemp;
 	}
 	
+	@Override
 	public Coords getCoords()
 	{
 		return new Coords(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 	}
 	
+	@Override
 	public ForgeDirection[] getConnections()
 	{
-		if (this.connections != null)
-		{
-			return this.connections;
-		}
-		
-		return new ForgeDirection[0];
+		return this.connections;
 	}
 	
+	@Override
 	public void calculateConnections()
 	{
 		this.calculateConnections(ForgeDirection.UNKNOWN);
 	}
 	
+	@Override
 	public void calculateConnections(ForgeDirection removeDir)
 	{
 		Coords coords = this.getCoords();
@@ -70,23 +72,37 @@ public class TileEntityVentBase extends TileEntity
 		
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (dir != removeDir.getOpposite() && coords.getCoordsInDir(dir).getBlock() instanceof BlockVentBase)
+			Coords pos = coords.getCoordsInDir(dir);
+			
+			if (dir == removeDir.getOpposite() || coords.isBlockSideSolid(dir) || pos.isBlockSideSolid(dir.getOpposite()))
 			{
-				this.connections = Utils.append(this.connections, dir);
+				continue;
+			}
+			
+			if (pos.hasTileEntity())
+			{
+				TileEntity tileEntity = pos.getTileEntity();
+				
+				if (tileEntity instanceof TileEntityVentBase) {
+					this.connections = Utils.append(this.connections, dir);
+				} else if (tileEntity instanceof TileMultipart) {
+					TMultiPart part = ((TileMultipart)tileEntity).jPartList().get(0);
+					if (part instanceof IVentTileBase) {
+						this.connections = Utils.append(this.connections, dir);
+					}
+				}
 			}
 		}
 		
-		if (!this.worldObj.isRemote) {
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
+		coords.markForUpdate(true);
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbt);
+		super.readFromNBT(tag);
 		
-		int[] conns = nbt.getIntArray("Connections");
+		int[] conns = tag.getIntArray("Connections");
 		
 		this.connections = new ForgeDirection[conns.length];
 		
@@ -94,12 +110,18 @@ public class TileEntityVentBase extends TileEntity
 		{
 			this.connections[i] = ForgeDirection.getOrientation(conns[i]);
 		}
+		
+		this.airSpeed = tag.getFloat("speed");
+		this.airTemp = tag.getInteger("temp");
+		this.insulation = tag.getFloat("insulation");
+		this.leakageMultiplier = tag.getFloat("leakage");
+		this.repair = tag.getFloat("repair");
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbt);
+		super.writeToNBT(tag);
 		
 		int[] conns = new int[this.connections.length];
 		
@@ -108,7 +130,13 @@ public class TileEntityVentBase extends TileEntity
 			conns[i] = this.connections[i].ordinal();
 		}
 		
-		nbt.setIntArray("Connections", conns);
+		tag.setIntArray("Connections", conns);
+		
+		tag.setFloat("speed", this.airSpeed);
+		tag.setInteger("temp", this.airTemp);
+		tag.setFloat("insulation", this.insulation);
+		tag.setFloat("leakage", this.leakageMultiplier);
+		tag.setFloat("repair", this.repair);
 	}
 	
 	@Override

@@ -7,11 +7,14 @@ import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import enviromine.blocks.tiles.ventilation.IVentTileBase;
 import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
 import enviromine.client.model.tileentity.ventilation.ModelVentSmall;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import codechicken.multipart.TileMultipart;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityVentSmallRenderer extends TileEntitySpecialRenderer
@@ -22,7 +25,14 @@ public class TileEntityVentSmallRenderer extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale)
 	{
-		TileEntityVentSmall te = (TileEntityVentSmall)tileEntity;
+		IVentTileBase te;
+		if (tileEntity instanceof TileEntityVentSmall) {
+			te = (IVentTileBase)tileEntity;
+		} else if (tileEntity instanceof TileMultipart) {
+			te = (IVentTileBase)((TileMultipart)tileEntity).jPartList().get(0);
+		} else {
+			return;
+		}
 		
 		int i = 0;
 		

@@ -10,9 +10,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -29,6 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
+import enviromine.blocks.ventilation.multipart.PartRegister;
 import enviromine.core.commands.CommandPhysics;
 import enviromine.core.commands.EnviroCommand;
 import enviromine.core.proxies.EM_CommonProxy;
@@ -46,7 +45,10 @@ import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
 import enviromine.world.features.mineshaft.EM_VillageMineshaft;
 
-@Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version)
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
+@Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version, dependencies = "after:ForgeMultipart")
 public class EnviroMine
 {
 	public static Logger logger;
@@ -92,6 +94,11 @@ public class EnviroMine
 
 		
 		GameRegistry.registerWorldGenerator(new WorldFeatureGenerator(), 20);
+		
+		if (Loader.isModLoaded("ForgeMultipart"))
+		{
+			new PartRegister().init();
+		}
 	}
 	
 	@EventHandler

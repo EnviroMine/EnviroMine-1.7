@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.tiles.ventilation.IVentTileBase;
+import enviromine.blocks.ventilation.VentDataHandler;
 
 public class ModelVentSmall extends ModelBase
 {
@@ -57,11 +57,11 @@ public class ModelVentSmall extends ModelBase
 		}
 	}
 	
-	public void renderAll(IVentTileBase te, float scale)
+	public void renderAll(VentDataHandler handler, float scale)
 	{
 		//this.initModel();
 		
-		ForgeDirection[] connections = te.getConnections();
+		ForgeDirection[] connections = handler.getConnections();
 		
 		if (connections.length < 6) {
 			this.pipeBox.render(scale); //Don't bother to render if covered up by extensions

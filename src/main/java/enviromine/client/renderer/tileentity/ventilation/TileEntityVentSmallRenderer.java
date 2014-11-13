@@ -7,8 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import enviromine.blocks.tiles.ventilation.IVentTileBase;
 import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
+import enviromine.blocks.ventilation.VentDataHandler;
+import enviromine.blocks.ventilation.multipart.VentBasePart;
 import enviromine.client.model.tileentity.ventilation.ModelVentSmall;
 
 import org.lwjgl.opengl.GL11;
@@ -25,21 +26,22 @@ public class TileEntityVentSmallRenderer extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale)
 	{
-		IVentTileBase te;
+		VentDataHandler handler;
 		if (tileEntity instanceof TileEntityVentSmall) {
-			te = (IVentTileBase)tileEntity;
+			handler = ((TileEntityVentSmall)tileEntity).getHandler();
 		} else if (tileEntity instanceof TileMultipart) {
-			te = (IVentTileBase)((TileMultipart)tileEntity).jPartList().get(0);
+			handler = ((VentBasePart)((TileMultipart)tileEntity).jPartList().get(0)).getHandler();
 		} else {
 			return;
 		}
 		
+		/*
 		int i = 0;
-		
-		if (te.hasWorldObj())
+		if (handler.hasWorldObj())
         {
-            i = te.getBlockMetadata();
+            i = handler.getBlockMetadata();
         }
+		*/
 		
 		this.bindTexture(texture);
 		
@@ -50,12 +52,12 @@ public class TileEntityVentSmallRenderer extends TileEntitySpecialRenderer
 		GL11.glScalef(1.0F, -1.0F, -1.0F);
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 		
-		short rotateX = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0))); //TODO
+		//short rotateX = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0))); //TODO
+		//GL11.glRotatef((float)rotateX, 0.0F, 1.0F, 0.0F);
 		
-		GL11.glRotatef((float)rotateX, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		
-		this.model.renderAll(te, 0.0625F);
+		this.model.renderAll(handler, 0.0625F);
 		
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		GL11.glPopMatrix();

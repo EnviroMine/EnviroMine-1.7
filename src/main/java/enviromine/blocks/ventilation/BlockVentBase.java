@@ -12,8 +12,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.tiles.ventilation.IVentTileBase;
 import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
+import enviromine.blocks.ventilation.multipart.VentBasePart;
 import enviromine.util.Coords;
 
 import codechicken.multipart.TMultiPart;
@@ -45,7 +45,7 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 	protected void onChanged(boolean removed, Coords coords)
 	{
 		TileEntityVentBase te = (TileEntityVentBase)coords.getTileEntity();
-		te.calculateConnections();
+		te.getHandler().calculateConnections();
 		
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
@@ -54,25 +54,25 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 			{
 				TileEntity tileEntity = pos.getTileEntity();
 				
-				IVentTileBase ivtb = null;
+				VentDataHandler handler = null;
 				
-				if (tileEntity instanceof IVentTileBase) {
-					ivtb = (IVentTileBase)tileEntity;
+				if (tileEntity instanceof TileEntityVentBase) {
+					handler = ((TileEntityVentBase)tileEntity).getHandler();
 				} else if (tileEntity instanceof TileMultipart) {
 					TMultiPart part = ((TileMultipart)tileEntity).jPartList().get(0);
-					if (part instanceof IVentTileBase) {
-						ivtb = (IVentTileBase)part;
+					if (part instanceof VentBasePart) {
+						handler = ((VentBasePart)part).getHandler();
 					}
 				}
 				
-				if (ivtb == null) {
+				if (handler == null) {
 					continue;
 				}
 				
 				if (removed) {
-					ivtb.calculateConnections(dir);
+					handler.calculateConnections(dir);
 				} else {
-					ivtb.calculateConnections();
+					handler.calculateConnections();
 				}
 			}
 		}
@@ -89,7 +89,7 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		((TileEntityVentBase)new Coords(world, x, y, z).getTileEntity()).calculateConnections();
+		((TileEntityVentBase)new Coords(world, x, y, z).getTileEntity()).getHandler().calculateConnections();
 	}
 	
 	@Override

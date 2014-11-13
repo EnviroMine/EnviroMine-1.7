@@ -23,7 +23,7 @@ public class BlockVentSmall extends BlockVentBase
 	@Override
 	public void updateBounds(TileEntity te)
 	{
-		ForgeDirection[] dirs = ((TileEntityVentSmall)te).getConnections();
+		ForgeDirection[] dirs = ((TileEntityVentSmall)te).getHandler().getConnections();
 		
 		boolean up = false;
 		boolean down = false;

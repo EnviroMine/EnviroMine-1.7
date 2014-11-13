@@ -11,13 +11,13 @@ public class TileEntityFan extends TileEntityVentBase
 	@Override
 	public void updateEntity()
 	{
-		this.airSpeed = 1;
+		this.handler.airSpeed = 1;
 		super.updateEntity();
 		
 		Coords intake = this.getCoords().getCoordsOppositeDir(ForgeDirection.getOrientation(facing));
 		if (intake.hasTileEntity() && intake.getTileEntity() instanceof TileEntityVentBase)
 		{
-			this.airTemp = ((TileEntityVentBase)intake.getTileEntity()).getTemp();
+			this.handler.airTemp = ((TileEntityVentBase)intake.getTileEntity()).getHandler().airTemp;
 		}
 	}
 }

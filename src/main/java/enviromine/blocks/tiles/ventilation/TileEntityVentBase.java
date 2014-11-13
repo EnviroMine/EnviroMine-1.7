@@ -9,29 +9,23 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.world.World;
 
+import enviromine.blocks.ventilation.VentDataHandler;
 import enviromine.util.Coords;
-import enviromine.util.Utils;
 
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
-
-public class TileEntityVentBase extends TileEntity implements IVentTileBase
+public class TileEntityVentBase extends TileEntity implements IPosProvider
 {
-	/** The air temperature in this pipe */
-	protected int airTemp = 12;
-	/** The air speed in this pipe (0-1) */
-	protected float airSpeed = 0F;
-	/** The insulation of this pipe (0-1)<br>0 will be instantly set to the ambient temp<br>1 will never be affected by external forces */
-	protected float insulation = 0F;
-	/** The percentage of air that will leak out every tick (0-1)<br>0 is no leakage<br>1 is full leakage - none transmitted */
-	protected float leakageMultiplier = 0F;
-	/** The state this pipe is in (0-1)<br>0 is completely broken, and will be removed next tick<br>1 is fully repaired */
-	protected float repair;
+	protected VentDataHandler handler;
 	
-	/** The sides that are connected to other pipes */
-	private ForgeDirection[] connections = new ForgeDirection[0];
+	@Override
+	public void setWorldObj(World world)
+	{
+		super.setWorldObj(world);
+		if (this.handler == null) {
+			this.handler = new VentDataHandler(this);
+		}
+	}
 	
 	@Override
 	public void updateEntity()
@@ -39,10 +33,9 @@ public class TileEntityVentBase extends TileEntity implements IVentTileBase
 		super.updateEntity();
 	}
 	
-	@Override
-	public int getTemp()
+	public VentDataHandler getHandler()
 	{
-		return this.airTemp;
+		return this.handler;
 	}
 	
 	@Override
@@ -52,70 +45,11 @@ public class TileEntityVentBase extends TileEntity implements IVentTileBase
 	}
 	
 	@Override
-	public ForgeDirection[] getConnections()
-	{
-		return this.connections;
-	}
-	
-	@Override
-	public void calculateConnections()
-	{
-		this.calculateConnections(ForgeDirection.UNKNOWN);
-	}
-	
-	@Override
-	public void calculateConnections(ForgeDirection removeDir)
-	{
-		Coords coords = this.getCoords();
-		
-		this.connections = new ForgeDirection[0];
-		
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			Coords pos = coords.getCoordsInDir(dir);
-			
-			if (dir == removeDir.getOpposite() || coords.isBlockSideSolid(dir) || pos.isBlockSideSolid(dir.getOpposite()))
-			{
-				continue;
-			}
-			
-			if (pos.hasTileEntity())
-			{
-				TileEntity tileEntity = pos.getTileEntity();
-				
-				if (tileEntity instanceof TileEntityVentBase) {
-					this.connections = Utils.append(this.connections, dir);
-				} else if (tileEntity instanceof TileMultipart) {
-					TMultiPart part = ((TileMultipart)tileEntity).jPartList().get(0);
-					if (part instanceof IVentTileBase) {
-						this.connections = Utils.append(this.connections, dir);
-					}
-				}
-			}
-		}
-		
-		coords.markForUpdate(true);
-	}
-	
-	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
 		
-		int[] conns = tag.getIntArray("Connections");
-		
-		this.connections = new ForgeDirection[conns.length];
-		
-		for (int i = 0; i < conns.length; i++)
-		{
-			this.connections[i] = ForgeDirection.getOrientation(conns[i]);
-		}
-		
-		this.airSpeed = tag.getFloat("speed");
-		this.airTemp = tag.getInteger("temp");
-		this.insulation = tag.getFloat("insulation");
-		this.leakageMultiplier = tag.getFloat("leakage");
-		this.repair = tag.getFloat("repair");
+		this.handler.load(tag.getCompoundTag("TileEntityData"));
 	}
 	
 	@Override
@@ -123,20 +57,7 @@ public class TileEntityVentBase extends TileEntity implements IVentTileBase
 	{
 		super.writeToNBT(tag);
 		
-		int[] conns = new int[this.connections.length];
-		
-		for (int i = 0; i < connections.length; i++)
-		{
-			conns[i] = this.connections[i].ordinal();
-		}
-		
-		tag.setIntArray("Connections", conns);
-		
-		tag.setFloat("speed", this.airSpeed);
-		tag.setInteger("temp", this.airTemp);
-		tag.setFloat("insulation", this.insulation);
-		tag.setFloat("leakage", this.leakageMultiplier);
-		tag.setFloat("repair", this.repair);
+		tag.setTag("TileEntityData", this.handler.save());
 	}
 	
 	@Override

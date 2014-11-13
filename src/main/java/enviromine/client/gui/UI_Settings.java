@@ -27,7 +27,7 @@ public class UI_Settings {
 	public static boolean minimalHud =  false;
 	public static int screenWidth;
 	public static int screenHeight;
-	public static boolean overlay;
+	public static boolean overlay = true;
 	
 	public static void writeToNBT(NBTTagCompound nbt) 
 	{
@@ -47,6 +47,7 @@ public class UI_Settings {
     	nbt.setInteger("breathPause", breathPause);
     	nbt.setFloat("breathVolume", breathVolume);
     	nbt.setBoolean("minimalHud",minimalHud); 
+    	nbt.setBoolean("overlay", overlay);
 
     	
 		// TODO Auto-generated method stub
@@ -71,5 +72,6 @@ public class UI_Settings {
 		breathPause = nbt.getInteger("breathPause");
 		breathVolume = nbt.getFloat("breathVolume");
 		minimalHud = nbt.getBoolean("minimalHud"); 
+		overlay = nbt.getBoolean("overlay");
 	}
 }

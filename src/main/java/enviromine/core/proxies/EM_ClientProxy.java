@@ -83,7 +83,12 @@ public class EM_ClientProxy extends EM_CommonProxy
 	{
 		super.init(event);
 		EnviroKeybinds.Init();
-		SaveController.saveConfig("UI_Settings");
+        
+		if (!SaveController.loadConfig(SaveController.UISettingsData)) 
+        {
+        	SaveController.saveConfig(SaveController.UISettingsData);	
+        }
+		
 			
 		initRenderers();
 	}

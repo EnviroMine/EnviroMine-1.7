@@ -1,6 +1,8 @@
 package enviromine.handlers;
 
+import org.apache.logging.log4j.Level;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.items.RottenFood;
 import enviromine.trackers.properties.RotProperties;
 import net.minecraft.init.Items;
@@ -72,13 +74,15 @@ public class RotHandler
 	
 	public static void rotInvo(World world, IInventory inventory)
 	{
-		if(inventory == null || inventory.getSizeInventory() <= 0)
+		if(inventory == null || inventory.getSizeInventory() <= 0 || world.isRemote)
 		{
 			return;
 		}
 		
 		boolean flag = false;
 		
+		try
+		{
 		for(int i = 0; i < inventory.getSizeInventory(); i++)
 		{
 			ItemStack slotItem = inventory.getStackInSlot(i);
@@ -98,6 +102,11 @@ public class RotHandler
 		if(flag && inventory instanceof TileEntity)
 		{
 			((TileEntity)inventory).markDirty();
+		}
+		} catch(Exception e)
+		{
+			EnviroMine.logger.log(Level.ERROR, "An error occured while attempting to rot inventory:", e);
+			return;
 		}
 	}
 }

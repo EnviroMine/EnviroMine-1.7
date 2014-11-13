@@ -139,6 +139,7 @@ public class EM_ConfigHandler
 		EM_Settings.foodSpoiling = config.get(Configuration.CATEGORY_GENERAL, "Enable food spoiling", true).getBoolean(true);
 		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7D).getDouble(7D);
 		EM_Settings.torchesBurn = config.get(Configuration.CATEGORY_GENERAL, "Torches burn", true).getBoolean(true);
+		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
 		
 		// Physics Settings
 		String PhySetCat = "Physics";

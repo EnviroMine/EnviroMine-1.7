@@ -69,6 +69,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
@@ -82,6 +83,7 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.GasBuffer;
 import enviromine.network.packet.PacketAutoOverride;
+import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.properties.BiomeProperties;
@@ -427,6 +429,12 @@ public class EM_EventManager
 					fillBottle(event.entityPlayer.worldObj, event.entityPlayer, event.x, event.y, event.z, item, event);
 				}
 			}
+		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null)
+		{
+			NBTTagCompound pData = new NBTTagCompound();
+			pData.setInteger("id", 1);
+			pData.setString("player", event.entityPlayer.getCommandSenderName());
+			EnviroMine.instance.network.sendToServer(new PacketEnviroMine(pData));
 		}
 	}
 	
@@ -581,6 +589,9 @@ public class EM_EventManager
 					if(isValidCauldron)
 					{
 						player.worldObj.setBlockMetadataWithNotify(i, j, k, player.worldObj.getBlockMetadata(i, j, k) - 1, 2);
+					} else if(EM_Settings.finiteWater)
+					{
+						player.worldObj.setBlock(i, j, k, Blocks.flowing_water, player.worldObj.getBlockMetadata(i, j, k) + 1, 2);
 					}
 					
 					--item.stackSize;
@@ -595,8 +606,6 @@ public class EM_EventManager
                     {
                         player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
                     }
-
-                    
 					
 					event.setCanceled(true);
 				}
@@ -608,6 +617,10 @@ public class EM_EventManager
 	
 	public static void drinkWater(EntityPlayer entityPlayer, PlayerInteractEvent event)
 	{
+		if(entityPlayer.isInsideOfMaterial(Material.water))
+		{
+			return;
+		}
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entityPlayer);
 		MovingObjectPosition mop = getMovingObjectPositionFromPlayer(entityPlayer.worldObj, entityPlayer, true);
 		
@@ -710,11 +723,17 @@ public class EM_EventManager
 						if(isValidCauldron)
 						{
 							entityPlayer.worldObj.setBlockMetadataWithNotify(i, j, k, entityPlayer.worldObj.getBlockMetadata(i, j, k) - 1, 2);
+						} else if(EM_Settings.finiteWater)
+						{
+							entityPlayer.worldObj.setBlock(i, j, k, Blocks.flowing_water, entityPlayer.worldObj.getBlockMetadata(i, j, k) + 1, 2);
 						}
 						
 						entityPlayer.worldObj.playSoundAtEntity(entityPlayer, "random.drink", 1.0F, 1.0F);
 						
-						event.setCanceled(true);
+						if(event != null)
+						{
+							event.setCanceled(true);
+						}
 					}
 				}
 			}

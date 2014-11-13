@@ -97,7 +97,14 @@ public class EM_StatusManager
 	
 	public static void syncMultiplayerTracker(EnviroDataTracker tracker)
 	{
-		String dataString = "";
+		if(!(tracker.trackedEntity instanceof EntityPlayer))
+		{
+			return;
+		}
+		
+		// String packets Depreciated!
+		/*String dataString = "";
+		
 		if(tracker.trackedEntity instanceof EntityPlayer)
 		{
 			dataString = ("ID:0," + tracker.trackedEntity.getCommandSenderName() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
@@ -105,9 +112,18 @@ public class EM_StatusManager
 		{
 			return;
 			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
-		}
+		}*/
+		tracker.fixFloatinfPointErrors(); // Shortens data as much as possible before sending
+		NBTTagCompound pData = new NBTTagCompound();
+		pData.setInteger("id", 0);
+		pData.setString("player", tracker.trackedEntity.getCommandSenderName());
+		pData.setFloat("airQuality", tracker.airQuality);
+		pData.setFloat("bodyTemp", tracker.bodyTemp);
+		pData.setFloat("hydration", tracker.hydration);
+		pData.setFloat("sanity", tracker.sanity);
+		pData.setFloat("airTemp", tracker.airTemp);
 		
-		EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(dataString), new TargetPoint(tracker.trackedEntity.worldObj.provider.dimensionId, tracker.trackedEntity.posX, tracker.trackedEntity.posY, tracker.trackedEntity.posZ, 128D));
+		EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(tracker.trackedEntity.worldObj.provider.dimensionId, tracker.trackedEntity.posX, tracker.trackedEntity.posY, tracker.trackedEntity.posZ, 128D));
 	}
 	
 	public static EnviroDataTracker lookupTracker(EntityLivingBase entity)

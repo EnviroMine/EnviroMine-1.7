@@ -57,21 +57,21 @@ public class UI_Settings {
 	public static void readFromNBT(NBTTagCompound nbt)
 	{
 	
-		ShowGuiIcons = nbt.getBoolean("ShowGuiIcons");
-		guiScale = nbt.getFloat("guiScale");
-		sweatParticals = nbt.getBoolean("sweatParticals");
-		insaneParticals = nbt.getBoolean("insaneParticals");
-		useFarenheit = nbt.getBoolean("useFarenheit");
-		heatBarPos = nbt.getString("heatBarPos");
-		waterBarPos = nbt.getString("waterBarPos");
-		sanityBarPos = nbt.getString("sanityBarPos");
-		oxygenBarPos = nbt.getString("oxygenBarPos"); 
-		ShowText = nbt.getBoolean("ShowText");
-		ShowDebug = nbt.getBoolean("ShowDebug");
-		breathSound = nbt.getBoolean("breathSound");
-		breathPause = nbt.getInteger("breathPause");
-		breathVolume = nbt.getFloat("breathVolume");
-		minimalHud = nbt.getBoolean("minimalHud"); 
-		overlay = nbt.getBoolean("overlay");
+		ShowGuiIcons = nbt.hasKey("ShowGuiIcons") ? nbt.getBoolean("ShowGuiIcons") : ShowGuiIcons;
+		guiScale = nbt.hasKey("guiScale") ? nbt.getFloat("guiScale") : guiScale;
+		sweatParticals = nbt.hasKey("sweatParticals") ? nbt.getBoolean("sweatParticals") : sweatParticals;
+		insaneParticals = nbt.hasKey("insaneParticals") ? nbt.getBoolean("insaneParticals") : insaneParticals;
+		useFarenheit = nbt.hasKey("useFarenheit") ? nbt.getBoolean("useFarenheit") : useFarenheit;
+		heatBarPos = nbt.hasKey("heatBarPos") ? nbt.getString("heatBarPos") : heatBarPos;
+		waterBarPos = nbt.hasKey("waterBarPos") ? nbt.getString("waterBarPos") : waterBarPos;
+		sanityBarPos = nbt.hasKey("sanityBarPos") ? nbt.getString("sanityBarPos") : sanityBarPos;
+		oxygenBarPos = nbt.hasKey("oxygenBarPos") ? nbt.getString("oxygenBarPos") : oxygenBarPos; 
+		ShowText = nbt.hasKey("ShowText") ? nbt.getBoolean("ShowText") : ShowText;
+		ShowDebug = nbt.hasKey("ShowDebug") ? nbt.getBoolean("ShowDebug") : ShowDebug;
+		breathSound = nbt.hasKey("breathSound") ? nbt.getBoolean("breathSound") : breathSound;
+		breathPause = nbt.hasKey("breathPause") ? nbt.getInteger("breathPause") : breathPause;
+		breathVolume = nbt.hasKey("breathVolume") ? nbt.getFloat("breathVolume") : breathVolume;
+		minimalHud = nbt.hasKey("minimalHud") ? nbt.getBoolean("minimalHud") : minimalHud; 
+		overlay = nbt.hasKey("overlay") ? nbt.getBoolean("overlay") : overlay;
 	}
 }

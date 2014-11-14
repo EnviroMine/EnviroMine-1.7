@@ -20,9 +20,9 @@ public class VentSmallPart extends VentBasePart
 		float max = 0.876F;
 		
 		this.sidedBounds = new Cuboid6[] {
-					new Cuboid6(min , max , min , max , 1.0F, max ), //UP
-					new Cuboid6(min , 0.0F, min , max , min , max ), //DOWN
-					new Cuboid6(min , min , 0.0F, max , max , min), //NORTH
+					new Cuboid6(min , 0.0F, min , max , min , max ), //UP
+					new Cuboid6(min , max , min , max , 1.0F, max ), //DOWN
+					new Cuboid6(min , min , 0.0F, max , max , min ), //NORTH
 					new Cuboid6(min , min , max , max , max , 1.0F), //SOUTH
 					new Cuboid6(0.0F, min , min , min , max , max ), //WEST
 					new Cuboid6(max , min , min , 1.0F, max , max ), //EAST

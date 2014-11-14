@@ -122,4 +122,10 @@ public class Coords
 	public Coords copy() {
 		return new Coords(this.world, this.x, this.y, this.z);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return String.format("(%s: %s, %s, %s)", this.world.provider.dimensionId, this.x, this.y, this.z);
+	}
 }

@@ -13,11 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
-import enviromine.blocks.ventilation.multipart.VentBasePart;
 import enviromine.util.Coords;
-
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 
 public abstract class BlockVentBase extends Block implements ITileEntityProvider
 {
@@ -52,18 +48,7 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 			Coords pos = coords.getCoordsInDir(dir);
 			if (pos.hasTileEntity())
 			{
-				TileEntity tileEntity = pos.getTileEntity();
-				
-				VentDataHandler handler = null;
-				
-				if (tileEntity instanceof TileEntityVentBase) {
-					handler = ((TileEntityVentBase)tileEntity).getHandler();
-				} else if (tileEntity instanceof TileMultipart) {
-					TMultiPart part = ((TileMultipart)tileEntity).jPartList().get(0);
-					if (part instanceof VentBasePart) {
-						handler = ((VentBasePart)part).getHandler();
-					}
-				}
+				VentDataHandler handler = VentDataHandler.getHandler(pos.getTileEntity());
 				
 				if (handler == null) {
 					continue;

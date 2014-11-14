@@ -16,15 +16,12 @@ import enviromine.util.Coords;
 
 public class TileEntityVentBase extends TileEntity implements IPosProvider
 {
-	protected VentDataHandler handler;
+	protected VentDataHandler handler = new VentDataHandler(this);
 	
 	@Override
 	public void setWorldObj(World world)
 	{
 		super.setWorldObj(world);
-		if (this.handler == null) {
-			this.handler = new VentDataHandler(this);
-		}
 	}
 	
 	@Override

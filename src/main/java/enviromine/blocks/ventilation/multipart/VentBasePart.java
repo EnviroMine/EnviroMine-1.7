@@ -4,11 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.tiles.ventilation.IPosProvider;
-import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
 import enviromine.blocks.ventilation.VentDataHandler;
 import enviromine.core.EM_Settings;
 import enviromine.util.Coords;
@@ -18,16 +15,15 @@ import java.util.Arrays;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 import codechicken.multipart.minecraft.McMetaPart;
 
-public abstract class VentBasePart extends McMetaPart implements IPosProvider
+public abstract class VentBasePart extends McMetaPart implements ICollisionProvider
 {
 	private final Block block;
 	private final TileEntitySpecialRenderer renderer;
 	private final String type;
 	
-	private final VentDataHandler handler;
+	private final VentDataHandler handler = new VentDataHandler(this);
 	
 	public VentBasePart(Block block, String type)
 	{
@@ -44,7 +40,6 @@ public abstract class VentBasePart extends McMetaPart implements IPosProvider
 		this.block = block;
 		this.renderer = render;
 		this.type = EM_Settings.ModID + "|" + type;
-		this.handler = new VentDataHandler(this);
 	}
 	
 	@Override
@@ -100,6 +95,29 @@ public abstract class VentBasePart extends McMetaPart implements IPosProvider
 	}
 	
 	@Override
+	public void onRemoved()
+	{
+		Coords coords = this.getCoords();
+		
+		this.handler.calculateConnections();
+		
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			Coords pos = coords.getCoordsInDir(dir);
+			if (pos.hasTileEntity())
+			{
+				VentDataHandler handler = VentDataHandler.getHandler(pos.getTileEntity());
+				
+				if (handler == null) {
+					continue;
+				}
+				
+				handler.calculateConnections(dir);
+			}
+		}
+	}
+	
+	@Override
 	public void renderDynamic(Vector3 pos, float frame, int pass)
 	{
 		if (this.renderer != null)
@@ -120,16 +138,12 @@ public abstract class VentBasePart extends McMetaPart implements IPosProvider
 			
 			if (pos.hasTileEntity())
 			{
-				TileEntity tileEntity = pos.getTileEntity();
-				
-				if (tileEntity instanceof TileEntityVentBase) {
-					((TileEntityVentBase)tileEntity).getHandler().calculateConnections();
-				} else if (tileEntity instanceof TileMultipart) {
-					TMultiPart part = ((TileMultipart)tileEntity).jPartList().get(0);
-					if (part instanceof VentBasePart) {
-						((VentBasePart)part).getHandler().calculateConnections();
-					}
+				VentDataHandler handler = VentDataHandler.getHandler(pos.getTileEntity());
+				if (handler == null) {
+					continue;
 				}
+				
+				handler.calculateConnections();
 			}
 		}
 	}

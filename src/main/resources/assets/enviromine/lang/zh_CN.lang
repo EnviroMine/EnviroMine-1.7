@@ -1,20 +1,32 @@
-language.name=Chinese
+language.name=Simplified Chinese
 
 item.enviromine.badwater.name=脏水瓶
 item.enviromine.saltwater.name=咸水瓶
 item.enviromine.coldwater.name=冷水瓶
-item.enviromine.camelpack.name=储水包
+item.enviromine.camelpack.name=骆驼包
 item.enviromine.gasmask.name=口罩
 item.enviromine.hardhat.name=安全帽
 item.enviromine.airfilter.name=空气过滤器
-item.enviromine.rottenfood.name=腐坏食物
+item.enviromine.rottenfood.name=腐坏的食物
+
+potion.enviromine.frostbite=冻伤
+potion.enviromine.dehydration=脱水
+potion.enviromine.insanity=疯狂
+potion.enviromine.heatstroke=中暑
+potion.enviromine.hypothermia=低温
 
 tile.enviromine.elevator_top.name=升降机顶
 tile.enviromine.elevator_bottom.name=升降机底
+tile.enviromine.esky.name=冰盒
+tile.enviromine.freezer.name=冰箱
+tile.enviromine.davy_lamp.name=矿灯
+tile.enviromine.gas.name=瓦斯
+tile.enviromine.firegas.name=瓦斯火焰
+tile.enviromine.burningcoal.name=燃烧的煤炭
 
-itemGroup.enviromine.enviroTab=EnviroMine
+itemGroup.enviromine.enviroTab=我的环境
 
-achievement.enviromine.FunwaysFault=都是Funway的错
+achievement.enviromine.FunwaysFault=Funway的错
 achievement.enviromine.MindOverMatter=心胜于物
 achievement.enviromine.ProMiner=挖矿达人
 achievement.enviromine.HardBoiled=死猪不怕烫
@@ -46,16 +58,20 @@ achievement.enviromine.BoreToTheCore.desc=进入洞穴世界
 achievement.enviromine.IntoTheDarkness.desc=在洞穴世界旅行1000米并活着回来
 achievement.enviromine.ThatJustHappened.desc=从气体火灾中幸存
 achievement.enviromine.ItsPitchBlack.desc=???
-achievement.enviromine.TenSecondRule.desc=食用腐败的食物
+achievement.enviromine.TenSecondRule.desc=食用腐坏的食物
 achievement.enviromine.MedicalMarvels.desc=治愈任何感染或疾病
 achievement.enviromine.SuckItUpPrincess.desc=四肢受损时杀死一只敌对生物
 
-options.enviromine.menu.title=Enviromine菜单
-options.enviromine.guiMainmenu.title=EnviroMine主菜单
-options.enviromine.guiSetting.title=EnviroMine视频设置
-options.enviromine.guiBars.title=EnviroMine显示设置
-options.enviromine.configSetting.title=Enviromine配置设定
-options.enviromine.guiBarPos.title=EnviroMine显示位置
+options.enviromine.on=打开
+options.enviromine.off=关闭
+options.enviromine.visible=显示
+options.enviromine.hidden=隐藏
+options.enviromine.menu.title=我的环境菜单
+options.enviromine.guiMainmenu.title=我的环境主菜单
+options.enviromine.guiSetting.title=我的环境视频设置
+options.enviromine.guiBars.title=我的环境显示设置
+options.enviromine.configSetting.title=我的环境配置设定
+options.enviromine.guiBarPos.title=我的环境显示位置
 options.enviromine.adminOptions.title=管理选项
 options.enviromine.physics=物理
 options.enviromine.guiScaling=显示缩放
@@ -68,6 +84,9 @@ options.enviromine.status.hidden=隐藏
 options.enviromine.minBars=简约显示
 options.enviromine.minBars.on=开启
 options.enviromine.minBars.off=关闭
+options.enviromine.tinting=屏幕着色
+options.enviromine.sweatParticles=汗水粒子
+options.enviromine.insaneParticles=疯狂粒子
 options.enviromine.debug=调试文本
 options.enviromine.debug.visible=显示
 options.enviromine.debug.hidden=隐藏
@@ -90,7 +109,7 @@ deathmessage.enviromine.landslide=%s死于滑坡
 deathmessage.enviromine.organfailure=%s死于器官衰竭
 deathmessage.enviromine.heatstroke=%s的大脑因中暑而烤熟了
 deathmessage.enviromine.bleedout=%s流血而死
-deathmessage.enviromine.gasfire=%s死于气体火灾
+deathmessage.enviromine.gasfire=%s死于瓦斯火焰
 
-updatemsg.enviromine.avalible=EnviroMine可用更新版本 %s
-updatemsg.enviromine.download=下载&更新日志:
+updatemsg.enviromine.avalible=我的环境可用更新版本 %s
+updatemsg.enviromine.download=下载 & 更新日志:

@@ -84,7 +84,7 @@ public class BlockProperties
 		
 		String name = config.get(category, BPName[0], "").getString();
 		int metaData = config.get(category, BPName[1], 0).getInt(0);
-		String dropName = config.get(category, BPName[2], 0).getString();
+		String dropName = config.get(category, BPName[2], "").getString();
 		int dropMeta = config.get(category, BPName[3], 0).getInt(0);
 		int dropNum = config.get(category, BPName[4], 0).getInt(0);
 		boolean enableTemp = config.get(category, BPName[5], false).getBoolean(false);
@@ -150,7 +150,4 @@ public class BlockProperties
 		config.get(category, BPName[10], slides).getBoolean(false);
 		config.get(category, BPName[11], wetSlides).getBoolean(false);
 	}
-	
-	
-	
 }

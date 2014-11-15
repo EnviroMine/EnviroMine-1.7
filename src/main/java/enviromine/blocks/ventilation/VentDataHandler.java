@@ -6,14 +6,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import enviromine.blocks.tiles.ventilation.IPosProvider;
 import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
-import enviromine.blocks.ventilation.multipart.ICollisionProvider;
 import enviromine.blocks.ventilation.multipart.VentBasePart;
-import enviromine.util.Coords;
 import enviromine.util.Utils;
 
 import java.util.List;
 
-import codechicken.lib.vec.Cuboid6;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -87,6 +84,16 @@ public class VentDataHandler
 		return this.connections;
 	}
 	
+	public IPosProvider provider()
+	{
+		return this.provider;
+	}
+	
+	//Data passage calculations
+	
+	
+	//Connection calculations
+	
 	public void calculateConnections()
 	{
 		this.calculateConnections(ForgeDirection.UNKNOWN);
@@ -98,7 +105,7 @@ public class VentDataHandler
 		
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (dir != removeDir.getOpposite() && checkConnection(dir))
+			if (dir != removeDir.getOpposite() && ConnectionChecker.checkConnection(this.provider, dir))
 			{
 				this.connections = Utils.append(this.connections, dir);
 			}
@@ -107,73 +114,9 @@ public class VentDataHandler
 		this.provider.getCoords().markForUpdate(true);
 	}
 	
-	/** Checks if there is any reason why we can't connect in this direction. For example, a multipart in the way, or there being nothing in this direction. */
-	public boolean checkConnection(ForgeDirection dir)
-	{
-		Coords pos = this.provider.getCoords();
-		Coords pos2 = pos.getCoordsInDir(dir);
-		
-		if (!pos.hasTileEntity() || !pos2.hasTileEntity()) {
-			return false;
-		}
-		
-		return isValidConnection(dir);
-	}
 	
-	public boolean isValidConnection(ForgeDirection dir)
-	{
-		Coords pos = this.provider.getCoords();
-		
-		boolean valid1 = isValidBlock(pos.getTileEntity()) && (!(this.provider instanceof ICollisionProvider) || !doesSideClip((ICollisionProvider)this.provider, dir));
-		
-		Coords pos2 = pos.getCoordsInDir(dir);
-		VentDataHandler handler = getHandler(pos2.getTileEntity());
-		
-		boolean valid2 = isValidBlock(pos2.getTileEntity()) && (handler == null || !(handler.provider instanceof ICollisionProvider) || !doesSideClip((ICollisionProvider)handler.provider, dir.getOpposite()));
-		
-		return valid1 && valid2;
-	}
 	
-	public static boolean doesSideClip(ICollisionProvider provider, ForgeDirection dir)
-	{
-		TileEntity te = provider.getCoords().getTileEntity();
-		
-		if (!(te instanceof TileMultipart)) {
-			return false;
-		}
-		
-		TileMultipart tilemp = (TileMultipart)te;
-		
-		if (tilemp.isSolid(dir.ordinal())) {
-			return true;
-		}
-		
-		TMultiPart part = tilemp.partMap(dir.ordinal());
-		if (part == null) {
-			return false;
-		}
-		
-		Iterable<Cuboid6> colls = part.getCollisionBoxes();
-		Cuboid6 baseColl = provider.getCollision(dir);
-		for (Cuboid6 coll : colls) {
-			if (baseColl.intersects(coll)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public static boolean isValidBlock(TileEntity te)
-	{
-		if (te instanceof TileEntityVentBase) {
-			return true;
-		} else if (getMultiPart(te) != null) {
-			return true;
-		}
-		
-		return false;
-	}
+	// Static methods
 	
 	public static VentBasePart getMultiPart(TileEntity te)
 	{

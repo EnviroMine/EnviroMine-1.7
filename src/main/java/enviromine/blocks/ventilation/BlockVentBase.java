@@ -7,8 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -76,14 +74,6 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 	{
 		((TileEntityVentBase)new Coords(world, x, y, z).getTileEntity()).getHandler().calculateConnections();
 	}
-	
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
-	{
-		this.updateBounds(blockAccess.getTileEntity(x, y, z));
-	}
-	
-	public abstract void updateBounds(TileEntity te);
 	
 	public int getFacing(Coords coords, EntityLivingBase entity)
 	{

@@ -20,6 +20,8 @@ public class BlockFan extends BlockVentBase
 	public BlockFan()
 	{
 		super(Material.iron);
+		
+		//TODO Set bounds
 	}
 	
 	@Override
@@ -67,11 +69,5 @@ public class BlockFan extends BlockVentBase
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
 	{
 		return new TileEntityFan();
-	}
-
-	@Override
-	public void updateBounds(TileEntity te)
-	{
-		//TODO
 	}
 }

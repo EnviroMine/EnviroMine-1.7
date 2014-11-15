@@ -16,8 +16,8 @@ public class VentSmallPart extends VentBasePart
 	{
 		super(ObjectHandler.ventSmall, new TileEntityVentSmallRenderer(), "ventSmall");
 		
-		float min = 0.125F;
-		float max = 0.876F;
+		float min = 0.13F;
+		float max = 0.87F;
 		
 		this.sidedBounds = new Cuboid6[] {
 					new Cuboid6(min , 0.0F, min , max , min , max ), //UP

@@ -1,30 +1,5 @@
 package enviromine.core;
 
-import net.minecraft.command.ICommandManager;
-import net.minecraft.command.ServerCommandManager;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.gen.structure.MapGenStructureIO;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.DimensionManager;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
-
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.blocks.ventilation.multipart.PartRegister;
@@ -45,6 +20,30 @@ import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
 import enviromine.world.features.mineshaft.EM_VillageMineshaft;
 
+import net.minecraft.command.ICommandManager;
+import net.minecraft.command.ServerCommandManager;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.gen.structure.MapGenStructureIO;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.DimensionManager;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +79,7 @@ public class EnviroMine
 		ObjectHandler.registerGases();
 		ObjectHandler.registerEntities();
 		
-		if(EM_Settings.shaftGen == true)
+		if(EM_Settings.shaftGen)
 		{
 			VillagerRegistry.instance().registerVillageCreationHandler(new EnviroShaftCreationHandler());
 			MapGenStructureIO.func_143031_a(EM_VillageMineshaft.class, "ViMS");

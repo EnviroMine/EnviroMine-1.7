@@ -1,13 +1,15 @@
 package enviromine.trackers.properties;
 
-import java.io.File;
-import java.io.IOException;
-
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.config.Configuration;
 import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+
+import net.minecraft.world.biome.BiomeGenBase;
+
+import java.io.File;
+import java.io.IOException;
+
+import net.minecraftforge.common.config.Configuration;
 
 
 public class BiomeProperties
@@ -88,22 +90,22 @@ public class BiomeProperties
 		
 		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate);
 		
-		EM_Settings.biomeProperties.put(id, entry);;
+		EM_Settings.biomeProperties.put(id, entry);
 		
 	}
 	
 	public static void SearchForBiomes()
 	{
 		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
-		
-		for(int p = 0; p < BiomeArray.length; p++)
+
+		for (BiomeGenBase biomeGen : BiomeArray)
 		{
-			if(BiomeArray[p] == null)
+			if (biomeGen == null)
 			{
 				continue;
 			}
-			
-			BiomeSaveConfig(BiomeArray[p], "Biomes");
+
+			BiomeSaveConfig(biomeGen, "Biomes");
 		}
 	}
 	

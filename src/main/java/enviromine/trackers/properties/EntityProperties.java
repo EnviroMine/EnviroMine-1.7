@@ -1,7 +1,8 @@
 package enviromine.trackers.properties;
 
-import net.minecraftforge.common.config.Configuration;
 import enviromine.core.EM_Settings;
+
+import net.minecraftforge.common.config.Configuration;
 
 public class EntityProperties
 {
@@ -21,7 +22,7 @@ public class EntityProperties
 	public float ambHydration;
 	public float hitHydration;
 	
-	/** Entity properties:<br>00 ({@link Int}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
+	/** Entity properties:<br>00 ({@link Integer}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
 	static String[] EPName;
 	
 	public static String categoryName = "entity";
@@ -45,7 +46,7 @@ public class EntityProperties
 		this.hitHydration = hHyd;
 	}
 	
-	/**Set up config names for Entity properties:<br>00 ({@link Int}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
+	/**Set up config names for Entity properties:<br>00 ({@link Integer}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
 	public static void setConfigNames()
 	{
 		EPName = new String[15];

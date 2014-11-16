@@ -1,17 +1,18 @@
 package enviromine.trackers.properties;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraftforge.common.config.Configuration;
-
 import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+
+import net.minecraftforge.common.config.Configuration;
 
 public class ArmorProperties
 {
@@ -155,7 +156,7 @@ public class ArmorProperties
 
 	private static void DetectedArmorGen(ItemArmor armor, String ModID)
 	{
-		String[] classpath = armor.getClass().getCanonicalName().toString().split("\\.");
+		String[] classpath = armor.getClass().getCanonicalName().split("\\.");
 		
 		
 		File armorFile = new File(EM_ConfigHandler.customPath + classpath[0] + ".cfg");
@@ -192,7 +193,6 @@ public class ArmorProperties
 	
 	private static String[] SplitObjectName(String splitName)
 	{
-		String[] nameArr = splitName.split(":");
-		return nameArr;
+		return splitName.split(":");
 	}
 }

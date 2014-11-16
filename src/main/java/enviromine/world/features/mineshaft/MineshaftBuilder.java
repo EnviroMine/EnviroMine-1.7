@@ -1,33 +1,23 @@
 package enviromine.world.features.mineshaft;
 
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.world.features.WorldFeatureGenerator;
+import enviromine.world.features.mineshaft.designers.*;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.world.features.WorldFeatureGenerator;
-import enviromine.world.features.mineshaft.designers.MineDesigner;
-import enviromine.world.features.mineshaft.designers.MineDesignerComb;
-import enviromine.world.features.mineshaft.designers.MineDesignerFeather;
-import enviromine.world.features.mineshaft.designers.MineDesignerGrid;
-import enviromine.world.features.mineshaft.designers.MineDesignerRandomized;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
+
 import org.apache.logging.log4j.Level;
 
 public class MineshaftBuilder
@@ -134,7 +124,6 @@ public class MineshaftBuilder
 			{
 				if(scannedGrids.containsKey("" + i + "," + k + "," + world.provider.dimensionId))
 				{
-					continue;
 				} else
 				{
 					int foundBuilders = 0;
@@ -448,14 +437,11 @@ public class MineshaftBuilder
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			
 			HashMap<String, Integer> savedGrids = new HashMap<String, Integer>();
-			
-			Iterator<String> iterator = scannedGrids.keySet().iterator();
-			
-			while(iterator.hasNext())
+
+			for (String key : scannedGrids.keySet())
 			{
-				String key = iterator.next();
 				Integer value = scannedGrids.get(key);
-				if(value <= 0)
+				if (value <= 0)
 				{
 					savedGrids.put(key, value);
 				}
@@ -482,7 +468,6 @@ public class MineshaftBuilder
 	{
 		if(!file.exists())
 		{
-			return;
 		} else
 		{
 			try
@@ -492,14 +477,11 @@ public class MineshaftBuilder
 				ObjectInputStream ois = new ObjectInputStream(bis);
 				
 				HashMap<String, Integer> loadedGrids = (HashMap<String, Integer>)ois.readObject();
-				
-				Iterator<String> iterator = loadedGrids.keySet().iterator();
-				
-				while(iterator.hasNext())
+
+				for (String key : loadedGrids.keySet())
 				{
-					String key = iterator.next();
 					Integer value = loadedGrids.get(key);
-					if(value <= 0)
+					if (value <= 0)
 					{
 						scannedGrids.put(key, value);
 					}

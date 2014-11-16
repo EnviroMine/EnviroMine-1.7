@@ -15,7 +15,6 @@ import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -44,7 +43,7 @@ public class Hallucination
 		
 		Random rand = entityLiving.getRNG();
 		
-		if (rand.nextInt(10) == 0 || true) {
+		if (rand.nextInt(10) == 0) {
 			this.overriding = this.findPlayer(entityLiving);
 			if (this.overriding != null) {
 				this.type = Type.OVERRIDE;
@@ -69,7 +68,7 @@ public class Hallucination
 		
         try
         {
-            falseEntity = (EntityLiving)spawnList.get(spawnIndex).entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {entityLiving.worldObj});
+            falseEntity = (EntityLiving)spawnList.get(spawnIndex).entityClass.getConstructor(new Class[] {World.class}).newInstance(entityLiving.worldObj);
         } catch (Exception exception)
         {
             exception.printStackTrace();
@@ -99,7 +98,7 @@ public class Hallucination
 		{
 			//Minecraft.getMinecraft().sndManager.playSound(falseSound, x, y, z, 1.0F, 1.0F);
 			falseEntity.getEntityData().setBoolean("EM_Hallucination", true);
-			((EntityLiving)falseEntity).playLivingSound();
+			falseEntity.playLivingSound();
 		}
 	}
 	
@@ -116,12 +115,12 @@ public class Hallucination
 	private List<EntityPlayer> getPlayerList(EntityLivingBase entity)
 	{
 		List<EntityPlayer> players = new ArrayList<EntityPlayer>();
-		Iterator ite = entity.worldObj.loadedEntityList.iterator();
-		
-		while (ite.hasNext())
+
+		for (Object ent : entity.worldObj.loadedEntityList)
 		{
-			Entity e = (Entity)ite.next();
-			if (e instanceof EntityPlayer && !e.getCommandSenderName().equals(entity.getCommandSenderName()) && !isPlayerSeenWrong(e.getCommandSenderName())) {
+			Entity e = (Entity)ent;
+			if (e instanceof EntityPlayer && !e.getCommandSenderName().equals(entity.getCommandSenderName()) && !isPlayerSeenWrong(e.getCommandSenderName()))
+			{
 				players.add((EntityPlayer)e);
 			}
 		}

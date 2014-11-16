@@ -1,5 +1,7 @@
 package enviromine.handlers;
 
+import enviromine.core.EM_Settings;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,10 +12,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import enviromine.core.EM_Settings;
 
 public class TeleportHandler extends Teleporter
 {
@@ -151,7 +153,7 @@ public class TeleportHandler extends Teleporter
 			if (flag)
 			{
 				this.destinationCoordinateCache.add(j1, new PortalPosition(i, j, k, this.worldServerInstance.getTotalWorldTime()));
-				this.destinationCoordinateKeys.add(Long.valueOf(j1));
+				this.destinationCoordinateKeys.add(j1);
 			}
 			
 			double d8 = (double)i + 0.5D;
@@ -267,12 +269,12 @@ public class TeleportHandler extends Teleporter
 			while (iterator.hasNext())
 			{
 				Long olong = iterator.next();
-				PortalPosition portalposition = (PortalPosition)this.destinationCoordinateCache.getValueByKey(olong.longValue());
+				PortalPosition portalposition = (PortalPosition)this.destinationCoordinateCache.getValueByKey(olong);
 				
 				if (portalposition == null || portalposition.lastUpdateTime < j)
 				{
 					iterator.remove();
-					this.destinationCoordinateCache.remove(olong.longValue());
+					this.destinationCoordinateCache.remove(olong);
 				}
 			}
 		}

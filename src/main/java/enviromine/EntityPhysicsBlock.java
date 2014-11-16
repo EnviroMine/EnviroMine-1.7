@@ -1,15 +1,9 @@
 package enviromine;
 
-import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Level;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockFlower;
@@ -26,6 +20,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import io.netty.buffer.ByteBuf;
+import org.apache.logging.log4j.Level;
 
 public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdditionalSpawnData
 {
@@ -62,18 +65,15 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 					EnviroMine.logger.log(Level.WARN, "No.: " + entityList.size());
 					EM_PhysManager.physSchedule.clear();
 					this.setDead();
-					return;
 				} else if(EM_Settings.entityFailsafe >= 2)
 				{
 					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated! Deleting excess entities!");
 					EnviroMine.logger.log(Level.ERROR, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
 					EnviroMine.logger.log(Level.ERROR, "No.: " + entityList.size());
-					Iterator<EntityPhysicsBlock> iterator = entityList.iterator();
-					
-					while(iterator.hasNext())
+
+					for (EntityPhysicsBlock oldPhysBlock : entityList)
 					{
-						EntityPhysicsBlock oldPhysBlock = iterator.next();
-						if(!oldPhysBlock.isDead)
+						if (!oldPhysBlock.isDead)
 						{
 							oldPhysBlock.setDead();
 						}
@@ -81,7 +81,6 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 					this.setDead();
 					
 					EM_PhysManager.physSchedule.clear();
-					return;
 				}
 			}
 		}
@@ -115,12 +114,10 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 					EnviroMine.logger.log(Level.ERROR, "Entity fail safe activated: Level 2");
 					EnviroMine.logger.log(Level.ERROR, "Location: " + this.posX + "," + this.posY + "," + this.posZ);
 					EnviroMine.logger.log(Level.ERROR, "No.: " + entityList.size());
-					Iterator<EntityPhysicsBlock> iterator = entityList.iterator();
-					
-					while(iterator.hasNext())
+
+					for (EntityPhysicsBlock oldPhysBlock : entityList)
 					{
-						EntityPhysicsBlock oldPhysBlock = iterator.next();
-						if(!oldPhysBlock.isDead)
+						if (!oldPhysBlock.isDead)
 						{
 							oldPhysBlock.setDead();
 						}
@@ -212,7 +209,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 				        	this.setPosition(i + 0.5D, j + 0.5D, k + 0.5D);
 				        }
 			        }
-				} catch(NullPointerException e)
+				} catch(NullPointerException ignored)
 				{
 				}
 				
@@ -253,12 +250,12 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 					{
 						this.setDead();
 						
-						if(!this.worldObj.canPlaceEntityOnSide(Blocks.anvil, i, j, k, true, 1, (Entity)null, (ItemStack)null) && !EM_PhysManager.blockNotSolid(this.worldObj, i, j, k, false))
+						if(!this.worldObj.canPlaceEntityOnSide(Blocks.anvil, i, j, k, true, 1, null, null) && !EM_PhysManager.blockNotSolid(this.worldObj, i, j, k, false))
 						{
 							j += 1;
 						}
 						
-						if(!this.isBreakingAnvil2 && this.worldObj.canPlaceEntityOnSide(Blocks.anvil, i, j, k, true, 1, (Entity)null, (ItemStack)null) && !BlockFalling.func_149831_e(this.worldObj, i, j - 1, k) && this.worldObj.setBlock(i, j, k, this.block, this.meta, 3))
+						if(!this.isBreakingAnvil2 && this.worldObj.canPlaceEntityOnSide(Blocks.anvil, i, j, k, true, 1, null, null) && !BlockFalling.func_149831_e(this.worldObj, i, j - 1, k) && this.worldObj.setBlock(i, j, k, this.block, this.meta, 3))
 						{
 							EM_PhysManager.schedulePhysUpdate(this.worldObj, i, j, k, true, earthquake? "Quake" : "Collapse");
 							
@@ -275,18 +272,17 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 								{
 									NBTTagCompound nbttagcompound = new NBTTagCompound();
 									tileentity.writeToNBT(nbttagcompound);
-									Iterator iterator = this.field_145810_d.func_150296_c().iterator();
 
-                                    while (iterator.hasNext())
-                                    {
-                                        String s = (String)iterator.next();
-                                        NBTBase nbtbase = this.field_145810_d.getTag(s);
+									for (Object o : this.field_145810_d.func_150296_c())
+									{
+										String s = (String)o;
+										NBTBase nbtbase = this.field_145810_d.getTag(s);
 
-                                        if (!s.equals("x") && !s.equals("y") && !s.equals("z"))
-                                        {
-                                            nbttagcompound.setTag(s, nbtbase.copy());
-                                        }
-                                    }
+										if (!s.equals("x") && !s.equals("y") && !s.equals("z"))
+										{
+											nbttagcompound.setTag(s, nbtbase.copy());
+										}
+									}
 
                                     tileentity.readFromNBT(nbttagcompound);
                                     tileentity.markDirty();

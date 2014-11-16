@@ -1,15 +1,15 @@
 package enviromine.client.renderer.itemInventory;
 
+import enviromine.EnviroUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.client.IItemRenderer;
-
-import enviromine.EnviroUtils;
-
 import org.lwjgl.opengl.GL11;
 
 public class ArmoredCamelPackRenderer implements IItemRenderer
@@ -106,9 +106,9 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 		Tessellator tessellator = Tessellator.instance;
 		//int l = 255 - k << 16 | k << 8;
 		//int i1 = (255 - k) / 4 << 16 | 16128;
-		this.renderQuad(tessellator, 0 + x, 1 + y, width + 1, height, EnviroUtils.getColorFromRGBA(172, 172, 172, 255));
-		this.renderQuad(tessellator, 0 + x, 0 + y, width, height, EnviroUtils.getColorFromRGBA(42, 85, 210, k));
-		this.renderQuad(tessellator, 0 + x, 0 + y, width, height - j1, 0);
+		this.renderQuad(tessellator, x, 1 + y, width + 1, height, EnviroUtils.getColorFromRGBA(172, 172, 172, 255));
+		this.renderQuad(tessellator, x, y, width, height, EnviroUtils.getColorFromRGBA(42, 85, 210, k));
+		this.renderQuad(tessellator, x, y, width, height - j1, 0);
 		//GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -121,10 +121,10 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 	{
 		tessellator.startDrawingQuads();
 		tessellator.setColorOpaque_I(p_77017_6_);
-		tessellator.addVertex((double)(x1 + 0), (double)(y1 + 0), 0.0D);
-		tessellator.addVertex((double)(x1 + 0), (double)(y1 + height), 0.0D);
+		tessellator.addVertex((double)(x1), (double)(y1), 0.0D);
+		tessellator.addVertex((double)(x1), (double)(y1 + height), 0.0D);
 		tessellator.addVertex((double)(x1 + width), (double)(y1 + height), 0.0D);
-		tessellator.addVertex((double)(x1 + width), (double)(y1 + 0), 0.0D);
+		tessellator.addVertex((double)(x1 + width), (double)(y1), 0.0D);
 		tessellator.draw();
 	}
 	

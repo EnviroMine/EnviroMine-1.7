@@ -135,13 +135,7 @@ public class MineSegmentNormal extends MineSegment
 	@Override
 	public boolean canBuild()
 	{
-		if(this.getBlock(2, 0, 1) == Blocks.ladder || this.getBlock(1, 0, 2) == Blocks.ladder || this.getBlock(2, 0, 3) == Blocks.ladder || this.getBlock(3, 0, 2) == Blocks.ladder)
-		{
-			return false;
-		} else
-		{
-			return super.canBuild();
-		}
+		return !(this.getBlock(2, 0, 1) == Blocks.ladder || this.getBlock(1, 0, 2) == Blocks.ladder || this.getBlock(2, 0, 3) == Blocks.ladder || this.getBlock(3, 0, 2) == Blocks.ladder) && super.canBuild();
 	}
 	
 	@Override

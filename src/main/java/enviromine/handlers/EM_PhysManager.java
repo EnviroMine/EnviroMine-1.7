@@ -7,22 +7,7 @@ import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.BlockProperties;
 import enviromine.trackers.properties.StabilityType;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockEndPortal;
-import net.minecraft.block.BlockEndPortalFrame;
-import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockGlowstone;
-import net.minecraft.block.BlockGravel;
-import net.minecraft.block.BlockLadder;
-import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.BlockMobSpawner;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.BlockPortal;
-import net.minecraft.block.BlockSign;
-import net.minecraft.block.BlockWeb;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -41,9 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.Level;
-
 import com.google.common.base.Stopwatch;
+import org.apache.logging.log4j.Level;
 
 public class EM_PhysManager
 {
@@ -169,10 +153,10 @@ public class EM_PhysManager
 	public static void callPhysUpdate(World world, int x, int y, int z, Block block, int meta, String type)
 	{
 		String position = (new StringBuilder()).append(x).append(",").append(y).append(",").append(z).toString();
-		
-		if(excluded.containsKey(position))
+
+		if (excluded.containsKey(position))
 		{
-			if(!excluded.get(position).equals("Collapse") && type.equals("Collapse"))
+			if (!excluded.get(position).equals("Collapse") && type.equals("Collapse"))
 			{
 				excluded.put(position, type);
 			} else
@@ -183,60 +167,54 @@ public class EM_PhysManager
 		{
 			excluded.put(position, type);
 		}
-		
+
 		boolean locLoaded = false;
-		
-		if(world.getChunkProvider().chunkExists(x >> 4, z >> 4))
-		{
-			locLoaded = world.getChunkFromChunkCoords(x >> 4, z >> 4).isChunkLoaded;
-		} else
-		{
-			locLoaded = false;
-		}
-		
-		if(world.isRemote || block == null || !locLoaded)
+
+		locLoaded = world.getChunkProvider().chunkExists(x >> 4, z >> 4) && world.getChunkFromChunkCoords(x >> 4, z >> 4).isChunkLoaded;
+
+		if (world.isRemote || block == null || !locLoaded)
 		{
 			return;
 		}
-		
-		if(EnviroMine.proxy.isClient())
+
+		if (EnviroMine.proxy.isClient())
 		{
 			debugUpdatesCaptured += 1;
 		}
-		
+
 		int[] blockData = getSurroundingBlockData(world, x, y, z);
-		
+
 		boolean waterLogged = false;
 		boolean isMuddy = false;
 		boolean touchingWaterDirect = blockData[2] > 0;//isTouchingLiquid(world, x, y, z, true);
 		boolean touchingWater = blockData[3] > 0;//isTouchingLiquid(world, x, y, z, false);
-		
+
 		BlockProperties blockProps = null;
-		
+
 		Chunk chunk = world.getChunkFromBlockCoords(x, z);
-		if(chunk != null)
+		if (chunk != null)
 		{
 			waterLogged = (chunk.getBiomeGenForWorldCoords(x & 15, z & 15, world.getWorldChunkManager()).rainfall > 0 && world.isRaining() && world.canBlockSeeTheSky(x, y + 1, z)) || touchingWater;
 		}
-		
+
 		boolean validSlideType = false;
 		boolean emptyBelow = BlockFalling.func_149831_e(world, x, y - 1, z);
-		
-		if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta) || EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block)))
+
+		if (EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta) || EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block)))
 		{
-			if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
+			if (EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
 			{
 				blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block) + "," + meta);
 			} else
 			{
 				blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block));
 			}
-			
+
 			validSlideType = blockProps.slides || ((waterLogged || touchingWater) && blockProps.wetSlide);
 			isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
-		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow) && (waterLogged || touchingWater)))
+		} else if (block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow) && (waterLogged || touchingWater)))
 		{
-			if(block instanceof BlockAnvil)
+			if (block instanceof BlockAnvil)
 			{
 				validSlideType = false;
 			} else
@@ -245,35 +223,33 @@ public class EM_PhysManager
 				isMuddy = (block == Blocks.dirt || block == Blocks.snow);
 			}
 		}
-		
-		if(validSlideType && EM_Settings.enableLandslide)
+
+		if (validSlideType && EM_Settings.enableLandslide)
 		{
-			if(!(block instanceof BlockFalling) && blockData[4] >= 1)
+			if (!(block instanceof BlockFalling) && blockData[4] >= 1)
 			{
 				return;
 			}
-			Block slideBlock = block;
-			int slideMeta = meta;
-			
+
 			int[] pos = new int[]{x, y, z};
 			int[] npos = slideDirection(world, pos, true);
 			int[] ppos = slideDirection(world, pos, false);
-			
+
 			TileEntity tile = world.getTileEntity(x, y, z);
 			NBTTagCompound nbtTC = new NBTTagCompound();
-			
-			if(tile != null)
+
+			if (tile != null)
 			{
 				tile.writeToNBT(nbtTC);
 			}
-			
-			if(emptyBelow)
+
+			if (emptyBelow)
 			{
-				if(!(block instanceof BlockFalling) && !usedSlidePositions.contains("" + pos[0] + "," + pos[2]))
+				if (!(block instanceof BlockFalling) && !usedSlidePositions.contains("" + pos[0] + "," + pos[2]))
 				{
 					//usedSlidePositions.add("" + pos[0] + "," + pos[2]);
-					EntityPhysicsBlock physBlock = new EntityPhysicsBlock(world, pos[0] + 0.5, pos[1] + 0.5, pos[2] + 0.5, slideBlock, slideMeta, false);
-					if(tile != null)
+					EntityPhysicsBlock physBlock = new EntityPhysicsBlock(world, pos[0] + 0.5, pos[1] + 0.5, pos[2] + 0.5, block, meta, false);
+					if (tile != null)
 					{
 						physBlock.field_145810_d = nbtTC;
 					}
@@ -283,13 +259,13 @@ public class EM_PhysManager
 					EM_PhysManager.schedulePhysUpdate(world, x, y, z, true, "Collapse");
 					return;
 				}
-			} else if(!(pos[0] == npos[0] && pos[1] == npos[1] && pos[2] == npos[2]) && !usedSlidePositions.contains("" + npos[0] + "," + npos[2]))
+			} else if (!(pos[0] == npos[0] && pos[1] == npos[1] && pos[2] == npos[2]) && !usedSlidePositions.contains("" + npos[0] + "," + npos[2]))
 			{
 				//world.setBlock(npos[0], npos[1], npos[2], slideID, slideMeta, 2);
 				//usedSlidePositions.add("" + npos[0] + "," + npos[2]);
-				
-				EntityPhysicsBlock physBlock = new EntityPhysicsBlock(world, npos[0] + 0.5, npos[1] + 0.5, npos[2] + 0.5, slideBlock, slideMeta, false);
-				if(tile != null)
+
+				EntityPhysicsBlock physBlock = new EntityPhysicsBlock(world, npos[0] + 0.5, npos[1] + 0.5, npos[2] + 0.5, block, meta, false);
+				if (tile != null)
 				{
 					physBlock.field_145810_d = nbtTC;
 				}
@@ -298,43 +274,43 @@ public class EM_PhysManager
 				world.spawnEntityInWorld(physBlock);
 				EM_PhysManager.schedulePhysUpdate(world, x, y, z, true, "Collapse");
 				return;
-			} else if(!(pos[0] == ppos[0] && pos[1] == ppos[1] && pos[2] == ppos[2]))
+			} else if (!(pos[0] == ppos[0] && pos[1] == ppos[1] && pos[2] == ppos[2]))
 			{
 				EM_PhysManager.scheduleSlideUpdate(world, x, y, z);
 			}
 		}
-		
-		if(isLegalType(world, x, y, z) && blockNotSolid(world, x, y - 1, z, false) && blockData[4] <= 0)
+
+		if (isLegalType(world, x, y, z) && blockNotSolid(world, x, y - 1, z, false) && blockData[4] <= 0)
 		{
 			Object dropBlock = block;
 			int dropMeta = -1;
 			int dropNum = -1;
 			int dropType = 0;
-			
+
 			boolean isCustom = false;
 			boolean defaultDrop = true;
-			
-			if(blockProps != null)
+
+			if (blockProps != null)
 			{
 				isCustom = true;
 				defaultDrop = false;
-				
-				if(blockProps.dropName.equals(""))
+
+				if (blockProps.dropName.equals(""))
 				{
 					dropType = 1;
 					defaultDrop = true;
 					dropNum = blockProps.dropNum;
-				} else if(blockProps.equals(""))
+				} else if (blockProps.equals(""))
 				{
 					dropType = 0;
 					dropBlock = null;
 					dropMeta = 0;
 					dropNum = 0;
-				} else if(Block.getBlockFromName(blockProps.dropName) != null && blockProps.dropNum <= 0)
+				} else if (Block.getBlockFromName(blockProps.dropName) != null && blockProps.dropNum <= 0)
 				{
 					dropType = 1;
 					dropBlock = Block.getBlockFromName(blockProps.dropName);
-					if(blockProps.dropMeta <= -1)
+					if (blockProps.dropMeta <= -1)
 					{
 						dropMeta = -1;
 					} else
@@ -342,11 +318,11 @@ public class EM_PhysManager
 						dropMeta = blockProps.dropMeta;
 					}
 					dropNum = 0;
-				} else if(Item.getItemFromBlock(Block.getBlockFromName(blockProps.dropName)) != null && blockProps.dropNum > 0)
+				} else if (Item.getItemFromBlock(Block.getBlockFromName(blockProps.dropName)) != null && blockProps.dropNum > 0)
 				{
 					dropType = 2;
 					dropBlock = Item.getItemFromBlock(Block.getBlockFromName(blockProps.dropName));
-					if(blockProps.dropMeta <= -1)
+					if (blockProps.dropMeta <= -1)
 					{
 						dropMeta = -1;
 					} else
@@ -362,75 +338,75 @@ public class EM_PhysManager
 					dropNum = -1;
 				}
 			}
-			
-			if(!defaultDrop)
+
+			if (!defaultDrop)
 			{
-			} else if(dropBlock == null || dropBlock == Blocks.air || block.getMaterial() == Material.glass || block.getMaterial() == Material.ice)
+			} else if (dropBlock == null || dropBlock == Blocks.air || block.getMaterial() == Material.glass || block.getMaterial() == Material.ice)
 			{
 				dropType = 0;
-			} else if(block instanceof BlockLeavesBase)
+			} else if (block instanceof BlockLeavesBase)
 			{
 				dropType = 2;
-			} else if(dropBlock instanceof Block)
+			} else if (dropBlock instanceof Block)
 			{
 				dropType = 1;
-			} else if(dropBlock instanceof Item)
+			} else if (dropBlock instanceof Item)
 			{
 				dropType = 2;
 			} else
 			{
 				dropType = 0;
 			}
-			
+
 			int minThreshold = 10;
 			int maxThreshold = 15;
 			int supportDist = 1;
 			int yMax = 1;
-			
+
 			int stabNum = getDefaultStabilityType(block);
-			
-			if(isCustom)
+
+			if (isCustom)
 			{
 				minThreshold = blockProps.minFall;
 				maxThreshold = blockProps.maxFall;
 				supportDist = blockProps.supportDist;
-				if(blockProps.canHang)
+				if (blockProps.canHang)
 				{
 					yMax = 2;
 				} else
 				{
 					yMax = 1;
 				}
-			} else if(stabNum == 3)
+			} else if (stabNum == 3)
 			{
 				StabilityType strongType = EM_Settings.stabilityTypes.get("strong");
 				minThreshold = strongType.minFall;
 				maxThreshold = strongType.maxFall;
 				supportDist = strongType.supportDist;
-				if(strongType.canHang)
+				if (strongType.canHang)
 				{
 					yMax = 2;
 				} else
 				{
 					yMax = 1;
 				}
-			} else if(stabNum == 2)
+			} else if (stabNum == 2)
 			{
 				StabilityType avgType = EM_Settings.stabilityTypes.get("average");
 				minThreshold = avgType.minFall;
 				maxThreshold = avgType.maxFall;
 				supportDist = avgType.supportDist;
-				if(avgType.canHang)
+				if (avgType.canHang)
 				{
 					yMax = 2;
 				} else
 				{
 					yMax = 1;
 				}
-			} else if(stabNum == 1)
+			} else if (stabNum == 1)
 			{
 				StabilityType looseType;
-				if(Block.getIdFromBlock(block) > 175 && EM_Settings.stabilityTypes.containsKey(EM_Settings.defaultStability))
+				if (Block.getIdFromBlock(block) > 175 && EM_Settings.stabilityTypes.containsKey(EM_Settings.defaultStability))
 				{
 					looseType = EM_Settings.stabilityTypes.get(EM_Settings.defaultStability);
 				} else
@@ -440,7 +416,7 @@ public class EM_PhysManager
 				minThreshold = looseType.minFall;
 				maxThreshold = looseType.maxFall;
 				supportDist = looseType.supportDist;
-				if(looseType.canHang)
+				if (looseType.canHang)
 				{
 					yMax = 2;
 				} else
@@ -448,64 +424,64 @@ public class EM_PhysManager
 					yMax = 1;
 				}
 			}
-			
-			if(world.provider.isHellWorld && block.getMaterial() == Material.rock && !isCustom)
+
+			if (world.provider.isHellWorld && block.getMaterial() == Material.rock && !isCustom)
 			{
 				yMax = 2;
 			}
-			
+
 			int missingBlocks = 0;
-			
-			if(yMax >= 2)
+
+			if (yMax >= 2)
 			{
 				missingBlocks = blockData[0];
 			} else
 			{
 				missingBlocks = blockData[1];
 			}
-			
+
 			int dropChance = maxThreshold - missingBlocks;
-			
-			if(dropChance <= 0)
+
+			if (dropChance <= 0)
 			{
 				dropChance = 1;
 			}
-			
-			boolean supported = hasSupports(world, x, y, z, (touchingWaterDirect || isMuddy)? MathHelper.floor_double(supportDist/2D) : supportDist);
+
+			boolean supported = hasSupports(world, x, y, z, (touchingWaterDirect || isMuddy) ? MathHelper.floor_double(supportDist / 2D) : supportDist);
 			//missingBlocks total = 25 - 26
-			
-			if(missingBlocks > 0 && blockNotSolid(world, x, y - 1, z, false) && !supported)
+
+			if (missingBlocks > 0 && blockNotSolid(world, x, y - 1, z, false) && !supported)
 			{
-				if(!world.isRemote && ((missingBlocks > minThreshold && (world.rand.nextInt(dropChance) == 0 || type.equals("Collapse"))) || missingBlocks >= maxThreshold || ((touchingWaterDirect || isMuddy) && world.rand.nextBoolean())))
+				if (!world.isRemote && ((missingBlocks > minThreshold && (world.rand.nextInt(dropChance) == 0 || type.equals("Collapse"))) || missingBlocks >= maxThreshold || ((touchingWaterDirect || isMuddy) && world.rand.nextBoolean())))
 				{
-					if(dropType == 2)
+					if (dropType == 2)
 					{
 						world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (world.getBlockMetadata(x, y, z) << 12));
-						if(isCustom && dropMeta > -1)
+						if (isCustom && dropMeta > -1)
 						{
-							if(dropNum >= 1)
+							if (dropNum >= 1)
 							{
 								dropItemstack(world, x, y, z, new ItemStack((Item)dropBlock, dropNum, dropMeta));
 							}
-						} else if(isCustom && dropNum >= 1)
+						} else if (isCustom && dropNum >= 1)
 						{
 							dropItemstack(world, x, y, z, new ItemStack((Item)dropBlock, dropNum, meta));
-						} else if(!isCustom || (isCustom && dropMeta <= -1 && dropNum > 0))
+						} else if (!isCustom || (isCustom && dropMeta <= -1 && dropNum > 0))
 						{
 							block.dropBlockAsItem(world, x, y, z, meta, 0);
 						}
 						world.setBlock(x, y, z, Blocks.air);
 						schedulePhysUpdate(world, x, y, z, true, "Normal");
 						return;
-					} else if(dropType == 0)
+					} else if (dropType == 0)
 					{
 						world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (world.getBlockMetadata(x, y, z) << 12));
-						
-						if(block == Blocks.ice)
+
+						if (block == Blocks.ice)
 						{
 							Material mat = world.getBlock(x, y - 1, z).getMaterial();
-							
-							if((mat.blocksMovement() || mat.isLiquid()) && !world.provider.isHellWorld)
+
+							if ((mat.blocksMovement() || mat.isLiquid()) && !world.provider.isHellWorld)
 							{
 								world.setBlock(x, y, z, Blocks.flowing_water);
 							} else
@@ -516,64 +492,63 @@ public class EM_PhysManager
 						{
 							world.setBlock(x, y, z, Blocks.air);
 						}
-						
-						if(block.getMaterial() != Material.ice || EM_Settings.spreadIce)
+
+						if (block.getMaterial() != Material.ice || EM_Settings.spreadIce)
 						{
 							schedulePhysUpdate(world, x, y, z, true, "Break");
 						}
 						return;
 					}
-					
-					if(dropType != 1)
+
+					if (dropType != 1)
 					{
 						return;
 					}
-					if(block == Blocks.stone && EM_Settings.stoneCracks && !isCustom)
+					if (block == Blocks.stone && EM_Settings.stoneCracks && !isCustom)
 					{
 						world.setBlock(x, y, z, Blocks.cobblestone);
 						dropBlock = Blocks.cobblestone;
-					} else if(block == Blocks.grass && !isCustom)
+					} else if (block == Blocks.grass && !isCustom)
 					{
 						world.setBlock(x, y, z, Blocks.dirt);
 						dropBlock = Blocks.dirt;
 					} else
 					{
-						if(world.getBlock(x, y, z) != dropBlock)
+						if (world.getBlock(x, y, z) != dropBlock)
 						{
 							world.setBlock(x, y, z, (Block)dropBlock, world.getBlockMetadata(x, y, z), 2);
 						}
 					}
-					
+
 					TileEntity tile = world.getTileEntity(x, y, z);
 					NBTTagCompound nbtTC = new NBTTagCompound();
-					
-					if(tile != null)
+
+					if (tile != null)
 					{
 						tile.writeToNBT(nbtTC);
 					}
-					
+
 					EntityPhysicsBlock entityphysblock;
-					if(isCustom && dropMeta > -1)
+					if (isCustom && dropMeta > -1)
 					{
 						entityphysblock = new EntityPhysicsBlock(world, (float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, (Block)dropBlock, dropMeta, true);
 					} else
 					{
 						entityphysblock = new EntityPhysicsBlock(world, (float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, (Block)dropBlock, world.getBlockMetadata(x, y, z), true);
 					}
-					
-					if(tile != null)
+
+					if (tile != null)
 					{
 						entityphysblock.field_145810_d = nbtTC;
 						world.removeTileEntity(x, y, z);
 					}
 					world.spawnEntityInWorld(entityphysblock);
-					
-				} else if(missingBlocks > minThreshold && !world.isRemote && EM_Settings.stoneCracks)
+				} else if (missingBlocks > minThreshold && !world.isRemote && EM_Settings.stoneCracks)
 				{
-					if(block == Blocks.stone && !isCustom)
+					if (block == Blocks.stone && !isCustom)
 					{
 						world.setBlock(x, y, z, Blocks.cobblestone);
-					} else if(block == Blocks.grass && !isCustom)
+					} else if (block == Blocks.grass && !isCustom)
 					{
 						world.setBlock(x, y, z, Blocks.dirt);
 					}
@@ -744,30 +719,27 @@ public class EM_PhysManager
 		}
 		for(int i = x + 1; i <= x + dist; i++)
 		{
-			int k = z;
-			
+
 			boolean cancel = false;
 			
 			for(int j = y - 1; j <= y; j++)
 			{
-				Block block = world.getBlock(i, j, k);
+				Block block = world.getBlock(i, j, z);
 				Material material = block == null? Material.air : block.getMaterial();
 				
 				if(j == y)
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, i, j, z, false) || (material == Material.leaves && !isLeaves))
 					{
 						cancel = true;
 						break;
 					} else
 					{
-						continue;
 					}
 				} else
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, i, j, z, false) || (material == Material.leaves && !isLeaves))
 					{
-						continue;
 					} else
 					{
 						return true;
@@ -783,30 +755,27 @@ public class EM_PhysManager
 		
 		for(int i = x - 1; i >= x - dist; i--)
 		{
-			int k = z;
-			
+
 			boolean cancel = false;
 			
 			for(int j = y - 1; j <= y; j++)
 			{
-				Block block = world.getBlock(i, j, k);
+				Block block = world.getBlock(i, j, z);
 				Material material = block == null? Material.air : block.getMaterial();
 				
 				if(j == y)
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, i, j, z, false) || (material == Material.leaves && !isLeaves))
 					{
 						cancel = true;
 						break;
 					} else
 					{
-						continue;
 					}
 				} else
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, i, j, z, false) || (material == Material.leaves && !isLeaves))
 					{
-						continue;
 					} else
 					{
 						return true;
@@ -822,30 +791,27 @@ public class EM_PhysManager
 		
 		for(int k = z + 1; k <= z + dist; k++)
 		{
-			int i = x;
-			
+
 			boolean cancel = false;
 			
 			for(int j = y - 1; j <= y; j++)
 			{
-				Block block = world.getBlock(i, j, k);
+				Block block = world.getBlock(x, j, k);
 				Material material = block == null? Material.air : block.getMaterial();
 				
 				if(j == y)
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, x, j, k, false) || (material == Material.leaves && !isLeaves))
 					{
 						cancel = true;
 						break;
 					} else
 					{
-						continue;
 					}
 				} else
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, x, j, k, false) || (material == Material.leaves && !isLeaves))
 					{
-						continue;
 					} else
 					{
 						return true;
@@ -861,30 +827,27 @@ public class EM_PhysManager
 		
 		for(int k = z - 1; k >= z - dist; k--)
 		{
-			int i = x;
-			
+
 			boolean cancel = false;
 			
 			for(int j = y - 1; j <= y; j++)
 			{
-				Block block = world.getBlock(i, j, k);
+				Block block = world.getBlock(x, j, k);
 				Material material = block == null? Material.air : block.getMaterial();
 				
 				if(j == y)
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, x, j, k, false) || (material == Material.leaves && !isLeaves))
 					{
 						cancel = true;
 						break;
 					} else
 					{
-						continue;
 					}
 				} else
 				{
-					if(blockNotSolid(world, i, j, k, false) || (material == Material.leaves && !isLeaves))
+					if(blockNotSolid(world, x, j, k, false) || (material == Material.leaves && !isLeaves))
 					{
-						continue;
 					} else
 					{
 						return true;
@@ -947,23 +910,11 @@ public class EM_PhysManager
 				if(stabNum == 3)
 				{
 					StabilityType strongType = EM_Settings.stabilityTypes.get("strong");
-					if(strongType != null && strongType.enablePhysics)
-					{
-						return true;
-					} else
-					{
-						return false;
-					}
+					return strongType != null && strongType.enablePhysics;
 				} else if(stabNum == 2)
 				{
 					StabilityType avgType = EM_Settings.stabilityTypes.get("average");
-					if(avgType != null && avgType.enablePhysics)
-					{
-						return true;
-					} else
-					{
-						return false;
-					}
+					return avgType != null && avgType.enablePhysics;
 				} else if(stabNum == 1)
 				{
 					StabilityType looseType;
@@ -974,13 +925,7 @@ public class EM_PhysManager
 					{
 						looseType = EM_Settings.stabilityTypes.get("loose");
 					}
-					if(looseType != null && looseType.enablePhysics)
-					{
-						return true;
-					} else
-					{
-						return false;
-					}
+					return looseType != null && looseType.enablePhysics;
 				} else
 				{
 					return false;
@@ -1008,13 +953,7 @@ public class EM_PhysManager
 		} else if(material == Material.water || material == Material.lava)
 		{
 			return !isSliding;
-		} else if(block.getCollisionBoundingBoxFromPool(world, x, y, z) == null)
-		{
-			return true;
-		} else
-		{
-			return false;
-		}
+		} else return block.getCollisionBoundingBoxFromPool(world, x, y, z) == null;
 	}
 	
 	public static void updateSchedule()
@@ -1061,19 +1000,19 @@ public class EM_PhysManager
 			
 			for(int i = updateNum - 1; i >= 0; i -= 1)
 			{
-				if(!MinecraftServer.getServer().isServerRunning())
+				if (!MinecraftServer.getServer().isServerRunning())
 				{
 					physSchedule.clear();
 					physSchedule = new ArrayList<Object[]>();
 					canClear = true;
 					break;
 				}
-				
-				if(EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning())
+
+				if (EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning())
 				{
-					if(Minecraft.getMinecraft().isGamePaused() && !EnviroMine.proxy.isOpenToLAN())
+					if (Minecraft.getMinecraft().isGamePaused() && !EnviroMine.proxy.isOpenToLAN())
 					{
-						if(timer.isRunning())
+						if (timer.isRunning())
 						{
 							timer.stop();
 							debugTime = 0;
@@ -1081,47 +1020,41 @@ public class EM_PhysManager
 						break;
 					} else
 					{
-						if(!timer.isRunning())
+						if (!timer.isRunning())
 						{
 							timer.start();
 						}
 					}
 				}
-				
-				if(timer.elapsed(TimeUnit.SECONDS) > 2)
+
+				if (timer.elapsed(TimeUnit.SECONDS) > 2)
 				{
 					EnviroMine.logger.log(Level.ERROR, "Physics updates are taking too long! Dumping schedule!");
 					physSchedule.clear();
 					canClear = false;
 					break;
 				}
-				
-				if(physSchedule.size() - 1 < i)
+
+				if (physSchedule.size() - 1 < i)
 				{
-					EnviroMine.logger.log(Level.ERROR, "Unable to get physcis schedule entry, index out of bounds! (Size: " + physSchedule.size() + ", Index: " + i +")");
+					EnviroMine.logger.log(Level.ERROR, "Unable to get physcis schedule entry, index out of bounds! (Size: " + physSchedule.size() + ", Index: " + i + ")");
 					canClear = false;
 					break;
 				}
-				
+
 				Object[] entry = physSchedule.get(i);
-				
+
 				boolean locLoaded = false;
-				
-				if(((World)entry[0]).getChunkProvider().chunkExists((Integer)entry[1] >> 4, (Integer)entry[3] >> 4))
-				{
-					locLoaded = ((World)entry[0]).getChunkFromChunkCoords((Integer)entry[1] >> 4, (Integer)entry[3] >> 4).isChunkLoaded;
-				} else
-				{
-					locLoaded = false;
-				}
-				
-				if(locLoaded)
+
+				locLoaded = ((World)entry[0]).getChunkProvider().chunkExists((Integer)entry[1] >> 4, (Integer)entry[3] >> 4) && ((World)entry[0]).getChunkFromChunkCoords((Integer)entry[1] >> 4, (Integer)entry[3] >> 4).isChunkLoaded;
+
+				if (locLoaded)
 				{
 					canClear = false;
-					if(((String)entry[5]).equalsIgnoreCase("Slide"))
+					if (((String)entry[5]).equalsIgnoreCase("Slide"))
 					{
-						String position = (new StringBuilder()).append((Integer)entry[1]).append(",").append((Integer)entry[2]).append(",").append((Integer)entry[3]).toString();
-						if(!excluded.containsKey(position))
+						String position = (new StringBuilder()).append(entry[1]).append(",").append(entry[2]).append(",").append(entry[3]).toString();
+						if (!excluded.containsKey(position))
 						{
 							excluded.put(position, (String)entry[5]);
 							callPhysUpdate((World)entry[0], (Integer)entry[1], (Integer)entry[2], (Integer)entry[3], (String)entry[5]);
@@ -1131,23 +1064,23 @@ public class EM_PhysManager
 						updateSurroundingWithExclusions((World)entry[0], (Integer)entry[1], (Integer)entry[2], (Integer)entry[3], (Boolean)entry[4], (String)entry[5]);
 					}
 				}
-				
-				if(physSchedule.size() < updateRem)
+
+				if (physSchedule.size() < updateRem)
 				{
 					EnviroMine.logger.log(Level.ERROR, "Physics schedule dumped early! Resetting scheduler...");
 					physSchedule.clear();
 					canClear = false;
 					break;
 				}
-				
-				if(physSchedule.size() - 1 >= i)
+
+				if (physSchedule.size() - 1 >= i)
 				{
 					physSchedule.remove(i);
 				} else
 				{
 					EnviroMine.logger.log(Level.ERROR, "Failed to remove entry from physics schedule. Things may break badly!");
 				}
-				
+
 				updateRem = physSchedule.size();
 			}
 			currentTime = 0;

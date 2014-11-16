@@ -17,11 +17,9 @@ public class ClientQuake extends Earthquake
 	
 	public static void UpdateQuakeHeight(int d, int x, int z, int l, int w, float a, int height)
 	{
-		for(int i = 0; i < clientQuakes.size(); i++)
+		for (ClientQuake quake : clientQuakes)
 		{
-			ClientQuake quake = clientQuakes.get(i);
-			
-			if(quake.posX == x && quake.posZ == z)
+			if (quake.posX == x && quake.posZ == z)
 			{
 				quake.passY = height;
 				quake.duration = 6000L;

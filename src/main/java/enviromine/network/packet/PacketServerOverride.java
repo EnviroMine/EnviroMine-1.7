@@ -1,18 +1,11 @@
 package enviromine.network.packet;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.encoders.IPacketEncoder;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 import org.apache.logging.log4j.Level;
 
 public class PacketServerOverride implements IMessage
@@ -64,10 +62,8 @@ public class PacketServerOverride implements IMessage
 					e.printStackTrace();
 				}
 				String[] temp = new String[length];
-				for (int i = 0; i < length; i++)
-				{
-					temp[i] = tmp[i + 2];
-				}
+				System.arraycopy(tmp, 2, temp, 0, length);
+				
 				this.data.put(tmp[0], temp);
 			}
 		}
@@ -88,9 +84,9 @@ public class PacketServerOverride implements IMessage
 			String[] tmpData = data.get(key);
 			
 			String tmp = (key + "::" + tmpData.length);
-			for (int i = 0; i < tmpData.length; i++)
+			for (String s : tmpData)
 			{
-				tmp += "::" + tmpData[i];
+				tmp += "::" + s;
 			}
 			
 			info += tmp;
@@ -184,10 +180,8 @@ public class PacketServerOverride implements IMessage
 		@Override
 		public IMessage onMessage(PacketServerOverride message, MessageContext ctx)
 		{
-			Iterator<String> iterator = message.data.keySet().iterator();
-			while (iterator.hasNext())
+			for (String key : message.data.keySet())
 			{
-				String key = iterator.next();
 				try
 				{
 					String[] strs = message.data.get(key);

@@ -1,12 +1,12 @@
 package enviromine.handlers.crafting;
 
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import enviromine.handlers.ObjectHandler;
 
 public class CamelPackExpandHandler implements IRecipe
 {
@@ -29,7 +29,6 @@ public class CamelPackExpandHandler implements IRecipe
 			ItemStack item = inv.getStackInSlot(i);
 			if (item == null)
 			{
-				continue;
 			} else if (item.hasTagCompound() && item.stackTagCompound.hasKey("isCamelPack"))
 			{
 				if (item.getTagCompound().getInteger("camelPackMax") > 100) {

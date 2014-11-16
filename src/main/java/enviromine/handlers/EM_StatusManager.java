@@ -1,8 +1,15 @@
 package enviromine.handlers;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
+import enviromine.client.gui.EM_GuiEnviroMeters;
+import enviromine.client.gui.UI_Settings;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.properties.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -33,24 +40,15 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.EnumPlantType;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import com.google.common.base.Stopwatch;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.client.gui.EM_GuiEnviroMeters;
-import enviromine.client.gui.UI_Settings;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
+import net.minecraftforge.common.EnumPlantType;
 
 public class EM_StatusManager
 {
@@ -641,7 +639,7 @@ public class EM_StatusManager
 		
 		if(entityLiving instanceof EntityPlayer)
 		{
-			if(((EntityPlayer)entityLiving).isPlayerSleeping())
+			if(entityLiving.isPlayerSleeping())
 			{
 				bTemp += 5F;
 			}
@@ -904,8 +902,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
+						int enID = enchTags.getCompoundTagAt(index).getShort("id");
+						int enLV = enchTags.getCompoundTagAt(index).getShort("lvl");
 						
 						if(enID == Enchantment.respiration.effectId)
 						{
@@ -963,8 +961,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
+						int enID = enchTags.getCompoundTagAt(index).getShort("id");
+						int enLV = enchTags.getCompoundTagAt(index).getShort("lvl");
 						
 						if(enID == Enchantment.fireProtection.effectId)
 						{
@@ -1016,8 +1014,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
+						int enID = enchTags.getCompoundTagAt(index).getShort("id");
+						int enLV = enchTags.getCompoundTagAt(index).getShort("lvl");
 						
 						if(enID == Enchantment.fireProtection.effectId)
 						{
@@ -1069,8 +1067,8 @@ public class EM_StatusManager
 				{
 					for(int index = 0; index < enchTags.tagCount(); index++)
 					{
-						int enID = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("id");
-						int enLV = ((NBTTagCompound)enchTags.getCompoundTagAt(index)).getShort("lvl");
+						int enID = enchTags.getCompoundTagAt(index).getShort("id");
+						int enLV = enchTags.getCompoundTagAt(index).getShort("lvl");
 						
 						if(enID == Enchantment.fireProtection.effectId)
 						{
@@ -1257,10 +1255,9 @@ public class EM_StatusManager
 	
 	public static float getBiomeTemprature(int x, int y, BiomeGenBase biome)
 	{
-		float temp= 0F;
-		
-		
-		return temp;
+
+
+		return 0F;
 		
 	}
 	
@@ -1310,10 +1307,8 @@ public class EM_StatusManager
 	
 	public static void removeAllTrackers()
 	{
-		Iterator<EnviroDataTracker> iterator = trackerList.values().iterator();
-		while(iterator.hasNext())
+		for (EnviroDataTracker tracker : trackerList.values())
 		{
-			EnviroDataTracker tracker = iterator.next();
 			tracker.isDisabled = true;
 		}
 		
@@ -1322,10 +1317,8 @@ public class EM_StatusManager
 	
 	public static void saveAndDeleteAllTrackers()
 	{
-		Iterator<EnviroDataTracker> iterator = trackerList.values().iterator();
-		while(iterator.hasNext())
+		for (EnviroDataTracker tracker : trackerList.values())
 		{
-			EnviroDataTracker tracker = iterator.next();
 			tracker.isDisabled = true;
 			NBTTagCompound tags = tracker.trackedEntity.getEntityData();
 			tags.setFloat("ENVIRO_AIR", tracker.airQuality);
@@ -1339,12 +1332,9 @@ public class EM_StatusManager
 	public static void saveAndDeleteWorldTrackers(World world)
 	{
 		HashMap<String,EnviroDataTracker> tempList = new HashMap<String,EnviroDataTracker>(trackerList);
-		Iterator<EnviroDataTracker> iterator = tempList.values().iterator();
-		while(iterator.hasNext())
+		for (EnviroDataTracker tracker : tempList.values())
 		{
-			EnviroDataTracker tracker = iterator.next();
-			
-			if(tracker.trackedEntity.worldObj == world)
+			if (tracker.trackedEntity.worldObj == world)
 			{
 				NBTTagCompound tags = tracker.trackedEntity.getEntityData();
 				tags.setFloat("ENVIRO_AIR", tracker.airQuality);
@@ -1352,7 +1342,7 @@ public class EM_StatusManager
 				tags.setFloat("ENVIRO_TMP", tracker.bodyTemp);
 				tags.setFloat("ENVIRO_SAN", tracker.sanity);
 				tracker.isDisabled = true;
-				if(tracker.trackedEntity instanceof EntityPlayer)
+				if (tracker.trackedEntity instanceof EntityPlayer)
 				{
 					trackerList.remove(tracker.trackedEntity.getCommandSenderName());
 				} else
@@ -1366,12 +1356,9 @@ public class EM_StatusManager
 	public static void saveAllWorldTrackers(World world)
 	{
 		HashMap<String,EnviroDataTracker> tempList = new HashMap<String,EnviroDataTracker>(trackerList);
-		Iterator<EnviroDataTracker> iterator = tempList.values().iterator();
-		while(iterator.hasNext())
+		for (EnviroDataTracker tracker : tempList.values())
 		{
-			EnviroDataTracker tracker = iterator.next();
-			
-			if(tracker.trackedEntity.worldObj == world)
+			if (tracker.trackedEntity.worldObj == world)
 			{
 				NBTTagCompound tags = tracker.trackedEntity.getEntityData();
 				tags.setFloat("ENVIRO_AIR", tracker.airQuality);

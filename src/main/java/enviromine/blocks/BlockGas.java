@@ -1,5 +1,13 @@
 package enviromine.blocks;
 
+import enviromine.EnviroUtils;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.core.EM_Settings;
+import enviromine.gases.EnviroGas;
+import enviromine.gases.EnviroGasDictionary;
+import enviromine.gases.GasBuffer;
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -16,22 +24,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
-import enviromine.EnviroUtils;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.core.EM_Settings;
-import enviromine.gases.EnviroGas;
-import enviromine.gases.EnviroGasDictionary;
-import enviromine.gases.GasBuffer;
-import enviromine.handlers.ObjectHandler;
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Random;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGas extends Block implements ITileEntityProvider
 {
@@ -133,8 +133,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 			
 			if(tile != null && tile instanceof TileEntityGas)
 			{
-				float maxOpacity = ((TileEntityGas)tile).opacity;
-				return maxOpacity;
+				return ((TileEntityGas)tile).opacity;
 			} else
 			{
 				return 0F;
@@ -240,48 +239,21 @@ public class BlockGas extends Block implements ITileEntityProvider
 				return true;
 			} else if(side > 1) // Sides
 			{
-				
-				if(sideYMin > yMin || sideYMax < yMax)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
+
+				return sideYMin > yMin || sideYMax < yMax;
 			} else if(side == 0) // Bottom
 			{
-				if(sideYMax != 1.0F || yMin != 0.0F)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
+				return sideYMax != 1.0F || yMin != 0.0F;
 			} else if(side == 1) // Top
 			{
-				if(yMax != 1.0F || sideYMin != 0.0F)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
+				return yMax != 1.0F || sideYMin != 0.0F;
 			} else
 			{
 				return true;
 			}
 		} else
 		{
-			if(side == 0 && yMin != 0.0F)
-			{
-				return true;
-			} else if(side == 1 && yMax != 1.0F)
-			{
-				return true;
-			} else
-			{
-				return !blockAccess.getBlock(sideCoord[0], sideCoord[1], sideCoord[2]).isOpaqueCube();
-			}
+			return side == 0 && yMin != 0.0F || side == 1 && yMax != 1.0F || !blockAccess.getBlock(sideCoord[0], sideCoord[1], sideCoord[2]).isOpaqueCube();
 		}
 	}
 	
@@ -422,25 +394,24 @@ public class BlockGas extends Block implements ITileEntityProvider
 		dir.add(new int[]{0,1,0});
 		dir.add(new int[]{0,0,-1});
 		dir.add(new int[]{0,0,1});
-		
-		for(int i = 0; i < dir.size(); i++)
+
+		for (int[] pos : dir)
 		{
-			int[] pos = dir.get(i);
 			Block block = world.getBlock(x + pos[0], y + pos[1], z + pos[2]);
 			int meta = world.getBlockMetadata(x + pos[0], y + pos[1], z + pos[2]);
-			
-			if(ObjectHandler.igniteList.containsKey(block) && (ObjectHandler.igniteList.get(block).isEmpty() || ObjectHandler.igniteList.get(block).contains(meta)))
+
+			if (ObjectHandler.igniteList.containsKey(block) && (ObjectHandler.igniteList.get(block).isEmpty() || ObjectHandler.igniteList.get(block).contains(meta)))
 			{
 				return true;
 			} else
 			{
 				TileEntity tile = world.getTileEntity(x + pos[0], y + pos[1], z + pos[2]);
-				
-				if(tile != null && tile instanceof TileEntityGas)
+
+				if (tile != null && tile instanceof TileEntityGas)
 				{
 					TileEntityGas gasTile = (TileEntityGas)tile;
-					
-					if(gasTile.getGasQuantity(EnviroGasDictionary.gasFire.gasID) > 0)
+
+					if (gasTile.getGasQuantity(EnviroGasDictionary.gasFire.gasID) > 0)
 					{
 						return true;
 					}
@@ -537,8 +508,7 @@ public class BlockGas extends Block implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World world, int i)
 	{
-		TileEntityGas tile = new TileEntityGas();
-		return tile;
+		return new TileEntityGas();
 	}
 	
 	@Override
@@ -599,23 +569,21 @@ public class BlockGas extends Block implements ITileEntityProvider
 		dir.add(new int[]{0,1,0});
 		dir.add(new int[]{0,0,-1});
 		dir.add(new int[]{0,0,1});
-		
-		for(int i = 0; i < dir.size(); i++)
+
+		for (int[] pos : dir)
 		{
-			int[] pos = dir.get(i);
-			
 			TileEntity tile = world.getTileEntity(x + pos[0], y + pos[1], z + pos[2]);
-			
-			if(tile != null && tile instanceof TileEntityGas)
+
+			if (tile != null && tile instanceof TileEntityGas)
 			{
 				TileEntityGas gasTile = (TileEntityGas)tile;
-				
-				if(gasTile.burnGases())
+
+				if (gasTile.burnGases())
 				{
-					if(gasTile.getBlockType() == ObjectHandler.fireGasBlock)
+					if (gasTile.getBlockType() == ObjectHandler.fireGasBlock)
 					{
 						((BlockGas)gasTile.getBlockType()).swtichIgnitionState(world, x + pos[0], y + pos[1], z + pos[2]);
-			            world.playSoundEffect(x, y, z, "enviromine:gas_ignite", 1.0F, (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
+						world.playSoundEffect(x, y, z, "enviromine:gas_ignite", 1.0F, (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
 					}
 				}
 			}

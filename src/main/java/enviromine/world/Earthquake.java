@@ -1,5 +1,10 @@
 package enviromine.world;
 
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_PhysManager;
+import enviromine.network.packet.PacketEnviroMine;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -8,22 +13,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_PhysManager;
-import enviromine.network.packet.PacketEnviroMine;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import java.io.*;
 import java.util.ArrayList;
-import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import org.apache.logging.log4j.Level;
 
 public class Earthquake
 {
@@ -141,7 +136,6 @@ public class Earthquake
 						ravineMask.remove(i);
 						ravineMask.add(j, iEntry);
 					}
-					continue;
 				} else
 				{
 					if(j + 1 != i)
@@ -322,16 +316,14 @@ public class Earthquake
 	{
 		for(int y = 1; y < world.getActualHeight(); y++)
 		{
-			for(int i = 0; i < this.ravineMask.size(); i++)
+			for (int[] pos : this.ravineMask)
 			{
-				int[] pos = this.ravineMask.get(i);
-				
 				int x = pos[0];
 				int z = pos[2];
-				
-				if((world.getBlock(x, y, z).getMaterial() == Material.lava && y > 10) || world.getBlock(x, y, z).getMaterial() == Material.water || world.getBlock(x, y, z).getMaterial() == Material.rock || world.getBlock(x, y, z).getMaterial() == Material.clay || world.getBlock(x, y, z).getMaterial() == Material.sand || world.getBlock(x, y, z).getMaterial() == Material.ground || world.getBlock(x, y, z).getMaterial() == Material.grass || (y <= 10 && world.getBlock(x, y, z).getMaterial() == Material.air))
+
+				if ((world.getBlock(x, y, z).getMaterial() == Material.lava && y > 10) || world.getBlock(x, y, z).getMaterial() == Material.water || world.getBlock(x, y, z).getMaterial() == Material.rock || world.getBlock(x, y, z).getMaterial() == Material.clay || world.getBlock(x, y, z).getMaterial() == Material.sand || world.getBlock(x, y, z).getMaterial() == Material.ground || world.getBlock(x, y, z).getMaterial() == Material.grass || (y <= 10 && world.getBlock(x, y, z).getMaterial() == Material.air))
 				{
-					if(y <= 10)
+					if (y <= 10)
 					{
 						world.setBlock(x, y, z, Blocks.flowing_lava);
 					} else
@@ -424,10 +416,9 @@ public class Earthquake
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			
 			ArrayList<float[]> savedQuakes = new ArrayList<float[]>();
-			
-			for(int i = 0; i < pendingQuakes.size(); i++)
+
+			for (Earthquake quake : pendingQuakes)
 			{
-				Earthquake quake = pendingQuakes.get(i);
 				float[] entry = new float[7];
 				entry[0] = quake.world.provider.dimensionId;
 				entry[1] = quake.posX;
@@ -437,7 +428,7 @@ public class Earthquake
 				entry[5] = quake.mode;
 				entry[6] = quake.angle;
 				//entry[7] = quake.passY;
-				
+
 				savedQuakes.add(entry);
 			}
 			
@@ -462,7 +453,6 @@ public class Earthquake
 	{
 		if(!file.exists())
 		{
-			return;
 		} else
 		{
 			try
@@ -472,11 +462,9 @@ public class Earthquake
 				ObjectInputStream ois = new ObjectInputStream(bis);
 				
 				ArrayList<float[]> loadedQuakes = (ArrayList<float[]>)ois.readObject();
-				
-				for(int i = 0; i < loadedQuakes.size(); i++)
+
+				for (float[] qData : loadedQuakes)
 				{
-					float[] qData = loadedQuakes.get(i);
-					
 					int d = (int)qData[0];
 					World world = MinecraftServer.getServer().worldServerForDimension(d);
 					int x = (int)qData[1];
@@ -485,7 +473,7 @@ public class Earthquake
 					int w = (int)qData[4];
 					int m = (int)qData[5];
 					float a = qData[6];
-					
+
 					new Earthquake(world, x, y, l, w, m, a, true);
 				}
 				

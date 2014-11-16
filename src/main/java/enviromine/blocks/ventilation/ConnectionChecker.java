@@ -1,16 +1,16 @@
 package enviromine.blocks.ventilation;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-
 import enviromine.blocks.tiles.ventilation.IPosProvider;
 import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
 import enviromine.blocks.ventilation.multipart.ICollisionProvider;
 import enviromine.util.Coords;
 
+import net.minecraft.tileentity.TileEntity;
+
 import codechicken.lib.vec.Cuboid6;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class ConnectionChecker
 {
@@ -19,12 +19,8 @@ public class ConnectionChecker
 	{
 		Coords pos = provider.getCoords();
 		Coords pos2 = pos.getCoordsInDir(dir);
-		
-		if (!pos.hasTileEntity() || !pos2.hasTileEntity()) {
-			return false;
-		}
-		
-		return isValidConnection(provider, dir);
+
+		return !(!pos.hasTileEntity() || !pos2.hasTileEntity()) && isValidConnection(provider, dir);
 	}
 	
 	public static boolean isValidConnection(IPosProvider provider, ForgeDirection dir)

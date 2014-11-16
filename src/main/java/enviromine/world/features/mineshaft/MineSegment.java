@@ -1,13 +1,13 @@
 package enviromine.world.features.mineshaft;
 
+import enviromine.core.EnviroMine;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
-
-import enviromine.core.EnviroMine;
 
 import java.util.ArrayList;
 
@@ -82,8 +82,7 @@ public abstract class MineSegment
 	
 	public int[] getExitPoint(int rotation, int yDir)
 	{
-		int[] point = getExitPoint(rotation);
-		return point;
+		return getExitPoint(rotation);
 	}
 	
 	public boolean canBuild()

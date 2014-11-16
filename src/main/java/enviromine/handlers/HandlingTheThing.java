@@ -1,5 +1,10 @@
 package enviromine.handlers;
 
+import enviromine.EnviroDamageSource;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
@@ -7,13 +12,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
-import enviromine.EnviroDamageSource;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.trackers.EnviroDataTracker;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 public class HandlingTheThing
@@ -134,19 +135,17 @@ public class HandlingTheThing
 	public static boolean hasWitnesses(EntityPlayer victim)
 	{
 		List players = victim.worldObj.getEntitiesWithinAABB(EntityPlayer.class, victim.boundingBox.expand(128, 128, 128));
-		
-		Iterator iterator = players.iterator();
-		
-		while(iterator.hasNext())
+
+		for (Object player : players)
 		{
-			EntityPlayer witness = (EntityPlayer)iterator.next();
-			
-			if(witness.equals(victim))
+			EntityPlayer witness = (EntityPlayer)player;
+
+			if (witness.equals(victim))
 			{
 				continue;
 			}
-			
-			if(witness.canEntityBeSeen(victim))
+
+			if (witness.canEntityBeSeen(victim))
 			{
 				return true;
 			}

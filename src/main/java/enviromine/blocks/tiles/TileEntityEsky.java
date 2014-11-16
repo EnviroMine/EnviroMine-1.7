@@ -1,5 +1,7 @@
 package enviromine.blocks.tiles;
 
+import enviromine.blocks.BlockEsky;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -8,8 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-
-import enviromine.blocks.BlockEsky;
 
 public class TileEntityEsky extends TileEntity implements IInventory
 {
@@ -231,7 +231,7 @@ public class TileEntityEsky extends TileEntity implements IInventory
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
-        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : player.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
+        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) == this && player.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
 	}
 
     /**

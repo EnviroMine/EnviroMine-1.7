@@ -1,9 +1,7 @@
 package enviromine.world.chunk;
 
-import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.SHROOM;
-import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE;
-import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE;
-import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.NETHER_LAVA;
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
@@ -20,15 +18,20 @@ import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+
+import java.util.List;
+import java.util.Random;
+
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import java.util.List;
-import java.util.Random;
-import enviromine.handlers.ObjectHandler;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.SHROOM;
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE;
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.NETHER_LAVA;
 
 public class ChunkProviderCaves implements IChunkProvider
 {
@@ -114,7 +117,7 @@ public class ChunkProviderCaves implements IChunkProvider
 						{
 							for (int i2 = 0; i2 < 4; ++i2)
 							{
-								int j2 = i2 + i1 * 4 << 12 | 0 + j1 * 4 << 8 | k1 * 8 + l1;
+								int j2 = i2 + i1 * 4 << 12 | j1 * 4 << 8 | k1 * 8 + l1;
 								short short1 = 256;
 								j2 -= short1;
 								
@@ -127,13 +130,13 @@ public class ChunkProviderCaves implements IChunkProvider
 						continue;
 					}
 					double d0 = 0.125D;
-					double d1 = this.noiseField[((i1 + 0) * l + j1 + 0) * b2 + k1 + 0];
-					double d2 = this.noiseField[((i1 + 0) * l + j1 + 1) * b2 + k1 + 0];
-					double d3 = this.noiseField[((i1 + 1) * l + j1 + 0) * b2 + k1 + 0];
-					double d4 = this.noiseField[((i1 + 1) * l + j1 + 1) * b2 + k1 + 0];
-					double d5 = (this.noiseField[((i1 + 0) * l + j1 + 0) * b2 + k1 + 1] - d1) * d0;
-					double d6 = (this.noiseField[((i1 + 0) * l + j1 + 1) * b2 + k1 + 1] - d2) * d0;
-					double d7 = (this.noiseField[((i1 + 1) * l + j1 + 0) * b2 + k1 + 1] - d3) * d0;
+					double d1 = this.noiseField[(((i1) * l + j1) * b2 + k1)];
+					double d2 = this.noiseField[(((i1 + 0) * l + j1 + 1) * b2 + k1)];
+					double d3 = this.noiseField[(((i1 + 1) * l + j1 + 0) * b2 + k1)];
+					double d4 = this.noiseField[(((i1 + 1) * l + j1 + 1) * b2 + k1)];
+					double d5 = (this.noiseField[((i1 + 0) * l + j1) * b2 + k1 + 1] - d1) * d0;
+					double d6 = (this.noiseField[((i1) * l + j1 + 1) * b2 + k1 + 1] - d2) * d0;
+					double d7 = (this.noiseField[((i1 + 1) * l + j1) * b2 + k1 + 1] - d3) * d0;
 					double d8 = (this.noiseField[((i1 + 1) * l + j1 + 1) * b2 + k1 + 1] - d4) * d0;
 					
 					for (int l1 = 0; l1 < 8; ++l1)
@@ -146,7 +149,7 @@ public class ChunkProviderCaves implements IChunkProvider
 						
 						for (int i2 = 0; i2 < 4; ++i2)
 						{
-							int j2 = i2 + i1 * 4 << 12 | 0 + j1 * 4 << 8 | k1 * 8 + l1;
+							int j2 = i2 + i1 * 4 << 12 | j1 * 4 << 8 | k1 * 8 + l1;
 							short short1 = 256;
 							j2 -= short1;
 							double d14 = 0.25D;
@@ -218,7 +221,7 @@ public class ChunkProviderCaves implements IChunkProvider
 				{
 					int l1 = (l * 16 + k) * 256 + k1;
 					
-					if (k1 < 255 - this.hellRNG.nextInt(5) && k1 > 0 + this.hellRNG.nextInt(5))
+					if (k1 < 255 - this.hellRNG.nextInt(5) && k1 > this.hellRNG.nextInt(5))
 					{
 						Block block2 = p_147418_3_[l1];
 						
@@ -307,7 +310,7 @@ public class ChunkProviderCaves implements IChunkProvider
 		 this.hellRNG.setSeed((long)p_73154_1_ * 341873128712L + (long)p_73154_2_ * 132897987541L);
 		 Block[] ablock = new Block[32768*2];
 		 byte[] meta = new byte[ablock.length];
-		 BiomeGenBase[] abiomegenbase = this.worldObj.getWorldChunkManager().loadBlockGeneratorData((BiomeGenBase[])null, p_73154_1_ * 16, p_73154_2_ * 16, 16, 16); //Forge Move up to allow for passing to replaceBiomeBlocks
+		 BiomeGenBase[] abiomegenbase = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(null, p_73154_1_ * 16, p_73154_2_ * 16, 16, 16); //Forge Move up to allow for passing to replaceBiomeBlocks
 		 this.func_147419_a(p_73154_1_, p_73154_2_, ablock);
 				 this.replaceBiomeBlocks(p_73154_1_, p_73154_2_, ablock, meta, abiomegenbase);
 				 this.netherCaveGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);

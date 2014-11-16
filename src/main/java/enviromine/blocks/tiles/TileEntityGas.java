@@ -1,5 +1,13 @@
 package enviromine.blocks.tiles;
 
+import enviromine.EnviroUtils;
+import enviromine.blocks.BlockGas;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.EnviroGas;
+import enviromine.gases.EnviroGasDictionary;
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -13,15 +21,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import enviromine.EnviroUtils;
-import enviromine.blocks.BlockGas;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.EnviroGas;
-import enviromine.gases.EnviroGasDictionary;
-import enviromine.handlers.ObjectHandler;
-import java.awt.Color;
+
+import java.awt.*;
 import java.util.ArrayList;
+
 import org.apache.logging.log4j.Level;
 
 public class TileEntityGas extends TileEntity
@@ -55,10 +58,9 @@ public class TileEntityGas extends TileEntity
 		{
 			return;
 		}
-		
-		for(int i = 0; i < gases.size(); i++)
+
+		for (int[] gasArray : gases)
 		{
-			int[] gasArray = gases.get(i);
 			EnviroGasDictionary.gasList[gasArray[0]].applyEffects(entityLiving, gasArray[1]);
 		}
 	}
@@ -100,11 +102,10 @@ public class TileEntityGas extends TileEntity
 		}
 		
 		float alpha = 0F;
-		
-		for(int i = 0; i < gases.size(); i++)
+
+		for (int[] gasArray : gases)
 		{
-			int[] gasArray = gases.get(i);
-			alpha += EnviroGasDictionary.gasList[gasArray[0]].getOpacity()*gasArray[1];
+			alpha += EnviroGasDictionary.gasList[gasArray[0]].getOpacity() * gasArray[1];
 		}
 		
 		if(alpha >= 1F)
@@ -197,21 +198,20 @@ public class TileEntityGas extends TileEntity
 		
 		boolean lightGas = false;
 		boolean heavyGas = false;
-		
-		for(int i = 0; i < gases.size(); i++)
+
+		for (int[] gasArray : gases)
 		{
-			int[] gasArray = gases.get(i);
 			float density = EnviroGasDictionary.gasList[gasArray[0]].density;
-			
-			if(density >= 1F)
+
+			if (density >= 1F)
 			{
 				heavyGas = true;
-			} else if(density <= -1F)
+			} else if (density <= -1F)
 			{
 				lightGas = true;
 			}
-			
-			if(lightGas && heavyGas)
+
+			if (lightGas && heavyGas)
 			{
 				yMax = 1.0F;
 				yMin = 0.0F;
@@ -284,16 +284,15 @@ public class TileEntityGas extends TileEntity
 		}
 		
 		gases = new ArrayList<int[]>();
-		
-		for(int i = 0; i < savedGases.length; i++)
+
+		for (int gas : savedGases)
 		{
-			this.addGas(savedGases[i], 1);
+			this.addGas(gas, 1);
 		}
 		
 		if(gases.size() <= 0)
 		{
 			EnviroMine.logger.log(Level.ERROR, "GasTile loaded " + savedGases.length + " gas units but no gases were actually added!", new Exception());
-			return;
 		}
 	}
 	
@@ -340,10 +339,9 @@ public class TileEntityGas extends TileEntity
 	public int getGasQuantity(int id)
 	{
 		int total = 0;
-		for(int i = 0; i < gases.size(); i++)
+		for (int[] gasArray : gases)
 		{
-			int[] gasArray = gases.get(i);
-			if(gasArray[0] == id || id <= -1)
+			if (gasArray[0] == id || id <= -1)
 			{
 				total += gasArray[1];
 			}
@@ -365,7 +363,6 @@ public class TileEntityGas extends TileEntity
 			
 			if(!preReqRender && !curReqRender)
 			{
-				return;
 			} else
 			{
 				Packet packet = this.getDescriptionPacket();
@@ -384,7 +381,7 @@ public class TileEntityGas extends TileEntity
 		
 		for(int i = 0; i < 6; i++)
 		{
-			if(((BlockGas)this.getBlockType()).shouldSideBeRendered(this.worldObj, this.xCoord, this.yCoord, this.zCoord, i))
+			if(this.getBlockType().shouldSideBeRendered(this.worldObj, this.xCoord, this.yCoord, this.zCoord, i))
 			{
 				shouldRender = true;
 			}
@@ -480,13 +477,12 @@ public class TileEntityGas extends TileEntity
 		boolean didBurn = false;
 		int fireSize = 0;
 		ArrayList<int[]> burntGases = new ArrayList<int[]>();
-		
-		for(int i = 0; i < gases.size(); i ++)
+
+		for (int[] gasArray : gases)
 		{
-			int[] gasArray = gases.get(i);
-			int fire = EnviroGasDictionary.gasList[gasArray[0]].getFire(gasArray[1], this.amount >= 10? 0 : 10 - this.amount);
+			int fire = EnviroGasDictionary.gasList[gasArray[0]].getFire(gasArray[1], this.amount >= 10 ? 0 : 10 - this.amount);
 			float vol = EnviroGasDictionary.gasList[gasArray[0]].volitility;
-			if(vol > 0)
+			if (vol > 0)
 			{
 				burntGases.add(gasArray);
 				fireSize += fire;
@@ -496,9 +492,8 @@ public class TileEntityGas extends TileEntity
 		
 		if(burntGases.size() >= 1)
 		{
-			for(int i = 0; i < burntGases.size(); i++)
+			for (int[] burntArray : burntGases)
 			{
-				int[] burntArray = burntGases.get(i);
 				this.subtractGas(burntArray[0], burntArray[1]);
 			}
 		}
@@ -639,14 +634,8 @@ public class TileEntityGas extends TileEntity
 			if(this.worldObj.getBlock(i, j, k) == Blocks.air && this.getBlockType() != Blocks.air)
 			{
 				this.worldObj.setBlock(i, j, k, this.getBlockType());
-				
-				if(this.worldObj.getTileEntity(i, j, k) == null)
-				{
-					return false;
-				} else
-				{
-					return this.offLoadGas(i, j, k, offLoadNum);
-				}
+
+				return this.worldObj.getTileEntity(i, j, k) != null && this.offLoadGas(i, j, k, offLoadNum);
 			} else
 			{
 				return false;
@@ -681,19 +670,17 @@ public class TileEntityGas extends TileEntity
 					selGas = new int[]{0, this.getGasQuantity(0)};
 				} else
 				{
-					for(int index = 0; index < gases.size(); index++)
+					for (int[] gas : gases)
 					{
-						EnviroGas gasType = EnviroGasDictionary.gasList[gases.get(index)[0]];
-						
-						if(gasType.density < 0F && vDir == -1 && this.amount <= 10)
+						EnviroGas gasType = EnviroGasDictionary.gasList[gas[0]];
+
+						if (gasType.density < 0F && vDir == -1 && this.amount <= 10)
 						{
-							continue;
-						} else if(gasType.density > 0F && vDir == 1 && this.amount <= 10)
+						} else if (gasType.density > 0F && vDir == 1 && this.amount <= 10)
 						{
-							continue;
 						} else
 						{
-							selGas = gases.get(index);
+							selGas = gas;
 							break;
 						}
 					}
@@ -816,10 +803,10 @@ public class TileEntityGas extends TileEntity
 		float gasFactor;
 		if(this.getBlockType() == ObjectHandler.fireGasBlock)
 		{
-			gasFactor = this.amount/(float)(totalSpace + 1F);
+			gasFactor = this.amount/ (totalSpace + 1F);
 		} else
 		{
-			gasFactor = this.amount/(float)(totalSpace + 10F);
+			gasFactor = this.amount/ (totalSpace + 10F);
 		}
 		
 		for(int i = 0; i < 6; i++)

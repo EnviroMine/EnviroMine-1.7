@@ -1,17 +1,17 @@
 package enviromine.handlers.crafting;
 
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
-import enviromine.handlers.ObjectHandler;
-
-import java.util.ArrayList;
 
 public class GaskMaskRefillHandler implements IRecipe
 {
@@ -41,7 +41,6 @@ public class GaskMaskRefillHandler implements IRecipe
 			
 			if (item == null)
 			{
-				continue;
 			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("gasMaskFill"))
 			{
 				if (hasMask)
@@ -61,22 +60,16 @@ public class GaskMaskRefillHandler implements IRecipe
 				return false;
 			}
 		}
-		
+
 		if (maskFill == 200 || !hasMask || mask == null)
 		{
 			return false;
-		} else if (maskFill + (filters.size() * 100) >= 300)
-		{
-			return false;
-		} 
-		//else if (maskFill + 100 > 200)
-		//{
-		//	return false;
-		//}
-	    else
-		{
-			return hasMask && filters.size() >= 1;
-		}
+		} else
+//else if (maskFill + 100 > 200)
+//{
+//	return false;
+//}
+			return maskFill + (filters.size() * 100) < 300 && hasMask && filters.size() >= 1;
 	}
 	
 	@Override
@@ -120,7 +113,6 @@ public class GaskMaskRefillHandler implements IRecipe
 		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj)) {
 			if (!craftMatrix.getInventoryName().equals("container.crafting"))
 			{
-				return;
 			} else
 			{
 				for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
@@ -129,7 +121,6 @@ public class GaskMaskRefillHandler implements IRecipe
 					
 					if (slot == null)
 					{
-						continue;
 					}else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("gasMaskFill"))
 					{
 						slot.stackSize -= 1;

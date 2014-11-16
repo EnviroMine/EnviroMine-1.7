@@ -1,14 +1,16 @@
 package enviromine.client.renderer.tileentity;
 
+import enviromine.blocks.BlockGas;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import enviromine.blocks.BlockGas;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.ObjectHandler;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -315,13 +317,7 @@ public class RenderGasHandler implements ISimpleBlockRenderingHandler
 		
 		tessellator.addTranslation((float)-i, (float)-j, (float)-k);
 
-		if(verts <= 0)
-		{
-			return false;
-		} else
-		{
-			return true;
-		}
+		return verts > 0;
 	}
 	
 	private void vertexAutoMap(double x, double y, double z, double u, double v)

@@ -1,5 +1,14 @@
 package enviromine.trackers;
 
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.client.gui.UI_Settings;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,19 +24,13 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.client.gui.UI_Settings;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class EnviroDataTracker
 {
@@ -120,7 +123,7 @@ public class EnviroDataTracker
 			}
 		}
 		
-		if(!(trackedEntity instanceof EntityPlayer) && !EM_Settings.trackNonPlayer || (EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
+		if(!(trackedEntity instanceof EntityPlayer) && !EM_Settings.trackNonPlayer || (!EM_Settings.enableAirQ && !EM_Settings.enableBodyTemp && !EM_Settings.enableHydrate && !EM_Settings.enableSanity))
 		{
 			EM_StatusManager.saveAndRemoveTracker(this);
 			return;
@@ -601,14 +604,8 @@ public class EnviroDataTracker
 			if(entity instanceof EntityPlayer)
 			{
 				EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entity);
-				
-				if(tracker != null)
-				{
-					return false;
-				} else
-				{
-					return true;
-				}
+
+				return tracker == null;
 			} else
 			{
 				return true;

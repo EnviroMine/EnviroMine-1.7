@@ -1,21 +1,20 @@
 package enviromine.client.gui;
 
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import org.apache.logging.log4j.Level;
 
 public class UpdateNotification
@@ -50,10 +49,10 @@ public class UpdateNotification
 			{
 				return;
 			}
-			
-			for(int i = 0; i < data.length; i++)
+
+			for (String s : data)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + s.trim()));
 			}
 			
 			String version = data[0].trim();
@@ -108,7 +107,7 @@ public class UpdateNotification
 		con.setRequestProperty("Connection", "keep-alive");
 		
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0");
-		((HttpURLConnection)con).setRequestMethod("GET");
+		con.setRequestMethod("GET");
 		con.setConnectTimeout(5000);
 		BufferedInputStream in = new BufferedInputStream(con.getInputStream());
 		int responseCode = con.getResponseCode();
@@ -119,31 +118,23 @@ public class UpdateNotification
 		{
 			if(doRedirect)
 			{
-				try
-				{
-					return getNotification(con.getHeaderField("location"), false);
-				} catch(IOException e)
-				{
-					throw e;
-				}
+				return getNotification(con.getHeaderField("location"), false);
 			} else
 			{
 				throw new IOException();
 			}
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		int chars_read;
 		//	int total = 0;
 		while((chars_read = in.read()) != -1)
 		{
 			char g = (char)chars_read;
-			buffer.append(g);
+			builder.append(g);
 		}
-		final String page = buffer.toString();
-		
-		String[] pageSplit = page.split("\\n");
-		
-		return pageSplit;
+		final String page = builder.toString();
+
+		return page.split("\\n");
 	}
 	
 	public int compareVersions(String oldVer, String newVer)

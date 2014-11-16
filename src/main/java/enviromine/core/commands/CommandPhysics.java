@@ -67,13 +67,11 @@ public class CommandPhysics extends CommandBase
 			else
 			{
 				this.ShowUsage(sender);
-				return;
 			}
 			
 		} catch(Exception e)
 		{
 			this.ShowUsage(sender);
-			return;
 		}
 	}
 	

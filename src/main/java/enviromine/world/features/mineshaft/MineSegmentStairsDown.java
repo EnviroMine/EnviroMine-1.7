@@ -14,11 +14,6 @@ public class MineSegmentStairsDown extends MineSegment
 	@Override
 	public boolean build()
 	{
-		if(!this.canBuild())
-		{
-			return false;
-		}
-		
-		return true;
+		return this.canBuild();
 	}
 }

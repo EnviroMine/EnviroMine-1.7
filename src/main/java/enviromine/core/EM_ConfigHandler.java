@@ -1,28 +1,19 @@
 package enviromine.core;
 
+import enviromine.trackers.properties.*;
+
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.trackers.properties.RotProperties;
-import enviromine.trackers.properties.StabilityType;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import org.apache.logging.log4j.Level;
 
 public class EM_ConfigHandler
@@ -61,18 +52,16 @@ public class EM_ConfigHandler
 		
 		// Now load Files from "Custom Objects"
 		File[] customFiles = GetFileList(customPath);
-		for(int i = 0; i < customFiles.length; i++)
+		for (File file : customFiles)
 		{
-			LoadCustomObjects(customFiles[i]);
+			LoadCustomObjects(file);
 		}
 		
 		// Load Main Config File And this will go though changes
 		File configFile = new File(configPath + "EnviroMine.cfg");
 		loadGeneralConfig(configFile);
-		
-		int Total = EM_Settings.armorProperties.size() + EM_Settings.blockProperties.size() + EM_Settings.livingProperties.size() + EM_Settings.itemProperties.size() + EM_Settings.biomeProperties.size() + EM_Settings.dimensionProperties.size();
-		
-		return Total;
+
+		return EM_Settings.armorProperties.size() + EM_Settings.blockProperties.size() + EM_Settings.livingProperties.size() + EM_Settings.itemProperties.size() + EM_Settings.biomeProperties.size() + EM_Settings.dimensionProperties.size();
 	}
 	
 	private static void setPropertyConfigNames()
@@ -232,7 +221,6 @@ public class EM_ConfigHandler
 		{
 			if(i == EM_Settings.hypothermiaPotionID || i == EM_Settings.heatstrokePotionID || i == EM_Settings.frostBitePotionID || i == EM_Settings.dehydratePotionID || i == EM_Settings.insanityPotionID)
 			{
-				continue;
 			} else if(i >= Potion.potionTypes.length)
 			{
 				return i;
@@ -254,9 +242,8 @@ public class EM_ConfigHandler
 		
 		// Will be used Auto Load Custom Objects from ??? Dir 
 		File f = new File(path);
-		File[] list = f.listFiles();
-		
-		return list;
+
+		return f.listFiles();
 	}
 	
 	private static boolean isCFGFile(String fileName)
@@ -312,7 +299,7 @@ public class EM_ConfigHandler
 		boolean datFile = isCFGFile(customFiles.getName());
 		
 		// Check to make sure this is a Data File Before Editing
-		if(datFile == true)
+		if(datFile)
 		{
 			Configuration config;
 			try
@@ -341,12 +328,11 @@ public class EM_ConfigHandler
 			// 	Grab all Categories in File
 			List<String> catagory = new ArrayList<String>();
 			Set<String> nameList = config.getCategoryNames();
-			Iterator<String> nameListData = nameList.iterator();
-			
+
 			// add Categories to a List 
-			while(nameListData.hasNext())
+			for (String s : nameList)
 			{
-				catagory.add(nameListData.next());
+				catagory.add(s);
 			}
 			
 			// Now Read/Save Each Category And Add into Proper Hash Maps
@@ -355,7 +341,7 @@ public class EM_ConfigHandler
 			{
 				String CurCat = catagory.get(x);
 				
-				if(!((String)CurCat).isEmpty() && ((String)CurCat).contains(Configuration.CATEGORY_SPLITTER))
+				if(!CurCat.isEmpty() && CurCat.contains(Configuration.CATEGORY_SPLITTER))
 				{
 					String parent = CurCat.split("\\" + Configuration.CATEGORY_SPLITTER)[0];
 					
@@ -432,7 +418,7 @@ public class EM_ConfigHandler
 		// Check to make sure this is a Data File Before Editing
 		File configFile = new File(customPath + "MyCustom.cfg");
 		
-		String[] classpath = data.getClass().getCanonicalName().toString().toLowerCase().split("\\.");
+		String[] classpath = data.getClass().getCanonicalName().toLowerCase().split("\\.");
 		String classname = "";
 		
 		if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
@@ -463,9 +449,9 @@ public class EM_ConfigHandler
 		
 		if(type.equalsIgnoreCase("BLOCK"))
 		{
-			String nameULCat = blockCat + "." + name + " " + (Integer)data[1];
+			String nameULCat = blockCat + "." + name + " " + data[1];
 			
-			if(config.hasCategory(nameULCat) == true)
+			if(config.hasCategory(nameULCat))
 			{
 				config.removeCategory(config.getCategory(nameULCat));
 				returnValue = "Removed";
@@ -483,7 +469,7 @@ public class EM_ConfigHandler
 			
 			String nameEntityCat = entityCat + "." + name;
 			
-			if(config.hasCategory(nameEntityCat) == true)
+			if(config.hasCategory(nameEntityCat))
 			{
 				config.removeCategory(config.getCategory(nameEntityCat));
 				returnValue = "Removed";
@@ -499,7 +485,7 @@ public class EM_ConfigHandler
 			
 			String nameItemCat = itemsCat + "." + name;
 			
-			if(config.hasCategory(nameItemCat) == true)
+			if(config.hasCategory(nameItemCat))
 			{
 				config.removeCategory(config.getCategory(nameItemCat));
 				returnValue = "Removed";
@@ -514,7 +500,7 @@ public class EM_ConfigHandler
 		{
 			String nameArmorCat = armorCat + "." + name;
 			
-			if(config.hasCategory(nameArmorCat) == true)
+			if(config.hasCategory(nameArmorCat))
 			{
 				config.removeCategory(config.getCategory(nameArmorCat));
 				returnValue = "Removed";

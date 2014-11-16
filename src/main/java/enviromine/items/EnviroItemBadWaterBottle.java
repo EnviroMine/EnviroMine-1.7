@@ -1,8 +1,5 @@
 package enviromine.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
 
@@ -19,10 +16,11 @@ import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class EnviroItemBadWaterBottle extends Item
 {
-	@SideOnly(Side.CLIENT)
-	private IIcon field_94591_c;
 	@SideOnly(Side.CLIENT)
 	private IIcon field_94590_d;
 	@SideOnly(Side.CLIENT)
@@ -151,7 +149,6 @@ public class EnviroItemBadWaterBottle extends Item
 	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		this.field_94590_d = par1IconRegister.registerIcon(this.getIconString() + "_" + "bottle_drinkable");
-		this.field_94591_c = par1IconRegister.registerIcon(this.getIconString() + "_" + "bottle_splash");
 		this.field_94592_ct = par1IconRegister.registerIcon(this.getIconString() + "_" + "overlay");
 	}
 	

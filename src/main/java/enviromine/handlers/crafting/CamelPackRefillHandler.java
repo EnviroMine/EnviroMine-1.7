@@ -7,11 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class CamelPackRefillHandler implements IRecipe
 {
@@ -46,7 +45,6 @@ public class CamelPackRefillHandler implements IRecipe
 			
 			if (item == null)
 			{
-				continue;
 			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("camelPackFill"))
 			{
 				if (hasPack)
@@ -149,11 +147,9 @@ public class CamelPackRefillHandler implements IRecipe
 			return newItem;
 		} else
 		{
-			Iterator<ItemStack> iterator = bottles.iterator();
-			
-			while (iterator.hasNext())
+
+			for (ItemStack bottle : bottles)
 			{
-				ItemStack bottle = iterator.next();
 				bottle.getItem().setContainerItem(Items.glass_bottle);
 			}
 			
@@ -197,7 +193,6 @@ public class CamelPackRefillHandler implements IRecipe
 		{
 			if (!craftMatrix.getInventoryName().equals("container.crafting") || !emptyPack)
 			{
-				return;
 			} else
 			{
 				for (int i = craftMatrix.getSizeInventory() - 1; i >= 0; i--)
@@ -206,7 +201,6 @@ public class CamelPackRefillHandler implements IRecipe
 					
 					if (slot == null)
 					{
-						continue;
 					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
 					{
 						slot.stackSize += 1;

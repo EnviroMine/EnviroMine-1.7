@@ -1,12 +1,9 @@
 package enviromine.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,6 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDavyLamp extends Block implements ITileEntityProvider

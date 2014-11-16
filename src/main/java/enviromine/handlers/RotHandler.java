@@ -97,7 +97,7 @@ public class RotHandler
 		
 		if(flag && inventory instanceof TileEntity)
 		{
-			((TileEntity)inventory).markDirty();
+			inventory.markDirty();
 		}
 	}
 }

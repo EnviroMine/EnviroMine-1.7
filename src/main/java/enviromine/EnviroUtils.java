@@ -1,21 +1,24 @@
 package enviromine;
 
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import java.awt.Color;
+
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -261,17 +264,16 @@ public class EnviroUtils
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV((double)(x + 0), (double)(y + (height * scale)), 0, (double)((float)(u + 0) * f), (double)((float)(v + height) * f1));
+		tessellator.addVertexWithUV((double)(x), (double)(y + (height * scale)), 0, (double)((float)(u) * f), (double)((float)(v + height) * f1));
 		tessellator.addVertexWithUV((double)(x + (width * scale)), (double)(y + (height * scale)), 0, (double)((float)(u + width) * f), (double)((float)(v + height) * f1));
-		tessellator.addVertexWithUV((double)(x + (width * scale)), (double)(y + 0), 0, (double)((float)(u + width) * f), (double)((float)(v + 0) * f1));
-		tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), 0, (double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
+		tessellator.addVertexWithUV((double)(x + (width * scale)), (double)(y), 0, (double)((float)(u + width) * f), (double)((float)(v) * f1));
+		tessellator.addVertexWithUV((double)(x), (double)(y), 0, (double)((float)(u) * f), (double)((float)(v) * f1));
 		tessellator.draw();
 	}
 	
 	public static String replaceULN(String unlocalizedName)
 	{
-		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
-		return newName;
+		return unlocalizedName.replaceAll("\\.+", "\\_");
 	}
 	
 	public static float convertToFarenheit(float num)
@@ -331,9 +333,9 @@ public class EnviroUtils
 		
 		ArrayList<Type> typeList = new ArrayList<Type>();
 		Type[] typeArray = BiomeDictionary.getTypesForBiome(biome);
-		for(int i = 0; i < typeArray.length; i++)
+		for (Type type : typeArray)
 		{
-			typeList.add(typeArray[i]);
+			typeList.add(type);
 		}
 		
 		

@@ -17,10 +17,8 @@ public class Utils
 	{
 		E[] temp = array;
 		array = (E[])Array.newInstance(toAppend.getClass(), temp.length+1);
-		
-		for (int i = 0; i < temp.length; i++) {
-			array[i] = temp[i];
-		}
+
+		System.arraycopy(temp, 0, array, 0, temp.length);
 		
 		array[temp.length] = toAppend;
 		

@@ -1,17 +1,17 @@
 package enviromine.trackers.properties;
 
-import java.io.File;
-import java.io.IOException;
-
-import net.minecraft.world.WorldProvider;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.config.Configuration;
-
-import org.apache.logging.log4j.Level;
-
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+
+import net.minecraft.world.WorldProvider;
+
+import java.io.File;
+import java.io.IOException;
+
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
 
 public class DimensionProperties
 {
@@ -88,10 +88,10 @@ public class DimensionProperties
 		{
 			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
 			
-			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
+			String[] modname = dimension.getClass().trim().toLowerCase().split("\\.");
 			
 			//System.out.println(modname[0]);
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
+			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig)//If Vanilla
 			{
 				SaveConfig(dimension, "Defaults");
 			}

@@ -1,13 +1,14 @@
 package enviromine.client.gui.menu;
 
-import java.util.ArrayList;
-
 import enviromine.client.gui.SaveController;
 import enviromine.client.gui.UI_Settings;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
+
+import java.util.ArrayList;
 
 public class EM_Gui_Bars extends GuiScreen
 {
@@ -39,7 +40,7 @@ public class EM_Gui_Bars extends GuiScreen
 		this.buttonList.add(new GuiButton(102, this.width / 2 + 5 - 20, this.height / 6 + 48 - 6, 120, 20,  UI_Settings.heatBarPos ));
 		this.buttonList.add(new GuiButton(103, this.width / 2 + 5 - 20, this.height / 6 + 72 - 6, 120, 20,  UI_Settings.sanityBarPos ));
 		this.buttonList.add(new GuiButton(104, this.width / 2 + 5 - 20, this.height / 6 + 96 - 6, 120, 20,  UI_Settings.oxygenBarPos ));
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 75, this.height / 6 + 120 - 6, 150, 20, I18n.format( "gui.back", new Object[0])));
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 75, this.height / 6 + 120 - 6, 150, 20, I18n.format( "gui.back")));
 	}
 	
 	@Override

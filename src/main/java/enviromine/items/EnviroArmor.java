@@ -1,5 +1,8 @@
 package enviromine.items;
 
+import enviromine.handlers.EnviroAchievements;
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,10 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.handlers.EnviroAchievements;
-import enviromine.handlers.ObjectHandler;
 
 public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmorTextureProvider
 {
@@ -91,12 +93,8 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 		} else if (par1ItemStack.getItem() == ObjectHandler.gasMask && par2ItemStack.getItem() == ObjectHandler.gasMask)
 		{
 			return true;
-		} else if (par1ItemStack.getItem() == ObjectHandler.camelPack && par2ItemStack.getItem() == ObjectHandler.camelPack)
-		{
-			return true;
-		} else
-		{
-			return false;
+		} else {
+			return par1ItemStack.getItem() == ObjectHandler.camelPack && par2ItemStack.getItem() == ObjectHandler.camelPack;
 		}
 	}
 	

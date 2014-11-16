@@ -1,9 +1,25 @@
 package enviromine.handlers;
 
-import java.awt.Color;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.client.ModelCamelPack;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
+import enviromine.network.packet.PacketAutoOverride;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.world.Earthquake;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -35,16 +51,20 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.UUID;
+
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
@@ -67,29 +87,6 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EntityPhysicsBlock;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.ModelCamelPack;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.GasBuffer;
-import enviromine.network.packet.PacketAutoOverride;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.Hallucination;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_EventManager
 {
@@ -269,7 +266,6 @@ public class EM_EventManager
 					tracker.resetData();
 					EM_StatusManager.saveAndRemoveTracker(tracker);
 				}
-				return;
 			} else
 			{
 				tracker.resetData();
@@ -472,7 +468,6 @@ public class EM_EventManager
 		
 		if(movingobjectposition == null)
 		{
-			return;
 		} else
 		{
 			if(movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
@@ -514,7 +509,6 @@ public class EM_EventManager
 		
 		if(movingobjectposition == null)
 		{
-			return;
 		} else
 		{
 			if(movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
@@ -536,14 +530,8 @@ public class EM_EventManager
 				}
 				
 				boolean isWater;
-				
-				if(world.getBlock(i, j, k) == Blocks.water || world.getBlock(i, j, k) == Blocks.flowing_water)
-				{
-					isWater = true;
-				} else
-				{
-					isWater = false;
-				}
+
+				isWater = world.getBlock(i, j, k) == Blocks.water || world.getBlock(i, j, k) == Blocks.flowing_water;
 				
 				if(isWater || isValidCauldron)
 				{
@@ -601,8 +589,6 @@ public class EM_EventManager
 					event.setCanceled(true);
 				}
 			}
-			
-			return;
 		}
 	}
 	
@@ -633,14 +619,8 @@ public class EM_EventManager
 				}
 				
 				boolean isWater;
-				
-				if(entityPlayer.worldObj.getBlock(i, j, k) == Blocks.flowing_water || entityPlayer.worldObj.getBlock(i, j, k) == Blocks.water)
-				{
-					isWater = true;
-				} else
-				{
-					isWater = false;
-				}
+
+				isWater = entityPlayer.worldObj.getBlock(i, j, k) == Blocks.flowing_water || entityPlayer.worldObj.getBlock(i, j, k) == Blocks.water;
 				
 				boolean isValidCauldron = (entityPlayer.worldObj.getBlock(i, j, k) == Blocks.cauldron && entityPlayer.worldObj.getBlockMetadata(i, j, k) > 0);
 				
@@ -754,10 +734,7 @@ public class EM_EventManager
 		
 		ArrayList<Type> typeList = new ArrayList<Type>();
 		Type[] typeArray = BiomeDictionary.getTypesForBiome(biome);
-		for(int i = 0; i < typeArray.length; i++)
-		{
-			typeList.add(typeArray[i]);
-		}
+		Collections.addAll(typeList, typeArray);
 		
 		
 		if(typeList.contains(Type.SWAMP) || typeList.contains(Type.JUNGLE) || typeList.contains(Type.DEAD) || typeList.contains(Type.WASTELAND) || y < (float)seaLvl/0.75F || looksBad)
@@ -830,7 +807,7 @@ public class EM_EventManager
 		
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			InventoryPlayer invo = (InventoryPlayer)((EntityPlayer)event.entityLiving).inventory;
+			InventoryPlayer invo = ((EntityPlayer)event.entityLiving).inventory;
 			AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(event.entityLiving.posX - 0.5D, event.entityLiving.posY - 0.5D, event.entityLiving.posZ - 0.5D, event.entityLiving.posX + 0.5D, event.entityLiving.posY + 0.5D, event.entityLiving.posZ + 0.5D).expand(2D, 2D, 2D);
 			if(event.entityLiving.worldObj.getEntitiesWithinAABB(TileEntityGas.class, boundingBox).size() <= 0)
 			{
@@ -1074,7 +1051,7 @@ public class EM_EventManager
 			ItemStack item = null;
 			int itemUse = 0;
 			
-			if(((EntityPlayer)event.entityLiving).isPlayerSleeping() && tracker != null && !event.entityLiving.worldObj.isDaytime())
+			if(event.entityLiving.isPlayerSleeping() && tracker != null && !event.entityLiving.worldObj.isDaytime())
 			{
 				tracker.sleepState = "Asleep";
 				tracker.lastSleepTime = (int)event.entityLiving.worldObj.getWorldInfo().getWorldTime() % 24000;
@@ -1108,7 +1085,7 @@ public class EM_EventManager
 			
 			if(((EntityPlayer)event.entityLiving).isUsingItem())
 			{
-				item = ((EntityPlayer)event.entityLiving).getHeldItem();
+				item = event.entityLiving.getHeldItem();
 				
 				if(tracker != null)
 				{
@@ -1356,7 +1333,7 @@ public class EM_EventManager
 					MineshaftBuilder.saveBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
 					Earthquake.saveQuakes(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroEarthquakes"));
 				}
-				Earthquake.Reset();;
+				Earthquake.Reset();
 				MineshaftBuilder.clearBuilders();
 				GasBuffer.reset();
 				

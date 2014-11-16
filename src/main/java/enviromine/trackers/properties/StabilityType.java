@@ -1,17 +1,15 @@
 package enviromine.trackers.properties;
 
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import net.minecraftforge.common.config.Configuration;
-
 import org.apache.logging.log4j.Level;
-
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 
 public class StabilityType
 {
@@ -22,7 +20,7 @@ public class StabilityType
 	public boolean canHang;
 	public boolean holdOther;
 	
-	/** Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
+	/** Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Integer}) Max Support Distance <br>2 ({@link Integer}) Min Missing Blocks To Fall <br>3 ({@link Integer}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
 	static String[] SPName;
 	
 	public StabilityType(boolean enablePhysics, int supportDist, int minFall, int maxFall, boolean canHang, boolean holdOther)
@@ -35,7 +33,7 @@ public class StabilityType
 		this.holdOther = holdOther;
 	}
 	
-	/**Set up Config Names for Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
+	/**Set up Config Names for Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Integer}) Max Support Distance <br>2 ({@link Integer}) Min Missing Blocks To Fall <br>3 ({@link Integer}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
 	public static void setConfigNames()
 	{
 		SPName = new String[6];
@@ -72,12 +70,11 @@ public class StabilityType
 		// 	Grab all Categories in File
 		List<String> catagory = new ArrayList<String>();
 		Set<String> nameList = config.getCategoryNames();
-		Iterator<String> nameListData = nameList.iterator();
-		
+
 		// add Categories to a List 
-		while(nameListData.hasNext())
+		for (String s : nameList)
 		{
-			catagory.add(nameListData.next());
+			catagory.add(s);
 		}
 		
 		// Now Read/Save Each Category And Add into Proper Hash Maps

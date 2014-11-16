@@ -112,11 +112,9 @@ public class EnviroCommand extends CommandBase
 			}
 			
 			tracker.fixFloatinfPointErrors();
-			return;
 		} catch(Exception e)
 		{
 			this.ShowUsage(sender);
-			return;
 		}
 	}
 	

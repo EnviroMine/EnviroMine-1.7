@@ -1,5 +1,7 @@
 package enviromine.handlers.crafting;
 
+import enviromine.core.EM_Settings;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -11,8 +13,6 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
-import enviromine.core.EM_Settings;
 
 public class CamelPackIntegrationHandler implements IRecipe
 {
@@ -40,7 +40,6 @@ public class CamelPackIntegrationHandler implements IRecipe
 			ItemStack item = inv.getStackInSlot(i);
 			if (item == null)
 			{
-				continue;
 			} else if (item.hasTagCompound() && item.stackTagCompound.hasKey("isCamelPack"))
 			{
 				if (hasPack || isRemove)
@@ -82,9 +81,8 @@ public class CamelPackIntegrationHandler implements IRecipe
 				return false;
 			}
 		}
-		
-		boolean tmp = (hasArmor && armor != null && (isRemove || (hasPack && pack != null)));
-		return tmp;
+
+		return (hasArmor && armor != null && (isRemove || (hasPack && pack != null)));
 	}
 	
 	@Override
@@ -153,7 +151,6 @@ public class CamelPackIntegrationHandler implements IRecipe
 					
 					if (slot == null)
 					{
-						continue;
 					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
 					{
 						slot.stackSize++;

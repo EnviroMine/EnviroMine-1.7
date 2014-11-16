@@ -14,53 +14,42 @@ public class ModelVentSmall extends ModelBase
 	
 	public ModelVentSmall()
 	{
-		this.textureWidth = 16;
-		this.textureHeight = 16;
-		
-		this.initModel();
-	}
-	
-	//TODO REMOVE
-	private void initModel()
-	{
 		this.textureWidth = 64;
 		this.textureHeight = 64;
-		
+
 		pipeBox = new ModelRenderer(this, 0, 0);
 		pipeBox.setTextureSize(textureWidth, textureHeight);
 		pipeBox.addBox(2F, 2F, 2F, 12, 12, 12);
 		pipeBox.setRotationPoint(0F, 0F, 0F);
 		setRotation(pipeBox, 0F, 0F, 0F);
-		
+
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
 			ModelRenderer tmp = new ModelRenderer(this, 0, 24);
 			tmp.setTextureSize(textureWidth, textureHeight);
-			
+
 			int connectSize = 12;
 			float offSize = (14F - connectSize);
-			
+
 			int sizeX = dir.offsetX == 0 ? connectSize : 2;
 			int sizeY = dir.offsetY == 0 ? connectSize : 2;
 			int sizeZ = dir.offsetZ == 0 ? connectSize : 2;
-			
+
 			float offX = dir.offsetX == 0 ? offSize+(-7F*dir.offsetX) : 7F+(-7F*dir.offsetX);
 			float offY = dir.offsetY == 0 ? offSize+(7F*dir.offsetY) : 7F+(7F*dir.offsetY);
 			float offZ = dir.offsetZ == 0 ? offSize+(7F*dir.offsetZ) : 7F+(7F*dir.offsetZ);
-			
+
 			tmp.addBox(offX, offY, offZ, sizeX, sizeY, sizeZ);
-			
+
 			tmp.setRotationPoint(0F, 0F, 0F);
 			setRotation(tmp, 0F, 0F, 0F);
-			
+
 			connections[dir.getOpposite().ordinal()] = tmp;
 		}
 	}
 	
 	public void renderAll(VentDataHandler handler, float scale)
 	{
-		//this.initModel();
-		
 		ForgeDirection[] connections = handler.getConnections();
 		
 		if (connections.length < 6) {

@@ -131,7 +131,7 @@ public class ObjectHandler
 		esky = new BlockEsky(Material.iron).setBlockName("enviromine.esky").setCreativeTab(EnviroMine.enviroTab);
 		freezer = new BlockFreezer(Material.iron).setBlockName("enviromine.freezer").setCreativeTab(EnviroMine.enviroTab);
 		
-		fan = new BlockFan().setBlockName("enviromine.fan").setCreativeTab(EnviroMine.enviroTab);
+		fan = new BlockFan(Material.iron).setBlockName("enviromine.fan").setCreativeTab(EnviroMine.enviroTab);
 		ventSmall = new BlockVentSmall(Material.iron).setBlockName("enviromine.pipe_small").setCreativeTab(EnviroMine.enviroTab);
 		
 		Blocks.redstone_torch.setLightLevel(0.9375F);

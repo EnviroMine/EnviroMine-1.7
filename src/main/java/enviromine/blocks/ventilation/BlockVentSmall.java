@@ -8,9 +8,9 @@ import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
 
 public class BlockVentSmall extends BlockVentBase
 {
-	public BlockVentSmall(Material p_i45394_1_)
+	public BlockVentSmall(Material mat)
 	{
-		super(p_i45394_1_);
+		super(mat);
 		
 		//Set bounds slightly farther out than model so you can see the wireframe
 		float min = 0.125F;

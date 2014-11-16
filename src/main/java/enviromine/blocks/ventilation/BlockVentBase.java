@@ -1,5 +1,7 @@
 package enviromine.blocks.ventilation;
 
+import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
+import enviromine.util.Coords;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.ITileEntityProvider;
@@ -10,8 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
-import enviromine.util.Coords;
+import java.util.Random;
 
 public abstract class BlockVentBase extends Block implements ITileEntityProvider
 {
@@ -33,9 +34,15 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 	{
 		//When the block is placed at all - small pause before visual update
 		super.onBlockAdded(world, x, y, z);
+		world.scheduleBlockUpdate(x, y, z, this, 1);
+	}
+
+	@Override
+	public void updateTick(World world, int x, int y, int z, Random rand) {
+		super.updateTick(world, x, y, z, rand);
 		this.onChanged(false, new Coords(world, x, y, z));
 	}
-	
+
 	protected void onChanged(boolean removed, Coords coords)
 	{
 		TileEntityVentBase te = (TileEntityVentBase)coords.getTileEntity();

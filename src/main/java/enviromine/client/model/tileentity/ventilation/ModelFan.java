@@ -21,7 +21,7 @@ public class ModelFan extends ModelBase
 
 		pipeBox = new ModelRenderer(this, 0, 0);
 		pipeBox.setTextureSize(textureWidth, textureHeight);
-		pipeBox.addBox(2F, 2F, 2F, 12, 12, 12);
+		pipeBox.addBox(2F, 2F, 2F, 16, 12, 12);
 		pipeBox.setRotationPoint(0F, 0F, 0F);
 		setRotation(pipeBox, 0F, 0F, 0F);
 	}

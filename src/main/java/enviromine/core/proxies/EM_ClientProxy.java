@@ -1,13 +1,5 @@
 package enviromine.core.proxies;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevator;
@@ -24,14 +16,22 @@ import enviromine.client.renderer.tileentity.ventilation.TileEntityFanRenderer;
 import enviromine.client.renderer.tileentity.ventilation.TileEntityVentSmallRenderer;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.util.Iterator;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
@@ -42,15 +42,8 @@ public class EM_ClientProxy extends EM_CommonProxy
 	}
 	
 	@Override
-	public boolean isOpenToLAN()
-	{
-		if (Minecraft.getMinecraft().isIntegratedServerRunning())
-		{
-			return Minecraft.getMinecraft().getIntegratedServer().getPublic();
-		} else
-		{
-			return false;
-		}
+	public boolean isOpenToLAN() {
+		return Minecraft.getMinecraft().isIntegratedServerRunning() && Minecraft.getMinecraft().getIntegratedServer().getPublic();
 	}
 	
 	@Override
@@ -110,14 +103,11 @@ public class EM_ClientProxy extends EM_CommonProxy
 	@SideOnly(Side.CLIENT)
 	public static void armoredCamelRenderers()
 	{
-		Iterator tmp = Item.itemRegistry.iterator();
-		
-		while (tmp.hasNext())
+		for (Object itemArmor : Item.itemRegistry)
 		{
-			Object itemArmor = tmp.next();
-			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1)
+			if (itemArmor instanceof ItemArmor && ((ItemArmor) itemArmor).armorType == 1)
 			{
-				MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+				MinecraftForgeClient.registerItemRenderer((Item) itemArmor, new ArmoredCamelPackRenderer());
 			}
 		}
 	}

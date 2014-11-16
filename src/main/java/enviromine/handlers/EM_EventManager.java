@@ -9,6 +9,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -47,6 +50,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -1458,16 +1462,37 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderLivingEvent.Post event)
-	{
+	public void onRender(RenderLivingEvent.Specials.Pre event)
+	{ 
+		GL11.glPushMatrix();
 		ItemStack plate = event.entity.getEquipmentInSlot(3);
-		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))) {
-			GL11.glPushMatrix();
+		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")) && (event.renderer instanceof RenderBiped || event.renderer instanceof RenderPlayer))
+		{
+            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+    		double diffX = (event.entity.prevPosX + (event.entity.posX - event.entity.prevPosX) * partialTicks) - (player.prevPosX + (player.posX - player.prevPosX) * partialTicks); 
+    		double diffY = (event.entity.prevPosY + (event.entity.posY - event.entity.prevPosY) * partialTicks) - (player.prevPosY + (player.posY - player.prevPosY) * partialTicks) + (event.entity == player? -0.1D : event.entity.getEyeHeight() + (0.1D * (event.entity.width/0.6D))); 
+            double diffZ = (event.entity.prevPosZ + (event.entity.posZ - event.entity.prevPosZ) * partialTicks) - (player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks);
+            GL11.glTranslated(diffX, diffY, diffZ);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			GL11.glRotatef(180F + event.entity.renderYawOffset, 0F, 1F, 0F);
+			GL11.glRotatef(180F + (event.entity.renderYawOffset + (event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks), 0F, 1F, 0F);
+            GL11.glScaled(event.entity.width/0.6D, event.entity.width/0.6D, event.entity.width/0.6D);
+            if(event.entity.isSneaking())
+            {
+            	GL11.glRotatef(30F, 1F, 0F, 0F);
+            }
 			ModelCamelPack.RenderPack(event.entity, 0, 0, 0, 0, 0, .06325f);
-			GL11.glPopMatrix();
 		}
+		GL11.glPopMatrix();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	float partialTicks = 1F;
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void WorldRenderLast(RenderWorldLastEvent event)
+	{
+		partialTicks = event.partialTicks;
 	}
 	
 	@SubscribeEvent

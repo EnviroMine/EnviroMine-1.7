@@ -14,7 +14,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ModelCamelPack extends ModelBase
 {
 	private ModelRenderer pack;
-	private static HashMap<Entity, ModelCamelPack> modelMap = new HashMap<Entity, ModelCamelPack>();
+	//private static HashMap<Entity, ModelCamelPack> modelMap = new HashMap<Entity, ModelCamelPack>();
+	static ModelCamelPack model;
 	
 	private final ResourceLocation texture = new ResourceLocation("enviromine:textures/models/armor/camelpack.png");
 	
@@ -33,7 +34,7 @@ public class ModelCamelPack extends ModelBase
 	
 	public static void RenderPack(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
-		ModelCamelPack model;
+		/*ModelCamelPack model;
 		if (!modelMap.containsKey(entity))
 		{
 			model = new ModelCamelPack();
@@ -41,6 +42,11 @@ public class ModelCamelPack extends ModelBase
 		} else
 		{
 			model = modelMap.get(entity);
+		}*/
+		
+		if(model == null)
+		{
+			model = new ModelCamelPack();
 		}
 		
 		model.render(entity, f, f1, f2, f3, f4, f5);

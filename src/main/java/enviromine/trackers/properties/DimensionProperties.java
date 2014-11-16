@@ -88,7 +88,7 @@ public class DimensionProperties
 		{
 			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
 			
-			String[] modname = dimension.getClass().trim().toLowerCase().split("\\.");
+			String[] modname = dimension.getClass().getCanonicalName().trim().toLowerCase().split("\\.");
 			
 			//System.out.println(modname[0]);
 			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig)//If Vanilla

@@ -2,6 +2,9 @@ package enviromine.network.packet.encoders;
 
 import enviromine.trackers.properties.ArmorProperties;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -17,11 +20,16 @@ public class ArmorPropsEncoder<T> implements IPacketEncoder<HashMap<String, Armo
 			while (iterator.hasNext())
 			{
 				String name = iterator.next();
-				if (!str.equals(""))
+				
+				ArmorProperties prop = armorProps.get(name);
+				if (prop.item instanceof ItemArmor)
 				{
-					str += ";";
+					if (!str.equals(""))
+					{
+						str += ";";
+					}
+					str += name + "," + ((prop.allowCamelPack) ? "t" : "f");
 				}
-				str += name + "," + armorProps.get(name).allowCamelPack;
 			}
 			
 			return str;
@@ -45,7 +53,7 @@ public class ArmorPropsEncoder<T> implements IPacketEncoder<HashMap<String, Armo
 		{
 			String[] split = pair.split(",");
 			String name = split[0];
-			boolean state = Boolean.parseBoolean(split[1]);
+			boolean state = split[1].equals("t");
 			if (current.containsKey(name))
 			{
 				ArmorProperties prop = current.get(name);
@@ -53,7 +61,7 @@ public class ArmorPropsEncoder<T> implements IPacketEncoder<HashMap<String, Armo
 				current.put(name, prop);
 			} else
 			{
-				current.put(name, new ArmorProperties(name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, state));
+				current.put(name, new ArmorProperties((Item)Item.itemRegistry.getObject(name), name, 1F, 1F, 1F, 1F, 1F, 1F, 1F, 1F, state));
 			}
 		}
 		

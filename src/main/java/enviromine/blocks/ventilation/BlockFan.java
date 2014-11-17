@@ -3,6 +3,7 @@ package enviromine.blocks.ventilation;
 import enviromine.blocks.tiles.ventilation.TileEntityFan;
 import enviromine.handlers.ObjectHandler;
 import enviromine.util.Coords;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -18,7 +19,7 @@ public class BlockFan extends BlockVentBase
 		//Set bounds slightly farther out than model so you can see the wireframe
 		float min = 0.125F;
 		float max = 0.875F;
-		this.setBlockBounds(min, min, min, max, max, max);
+		this.setBlockBounds(min, min, 0F, max, max, 1F);
 	}
 	
 	@Override

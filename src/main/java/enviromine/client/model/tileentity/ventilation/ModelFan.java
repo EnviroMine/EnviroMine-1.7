@@ -1,6 +1,7 @@
 package enviromine.client.model.tileentity.ventilation;
 
 import enviromine.blocks.ventilation.VentDataHandler;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
@@ -21,14 +22,14 @@ public class ModelFan extends ModelBase
 
 		pipeBox = new ModelRenderer(this, 0, 0);
 		pipeBox.setTextureSize(textureWidth, textureHeight);
-		pipeBox.addBox(2F, 2F, 2F, 16, 12, 12);
+		pipeBox.addBox(2F, 2F, 0F, 12, 12, 16);
 		pipeBox.setRotationPoint(0F, 0F, 0F);
 		setRotation(pipeBox, 0F, 0F, 0F);
 	}
 
 	public void renderAll(VentDataHandler handler, float scale)
 	{
-		//this.initModel();
+//		this.initModel();
 
 		this.pipeBox.render(scale);
 	}

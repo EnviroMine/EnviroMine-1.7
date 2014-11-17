@@ -1,16 +1,17 @@
 package enviromine.client.model.tileentity.ventilation;
 
+import enviromine.blocks.ventilation.VentDataHandler;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import enviromine.blocks.ventilation.VentDataHandler;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class ModelVentSmall extends ModelBase
 {
 	public ModelRenderer pipeBox;
 	
-	public ModelRenderer[] connections = new ModelRenderer[6];
+	public ModelRenderer[] connections = new ModelRenderer[6]; //TODO Convert to rotation instead, and clean up texture file
 	
 	public ModelVentSmall()
 	{

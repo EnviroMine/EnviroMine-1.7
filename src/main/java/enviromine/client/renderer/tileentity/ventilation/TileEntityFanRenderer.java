@@ -4,7 +4,7 @@
 
 package enviromine.client.renderer.tileentity.ventilation;
 
-import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
+import enviromine.blocks.tiles.ventilation.TileEntityFan;
 import enviromine.blocks.ventilation.VentDataHandler;
 import enviromine.blocks.ventilation.multipart.VentBasePart;
 import enviromine.client.model.tileentity.ventilation.ModelFan;
@@ -19,28 +19,21 @@ import org.lwjgl.opengl.GL12;
 
 public class TileEntityFanRenderer extends TileEntitySpecialRenderer
 {
-	private static final ResourceLocation texture = new ResourceLocation("enviromine", "textures/models/blocks/yellow.png"); //TODO
+	private static final ResourceLocation texture = new ResourceLocation("enviromine", "textures/models/blocks/fan.png");
 	private ModelFan model = new ModelFan();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale)
 	{
 		VentDataHandler handler;
-		if (tileEntity instanceof TileEntityVentSmall) {
-			handler = ((TileEntityVentSmall)tileEntity).getHandler();
+		if (tileEntity instanceof TileEntityFan) {
+			handler = ((TileEntityFan)tileEntity).getHandler();
 		} else if (tileEntity instanceof TileMultipart) {
 			handler = ((VentBasePart)((TileMultipart)tileEntity).jPartList().get(0)).getHandler();
-		} else {
+		} else
+		{
 			return;
 		}
-		
-		/*
-		int i = 0;
-		if (handler.hasWorldObj())
-		{
-			i = handler.getBlockMetadata();
-		}
-		*/
 
 		this.bindTexture(texture);
 
@@ -51,9 +44,17 @@ public class TileEntityFanRenderer extends TileEntitySpecialRenderer
 		GL11.glScalef(1.0F, -1.0F, -1.0F);
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 
-		//short rotateX = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0))); //TODO
-		//GL11.glRotatef((float)rotateX, 0.0F, 1.0F, 0.0F);
-
+		
+		//Rotation start
+		int i = handler.provider().getCoords().getMetadata();
+		
+		short rotateX = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0)));
+		GL11.glRotatef((float)rotateX, 1.0F, 0.0F, 0.0F);
+		
+		short rotateY = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0))); //TODO
+		GL11.glRotatef((float)rotateY, 0.0F, 1.0F, 0.0F);
+		//Rotation end
+		
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 
 		this.model.renderAll(handler, 0.0625F);

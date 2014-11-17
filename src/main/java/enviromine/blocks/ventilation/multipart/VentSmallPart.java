@@ -1,11 +1,10 @@
 package enviromine.blocks.ventilation.multipart;
 
-import net.minecraftforge.common.util.ForgeDirection;
-
 import enviromine.client.renderer.tileentity.ventilation.TileEntityVentSmallRenderer;
 import enviromine.handlers.ObjectHandler;
 
 import codechicken.lib.vec.Cuboid6;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class VentSmallPart extends VentBasePart
 {
@@ -40,5 +39,11 @@ public class VentSmallPart extends VentBasePart
 	public Cuboid6 getCollision(ForgeDirection dir)
 	{
 		return this.sidedBounds[dir.ordinal()].copy();
+	}
+	
+	@Override
+	public boolean allowConnect(ForgeDirection dir)
+	{
+		return true;
 	}
 }

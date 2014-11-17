@@ -4,6 +4,9 @@
 
 package enviromine.blocks.tiles.ventilation;
 
+import enviromine.blocks.ventilation.VentDataHandler;
+import enviromine.util.Coords;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -11,10 +14,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import enviromine.blocks.ventilation.VentDataHandler;
-import enviromine.util.Coords;
-
-public class TileEntityVentBase extends TileEntity implements IPosProvider
+public abstract class TileEntityVentBase extends TileEntity implements IPosProvider
 {
 	protected VentDataHandler handler = new VentDataHandler(this);
 	

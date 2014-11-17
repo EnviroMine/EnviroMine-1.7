@@ -14,52 +14,59 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class ConnectionChecker
 {
-	/** Checks if there is any reason why we can't connect in this direction. For example, a multipart in the way, or there being nothing in this direction. */
+	/**
+	 * Checks if there is any reason why we can't connect in this direction. For example, a multipart in the way, or there being nothing in this direction.
+	 */
 	public static boolean checkConnection(IPosProvider provider, ForgeDirection dir)
 	{
 		Coords pos = provider.getCoords();
 		Coords pos2 = pos.getCoordsInDir(dir);
-
-		return !(!pos.hasTileEntity() || !pos2.hasTileEntity()) && isValidConnection(provider, dir);
+		
+		if (!pos.hasTileEntity() || !pos2.hasTileEntity())
+		{
+			return false;
+		}
+		
+		VentDataHandler handler = VentDataHandler.getHandler(pos2.getTileEntity());
+		
+		return handler != null && isValidConnection(provider, dir) && isValidConnection(handler.provider(), dir.getOpposite());
 	}
 	
 	public static boolean isValidConnection(IPosProvider provider, ForgeDirection dir)
 	{
 		Coords pos = provider.getCoords();
 		
-		boolean valid1 = isValidBlock(pos.getTileEntity()) && (!(provider instanceof ICollisionProvider) || !doesSideClip((ICollisionProvider)provider, dir));
-		
-		Coords pos2 = pos.getCoordsInDir(dir);
-		VentDataHandler handler = VentDataHandler.getHandler(pos2.getTileEntity());
-		
-		boolean valid2 = isValidBlock(pos2.getTileEntity()) && (handler == null || !(handler.provider() instanceof ICollisionProvider) || !doesSideClip((ICollisionProvider)handler.provider(), dir.getOpposite()));
-		
-		return valid1 && valid2;
+		return provider.allowConnect(dir) && isValidBlock(pos.getTileEntity()) && (!(provider instanceof ICollisionProvider) || !doesSideClip((ICollisionProvider)provider, dir));
 	}
 	
 	public static boolean doesSideClip(ICollisionProvider provider, ForgeDirection dir)
 	{
 		TileEntity te = provider.getCoords().getTileEntity();
 		
-		if (!(te instanceof TileMultipart)) {
+		if (!(te instanceof TileMultipart))
+		{
 			return false;
 		}
 		
 		TileMultipart tilemp = (TileMultipart)te;
 		
-		if (tilemp.isSolid(dir.ordinal())) {
+		if (tilemp.isSolid(dir.ordinal()))
+		{
 			return true;
 		}
 		
 		TMultiPart part = tilemp.partMap(dir.ordinal());
-		if (part == null) {
+		if (part == null)
+		{
 			return false;
 		}
 		
 		Iterable<Cuboid6> colls = part.getCollisionBoxes();
 		Cuboid6 baseColl = provider.getCollision(dir);
-		for (Cuboid6 coll : colls) {
-			if (baseColl.intersects(coll)) {
+		for (Cuboid6 coll : colls)
+		{
+			if (baseColl.intersects(coll))
+			{
 				return true;
 			}
 		}
@@ -69,9 +76,11 @@ public class ConnectionChecker
 	
 	public static boolean isValidBlock(TileEntity te)
 	{
-		if (te instanceof TileEntityVentBase) {
+		if (te instanceof TileEntityVentBase)
+		{
 			return true;
-		} else if (VentDataHandler.getMultiPart(te) != null) {
+		} else if (VentDataHandler.getMultiPart(te) != null)
+		{
 			return true;
 		}
 		

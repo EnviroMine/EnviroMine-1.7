@@ -1,12 +1,12 @@
 package enviromine.blocks.tiles.ventilation;
 
-import net.minecraftforge.common.util.ForgeDirection;
-
 import enviromine.util.Coords;
+
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityFan extends TileEntityVentBase
 {
-	private int facing;
+	private int facing = -1;
 	
 	@Override
 	public void updateEntity()
@@ -19,5 +19,11 @@ public class TileEntityFan extends TileEntityVentBase
 		{
 			this.handler.airTemp = ((TileEntityVentBase)intake.getTileEntity()).getHandler().airTemp;
 		}
+	}
+	
+	@Override
+	public boolean allowConnect(ForgeDirection dir)
+	{
+		return dir.ordinal() == facing; //TODO
 	}
 }

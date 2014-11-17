@@ -1,30 +1,35 @@
 package enviromine.blocks.ventilation.multipart;
 
-import net.minecraft.block.Block;
-
-import enviromine.core.EM_Settings;
+import enviromine.client.renderer.tileentity.ventilation.TileEntityFanRenderer;
 import enviromine.handlers.ObjectHandler;
 
 import codechicken.lib.vec.Cuboid6;
-import codechicken.multipart.minecraft.McMetaPart;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class FanPart extends McMetaPart
+public class FanPart extends VentBasePart
 {
+	private Cuboid6 bounds = new Cuboid6(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
+	
+	public FanPart()
+	{
+		super(ObjectHandler.fan, new TileEntityFanRenderer(), "fan");
+	}
+	
 	@Override
 	public Cuboid6 getBounds()
 	{
-		return null; //TODO
+		return this.bounds.set(0.125, 0.125, 0.125, 0.875, 0.875, 0.875); //TODO rotate
 	}
 	
 	@Override
-	public Block getBlock()
+	public Cuboid6 getCollision(ForgeDirection dir)
 	{
-		return ObjectHandler.fan;
+		return null;
 	}
 	
 	@Override
-	public String getType()
+	public boolean allowConnect(ForgeDirection dir)
 	{
-		return EM_Settings.ModID+"|fan";
+		return true; //TODO
 	}
 }

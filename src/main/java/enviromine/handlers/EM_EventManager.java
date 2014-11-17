@@ -1,9 +1,26 @@
 package enviromine.handlers;
 
-import java.awt.Color;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.client.ModelCamelPack;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
+import enviromine.network.packet.PacketAutoOverride;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.world.Earthquake;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -38,18 +55,20 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
@@ -72,31 +91,6 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EntityPhysicsBlock;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.ModelCamelPack;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.GasBuffer;
-import enviromine.network.packet.PacketAutoOverride;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.Hallucination;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_EventManager
 {
@@ -1488,6 +1482,7 @@ public class EM_EventManager
 	float partialTicks = 1F;
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void WorldRenderLast(RenderWorldLastEvent event)
 	{
 		partialTicks = event.partialTicks;

@@ -1485,11 +1485,9 @@ public class EM_EventManager
 		GL11.glPopMatrix();
 	}
 	
-	@SideOnly(Side.CLIENT)
 	float partialTicks = 1F;
 	
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public void WorldRenderLast(RenderWorldLastEvent event)
 	{
 		partialTicks = event.partialTicks;

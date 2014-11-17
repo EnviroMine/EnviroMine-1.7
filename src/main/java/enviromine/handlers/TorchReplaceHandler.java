@@ -34,7 +34,6 @@ public class TorchReplaceHandler
 		{
 			for(int i = posBuffer.size() - 1 > 100? 100 : posBuffer.size() - 1; i >= 0; i--)
 			{
-				System.out.println("Replacing...");
 				int[] entry = posBuffer.get(i);
 				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
 				

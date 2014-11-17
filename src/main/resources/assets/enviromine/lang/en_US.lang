@@ -19,6 +19,10 @@ tile.enviromine.elevator_top.name=Elevator Top
 tile.enviromine.elevator_bottom.name=Elevator Bottom
 tile.enviromine.esky.name=Esky
 tile.enviromine.freezer.name=Freezer
+tile.enviromine.davy_lamp.name=Davy Lamp
+tile.enviromine.gas.name=Gas
+tile.enviromine.firegas.name=Gas Fire
+tile.enviromine.burningcoal.name=Burning Coal
 
 itemGroup.enviromine.enviroTab=EnviroMine
 

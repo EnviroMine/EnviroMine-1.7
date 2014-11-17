@@ -1,9 +1,11 @@
 package enviromine.client;
 
+import java.util.HashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -12,6 +14,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ModelCamelPack extends ModelBase
 {
 	private ModelRenderer pack;
+	//private static HashMap<Entity, ModelCamelPack> modelMap = new HashMap<Entity, ModelCamelPack>();
+	static ModelCamelPack model;
 	
 	private final ResourceLocation texture = new ResourceLocation("enviromine:textures/models/armor/camelpack.png");
 	
@@ -26,6 +30,26 @@ public class ModelCamelPack extends ModelBase
 		pack.setTextureSize(64, 32);
 		pack.mirror = true;
 		setRotation(pack, 0F, 0F, 0F);
+	}
+	
+	public static void RenderPack(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+	{
+		/*ModelCamelPack model;
+		if (!modelMap.containsKey(entity))
+		{
+			model = new ModelCamelPack();
+			modelMap.put(entity, model);
+		} else
+		{
+			model = modelMap.get(entity);
+		}*/
+		
+		if(model == null)
+		{
+			model = new ModelCamelPack();
+		}
+		
+		model.render(entity, f, f1, f2, f3, f4, f5);
 	}
 	
 	@Override

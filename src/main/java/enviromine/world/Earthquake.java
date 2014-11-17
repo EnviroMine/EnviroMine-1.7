@@ -3,6 +3,7 @@ package enviromine.world;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
@@ -63,7 +64,17 @@ public class Earthquake
 			if(!(this instanceof ClientQuake))
 			{
 				int size = length > width? length/2 : width/2;
-				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+				NBTTagCompound pData = new NBTTagCompound();
+				pData.setInteger("id", 3);
+				pData.setInteger("dimension", world.provider.dimensionId);
+				pData.setInteger("posX", posX);
+				pData.setInteger("posZ", posZ);
+				pData.setInteger("length", length);
+				pData.setInteger("width", width);
+				pData.setFloat("angle", angle);
+				pData.setFloat("action", 0);
+				pData.setFloat("height", 1);
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 			}
 		}
 	}
@@ -86,7 +97,17 @@ public class Earthquake
 			{
 				pendingQuakes.add(this);
 				int size = length > width? length/2 : width/2;
-				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,0," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + ",1"), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+				NBTTagCompound pData = new NBTTagCompound();
+				pData.setInteger("id", 3);
+				pData.setInteger("dimension", world.provider.dimensionId);
+				pData.setInteger("posX", posX);
+				pData.setInteger("posZ", posZ);
+				pData.setInteger("length", length);
+				pData.setInteger("width", width);
+				pData.setFloat("angle", angle);
+				pData.setFloat("action", 0);
+				pData.setFloat("height", 1);
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 			}
 		}
 	}
@@ -226,7 +247,17 @@ public class Earthquake
 			}
 
 			int size = length > width? length/2 : width/2;
-			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,1," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + "," + passY), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+			NBTTagCompound pData = new NBTTagCompound();
+			pData.setInteger("id", 3);
+			pData.setInteger("dimension", world.provider.dimensionId);
+			pData.setInteger("posX", posX);
+			pData.setInteger("posZ", posZ);
+			pData.setInteger("length", length);
+			pData.setInteger("width", width);
+			pData.setFloat("angle", angle);
+			pData.setFloat("action", 1);
+			pData.setFloat("height", passY);
+			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 			return true;
 		}
 		return false;
@@ -312,7 +343,17 @@ public class Earthquake
 			
 			passY += EM_Settings.quakeSpeed;
 			int size = length > width? length/2 : width/2;
-			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,1," + world.provider.dimensionId + "," + posX + "," + posZ + "," + length + "," + width + "," + angle + "," + passY), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+			NBTTagCompound pData = new NBTTagCompound();
+			pData.setInteger("id", 3);
+			pData.setInteger("dimension", world.provider.dimensionId);
+			pData.setInteger("posX", posX);
+			pData.setInteger("posZ", posZ);
+			pData.setInteger("length", length);
+			pData.setInteger("width", width);
+			pData.setFloat("angle", angle);
+			pData.setFloat("action", 1);
+			pData.setFloat("height", passY);
+			EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
 		}
 		
 		return false;
@@ -376,7 +417,17 @@ public class Earthquake
 			if(!quake.removeBlock() || quake.ravineMask.size() <= 0)
 			{
 				int size = quake.length > quake.width? quake.length/2 : quake.width/2;
-				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine("ID:3,2," + quake.world.provider.dimensionId + "," + quake.posX + "," + quake.posZ + "," + quake.length + "," + quake.width + "," + quake.angle + "," + quake.passY), new TargetPoint(quake.world.provider.dimensionId, quake.posX, quake.passY, quake.posZ, 128 + size));
+				NBTTagCompound pData = new NBTTagCompound();
+				pData.setInteger("id", 3);
+				pData.setInteger("dimension", quake.world.provider.dimensionId);
+				pData.setInteger("posX", quake.posX);
+				pData.setInteger("posZ", quake.posZ);
+				pData.setInteger("length", quake.length);
+				pData.setInteger("width", quake.width);
+				pData.setFloat("angle", quake.angle);
+				pData.setFloat("action", 2);
+				pData.setFloat("height", quake.passY);
+				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(quake.world.provider.dimensionId, quake.posX, quake.passY, quake.posZ, 128 + size));
 				pendingQuakes.remove(i);
 			}
 		}

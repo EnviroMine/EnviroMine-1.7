@@ -5,6 +5,7 @@ package enviromine.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -18,23 +19,23 @@ import enviromine.world.ClientQuake;
 
 public class PacketEnviroMine implements IMessage
 {
-	private String message;
+	private NBTTagCompound tags;
 	
 	public PacketEnviroMine() {}
-	public PacketEnviroMine(String message) {
-		this.message = message;
+	public PacketEnviroMine(NBTTagCompound _tags) {
+		this.tags = _tags;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.message = ByteBufUtils.readUTF8String(buf);
+		this.tags = ByteBufUtils.readTag(buf);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		ByteBufUtils.writeUTF8String(buf, this.message);
+		ByteBufUtils.writeTag(buf, this.tags);
 	}
 	
 	public static class HandlerServer implements IMessageHandler<PacketEnviroMine,IMessage>
@@ -42,10 +43,11 @@ public class PacketEnviroMine implements IMessage
 		@Override
 		public IMessage onMessage(PacketEnviroMine packet, MessageContext ctx)
 		{
-			String[] data = packet.message.split(",");
-			if(data[0].equalsIgnoreCase("ID:1"))
+			int id = packet.tags.hasKey("id")? packet.tags.getInteger("id") : -1;
+			
+			if(id == 1)
 			{
-				this.emptyRightClick(data);
+				this.emptyRightClick(packet.tags);
 			} else
 			{
 				EnviroMine.logger.log(Level.ERROR, "Received invalid packet on serverside!");
@@ -53,9 +55,9 @@ public class PacketEnviroMine implements IMessage
 			return null; //Reply
 		}
 		
-		private void emptyRightClick(String[] data)
+		private void emptyRightClick(NBTTagCompound tags)
 		{
-			EntityPlayer player = EM_StatusManager.findPlayer(data[1]);
+			EntityPlayer player = EM_StatusManager.findPlayer(tags.getString("player"));
 			
 			if(player != null)
 			{
@@ -69,13 +71,14 @@ public class PacketEnviroMine implements IMessage
 		@Override
 		public IMessage onMessage(PacketEnviroMine packet, MessageContext ctx)
 		{
-			String[] data = packet.message.split(",");
-			if(data[0].equalsIgnoreCase("ID:0"))
+			int id = packet.tags.hasKey("id")? packet.tags.getInteger("id") : -1;
+			
+			if(id == 0)
 			{
-				this.trackerSync(data);
-			} else if(data[0].equalsIgnoreCase("ID:3"))
+				this.trackerSync(packet.tags);
+			} else if(id == 3)
 			{
-				this.registerQuake(data);
+				this.registerQuake(packet.tags);
 			} else
 			{
 				EnviroMine.logger.log(Level.ERROR, "Received invalid packet on clientside!");
@@ -83,10 +86,10 @@ public class PacketEnviroMine implements IMessage
 			return null; //Reply
 		}
 		
-		private void trackerSync(String[] data)
+		private void trackerSync(NBTTagCompound tags)
 		{
 			
-			EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(data[1]);
+			EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(tags.getString("player"));
 			
 			if(tracker != null)
 			{
@@ -94,24 +97,24 @@ public class PacketEnviroMine implements IMessage
 				tracker.prevBodyTemp = tracker.bodyTemp;
 				tracker.prevHydration = tracker.hydration;
 				tracker.prevSanity = tracker.sanity;
-				tracker.airQuality = Float.valueOf(data[2]);
-				tracker.bodyTemp = Float.valueOf(data[3]);
-				tracker.hydration = Float.valueOf(data[4]);
-				tracker.sanity = Float.valueOf(data[5]);
-				tracker.airTemp = Float.valueOf(data[6]);
+				tracker.airQuality = Float.valueOf(tags.getFloat("airQuality"));
+				tracker.bodyTemp = Float.valueOf(tags.getFloat("bodyTemp"));
+				tracker.hydration = Float.valueOf(tags.getFloat("hydration"));
+				tracker.sanity = Float.valueOf(tags.getFloat("sanity"));
+				tracker.airTemp = Float.valueOf(tags.getFloat("airTemp"));
 			}
 		}
 		
-		private void registerQuake(String[] data)
+		private void registerQuake(NBTTagCompound tags)
 		{
-			int b = Integer.valueOf(data[1]);
-			int d = Integer.valueOf(data[2]);
-			int x = Integer.valueOf(data[3]);
-			int z = Integer.valueOf(data[4]);
-			int l = Integer.valueOf(data[5]);
-			int w = Integer.valueOf(data[6]);
-			float a = Float.valueOf(data[7]);
-			int h = Integer.valueOf(data[8]);
+			int b = tags.getInteger("action");
+			int d = tags.getInteger("dimension");
+			int x = tags.getInteger("posX");
+			int z = tags.getInteger("posZ");
+			int l = tags.getInteger("length");
+			int w = tags.getInteger("width");
+			float a = tags.getFloat("angle");
+			int h = tags.getInteger("height");
 			
 			if(b == 0)
 			{

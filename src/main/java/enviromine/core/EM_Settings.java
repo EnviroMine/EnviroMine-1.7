@@ -141,6 +141,8 @@ public class EM_Settings
 	public static int quakeMode = 2;
 	public static int quakeSpeed = 2;
 	
+	public static boolean finiteWater = false;
+	
 	public static float convertToFarenheit(float num)
 	{
 		return((num * (9 / 5)) + 32F);

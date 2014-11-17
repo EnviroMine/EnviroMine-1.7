@@ -1,14 +1,34 @@
 package enviromine.handlers;
 
-import java.awt.Color;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.client.ModelCamelPack;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
+import enviromine.network.packet.PacketAutoOverride;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.world.Earthquake;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,17 +55,21 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -67,29 +91,6 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EntityPhysicsBlock;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.ModelCamelPack;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.GasBuffer;
-import enviromine.network.packet.PacketAutoOverride;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.Hallucination;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_EventManager
 {
@@ -427,6 +428,12 @@ public class EM_EventManager
 					fillBottle(event.entityPlayer.worldObj, event.entityPlayer, event.x, event.y, event.z, item, event);
 				}
 			}
+		} else if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_AIR && item == null)
+		{
+			NBTTagCompound pData = new NBTTagCompound();
+			pData.setInteger("id", 1);
+			pData.setString("player", event.entityPlayer.getCommandSenderName());
+			EnviroMine.instance.network.sendToServer(new PacketEnviroMine(pData));
 		}
 	}
 	
@@ -581,6 +588,9 @@ public class EM_EventManager
 					if(isValidCauldron)
 					{
 						player.worldObj.setBlockMetadataWithNotify(i, j, k, player.worldObj.getBlockMetadata(i, j, k) - 1, 2);
+					} else if(EM_Settings.finiteWater)
+					{
+						player.worldObj.setBlock(i, j, k, Blocks.flowing_water, player.worldObj.getBlockMetadata(i, j, k) + 1, 2);
 					}
 					
 					--item.stackSize;
@@ -595,8 +605,6 @@ public class EM_EventManager
                     {
                         player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
                     }
-
-                    
 					
 					event.setCanceled(true);
 				}
@@ -608,6 +616,10 @@ public class EM_EventManager
 	
 	public static void drinkWater(EntityPlayer entityPlayer, PlayerInteractEvent event)
 	{
+		if(entityPlayer.isInsideOfMaterial(Material.water))
+		{
+			return;
+		}
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entityPlayer);
 		MovingObjectPosition mop = getMovingObjectPositionFromPlayer(entityPlayer.worldObj, entityPlayer, true);
 		
@@ -710,11 +722,17 @@ public class EM_EventManager
 						if(isValidCauldron)
 						{
 							entityPlayer.worldObj.setBlockMetadataWithNotify(i, j, k, entityPlayer.worldObj.getBlockMetadata(i, j, k) - 1, 2);
+						} else if(EM_Settings.finiteWater)
+						{
+							entityPlayer.worldObj.setBlock(i, j, k, Blocks.flowing_water, entityPlayer.worldObj.getBlockMetadata(i, j, k) + 1, 2);
 						}
 						
 						entityPlayer.worldObj.playSoundAtEntity(entityPlayer, "random.drink", 1.0F, 1.0F);
 						
-						event.setCanceled(true);
+						if(event != null)
+						{
+							event.setCanceled(true);
+						}
 					}
 				}
 			}
@@ -1414,17 +1432,10 @@ public class EM_EventManager
 	}
 	
 	/* Client only events */
-	@SideOnly(Side.CLIENT)
-	ModelCamelPack model;
-	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onEntitySoundPlay(PlaySoundAtEntityEvent event)
 	{
-		if (model == null) {
-			model = new ModelCamelPack();
-		}
-		
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
 			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
@@ -1445,20 +1456,36 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderPlayerEvent.Post event)
-	{
-		ItemStack plate = event.entityPlayer.getEquipmentInSlot(3);
-		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))) {
-			//model = new ModelCamelPack();
-			
-			GL11.glPushMatrix();
+	public void onRender(RenderLivingEvent.Specials.Pre event)
+	{ 
+		GL11.glPushMatrix();
+		ItemStack plate = event.entity.getEquipmentInSlot(3);
+		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")) && (event.renderer instanceof RenderBiped || event.renderer instanceof RenderPlayer))
+		{
+            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+    		double diffX = (event.entity.prevPosX + (event.entity.posX - event.entity.prevPosX) * partialTicks) - (player.prevPosX + (player.posX - player.prevPosX) * partialTicks); 
+    		double diffY = (event.entity.prevPosY + (event.entity.posY - event.entity.prevPosY) * partialTicks) - (player.prevPosY + (player.posY - player.prevPosY) * partialTicks) + (event.entity == player? -0.1D : event.entity.getEyeHeight() + (0.1D * (event.entity.width/0.6D))); 
+            double diffZ = (event.entity.prevPosZ + (event.entity.posZ - event.entity.prevPosZ) * partialTicks) - (player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks);
+            GL11.glTranslated(diffX, diffY, diffZ);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			GL11.glRotatef(180F + event.entityLiving.renderYawOffset, 0F, 1F, 0F);
-			GL11.glEnable(GL11.GL_BLEND);
-			model.render(event.entity, 0, 0, 0, 0, 0, .06325f);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glPopMatrix();
+			GL11.glRotatef(180F + (event.entity.renderYawOffset + (event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks), 0F, 1F, 0F);
+            GL11.glScaled(event.entity.width/0.6D, event.entity.width/0.6D, event.entity.width/0.6D);
+            if(event.entity.isSneaking())
+            {
+            	GL11.glRotatef(30F, 1F, 0F, 0F);
+            }
+			ModelCamelPack.RenderPack(event.entity, 0, 0, 0, 0, 0, .06325f);
 		}
+		GL11.glPopMatrix();
+	}
+	
+	float partialTicks = 1F;
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void WorldRenderLast(RenderWorldLastEvent event)
+	{
+		partialTicks = event.partialTicks;
 	}
 	
 	@SubscribeEvent

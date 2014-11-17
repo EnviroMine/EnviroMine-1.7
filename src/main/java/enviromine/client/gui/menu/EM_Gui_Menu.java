@@ -24,8 +24,10 @@ public class EM_Gui_Menu extends GuiScreen
 		GuiButton serverSettings = new GuiButton(100, this.width / 2 - 90, this.height / 6 + 98 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
 		GuiButton customEditor =  new GuiButton(100, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
 		
+		/* update later on.... causeing a crash now.
 		// The old if statement would never work, GUIs are never run server side and mc.thePlayer is not accessible to server side functions - Funwayguy
 		EntityPlayerMP playerMP = mc.getIntegratedServer().isServerRunning()? MinecraftServer.getServer().getConfigurationManager().func_152612_a(mc.thePlayer.getCommandSenderName()) : null;
+		
 		if(playerMP != null && playerMP.getGameProfile() != null && MinecraftServer.getServer().getConfigurationManager().func_152596_g(playerMP.getGameProfile()))
 		{
 			serverSettings.enabled = true;
@@ -36,9 +38,9 @@ public class EM_Gui_Menu extends GuiScreen
 			serverSettings.enabled = false;
 			customEditor.enabled = false;			
 		}
-		
-		//serverSettings.enabled = false;
-		//customEditor.enabled = false;	
+		*/
+		serverSettings.enabled = false;
+		customEditor.enabled = false;	
 		
 		serverSettings.visible = true;
 		customEditor.visible = true;			

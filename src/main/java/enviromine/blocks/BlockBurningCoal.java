@@ -6,14 +6,13 @@ import static net.minecraftforge.common.util.ForgeDirection.NORTH;
 import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
-
 import java.util.Random;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.tiles.TileEntityBurningCoal;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -30,7 +29,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
 	public BlockBurningCoal(Material mat)
 	{
 		super(mat);
-		this.setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setBlockTextureName("redstone_ore").setLightLevel(0.625F).setTickRandomly(true);
+		this.setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setBlockTextureName("enviromine:burning_coal").setLightLevel(0.625F).setTickRandomly(true);
 	}
 
     /**
@@ -70,6 +69,11 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		super.updateTick(world, x, y, z, rand);
+		
+		if(world.isAirBlock(x, y + 1, z))
+		{
+			world.setBlock(x, y + 1, z, Blocks.fire);
+		}
 		
 		if(!world.scheduledUpdatesAreImmediate)
 		{
@@ -244,6 +248,36 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     {
         int newChance = world.getBlock(x, y, z).getFireSpreadSpeed(world, x, y, z, face);
         return (newChance > oldChance ? newChance : oldChance);
+    }
+
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
+    @SideOnly(Side.CLIENT)
+	public void randomDisplayTick(World world, int x, int y, int z, Random rand)
+    {
+        float f = (float)x + 0.5F;
+        float f1 = (float)y;
+        float f2 = (float)z + 0.5F;
+        float f3 = 0.52F;
+        float rf1 = rand.nextFloat();
+        float rf2 = rand.nextFloat()*0.6F - 0.3F;
+        float rf3 = rand.nextFloat();
+        
+        world.spawnParticle("smoke", (double)(f - f3), (double)f1 + rf1, (double)(f2 + rf2), 0.0D, 0.0D, 0.0D);
+        world.spawnParticle("flame", (double)(f - f3), (double)f1 + rf1, (double)(f2 + rf2), 0.0D, 0.0D, 0.0D);
+        
+        world.spawnParticle("smoke", (double)(f + f3), (double)f1 + rf1, (double)(f2 + rf2), 0.0D, 0.0D, 0.0D);
+        world.spawnParticle("flame", (double)(f + f3), (double)f1 + rf1, (double)(f2 + rf2), 0.0D, 0.0D, 0.0D);
+        
+        world.spawnParticle("smoke", (double)(f + rf2), (double)f1 + rf1, (double)(f2 - f3), 0.0D, 0.0D, 0.0D);
+        world.spawnParticle("flame", (double)(f + rf2), (double)f1 + rf1, (double)(f2 - f3), 0.0D, 0.0D, 0.0D);
+        
+        world.spawnParticle("smoke", (double)(f + rf2), (double)f1 + rf1, (double)(f2 + f3), 0.0D, 0.0D, 0.0D);
+        world.spawnParticle("flame", (double)(f + rf2), (double)f1 + rf1, (double)(f2 + f3), 0.0D, 0.0D, 0.0D);
+        
+        world.spawnParticle("smoke", (double)(f + rf1 - 0.5F), (double)f1 + 1.2F, (double)(f2 + rf3 - 0.5F), 0.0D, 0.0D, 0.0D);
+        world.spawnParticle("flame", (double)(f + rf1 - 0.5F), (double)f1 + 1.2F, (double)(f2 + rf3 - 0.5F), 0.0D, 0.0D, 0.0D);
     }
 
 	@Override

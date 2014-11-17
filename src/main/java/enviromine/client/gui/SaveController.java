@@ -16,8 +16,12 @@ import enviromine.core.EnviroMine;
 
 public class SaveController {
     protected static final String dirName = Minecraft.getMinecraft().mcDataDir + File.separator + "config" + File.separator + "enviromine";
+    
     protected static File dir = new File(dirName);
-
+    
+    public static String UISettingsData = "UI_Settings"; 
+    
+    
     public static boolean loadConfig(String name) {
         return loadConfig(name, null);
     }
@@ -31,7 +35,8 @@ public class SaveController {
         String fileName = name + ".dat";
         File file = new File(dir, fileName);
 
-        if (!file.exists()) {
+        if (!file.exists()) 
+        {
             EnviroMine.logger.warn("Config load canceled, file ("+ file.getAbsolutePath()  +")does not exist. This is normal for first run.");
             return false;
         } else {
@@ -40,7 +45,7 @@ public class SaveController {
         try {
             NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
 
-            UI_Settings.readFromNBT(nbt.getCompoundTag("global"));
+            UI_Settings.readFromNBT(nbt.getCompoundTag(UISettingsData));
             
             // New HUD Settings will be here
             
@@ -74,10 +79,8 @@ public class SaveController {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             NBTTagCompound globalNBT = new NBTTagCompound();
-
-            UI_Settings.writeToNBT(globalNBT);
-            
-            nbt.setTag("global", globalNBT);
+            	UI_Settings.writeToNBT(globalNBT);
+            	nbt.setTag(UISettingsData, globalNBT);
 
            // New HUD Settings will be here
             

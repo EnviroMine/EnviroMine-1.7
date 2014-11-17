@@ -29,7 +29,7 @@ public class BlockFan extends BlockVentBase
 		
 		Coords coords = new Coords(world, x, y, z);
 		
-		coords.setBlockWithMetadata(ObjectHandler.fan, this.getFacing(coords, entity));
+		coords.setBlockWithMetadata(ObjectHandler.fan, this.getFacing(coords, entity)); //TODO Convert to TileEntity data
 	}
 	
 	@Override

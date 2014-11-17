@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class FanPart extends VentBasePart
 {
 	private Cuboid6 bounds = new Cuboid6(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
+	private ForgeDirection facing = ForgeDirection.UNKNOWN;
 	
 	public FanPart()
 	{
@@ -30,6 +31,8 @@ public class FanPart extends VentBasePart
 	@Override
 	public boolean allowConnect(ForgeDirection dir)
 	{
-		return true; //TODO
+		return dir == this.facing || dir.getOpposite() == this.facing;
 	}
+	
+	//TODO Override NBT save/load
 }

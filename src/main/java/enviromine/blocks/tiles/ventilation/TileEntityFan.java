@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityFan extends TileEntityVentBase
 {
-	private int facing = -1;
+	private ForgeDirection facing = ForgeDirection.UNKNOWN;
 	
 	@Override
 	public void updateEntity()
@@ -14,7 +14,7 @@ public class TileEntityFan extends TileEntityVentBase
 		this.handler.airSpeed = 1;
 		super.updateEntity();
 		
-		Coords intake = this.getCoords().getCoordsOppositeDir(ForgeDirection.getOrientation(facing));
+		Coords intake = this.getCoords().getCoordsOppositeDir(facing);
 		if (intake.hasTileEntity() && intake.getTileEntity() instanceof TileEntityVentBase)
 		{
 			this.handler.airTemp = ((TileEntityVentBase)intake.getTileEntity()).getHandler().airTemp;
@@ -24,6 +24,6 @@ public class TileEntityFan extends TileEntityVentBase
 	@Override
 	public boolean allowConnect(ForgeDirection dir)
 	{
-		return dir.ordinal() == facing; //TODO
+		return dir == this.facing || dir.getOpposite() == this.facing;
 	}
 }

@@ -7,6 +7,7 @@ package enviromine.util;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.util.ForgeDirection;
 
 /** Provides easy XYZ coord handling, as well as some methods to make world manipulation easier */
@@ -93,6 +94,10 @@ public class Coords
 		if (!requireServer || !this.world.isRemote) {
 			this.world.markBlockForUpdate(this.x, this.y, this.z);
 		}
+	}
+	public void notifyNeighbors()
+	{
+		this.world.notifyBlockOfNeighborChange(this.x, this.y, this.z, this.getBlock());
 	}
 	
 	public Coords getCoordsInDir(ForgeDirection dir)

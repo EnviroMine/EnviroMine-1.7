@@ -1,7 +1,3 @@
-/**
- * @author thislooksfun
- */
-
 package enviromine.blocks.tiles.ventilation;
 
 import enviromine.blocks.ventilation.VentDataHandler;
@@ -14,6 +10,9 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+/**
+ * @author thislooksfun
+ */
 public abstract class TileEntityVentBase extends TileEntity implements IPosProvider
 {
 	protected VentDataHandler handler = new VentDataHandler(this);

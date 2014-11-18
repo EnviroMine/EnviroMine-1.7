@@ -1,24 +1,23 @@
 package enviromine.blocks.ventilation.multipart;
 
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-
 import enviromine.core.EM_Settings;
 import enviromine.handlers.ObjectHandler;
+
+import net.minecraft.block.Block;
+import net.minecraft.world.World;
 
 import java.util.Arrays;
 
 import codechicken.lib.vec.BlockCoord;
+import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartConverter;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
-import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
 public class PartRegister implements IPartFactory, IPartConverter
 {
 	public void init()
     {
-		System.out.println("Sup.");
         MultiPartRegistry.registerConverter(this);
         MultiPartRegistry.registerParts(this, new String[]{
                 EM_Settings.ModID+"|fan",

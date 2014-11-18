@@ -1,5 +1,6 @@
 package enviromine.client.renderer.tileentity.ventilation;
 
+import enviromine.blocks.IRotatable;
 import enviromine.blocks.tiles.ventilation.TileEntityFan;
 import enviromine.blocks.ventilation.VentDataHandler;
 import enviromine.blocks.ventilation.multipart.VentBasePart;
@@ -10,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import codechicken.multipart.TileMultipart;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -45,15 +47,14 @@ public class TileEntityFanRenderer extends TileEntitySpecialRenderer
 		GL11.glScalef(1.0F, -1.0F, -1.0F);
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 		
-		
 		//Rotation start
-		int i = handler.provider().getCoords().getMetadata();
+		ForgeDirection dir = ((IRotatable)handler.provider()).facing();
 		
-		short rotateX = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0)));
-		GL11.glRotatef((float)rotateX, 1.0F, 0.0F, 0.0F);
+		float rotateX = (dir == ForgeDirection.UP ? -90 : dir == ForgeDirection.DOWN ? 90 : 0);
+		float rotateY = (dir == ForgeDirection.NORTH ? 180 : dir == ForgeDirection.EAST ? -90 : (dir == ForgeDirection.WEST ? 90 : 0));
 		
-		short rotateY = (short)(i == 2 ? 180 : (i == 4 ? 90 : (i == 5 ? -90 : 0))); //TODO
-		GL11.glRotatef((float)rotateY, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(rotateX, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(rotateY, 0.0F, 1.0F, 0.0F);
 		//Rotation end
 		
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);

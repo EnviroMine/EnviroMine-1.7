@@ -2,6 +2,7 @@ package enviromine.blocks.ventilation;
 
 import enviromine.blocks.tiles.ventilation.TileEntityVentBase;
 import enviromine.util.Coords;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.ITileEntityProvider;
@@ -10,10 +11,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
+/**
+ * @author thislooksfun
+ */
 public abstract class BlockVentBase extends Block implements ITileEntityProvider
 {
 	protected BlockVentBase(Material mat)
@@ -82,9 +87,9 @@ public abstract class BlockVentBase extends Block implements ITileEntityProvider
 		((TileEntityVentBase)new Coords(world, x, y, z).getTileEntity()).getHandler().calculateConnections();
 	}
 	
-	public int getFacing(Coords coords, EntityLivingBase entity)
+	public ForgeDirection getFacing(Coords coords, EntityLivingBase entity)
 	{
-		return BlockPistonBase.determineOrientation(coords.world, coords.x, coords.y, coords.z, entity);
+		return ForgeDirection.getOrientation(BlockPistonBase.determineOrientation(coords.world, coords.x, coords.y, coords.z, entity));
 	}
 	
 	public int translateSideAroundMeta(int side, int meta)

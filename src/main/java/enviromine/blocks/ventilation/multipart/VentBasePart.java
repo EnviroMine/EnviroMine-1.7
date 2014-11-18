@@ -1,14 +1,13 @@
 package enviromine.blocks.ventilation.multipart;
 
+import enviromine.blocks.ventilation.VentDataHandler;
+import enviromine.core.EM_Settings;
+import enviromine.util.Coords;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import enviromine.blocks.ventilation.VentDataHandler;
-import enviromine.core.EM_Settings;
-import enviromine.util.Coords;
 
 import java.util.Arrays;
 
@@ -16,9 +15,11 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.minecraft.McMetaPart;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class VentBasePart extends McMetaPart implements ICollisionProvider
 {
+	//TODO make ForgeMultipart optional
 	private final Block block;
 	private final TileEntitySpecialRenderer renderer;
 	private final String type;
@@ -65,6 +66,7 @@ public abstract class VentBasePart extends McMetaPart implements ICollisionProvi
 		NBTTagCompound tag = new NBTTagCompound();
 		this.world().getTileEntity(x(), y(), z()).writeToNBT(tag);
 		this.handler.load(tag);
+		this.customLoad(tag);
 		
 		super.invalidateConvertedTile();
 	}
@@ -73,6 +75,7 @@ public abstract class VentBasePart extends McMetaPart implements ICollisionProvi
 	public void save(NBTTagCompound tag)
 	{
 		super.save(tag);
+		this.customSave(tag);
 		tag.setTag("TileEntityData", this.handler.save());
 	}
 	
@@ -81,6 +84,14 @@ public abstract class VentBasePart extends McMetaPart implements ICollisionProvi
 	{
 		super.load(tag);
 		this.handler.load(tag.getCompoundTag("TileEntityData"));
+	}
+	
+	public void customSave(NBTTagCompound tag)
+	{
+	}
+	
+	public void customLoad(NBTTagCompound tag)
+	{
 	}
 	
 	@Override
@@ -108,7 +119,8 @@ public abstract class VentBasePart extends McMetaPart implements ICollisionProvi
 			{
 				VentDataHandler handler = VentDataHandler.getHandler(pos.getTileEntity());
 				
-				if (handler == null) {
+				if (handler == null)
+				{
 					continue;
 				}
 				
@@ -139,7 +151,8 @@ public abstract class VentBasePart extends McMetaPart implements ICollisionProvi
 			if (pos.hasTileEntity())
 			{
 				VentDataHandler handler = VentDataHandler.getHandler(pos.getTileEntity());
-				if (handler == null) {
+				if (handler == null)
+				{
 					continue;
 				}
 				

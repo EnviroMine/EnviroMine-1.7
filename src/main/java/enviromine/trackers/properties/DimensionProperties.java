@@ -2,6 +2,8 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
@@ -9,9 +11,12 @@ import net.minecraftforge.common.config.Configuration;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.GameData;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.utils.ModIdentification;
 
 public class DimensionProperties
 {
@@ -88,17 +93,17 @@ public class DimensionProperties
 		{
 			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
 			
-			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-			
-			//System.out.println(modname[0]);
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
+			String modname  = ModIdentification.nameFromObject((Object) dimension);
+
+			if(modname.trim() == "Minecraft")
 			{
 				SaveConfig(dimension, "Defaults");
 			}
 			else
 			{
-				SaveConfig(dimension, modname[0]);
+				SaveConfig(dimension, modname);
 			}
+			
 		}
 	}
 	

@@ -16,6 +16,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EnviroMine;
+import enviromine.utils.ModIdentification;
 
 public class AddRemoveCustom
 {
@@ -55,6 +56,8 @@ public class AddRemoveCustom
 						int itemMeta = mc.thePlayer.getHeldItem().getItemDamage();
 						String idName = Item.itemRegistry.getNameForObject(item);
 						String name = mc.thePlayer.getHeldItem().getDisplayName();
+						String modname  = ModIdentification.nameFromObject((Object) item);
+						if(modname.trim() == "Minecraft") modname = "Defaults";
 						
 						//TODO
 						//idName = EnviroUtils.replaceULN(idName);
@@ -65,12 +68,12 @@ public class AddRemoveCustom
 
 						if(item instanceof ItemArmor)
 						{
-							returnValue = EM_ConfigHandler.SaveMyCustom("ARMOR", name, dataToCustom);
-							mc.thePlayer.addChatMessage(new ChatComponentText(name + " " + returnValue + " in MyCustom.cfg file. "));
+							returnValue = EM_ConfigHandler.SaveMyCustom("ARMOR", name, modname, dataToCustom);
+							mc.thePlayer.addChatMessage(new ChatComponentText(name + " " + returnValue + " in "+ modname +".cfg file. "));
 						} else if(item instanceof Item)
 						{
-							returnValue = EM_ConfigHandler.SaveMyCustom("ITEM", name, dataToCustom);
-							mc.thePlayer.addChatMessage(new ChatComponentText(name + " " + returnValue + " in MyCustom.cfg file. "));
+							returnValue = EM_ConfigHandler.SaveMyCustom("ITEM", name, modname, dataToCustom);
+							mc.thePlayer.addChatMessage(new ChatComponentText(name + " " + returnValue + " in "+ modname +".cfg file. "));
 						}
 						
 						return;
@@ -81,6 +84,8 @@ public class AddRemoveCustom
 					if(type.name() == "ENTITY")
 					{
 						Entity lookingAt = Minecraft.getMinecraft().objectMouseOver.entityHit;
+						String modname  = ModIdentification.nameFromObject((Object) lookingAt);
+						if(modname.trim() == "Minecraft") modname = "Defaults";
 						int id = 0;
 						
 						if(EntityList.getEntityID(lookingAt) > 0)
@@ -95,10 +100,11 @@ public class AddRemoveCustom
 							EnviroMine.logger.log(Level.WARN, "Failed to add/remove config entry. " + lookingAt.getCommandSenderName() + " has no ID!");
 						}
 						
+						
 						dataToCustom[0] = id;
 						
-						returnValue = EM_ConfigHandler.SaveMyCustom(type.name(), lookingAt.getCommandSenderName(), dataToCustom);
-						mc.thePlayer.addChatMessage(new ChatComponentText(lookingAt.getCommandSenderName() + " (" + id + ") " + returnValue + " in MyCustom.cfg file."));
+						returnValue = EM_ConfigHandler.SaveMyCustom(type.name(), lookingAt.getCommandSenderName(), modname, dataToCustom);
+						mc.thePlayer.addChatMessage(new ChatComponentText(lookingAt.getCommandSenderName() + " (" + id + ") " + returnValue + " in "+ modname +".cfg file."));
 					} else if(type.name() == "BLOCK")
 					{
 						
@@ -110,6 +116,10 @@ public class AddRemoveCustom
 						int blockMeta = Minecraft.getMinecraft().thePlayer.worldObj.getBlockMetadata(blockX, blockY, blockZ);
 						String blockULName = Block.blockRegistry.getNameForObject(block);
 						String blockName = block.getLocalizedName();
+						String modname  = ModIdentification.nameFromObject((Object) block);
+						if(modname.trim() == "Minecraft") modname = "Defaults";
+		
+						
 						
 						//blockULName = EnviroUtils.replaceULN(blockULName);
 						blockName = EnviroUtils.replaceULN(blockName);
@@ -119,8 +129,8 @@ public class AddRemoveCustom
 						dataToCustom[1] = blockMeta;
 						dataToCustom[2] = blockULName;
 						
-						returnValue = EM_ConfigHandler.SaveMyCustom(type.name(), blockName, dataToCustom);
-						mc.thePlayer.addChatMessage(new ChatComponentText(blockName + "(" + Block.blockRegistry.getNameForObject(block) + ":" + blockMeta + ") " + returnValue + "  in MyCustom.cfg file."));
+						returnValue = EM_ConfigHandler.SaveMyCustom(type.name(), blockName, modname, dataToCustom);
+						mc.thePlayer.addChatMessage(new ChatComponentText(blockName + "(" + Block.blockRegistry.getNameForObject(block) + ":" + blockMeta + ") " + returnValue + "  in "+ modname +".cfg file."));
 					}
 				}
 				catch(NullPointerException e)

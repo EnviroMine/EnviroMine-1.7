@@ -1,18 +1,17 @@
 package enviromine.trackers.properties;
 
-import enviromine.EnviroUtils;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraftforge.common.config.Configuration;
+import enviromine.EnviroUtils;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.utils.ModIdentification;
 
 public class ArmorProperties
 {
@@ -86,6 +85,7 @@ public class ArmorProperties
 		
 		ArmorProperties entry = new ArmorProperties((Item)item, name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
 		EM_Settings.armorProperties.put(name, entry);
+		
 	}
 	
 	public static void SaveProperty(Configuration config, String catName, String name, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
@@ -137,14 +137,17 @@ public class ArmorProperties
 		while(itemList.hasNext())
 		{
 			theitem = (Item) itemList.next();
-			String[] Names = SplitObjectName(Item.itemRegistry.getNameForObject(theitem));
+			//String[] Names = SplitObjectName(Item.itemRegistry.getNameForObject(theitem));
+			String modname  = ModIdentification.nameFromObject((Object) theitem);
 			
-			if(!Names[0].equalsIgnoreCase("minecraft")) // Ignore Minecraft Items
+			//if(!Names[0].equalsIgnoreCase("minecraft")) // Ignore Minecraft Items
+			if(modname.trim() != "Minecraft")
 			{
 				if(theitem instanceof ItemArmor)
 				{
 					
-					DetectedArmorGen((ItemArmor)theitem, Names[0]);
+					//DetectedArmorGen((ItemArmor)theitem, Names[0]);
+					DetectedArmorGen((ItemArmor)theitem, modname);
 					//armorCount += 1;
 				}
 			}
@@ -158,10 +161,8 @@ public class ArmorProperties
 
 	private static void DetectedArmorGen(ItemArmor armor, String ModID)
 	{
-		String[] classpath = armor.getClass().getCanonicalName().toString().split("\\.");
 		
-		
-		File armorFile = new File(EM_ConfigHandler.customPath + classpath[0] + ".cfg");
+		File armorFile = new File(EM_ConfigHandler.customPath + ModID + ".cfg");
 		if(!armorFile.exists())
 		{
 			try

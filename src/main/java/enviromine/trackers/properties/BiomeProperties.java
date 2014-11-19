@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.utils.ModIdentification;
 
 
 public class BiomeProperties
@@ -103,7 +104,10 @@ public class BiomeProperties
 				continue;
 			}
 			
-			BiomeSaveConfig(BiomeArray[p], "Biomes");
+			String modname  = ModIdentification.nameFromObject((Object) BiomeArray[p]);
+			if(modname.trim() == "Minecraft") modname = "Defaults";
+				
+			BiomeSaveConfig(BiomeArray[p], modname);
 		}
 	}
 	

@@ -3,9 +3,7 @@ package enviromine.core;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
-
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.BlockProperties;
@@ -14,6 +12,7 @@ import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.trackers.properties.RotProperties;
 import enviromine.trackers.properties.StabilityType;
+import enviromine.utils.ModIdentification;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -427,17 +426,12 @@ public class EM_ConfigHandler
 	}
 
 	
-	public static String SaveMyCustom(String type, String name, Object[] data)
+	public static String SaveMyCustom(String type, String name, String modname, Object[] data)
 	{
-		
+		if(modname.trim() == "Minecraft") modname = "Defaults";
+
 		// Check to make sure this is a Data File Before Editing
-		File configFile = new File(customPath + "MyCustom.cfg");
-		
-		String[] classpath = data.getClass().getCanonicalName().toString().toLowerCase().split("\\.");
-		String classname = "";
-		
-		if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
-		else classname = classpath[0];
+		File configFile = new File(customPath + modname +".cfg");
 		
 		Configuration config;
 		try
@@ -490,7 +484,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameEntityCat, classname + ":" + name);
+				config.addCustomCategoryComment(nameEntityCat, modname + ":" + name);
 				EntityProperties.SaveProperty(config, nameEntityCat, (Integer)data[0], true, true, true, true, false, false, 0.0D, 0.0D, 37.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 				returnValue = "Saved";
 			}
@@ -506,7 +500,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameItemCat, classname + ":" + name);
+				config.addCustomCategoryComment(nameItemCat, modname + ":" + name);
 					ItemProperties.SaveProperty(config, nameItemCat, (String)data[0], (Integer)data[1], false, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 37.00);
 				returnValue = "Saved";
 			}
@@ -521,7 +515,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameArmorCat, classname + ":" + name);
+				config.addCustomCategoryComment(nameArmorCat, modname + ":" + name);
 					ArmorProperties.SaveProperty(config, nameArmorCat, (String)data[0], 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00);
 				returnValue = "Saved";
 			}

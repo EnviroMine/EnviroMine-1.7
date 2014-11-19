@@ -89,17 +89,24 @@ public class EM_Settings
 	public static boolean oldMineGen = true;
 	
 	//Properties
-	@ShouldOverride("enviromine.network.packet.encoders.ArmorPropsEncoder")
+	//@ShouldOverride("enviromine.network.packet.encoders.ArmorPropsEncoder")
+	@ShouldOverride({String.class, ArmorProperties.class})
 	public static HashMap<String,ArmorProperties> armorProperties = new HashMap<String,ArmorProperties>();
 	//@ShouldOverride("enviromine.network.packet.encoders.BlocksPropsEncoder")
+	@ShouldOverride({String.class, BlockProperties.class})
 	public static HashMap<String,BlockProperties> blockProperties = new HashMap<String,BlockProperties>();
+	@ShouldOverride({Integer.class, EntityProperties.class})
 	public static HashMap<Integer,EntityProperties> livingProperties = new HashMap<Integer,EntityProperties>();
+	@ShouldOverride({String.class, ItemProperties.class})
 	public static HashMap<String,ItemProperties> itemProperties = new HashMap<String,ItemProperties>();
+	@ShouldOverride({Integer.class, BiomeProperties.class})
 	public static HashMap<Integer,BiomeProperties> biomeProperties = new HashMap<Integer,BiomeProperties>();
+	@ShouldOverride({Integer.class, DimensionProperties.class})
 	public static HashMap<Integer,DimensionProperties> dimensionProperties = new HashMap<Integer,DimensionProperties>();
 	
 	public static HashMap<String,StabilityType> stabilityTypes = new HashMap<String,StabilityType>();
 	
+	@ShouldOverride({String.class, RotProperties.class})
 	public static HashMap<String,RotProperties> rotProperties = new HashMap<String,RotProperties>();
 	
 	public static int updateCap;
@@ -129,7 +136,7 @@ public class EM_Settings
 	public static int caveBiomeID = 23;
 	
 	public static boolean foodSpoiling = true;
-	public static double foodRotTime = 10.0D;
+	public static int foodRotTime = 7;
 	
 	/** Whether or not this overridden with server settings */
 	public static boolean isOverridden = false;
@@ -157,12 +164,12 @@ public class EM_Settings
 	 * Tells the server that this field should be sent to the client to overwrite<br>
 	 * Usage:<br>
 	 * <tt>@ShouldOverride</tt> - for ints/booleans/floats/Strings<br>
-	 * <tt>@ShouldOverride(classpath (String))</tt> - for other types
+	 * <tt>@ShouldOverride(Class[] value)</tt> - for ArrayList or HashMap types
 	 * */
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface ShouldOverride
 	{
-		String value() default "";
+		Class[] value() default {};
 	}
 }

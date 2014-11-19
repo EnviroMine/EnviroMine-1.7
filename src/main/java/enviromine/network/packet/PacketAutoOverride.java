@@ -98,22 +98,6 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 		}
 	}
 	
-	private static <T> T[] appendArrayToArray(T[] array, T[] newArray)
-	{
-		Class clazz = array.getClass().getComponentType();
-		T[] temp = (T[])Array.newInstance(clazz, array.length+newArray.length);
-		for (int i = 0; i < array.length; i++)
-		{
-			temp[i] = array[i];
-		}
-		for (int i = 0; i < newArray.length; i++)
-		{
-			temp[array.length + i] = newArray[i];
-		}
-		
-		return temp;
-	}
-	
 	public static class Handler implements IMessageHandler<PacketAutoOverride, IMessage>
 	{
 		@Override

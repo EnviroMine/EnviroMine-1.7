@@ -1,33 +1,27 @@
 package enviromine.network.packet;
 
+import io.netty.buffer.ByteBuf;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayerMP;
-
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-
-import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
-import enviromine.network.packet.encoders.IPacketEncoder;
-
-import io.netty.buffer.ByteBuf;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.logging.log4j.Level;
+import enviromine.trackers.properties.SerialisableProperty;
 
 public class PacketServerOverride implements IMessage
 {
 	private EntityPlayerMP player;
-	protected Map<String, String[]> data = new HashMap<String, String[]>();
+	protected NBTTagCompound tags = new NBTTagCompound();
 	
 	public PacketServerOverride()
 	{
@@ -38,16 +32,17 @@ public class PacketServerOverride implements IMessage
 		this.player = player;
 	}
 	
-	public PacketServerOverride(EntityPlayerMP player, Map<String, String[]> custom)
+	/*public PacketServerOverride(EntityPlayerMP player, Map<String, String[]> custom)
 	{
 		this.player = player;
 		this.data = custom == null ? this.data : custom;
-	}
+	}*/
 	
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		String str = ByteBufUtils.readUTF8String(buf);
+		tags = ByteBufUtils.readTag(buf);
+		/*String str = ByteBufUtils.readUTF8String(buf);
 		String[] strs = str.split(";;");
 		
 		for (String type : strs)
@@ -70,10 +65,10 @@ public class PacketServerOverride implements IMessage
 				}
 				this.data.put(tmp[0], temp);
 			}
-		}
+		}*/
 	}
 	
-	private String getDataAsString()
+	/*private String getDataAsString()
 	{
 		Iterator<String> iterator = data.keySet().iterator();
 		String info = "";
@@ -97,12 +92,13 @@ public class PacketServerOverride implements IMessage
 		}
 		
 		return info;
-	}
+	}*/
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		String info = getDataAsString();
+		ByteBufUtils.writeTag(buf, tags);
+		/*String info = getDataAsString();
 		
 		if (info.length() > 2000)
 		{
@@ -170,37 +166,71 @@ public class PacketServerOverride implements IMessage
 			}
 		}
 		
-		ByteBufUtils.writeUTF8String(buf, info);
+		ByteBufUtils.writeUTF8String(buf, info);*/
 	}
 	
-	private String getFormattedDate()
+	/*private String getFormattedDate()
 	{
 		Calendar c = Calendar.getInstance();
 		return c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"_"+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
-	}
+	}*/
 	
 	public static class Handler implements IMessageHandler<PacketServerOverride, IMessage>
 	{
 		@Override
 		public IMessage onMessage(PacketServerOverride message, MessageContext ctx)
 		{
-			Iterator<String> iterator = message.data.keySet().iterator();
-			while (iterator.hasNext())
+			NBTTagCompound tags = message.tags;
+			
+			Field[] fields = EM_Settings.class.getDeclaredFields();
+			
+			for(Field f : fields)
 			{
-				String key = iterator.next();
 				try
 				{
-					String[] strs = message.data.get(key);
-					for (int i = 0; i < strs.length; i += 2)
+					if(!f.isAccessible())
 					{
-						decodeCustom(key, EM_Settings.class.getDeclaredField(strs[i]), strs[i + 1]);
+						continue;
 					}
-				} catch (NoSuchFieldException e)
+					
+					ShouldOverride anno = f.getAnnotation(ShouldOverride.class);
+					
+					if(anno != null)
+					{
+						if(f.getType() == HashMap.class)
+						{
+							if(anno.value().length < 2)
+							{
+								EnviroMine.logger.log(Level.ERROR, "Annotation for field " + f.getName() + " (" + f.getType().getName() + ") is missing class types!");
+								continue;
+							}
+							
+							Class[] clazzes = anno.value();
+							NBTTagList nbtList = tags.getTagList(f.getName(), 10);
+							HashMap map = new HashMap();
+							
+							for(int i = 0; i < nbtList.tagCount(); i++)
+							{
+								NBTTagCompound tag = nbtList.getCompoundTagAt(i);
+								map.put(this.getNBTValue(tag, "key", clazzes[0]), this.getNBTValue(tag, "value", clazzes[1]));
+							}
+							
+							f.set(null, map);
+						} else if(f.getType() == ArrayList.class)
+						{
+							if(anno.value().length < 1)
+							{
+								EnviroMine.logger.log(Level.ERROR, "Annotation for field " + f.getName() + " is missing class types!");
+								continue;
+							}
+							ArrayList list = (ArrayList)f.get(null);
+						} else
+						{
+						}
+					}
+				} catch(Exception e)
 				{
-					e.printStackTrace();
-				} catch (SecurityException e)
-				{
-					e.printStackTrace();
+					EnviroMine.logger.log(Level.ERROR, "An error occured while syncing setting " + f.getName(), e);
 				}
 			}
 			
@@ -209,7 +239,79 @@ public class PacketServerOverride implements IMessage
 			return null; //Reply
 		}
 		
-		private void decodeCustom(String clazz, Field field, String msg)
+		/**
+		 * Returns the value of the given key and class type. If the class type implements SerialisableProperty then it will return a new instance
+		 * of that object from the NBTTagCompound stored under said key.
+		 * @param tag
+		 * @param key
+		 * @param clazz
+		 * @return
+		 */
+		public Object getNBTValue(NBTTagCompound tag, String key, Class clazz)
+		{
+			if(key == null || key.length() <= 0 || !tag.hasKey(key))
+			{
+				return null;
+			}
+			
+			if(clazz == Boolean.class ||clazz == boolean.class)
+			{
+				return tag.getBoolean(key);
+			} else if(clazz == Integer.class || clazz == int.class)
+			{
+				return tag.getInteger(key);
+			} else if(clazz == String.class)
+			{
+				return tag.getString(key);
+			} else if(clazz == Byte.class || clazz == byte.class)
+			{
+				return tag.getByte(key);
+			} else if(clazz == Float.class || clazz == float.class)
+			{
+				return tag.getFloat(key);
+			} else if(clazz == Double.class || clazz == double.class)
+			{
+				return tag.getDouble(key);
+			} else if(clazz == Short.class || clazz == short.class)
+			{
+				return tag.getShort(key);
+			} else if(clazz == Long.class || clazz == long.class)
+			{
+				return tag.getLong(key);
+			} else if(clazz == Byte[].class || clazz == byte[].class)
+			{
+				return tag.getByteArray(key);
+			} else if(clazz == NBTTagCompound.class)
+			{
+				return tag.getCompoundTag(key);
+			} else if(clazz == NBTTagList.class)
+			{
+				if(!tag.hasKey(key + "_type"))
+				{
+					EnviroMine.logger.log(Level.WARN, "NBTTagList '" + key + "' is missing type key '" + key + "_type'! Defaulting to NBTTagCompound(10)");
+					return tag.getTagList(key, 10);
+				} else
+				{
+					return tag.getTagList(key, tag.getInteger(key + "_type"));
+				}
+			} else if(clazz.isAssignableFrom(SerialisableProperty.class))
+			{
+				try
+				{
+					Constructor ctor = clazz.getConstructor(NBTTagCompound.class);
+					return ctor.newInstance(tag.getCompoundTag(key));
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "An error occured while trying to instantiate " + clazz.getSimpleName(), e);
+					return null;
+				}
+			} else
+			{
+				return null;
+			}
+		}
+		
+		/*private void decodeCustom(String clazz, Field field, String msg)
 		{
 			try
 			{
@@ -232,6 +334,6 @@ public class PacketServerOverride implements IMessage
 			{
 				EnviroMine.logger.log(Level.ERROR, "Error decoding", e);
 			}
-		}
+		}*/
 	}
 }

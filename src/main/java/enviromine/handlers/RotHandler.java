@@ -45,8 +45,7 @@ public class RotHandler
 			
 			if(UBD == 0)
 			{
-				long timeRound = (long)(world.getTotalWorldTime() % (rotTime < 24000L? rotTime/4D : 6000L));
-				item.getTagCompound().setLong("EM_ROT_DATE", world.getTotalWorldTime() + (long)(timeRound >= (rotTime < 24000L? rotTime/4D : 6000L)/2? (rotTime < 24000L? rotTime/4D : 6000L) - timeRound : -timeRound));
+				item.getTagCompound().setLong("EM_ROT_DATE", (world.getTotalWorldTime()%24000L + 1) * 24000L);
 				item.getTagCompound().setLong("EM_ROT_TIME", rotTime);
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())

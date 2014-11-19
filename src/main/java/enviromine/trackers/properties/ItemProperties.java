@@ -4,10 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 import enviromine.core.EM_Settings;
 
-public class ItemProperties
+public class ItemProperties implements SerialisableProperty
 {
 	public String name;
 	public int meta;
@@ -29,6 +30,11 @@ public class ItemProperties
 	static String[] IPName;
 	
 	public static String categoryName = "items";
+	
+	public ItemProperties(NBTTagCompound tags)
+	{
+		this.ReadFromNBT(tags);
+	}
 	
 	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap)
 	{
@@ -127,5 +133,35 @@ public class ItemProperties
 		SaveProperty(configFile, categoryName + ".skull", 		Item.itemRegistry.getNameForObject(Items.skull), 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
 		SaveProperty(configFile, categoryName + ".web", 		Block.blockRegistry.getNameForObject(Blocks.web), 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
 		SaveProperty(configFile, categoryName + ".11", 			Item.itemRegistry.getNameForObject(Items.record_11), 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
+	}
+
+	@Override
+	public NBTTagCompound WriteToNBT()
+	{
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setString("name", this.name);
+		tags.setBoolean("enableTemp", this.enableTemp);
+		tags.setFloat("ambTemp", this.ambTemp);
+		tags.setFloat("ambAir", this.ambAir);
+		tags.setFloat("ambSanity", this.ambSanity);
+		tags.setFloat("effTemp", this.effTemp);
+		tags.setFloat("effAir", this.effAir);
+		tags.setFloat("effHydration", this.effHydration);
+		tags.setFloat("effTempCap", this.effTempCap);
+		return tags;
+	}
+
+	@Override
+	public void ReadFromNBT(NBTTagCompound tags)
+	{
+		this.name = tags.getString("name");
+		this.enableTemp = tags.getBoolean("enableTemp");
+		this.ambTemp = tags.getFloat("ambTemp");
+		this.ambAir = tags.getFloat("ambAir");
+		this.ambSanity = tags.getFloat("ambSanity");
+		this.effTemp = tags.getFloat("effTemp");
+		this.effAir = tags.getFloat("effAir");
+		this.effHydration = tags.getFloat("effHydration");
+		this.effTempCap = tags.getFloat("effTempCap");
 	}
 }

@@ -1,9 +1,10 @@
 package enviromine.trackers.properties;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 import enviromine.core.EM_Settings;
 
-public class EntityProperties
+public class EntityProperties implements SerialisableProperty
 {
 	public int id;
 	public boolean shouldTrack;
@@ -25,6 +26,11 @@ public class EntityProperties
 	static String[] EPName;
 	
 	public static String categoryName = "entity";
+	
+	public EntityProperties(NBTTagCompound tags)
+	{
+		this.ReadFromNBT(tags);
+	}
 	
 	public EntityProperties(int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, float aSanity, float hSanity, float aTemp, float hTemp, float aAir, float hAir, float aHyd, float hHyd)
 	{
@@ -113,6 +119,48 @@ public class EntityProperties
 	{
 		SaveProperty(configFile, categoryName + ".blaze",		61, false, false, false, false, true, true, -0.01, 0.0, 75.0, 0.1, -0.05, 0.0, -0.01, -0.01);
 		SaveProperty(configFile, categoryName + ".wither", 	64,	false, false, false, false, true, true, -0.1, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	}
+
+	@Override
+	public NBTTagCompound WriteToNBT()
+	{
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setInteger("id", this.id);
+		tags.setBoolean("shouldTrack", this.shouldTrack);
+		tags.setBoolean("dehydration", this.dehydration);
+		tags.setBoolean("bodyTemp", this.bodyTemp);
+		tags.setBoolean("airQ", this.airQ);
+		tags.setBoolean("immuneToFrost", this.immuneToFrost);
+		tags.setBoolean("immuneToHeat", this.immuneToHeat);
+		tags.setFloat("ambSanity", this.ambSanity);
+		tags.setFloat("hitSanity", this.hitSanity);
+		tags.setFloat("ambTemp", this.ambTemp);
+		tags.setFloat("hitTemp", this.hitTemp);
+		tags.setFloat("ambAir", this.ambAir);
+		tags.setFloat("hitAir", this.hitAir);
+		tags.setFloat("ambHydration", this.ambHydration);
+		tags.setFloat("hitHydration", this.hitHydration);
+		return tags;
+	}
+
+	@Override
+	public void ReadFromNBT(NBTTagCompound tags)
+	{
+		this.id = tags.getInteger("id");
+		this.shouldTrack = tags.getBoolean("shouldTrack");
+		this.dehydration = tags.getBoolean("dehydration");
+		this.bodyTemp = tags.getBoolean("bodyTemp");
+		this.airQ = tags.getBoolean("airQ");
+		this.immuneToFrost = tags.getBoolean("immuneToFrost");
+		this.immuneToHeat = tags.getBoolean("immuneToHeat");
+		this.ambSanity = tags.getFloat("ambSanity");
+		this.hitSanity = tags.getFloat("hitSanity");
+		this.ambTemp = tags.getFloat("ambTemp");
+		this.hitTemp = tags.getFloat("hitTemp");
+		this.ambAir = tags.getFloat("ambAir");
+		this.hitAir = tags.getFloat("hitAir");
+		this.ambHydration = tags.getFloat("ambHydration");
+		this.hitHydration = tags.getFloat("hitHydration");
 	}
 
 }

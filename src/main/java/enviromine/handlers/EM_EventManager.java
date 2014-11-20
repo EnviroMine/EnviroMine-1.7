@@ -116,7 +116,7 @@ public class EM_EventManager
 					EM_ConfigHandler.initConfig();
 				} else {
 					EntityPlayerMP player = (EntityPlayerMP)event.entity;
-					EnviroMine.instance.network.sendTo(new PacketAutoOverride(player), player);
+					EnviroMine.instance.network.sendTo(new PacketAutoOverride(), player);
 				}
 			}
 		}

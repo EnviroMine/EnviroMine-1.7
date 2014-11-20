@@ -1,15 +1,9 @@
 package enviromine;
 
-import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Level;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockFlower;
@@ -17,6 +11,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -26,6 +21,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import io.netty.buffer.ByteBuf;
+import org.apache.logging.log4j.Level;
 
 public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdditionalSpawnData
 {
@@ -195,6 +199,10 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 					}
 					
 					this.worldObj.setBlockToAir(i, j, k);
+					List<Entity> l = ((List<Entity>)this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1, 1, 1)));
+					for (Entity e : l) {
+						e.setDead();
+					}
 				}
 				
 				try

@@ -7,22 +7,7 @@ import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.BlockProperties;
 import enviromine.trackers.properties.StabilityType;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockEndPortal;
-import net.minecraft.block.BlockEndPortalFrame;
-import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockGlowstone;
-import net.minecraft.block.BlockGravel;
-import net.minecraft.block.BlockLadder;
-import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.BlockMobSpawner;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.BlockPortal;
-import net.minecraft.block.BlockSign;
-import net.minecraft.block.BlockWeb;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -41,9 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.Level;
-
 import com.google.common.base.Stopwatch;
+import org.apache.logging.log4j.Level;
 
 public class EM_PhysManager
 {
@@ -564,7 +548,6 @@ public class EM_PhysManager
 					if(tile != null)
 					{
 						entityphysblock.field_145810_d = nbtTC;
-						world.removeTileEntity(x, y, z);
 					}
 					world.spawnEntityInWorld(entityphysblock);
 					

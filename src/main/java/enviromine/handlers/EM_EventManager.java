@@ -1468,7 +1468,7 @@ public class EM_EventManager
 			double diffZ = (event.entity.prevPosZ + (event.entity.posZ - event.entity.prevPosZ) * partialTicks) - (player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks);
 			GL11.glTranslated(diffX, diffY, diffZ);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			GL11.glRotatef(180F + (event.entity.renderYawOffset + (event.entity instanceof EntityPlayer && ((EntityPlayer)event.entity).openContainer != ((EntityPlayer)event.entity).inventoryContainer ? ((event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks) : 0)), 0F, 1F, 0F);
+			GL11.glRotatef(180F + (event.entity.renderYawOffset + ((event.entity == player && (player.openContainer != player.inventoryContainer)) ? ((event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks) : 0)), 0F, 1F, 0F);
 			GL11.glScaled(event.entity.width/0.6D, event.entity.width/0.6D, event.entity.width/0.6D);
 			if(event.entity.isSneaking())
 			{

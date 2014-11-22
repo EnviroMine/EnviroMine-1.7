@@ -1,5 +1,8 @@
 package enviromine.items;
 
+import enviromine.handlers.EnviroAchievements;
+import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,10 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.handlers.EnviroAchievements;
-import enviromine.handlers.ObjectHandler;
 
 public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmorTextureProvider
 {
@@ -112,7 +114,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				int meta = armor.getItemDamage() > 0 ? 100-armor.getItemDamage() : 0;
+				int meta = armor.getItemDamage() > 0 ? 100 - armor.getItemDamage() : 0;
 				armor.getTagCompound().setInteger("camelPackFill", meta);
 				armor.setItemDamage(0);
 			}
@@ -156,7 +158,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				int meta = armor.getItemDamage() > 0 ? 100-armor.getItemDamage() : 0;
+				int meta = armor.getItemDamage() > 0 ? 100 - armor.getItemDamage() : 0;
 				armor.getTagCompound().setInteger("camelPackFill", meta);
 				armor.setItemDamage(0);
 			}
@@ -176,7 +178,6 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			armor.getTagCompound().setInteger("gasMaskFill", 200);
 			armor.getTagCompound().setInteger("gasMaskMax", 200);
-			
 		} else if (armor.getItem() == ObjectHandler.hardHat)
 		{
 			player.addStat(EnviroAchievements.safetyFirst, 1);

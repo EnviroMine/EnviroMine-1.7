@@ -51,7 +51,7 @@ public class EnviroMine
 {
 	public static Logger logger;
 	public static BiomeGenBase caves;
-	public static CreativeTabs enviroTab = new EnviroTab("enviromine.enviroTab");
+	public static EnviroTab enviroTab = new EnviroTab("enviromine.enviroTab");
 	
 	@Instance(EM_Settings.ModID)
 	public static EnviroMine instance;

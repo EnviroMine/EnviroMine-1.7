@@ -72,7 +72,8 @@ public class ObjectHandler
 		
 		camelPackMaterial = EnumHelper.addArmorMaterial("camelPack", 100, new int[]{1, 0, 0, 0}, 0);
 		
-		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("enviromine.camelpack").setCreativeTab(EnviroMine.enviroTab);
+		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("enviromine.camelpack").setCreativeTab(null);
+		
 		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("enviromine.gasmask").setCreativeTab(EnviroMine.enviroTab);
 		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("enviromine.hardhat").setCreativeTab(EnviroMine.enviroTab);
 	}
@@ -87,6 +88,26 @@ public class ObjectHandler
 		GameRegistry.registerItem(camelPack, "camelPack");
 		GameRegistry.registerItem(gasMask, "gasMask");
 		GameRegistry.registerItem(hardHat, "hardHat");
+
+		// Empty Pack
+		ItemStack camelStack1 = new ItemStack(camelPack);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setInteger("camelPackFill", 0);
+		tag.setInteger("camelPackMax", 100);
+		tag.setBoolean("isCamelPack", true);
+		tag.setString("camelPath", Item.itemRegistry.getNameForObject(camelPack));
+		camelStack1.setTagCompound(tag);
+		EnviroMine.enviroTab.addRawStack(camelStack1);
+		
+		// Full Pack
+		ItemStack camelStack2 = new ItemStack(camelPack);
+		tag = new NBTTagCompound();
+		tag.setInteger("camelPackFill", 100);
+		tag.setInteger("camelPackMax", 100);
+		tag.setBoolean("isCamelPack", true);
+		tag.setString("camelPath", Item.itemRegistry.getNameForObject(camelPack));
+		camelStack2.setTagCompound(tag);
+		EnviroMine.enviroTab.addRawStack(camelStack2);
 	}
 	
 	public static void initBlocks()

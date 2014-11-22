@@ -20,7 +20,6 @@ import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -28,10 +27,13 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -40,6 +42,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -58,17 +61,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
@@ -835,7 +840,11 @@ public class EM_EventManager
 			{
 				if(Minecraft.getMinecraft().thePlayer.isPotionActive(EnviroPotion.insanity))
 				{
-					if(event.entityLiving.getRNG().nextInt(75) == 0)
+					int chance = 100 / Minecraft.getMinecraft().thePlayer.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() + 1;
+					
+					chance = chance > 0? chance : 1;
+					
+					if(event.entityLiving.getRNG().nextInt(chance) == 0)
 					{
 						new Hallucination(event.entityLiving);
 					}
@@ -1438,7 +1447,11 @@ public class EM_EventManager
 	{
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
-			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			ResourceLocation resLoc = new ResourceLocation(event.name);
+			if(new File(resLoc.getResourcePath()).exists())
+			{
+				Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			}
 			event.setCanceled(true);
 		}
 	}
@@ -1451,6 +1464,84 @@ public class EM_EventManager
 		{
 			// Replaces background music with cave ambience in the cave dimension
 			event.result = PositionedSoundRecord.func_147673_a(new ResourceLocation("enviromine", "cave_ambience"));
+		}
+	}
+	
+	HashMap<String, EntityLivingBase> playerMob = new HashMap<String, EntityLivingBase>();
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onRender(RenderPlayerEvent.Pre event)
+	{
+		if(event.entityPlayer.isPotionActive(EnviroPotion.insanity) && event.entityPlayer.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2)
+		{
+			event.setCanceled(true);
+			
+			EntityLivingBase entity = playerMob.get(event.entityPlayer.getCommandSenderName());
+			if(entity == null)
+			{
+				BiomeGenBase biome = event.entityPlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(event.entityPlayer.posX), MathHelper.floor_double(event.entityPlayer.posZ));
+				ArrayList<SpawnListEntry> spawnList = (ArrayList<SpawnListEntry>)biome.getSpawnableList(EnumCreatureType.monster);
+				
+				if(spawnList.size() <= 0)
+				{
+					entity = new EntityZombie(event.entityPlayer.worldObj);
+				} else
+				{
+					int spawnIndex = event.entityPlayer.getRNG().nextInt(spawnList.size());
+					try
+					{
+						entity = (EntityLiving)spawnList.get(spawnIndex).entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {event.entityPlayer.worldObj});
+					} catch(Exception e)
+					{
+						entity = new EntityZombie(event.entityPlayer.worldObj);
+					}
+				}
+				
+				playerMob.put(event.entityPlayer.getCommandSenderName(), entity);
+			}
+			entity.renderYawOffset = event.entityPlayer.renderYawOffset;
+			entity.prevRenderYawOffset = event.entityPlayer.prevRenderYawOffset;
+			entity.cameraPitch = event.entityPlayer.cameraPitch;
+			entity.posX = event.entityPlayer.posX;
+			entity.posY = event.entityPlayer.posY - event.entityPlayer.yOffset;
+			entity.posZ = event.entityPlayer.posZ;
+			entity.prevPosX = event.entityPlayer.prevPosX;
+			entity.prevPosY = event.entityPlayer.prevPosY - event.entityPlayer.yOffset;
+			entity.prevPosZ = event.entityPlayer.prevPosZ;
+			entity.lastTickPosX = event.entityPlayer.lastTickPosX;
+			entity.lastTickPosY = event.entityPlayer.lastTickPosY - event.entityPlayer.yOffset;
+			entity.lastTickPosZ = event.entityPlayer.lastTickPosZ;
+			entity.rotationPitch = event.entityPlayer.rotationPitch;
+			entity.prevRotationPitch = event.entityPlayer.prevRotationPitch;
+			entity.rotationYaw = event.entityPlayer.rotationYaw;
+			entity.prevRotationYaw = event.entityPlayer.prevRotationYaw;
+			entity.rotationYawHead = event.entityPlayer.rotationYawHead;
+			entity.prevRotationYawHead = event.entityPlayer.prevRotationYawHead;
+			entity.limbSwingAmount = event.entityPlayer.limbSwingAmount;
+			entity.prevLimbSwingAmount = event.entityPlayer.prevLimbSwingAmount;
+			entity.limbSwing = event.entityPlayer.limbSwing;
+			entity.prevSwingProgress = event.entityPlayer.prevSwingProgress;
+			entity.swingProgress = event.entityPlayer.swingProgress;
+			entity.swingProgressInt = event.entityPlayer.swingProgressInt;
+			ItemStack[] equipped = event.entityPlayer.getLastActiveItems();
+			entity.setCurrentItemOrArmor(0, event.entityPlayer.getHeldItem());
+			entity.setCurrentItemOrArmor(1, equipped[0]);
+			entity.setCurrentItemOrArmor(2, equipped[1]);
+			entity.setCurrentItemOrArmor(3, equipped[2]);
+			entity.setCurrentItemOrArmor(4, equipped[3]);
+			entity.motionX = event.entityPlayer.motionX;
+			entity.motionY = event.entityPlayer.motionY;
+			entity.motionZ = event.entityPlayer.motionZ;
+			entity.ticksExisted = event.entityPlayer.ticksExisted;
+			GL11.glPushMatrix();
+			//GL11.glRotatef(180F, 0F, 1F, 0F);
+			//GL11.glRotatef(180F - (event.entityPlayer.renderYawOffset + (event.entityPlayer.renderYawOffset - event.entityPlayer.prevRenderYawOffset) * partialTicks), 0F, 1F, 0F);
+			RenderManager.instance.renderEntitySimple(entity, partialTicks);
+			GL11.glPopMatrix();
+		} else
+		{
+			playerMob.clear();
 		}
 	}
 	
@@ -1483,9 +1574,9 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void WorldRenderLast(RenderWorldLastEvent event)
+	public void RenderTickEvent(TickEvent.RenderTickEvent event)
 	{
-		partialTicks = event.partialTicks;
+		partialTicks = event.renderTickTime;
 	}
 	
 	@SubscribeEvent

@@ -11,6 +11,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.client.gui.EM_GuiFakeDeath;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
@@ -151,11 +152,21 @@ public class EnviroPotion extends Potion
 			
 			int chance = 50 / (effect.getAmplifier() + 1);
 			
+			chance = chance > 0? chance : 1;
+			
 			if(entityLiving.getRNG().nextInt(chance) == 0)
 			{
 				if(effect.getAmplifier() >= 1)
 				{
 					entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
+				}
+			}
+			
+			if(entityLiving.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2 && entityLiving.getRNG().nextInt(1000) == 0 && EnviroMine.proxy.isClient())
+			{
+				if(Minecraft.getMinecraft().currentScreen == null)
+				{
+					Minecraft.getMinecraft().displayGuiScreen(new EM_GuiFakeDeath());
 				}
 			}
 			

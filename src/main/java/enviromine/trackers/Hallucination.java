@@ -36,7 +36,6 @@ public class Hallucination
 	@SuppressWarnings("unchecked")
 	public Hallucination(EntityLivingBase entityLiving)
 	{
-		System.out.println("Creating hallucination");
 		if(!(entityLiving instanceof EntityPlayer))
 		{
 			return;
@@ -48,7 +47,6 @@ public class Hallucination
 			this.overriding = this.findPlayer(entityLiving);
 			if (this.overriding != null) {
 				this.type = Type.OVERRIDE;
-				System.out.println("Overriding player "+this.overriding.getCommandSenderName());
 			}
 		}
 		

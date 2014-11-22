@@ -123,23 +123,26 @@ public class EM_EventManager
 			}
 		}
 		
-		if(event.entity instanceof EntityItem)
+		if(EM_Settings.foodSpoiling)
 		{
-			EntityItem item = (EntityItem)event.entity;
-			ItemStack rotStack = RotHandler.doRot(event.world, item.getEntityItem());
-			
-			if(item.getEntityItem() != rotStack)
+			if(event.entity instanceof EntityItem)
 			{
-				item.setEntityItemStack(rotStack);
+				EntityItem item = (EntityItem)event.entity;
+				ItemStack rotStack = RotHandler.doRot(event.world, item.getEntityItem());
+				
+				if(item.getEntityItem() != rotStack)
+				{
+					item.setEntityItemStack(rotStack);
+				}
+			} else if(event.entity instanceof EntityPlayer)
+			{
+				IInventory invo = ((EntityPlayer)event.entity).inventory;
+				RotHandler.rotInvo(event.world, invo);
+			} else if(event.entity instanceof IInventory)
+			{
+				IInventory invo = (IInventory)event.entity;
+				RotHandler.rotInvo(event.world, invo);
 			}
-		} else if(event.entity instanceof EntityPlayer)
-		{
-			IInventory invo = ((EntityPlayer)event.entity).inventory;
-			RotHandler.rotInvo(event.world, invo);
-		} else if(event.entity instanceof IInventory)
-		{
-			IInventory invo = (IInventory)event.entity;
-			RotHandler.rotInvo(event.world, invo);
 		}
 		
 		if(event.entity instanceof EntityLivingBase)
@@ -380,7 +383,7 @@ public class EM_EventManager
 	{
 		ItemStack item = event.entityPlayer.getCurrentEquippedItem();
 		
-		if(event.action == Action.RIGHT_CLICK_BLOCK)
+		if(event.action == Action.RIGHT_CLICK_BLOCK && EM_Settings.foodSpoiling)
 		{
 			TileEntity tile = event.entityPlayer.worldObj.getTileEntity(event.x, event.y, event.z);
 			
@@ -462,7 +465,7 @@ public class EM_EventManager
 			return;
 		}
 		
-		if(event.target != null && event.target instanceof IInventory)
+		if(event.target != null && event.target instanceof IInventory && EM_Settings.foodSpoiling)
 		{
 			IInventory chest = (IInventory)event.target;
 			

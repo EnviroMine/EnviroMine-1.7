@@ -2,17 +2,14 @@ package enviromine.core;
 
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -26,7 +23,6 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
-
 import enviromine.EnviroPotion;
 import enviromine.EnviroUtils;
 import enviromine.core.commands.CommandPhysics;

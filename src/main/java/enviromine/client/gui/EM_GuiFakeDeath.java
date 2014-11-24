@@ -1,9 +1,12 @@
 package enviromine.client.gui;
 
-import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.GuiGameOver;
-import net.minecraft.client.gui.GuiScreen;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
+
+@SideOnly(Side.CLIENT)
 public class EM_GuiFakeDeath extends GuiGameOver
 {
 	private int ticksOpen = 0;
@@ -15,7 +18,7 @@ public class EM_GuiFakeDeath extends GuiGameOver
     {
     	if(p_73869_2_ == Keyboard.KEY_ESCAPE)
     	{
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
             this.mc.setIngameFocus();
     	}
     }
@@ -31,7 +34,7 @@ public class EM_GuiFakeDeath extends GuiGameOver
 
         if (this.ticksOpen >= 15)
         {
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
             this.mc.setIngameFocus();
         }
     }

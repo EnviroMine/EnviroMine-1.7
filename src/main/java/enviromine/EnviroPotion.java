@@ -1,5 +1,12 @@
 package enviromine;
 
+import enviromine.client.gui.EM_GuiFakeDeath;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.handlers.EnviroAchievements;
+import enviromine.trackers.EnviroDataTracker;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -9,14 +16,9 @@ import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.client.gui.EM_GuiFakeDeath;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.handlers.EnviroAchievements;
-import enviromine.trackers.EnviroDataTracker;
 
 public class EnviroPotion extends Potion
 {
@@ -164,10 +166,7 @@ public class EnviroPotion extends Potion
 			
 			if(effect.getAmplifier() >= 2 && entityLiving.getRNG().nextInt(1000) == 0 && EnviroMine.proxy.isClient())
 			{
-				if(Minecraft.getMinecraft().currentScreen == null)
-				{
-					Minecraft.getMinecraft().displayGuiScreen(new EM_GuiFakeDeath());
-				}
+				displayFakeDeath();
 			}
 			
 			String sound = "";
@@ -273,6 +272,15 @@ public class EnviroPotion extends Potion
 					player.worldObj.playSoundEffect(entityLiving.posX + rndX, entityLiving.posY + rndY, entityLiving.posZ + rndZ, sound, 1.0F, (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F + 1.0F);
 				}
 			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private static void displayFakeDeath()
+	{
+		if(Minecraft.getMinecraft().currentScreen == null)
+		{
+			Minecraft.getMinecraft().displayGuiScreen(new EM_GuiFakeDeath());
 		}
 	}
 	

@@ -1,5 +1,17 @@
 package enviromine.handlers;
 
+import enviromine.EntityPhysicsBlock;
+import enviromine.blocks.*;
+import enviromine.blocks.materials.MaterialGas;
+import enviromine.blocks.tiles.*;
+import enviromine.blocks.tiles.ventilation.TileEntityFan;
+import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
+import enviromine.blocks.ventilation.BlockFan;
+import enviromine.blocks.ventilation.BlockVentSmall;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.items.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -10,44 +22,14 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.oredict.OreDictionary;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-
-import enviromine.EntityPhysicsBlock;
-import enviromine.blocks.BlockBurningCoal;
-import enviromine.blocks.BlockDavyLamp;
-import enviromine.blocks.BlockElevator;
-import enviromine.blocks.BlockEsky;
-import enviromine.blocks.BlockFireTorch;
-import enviromine.blocks.BlockFlammableCoal;
-import enviromine.blocks.BlockFreezer;
-import enviromine.blocks.BlockGas;
-import enviromine.blocks.materials.MaterialGas;
-import enviromine.blocks.tiles.TileEntityBurningCoal;
-import enviromine.blocks.tiles.TileEntityDavyLamp;
-import enviromine.blocks.tiles.TileEntityElevator;
-import enviromine.blocks.tiles.TileEntityEsky;
-import enviromine.blocks.tiles.TileEntityFreezer;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.blocks.tiles.ventilation.TileEntityFan;
-import enviromine.blocks.tiles.ventilation.TileEntityVentSmall;
-import enviromine.blocks.ventilation.BlockFan;
-import enviromine.blocks.ventilation.BlockVentSmall;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.items.EnviroArmor;
-import enviromine.items.EnviroItemBadWaterBottle;
-import enviromine.items.EnviroItemColdWaterBottle;
-import enviromine.items.EnviroItemSaltWaterBottle;
-import enviromine.items.ItemDavyLamp;
-import enviromine.items.ItemElevator;
-import enviromine.items.RottenFood;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ObjectHandler
 {

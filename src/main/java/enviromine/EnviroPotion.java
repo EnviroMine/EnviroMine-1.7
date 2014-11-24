@@ -162,7 +162,7 @@ public class EnviroPotion extends Potion
 				}
 			}
 			
-			if(entityLiving.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2 && entityLiving.getRNG().nextInt(1000) == 0 && EnviroMine.proxy.isClient())
+			if(effect.getAmplifier() >= 2 && entityLiving.getRNG().nextInt(1000) == 0 && EnviroMine.proxy.isClient())
 			{
 				if(Minecraft.getMinecraft().currentScreen == null)
 				{

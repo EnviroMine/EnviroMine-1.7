@@ -1,6 +1,7 @@
 package enviromine.gases;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.apache.logging.log4j.Level;
 import com.google.common.base.Stopwatch;
 import enviromine.blocks.BlockGas;
@@ -21,8 +22,9 @@ import net.minecraft.world.World;
  */
 public class GasBuffer
 {
-	private static ArrayList<int[]> gasBuffer = new ArrayList<int[]>();
-	private static ArrayList<int[]> fireBuffer = new ArrayList<int[]>();
+	static ArrayList<int[]> gasBuffer = new ArrayList<int[]>();
+	static ArrayList<int[]> fireBuffer = new ArrayList<int[]>();
+	static HashMap<String, Integer> chunkUpdates = new HashMap<String, Integer>();
 	
 	public static int curTick = 0;
 	public static int debugInterval = 30;
@@ -35,6 +37,30 @@ public class GasBuffer
 		gasBuffer.clear();
 		fireBuffer.clear();
 		curTick = 1;
+	}
+	
+	public static int getChunkUpdates(int cx, int cz)
+	{
+		String key = cx + "," + cz;
+		if(!chunkUpdates.containsKey(key))
+		{
+			return 0;
+		} else
+		{
+			return chunkUpdates.get(key);
+		}
+	}
+	
+	public static void incrementUpdates(int cx, int cz)
+	{
+		String key = cx + "," + cz;
+		if(!chunkUpdates.containsKey(key))
+		{
+			chunkUpdates.put(key, 1);
+		} else
+		{
+			chunkUpdates.put(key, chunkUpdates.get(key) + 1);
+		}
 	}
 	
 	public static void scheduleUpdate(World world, int x, int y, int z, BlockGas block)
@@ -71,7 +97,7 @@ public class GasBuffer
 			curTick = 1;
 		}
 		
-		int gasCutoff = gasBuffer.size() - 1;
+		/*int gasCutoff = gasBuffer.size() - 1;
 		int fireCutoff = fireBuffer.size() - 1;
 		
 		if(EM_Settings.gasPassLimit < gasCutoff && EM_Settings.gasPassLimit > -1)
@@ -82,7 +108,7 @@ public class GasBuffer
 		if(EM_Settings.gasPassLimit/4 < fireCutoff && EM_Settings.gasPassLimit > -1)
 		{
 			fireCutoff = EM_Settings.gasPassLimit/4;
-		}
+		}*/
 		
 
 		if(EnviroMine.proxy.isClient())
@@ -116,39 +142,9 @@ public class GasBuffer
 			}
 		}
 		
-		if(curTick%EM_Settings.gasTickRate == 0)
-		{
-			for(int i = gasCutoff; i >= 0; i--)
-			{
-				int[] entry = gasBuffer.get(i);
-				
-				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
-				
-				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
-				{
-					return;
-				} else if(EM_PhysManager.chunkDelay.containsKey("" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
-				{
-					if(EM_PhysManager.chunkDelay.get("" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
-					{
-						return;
-					}
-				}
-				
-				if(world != null && world.getChunkProvider().chunkExists(entry[1] >> 4, entry[3] >> 4) && world.getChunkFromBlockCoords(entry[1], entry[3]).isChunkLoaded && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
-				{
-					Block block = world.getBlock(entry[1], entry[2], entry[3]);
-					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 0);
-				}
-				
-				gasBuffer.remove(i);
-				debugUpdatesCaptured++;
-			}
-		}
-		
 		if(curTick%(EM_Settings.gasTickRate/4) == 0)
 		{
-			for(int i = fireCutoff; i >= 0; i--)
+			for(int i = 0; i < fireBuffer.size(); i++)
 			{
 				int[] entry = fireBuffer.get(i);
 				
@@ -156,25 +152,71 @@ public class GasBuffer
 				
 				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
 				{
-					return;
+					continue;
 				} else if(EM_PhysManager.chunkDelay.containsKey("" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
 				{
 					if(EM_PhysManager.chunkDelay.get("" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
 					{
-						return;
+						continue;
 					}
+				}
+				
+				if(EM_Settings.gasPassLimit >= 0 && getChunkUpdates(entry[1] >> 4, entry[3] >> 4) >= EM_Settings.gasPassLimit/4)
+				{
+					continue;
 				}
 				
 				if(world != null && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
 				{
 					Block block = world.getBlock(entry[1], entry[2], entry[3]);
 					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 0);
+					incrementUpdates(entry[1] >> 4, entry[3] >> 4);
 				}
 				
 				fireBuffer.remove(i);
+				i--; // Trust me this makes sense
 				debugUpdatesCaptured++;
 			}
 		}
+		
+		if(curTick%EM_Settings.gasTickRate == 0)
+		{
+			for(int i = 0; i < gasBuffer.size(); i++)
+			{
+				int[] entry = gasBuffer.get(i);
+				
+				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
+				
+				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
+				{
+					continue;
+				} else if(EM_PhysManager.chunkDelay.containsKey("" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
+				{
+					if(EM_PhysManager.chunkDelay.get("" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
+					{
+						continue;
+					}
+				}
+				
+				if(EM_Settings.gasPassLimit >= 0 && getChunkUpdates(entry[1] >> 4, entry[3] >> 4) >= EM_Settings.gasPassLimit)
+				{
+					continue;
+				}
+				
+				if(world != null && world.getChunkProvider().chunkExists(entry[1] >> 4, entry[3] >> 4) && world.getChunkFromBlockCoords(entry[1], entry[3]).isChunkLoaded && world.getBlock(entry[1], entry[2], entry[3]) instanceof BlockGas)
+				{
+					Block block = world.getBlock(entry[1], entry[2], entry[3]);
+					world.scheduleBlockUpdateWithPriority(entry[1], entry[2], entry[3], block, 1, 0);
+					incrementUpdates(entry[1] >> 4, entry[3] >> 4);
+				}
+				
+				gasBuffer.remove(i);
+				i--; // Trust me this makes sense
+				debugUpdatesCaptured++;
+			}
+		}
+		
+		chunkUpdates.clear();
 		
 		if(EnviroMine.proxy.isClient() && debugTime >= debugInterval && timer.isRunning())
 		{

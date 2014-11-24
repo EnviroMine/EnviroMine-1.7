@@ -124,9 +124,9 @@ public class BlockGas extends Block implements ITileEntityProvider
 	
 	public float getOpacity(IBlockAccess blockAccess, int i, int j, int k)
 	{
-		if(blockAccess.getBlock(i, k, k) == ObjectHandler.gasBlock && !EM_Settings.renderGases)
+		if(EM_Settings.renderGases)
 		{
-			return 0;
+			return 0.75F;
 		} else
 		{
 			TileEntity tile = blockAccess.getTileEntity(i, j, k);
@@ -646,14 +646,11 @@ public class BlockGas extends Block implements ITileEntityProvider
 	        double d1 = (double)((float)j + 0.5F);
 	        double d2 = (double)((float)k + 0.5F);
 	        
-    		for(int pass = 0; pass < 3; pass++)
-    		{
-		        double d3 = rand.nextDouble() - 0.5D;
-		        double d4 = rand.nextDouble() - 0.5D;
-		        
-		        p_149734_1_.spawnParticle("largesmoke", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-		        p_149734_1_.spawnParticle("flame", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-    		}
+	        double d3 = rand.nextDouble() - 0.5D;
+	        double d4 = rand.nextDouble() - 0.5D;
+	        
+	        p_149734_1_.spawnParticle("largesmoke", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+	        p_149734_1_.spawnParticle("flame", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
     	}
     }
 	

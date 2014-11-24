@@ -4,9 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -15,7 +17,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevator;
@@ -33,7 +34,6 @@ import enviromine.client.renderer.tileentity.TileEntityEskyRenderer;
 import enviromine.client.renderer.tileentity.TileEntityFreezerRenderer;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
-
 import java.util.Iterator;
 
 public class EM_ClientProxy extends EM_CommonProxy
@@ -122,7 +122,15 @@ public class EM_ClientProxy extends EM_CommonProxy
 			Object itemArmor = tmp.next();
 			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1)
 			{
-				MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+				IItemRenderer iRenderer = MinecraftForgeClient.getItemRenderer(new ItemStack((ItemArmor)itemArmor), ItemRenderType.INVENTORY);
+				
+				if(iRenderer != null)
+				{
+					MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer(iRenderer));
+				} else
+				{
+					MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+				}
 			}
 		}
 	}

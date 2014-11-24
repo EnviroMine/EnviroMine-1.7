@@ -15,7 +15,7 @@ public class GasHydrogenSulfide extends EnviroGas
 		super(name, ID);
 		this.setColor(new Color(255, 255, 0, 64));
 		this.setDensity(1F);
-		this.setVolitility(100F, 0.1F, 0.5F);
+		this.setVolitility(100F, 0F, 1F);
 	}
 	
 	@Override

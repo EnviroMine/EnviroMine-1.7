@@ -1,23 +1,24 @@
 package enviromine.world.features;
 
+import java.util.ArrayList;
+import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.IWorldGenerator;
-
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 public class WorldFeatureGenerator implements IWorldGenerator
 {
@@ -72,7 +73,7 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		
 		if(EM_Settings.gasGen)
 		{
-			for(int i = 8; i >= 0; i--)
+			for(int i = 4; i >= 0; i--)
 			{
 				GenGasPocket(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
 			}
@@ -89,13 +90,34 @@ public class WorldFeatureGenerator implements IWorldGenerator
 			{
 				for(int k = 0; k < 16; k++)
 				{
-					if(world.getBlock(i, j, k) == Blocks.coal_ore)
+					Item item = Item.getItemFromBlock(world.getBlock(i, j, k));
+					
+					if(world.getBlock(i, j, k) == Blocks.coal_ore || (item != null && SameOre(new ItemStack(item), "oreCoal")))
 					{
 						world.setBlock(i, j, k, ObjectHandler.flammableCoal);
 					}
 				}
 			}
 		}
+	}
+	
+	public boolean SameOre(ItemStack item, String oreName)
+	{
+		int[] oreIds = OreDictionary.getOreIDs(item);
+		int findId = OreDictionary.getOreID(oreName);
+		
+		for(int id : oreIds)
+		{
+			if(id == findId)
+			{
+				return true;
+			} else
+			{
+				continue;
+			}
+		}
+		
+		return false;
 	}
 	
 	public void GenGasPocket(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
@@ -107,6 +129,11 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		while(world.getBlock(rX, rY - 1, rZ) == Blocks.air && rY > 1)
 		{
 			rY -= 1;
+		}
+		
+		if(world.getSavedLightValue(EnumSkyBlock.Sky, rX, rY, rZ) > 1)
+		{
+			return;
 		}
 		
 		if(world.getBlock(rX, rY, rZ) == Blocks.air)

@@ -14,10 +14,19 @@ import org.lwjgl.opengl.GL11;
 
 public class ArmoredCamelPackRenderer implements IItemRenderer
 {
-	
+	IItemRenderer origRender;
 	private static RenderItem renderItem = new RenderItem();
 	
 	public static final ResourceLocation camelpackOverlay = new ResourceLocation("enviromine", "textures/items/camel_pack.png");
+	
+	public ArmoredCamelPackRenderer()
+	{
+	}
+	
+	public ArmoredCamelPackRenderer(IItemRenderer oRender)
+	{
+		origRender = oRender;
+	}
 	
 	@Override
 	public boolean handleRenderType(ItemStack itemStack, ItemRenderType type)
@@ -28,7 +37,13 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 	@Override
 	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
 	{
-		return false;
+		if(origRender != null)
+		{
+			return origRender.shouldUseRenderHelper(type, item, helper);
+		} else
+		{
+			return false;
+		}
 	}
 	
 	@Override
@@ -44,7 +59,10 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 		GL11.glEnable(GL11.GL_BLEND);
 		// ====================== Render item texture ======================
 		IIcon icon = itemStack.getIconIndex();
-		if(icon != null)
+		if(origRender != null)
+		{
+			origRender.renderItem(type, itemStack, data);
+		} else if(icon != null)
 		{
 			renderItem.renderIcon(0, 0, icon, 16, 16);
 		}

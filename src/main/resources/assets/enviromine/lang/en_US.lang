@@ -23,6 +23,8 @@ tile.enviromine.davy_lamp.name=Davy Lamp
 tile.enviromine.gas.name=Gas
 tile.enviromine.firegas.name=Gas Fire
 tile.enviromine.burningcoal.name=Burning Coal
+tile.enviromine.pipe_small.name=Small Vent
+tile.enviromine.fan.name=Fan
 
 itemGroup.enviromine.enviroTab=EnviroMine
 

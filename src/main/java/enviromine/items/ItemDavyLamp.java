@@ -28,7 +28,7 @@ public class ItemDavyLamp extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		return getUnlocalizedName() + "." + lampNames[itemstack.getItemDamage()%3];
+		return getUnlocalizedName()/* + "." + lampNames[itemstack.getItemDamage()%3]*/;
 	}
 
     /**

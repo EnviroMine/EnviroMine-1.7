@@ -32,7 +32,7 @@ public class RotHandler
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood) && rotProps == null) || (rotTime < 0 && rotProps != null) || item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh)
+		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood || item.getItem() == Items.fermented_spider_eye) && rotProps == null) || (rotTime < 0 && rotProps != null) || item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh)
 		{
 			return item;
 		} else
@@ -45,7 +45,7 @@ public class RotHandler
 			
 			if(UBD == 0)
 			{
-				item.getTagCompound().setLong("EM_ROT_DATE", (world.getTotalWorldTime()%24000L + 1) * 24000L);
+				item.getTagCompound().setLong("EM_ROT_DATE", (world.getTotalWorldTime()/24000L + 1L) * 24000L);
 				item.getTagCompound().setLong("EM_ROT_TIME", rotTime);
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())
@@ -57,6 +57,9 @@ public class RotHandler
 				} else if(item.getItem() == Items.beef || item.getItem() == Items.chicken || item.getItem() == Items.porkchop || item.getItem() == Items.fish || item.getItem() == Items.cooked_beef || item.getItem() == Items.cooked_chicken || item.getItem() == Items.cooked_porkchop || item.getItem() == Items.cooked_fished)
 				{
 					rotStack = new ItemStack(Items.rotten_flesh, item.stackSize);
+				} else if(item.getItem() == Items.spider_eye)
+				{
+					rotStack = new ItemStack(Items.fermented_spider_eye);
 				} else
 				{
 					rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);

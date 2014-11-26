@@ -876,7 +876,10 @@ public class EM_EventManager
 				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.fireTorch), 0, Item.getItemFromBlock(Blocks.torch), 0);
 			}*/
 			
-			RotHandler.rotInvo(event.entityLiving.worldObj, invo);
+			if(EM_Settings.foodSpoiling)
+			{
+				RotHandler.rotInvo(event.entityLiving.worldObj, invo);
+			}
 			
 			if(event.entityLiving.getEntityData().hasKey("EM_SAFETY"))
 			{
@@ -1617,9 +1620,11 @@ public class EM_EventManager
 				if(curTime - rotDate <= 0)
 				{
 					event.toolTip.add("Rotten: 0%");
+					event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				} else
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
+					event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				}
 			}
 			

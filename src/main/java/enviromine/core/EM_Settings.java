@@ -140,6 +140,7 @@ public class EM_Settings
 	
 	/** Whether or not this overridden with server settings */
 	public static boolean isOverridden = false;
+	public static boolean enableConfigOverride = false;
 	
 	public static boolean enableQuakes = true;
 	public static boolean quakePhysics = true;

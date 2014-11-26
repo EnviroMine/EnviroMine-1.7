@@ -27,7 +27,7 @@ public class GasBuffer
 	static HashMap<String, Integer> chunkUpdates = new HashMap<String, Integer>();
 	
 	public static int curTick = 0;
-	public static int debugInterval = 30;
+	public static int debugInterval = 1;
 	public static int debugTime = 0;
 	public static int debugUpdatesCaptured = 0;
 	private static Stopwatch timer = Stopwatch.createUnstarted();
@@ -227,7 +227,7 @@ public class GasBuffer
 			EM_GuiEnviroMeters.DB_gasBuffer = fireBuffer.size();
 			timer.reset();
 			debugTime = 0;
-		} else if(EnviroMine.proxy.isClient())
+		} else if(EnviroMine.proxy.isClient() && curTick == 1)
 		{
 			debugTime += 1;
 		}

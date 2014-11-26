@@ -108,19 +108,23 @@ public class EM_EventManager
 				chunkPhys = (EM_PhysManager.chunkDelay.get("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
 			
-			if (event.entity instanceof EntityPlayerMP) {
-				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
+			// [DISABLED] Reason: Player entities are also created when changing dimensions/worlds so this would call the mass sync whenever that happens!
+			/*if (event.entity instanceof EntityPlayerMP)
+			{
+				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden)
+				{
 					EM_Settings.armorProperties.clear();
 					EM_Settings.blockProperties.clear();
 					EM_Settings.itemProperties.clear();
 					EM_Settings.livingProperties.clear();
 					EM_Settings.stabilityTypes.clear();
 					EM_ConfigHandler.initConfig();
-				} else {
+				} else if(EM_Settings.enableConfigOverride && !EnviroMine.proxy.isClient())
+				{
 					EntityPlayerMP player = (EntityPlayerMP)event.entity;
 					EnviroMine.instance.network.sendTo(new PacketAutoOverride(), player);
 				}
-			}
+			}*/
 		}
 		
 		if(EM_Settings.foodSpoiling)

@@ -48,7 +48,7 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 					continue;
 				}
 				
-				if(!f.isAccessible())
+				if(!f.isAccessible()) // This is causing problems for some reason...
 				{
 					EnviroMine.logger.log(Level.WARN, "Field " + f.getName() + " is protected and cannot be synced!");
 					continue;

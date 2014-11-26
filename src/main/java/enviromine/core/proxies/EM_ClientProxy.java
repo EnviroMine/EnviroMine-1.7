@@ -32,9 +32,12 @@ import enviromine.client.renderer.tileentity.TileEntityDavyLampRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorRenderer;
 import enviromine.client.renderer.tileentity.TileEntityEskyRenderer;
 import enviromine.client.renderer.tileentity.TileEntityFreezerRenderer;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
 import java.util.Iterator;
+import org.apache.logging.log4j.Level;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
@@ -122,14 +125,20 @@ public class EM_ClientProxy extends EM_CommonProxy
 			Object itemArmor = tmp.next();
 			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1)
 			{
-				IItemRenderer iRenderer = MinecraftForgeClient.getItemRenderer(new ItemStack((ItemArmor)itemArmor), ItemRenderType.INVENTORY);
+				String name = Item.itemRegistry.getNameForObject(itemArmor);
 				
-				if(iRenderer != null)
+				if(EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
 				{
-					MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer(iRenderer));
-				} else
-				{
-					MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+					IItemRenderer iRenderer = MinecraftForgeClient.getItemRenderer(new ItemStack((ItemArmor)itemArmor), ItemRenderType.INVENTORY);
+					
+					if(iRenderer != null)
+					{
+						EnviroMine.logger.log(Level.WARN, "Item " + name + " aready has a custom ItemRenderer associated with it!");
+						EnviroMine.logger.log(Level.WARN, "EnviroMine will be unable to overlay the camel pack UI when attached!");
+					} else
+					{
+						MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+					}
 				}
 			}
 		}

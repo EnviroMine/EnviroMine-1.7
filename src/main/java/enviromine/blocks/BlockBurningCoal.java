@@ -7,22 +7,21 @@ import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 import java.util.Random;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.blocks.tiles.TileEntityBurningCoal;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.gases.EnviroGasDictionary;
-import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.blocks.tiles.TileEntityBurningCoal;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.gases.EnviroGasDictionary;
+import enviromine.handlers.ObjectHandler;
 
 public class BlockBurningCoal extends Block implements ITileEntityProvider
 {
@@ -40,27 +39,9 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     {
         world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + world.rand.nextInt(10), 0);
     }
-    
+	
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-    {
-    	double f = 0.125;
-        AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
-        
-        if(bounds != null)
-        {
-        	return bounds.contract(f, f, f);
-        } else
-        {
-        	return null;
-        }
-    }
-    
-    /**
-     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
-     */
-    @Override
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    public void onEntityWalking(World world, int x, int y, int z, Entity entity)
     {
     	entity.setFire(10);
     }
@@ -78,6 +59,9 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
 		if(!world.scheduledUpdatesAreImmediate)
 		{
 			world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + rand.nextInt(10), 0);
+		} else
+		{
+			return;
 		}
         
         TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);

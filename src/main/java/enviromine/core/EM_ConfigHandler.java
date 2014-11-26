@@ -157,8 +157,8 @@ public class EM_ConfigHandler
 		// Config Gas
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", false, "Whether to render gases not normally visible").getBoolean(false);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 256, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(256);
-		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 128, "How many gases can be processed in a single pass per chunk (-1 = infinite)").getInt(-1);
-		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", false, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(false);
+		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 2048, "How many gases can be processed in a single pass per chunk (-1 = infinite)").getInt(-1);
+		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", true, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(true);
 		
 		// Potion ID's
 		EM_Settings.hypothermiaPotionID = -1;
@@ -188,6 +188,7 @@ public class EM_ConfigHandler
 		String ConSetCat = "Config";
 		EM_Settings.genArmorConfigs = config.get(ConSetCat, "Generate Armor Configs", true, "Will attempt to find and generate blank configs for any custom armors loaded before EnviroMine.").getBoolean(true);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
+		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
 		
 		// Earthquake
 		String EarSetCat = "Earthquakes";

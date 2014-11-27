@@ -198,9 +198,15 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 						return;
 					}
 					
+					List<Entity> before = ((List<Entity>)this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1, 1, 1)));
 					this.worldObj.setBlockToAir(i, j, k);
-					List<Entity> l = ((List<Entity>)this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1, 1, 1)));
-					for (Entity e : l) {
+					List<Entity> after = ((List<Entity>)this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1, 1, 1)));
+					
+					for (Entity e : before) {
+						after.remove(e);
+					}
+					
+					for (Entity e : after) {
 						e.setDead();
 					}
 				}

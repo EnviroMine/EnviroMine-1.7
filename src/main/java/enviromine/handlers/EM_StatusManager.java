@@ -183,7 +183,7 @@ public class EM_StatusManager
 		
 		float[] data = new float[8];
 		
-		float sanityRate = -0.005F;
+		float sanityRate = 0F;
 		float sanityStartRate = sanityRate;
 		
 		float quality = 0;
@@ -379,7 +379,7 @@ public class EM_StatusManager
 							}
 						}
 						
-					} else if(block == Blocks.flowing_lava || block == Blocks.lava)
+					} else if(block == Blocks.flowing_lava || block == Blocks.lava || block == ObjectHandler.fireGasBlock)
 					{
 						if(quality > -1)
 						{
@@ -402,7 +402,7 @@ public class EM_StatusManager
 							
 							
 						}
-					} else if((block == Blocks.torch || block == Blocks.lit_furnace))
+					} else if((block == ObjectHandler.fireTorch || block == Blocks.torch || block == Blocks.lit_furnace))
 					{
 						if(quality > -0.25F)
 						{
@@ -659,7 +659,7 @@ public class EM_StatusManager
 		{
 			if(((EntityPlayer)entityLiving).isPlayerSleeping())
 			{
-				bTemp += 5F;
+				bTemp += 10F;
 			}
 		}
 		
@@ -670,12 +670,15 @@ public class EM_StatusManager
 		}
 		else 
 		{
-			if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
+			if(entityLiving.worldObj.isRaining() && biome.rainfall != 0.0F)
 			{
-				
 				bTemp -= 10F;
-				dropSpeed = 0.005F;
 				animalHostility = -1;
+				
+				if(entityLiving.worldObj.canBlockSeeTheSky(i, j, k))
+				{
+					dropSpeed += 0.01F;
+				}
 			}
 		
 		} // Dimension Overrides End
@@ -711,16 +714,16 @@ public class EM_StatusManager
 		}
 
 		
-		if((entityLiving.worldObj.getBlock(i, j, k) == Blocks.water || entityLiving.worldObj.getBlock(i, j, k) == Blocks.flowing_water) && entityLiving.posY > 48)
+		if(entityLiving.isInWater())
 		{
 			if(biome.getEnableSnow())
 			{
-				bTemp -= 10F;
+				bTemp -= 20F;
 			} else
 			{
-				bTemp -= 5F;
+				bTemp -= 10F;
 			}
-			dropSpeed = 0.01F;
+			dropSpeed += 0.01F;
 		}
 		
 		List mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));
@@ -895,9 +898,9 @@ public class EM_StatusManager
 		{
 			avgEntityTemp /= validEntities;
 			
-			if(bTemp < avgEntityTemp)
+			if(bTemp < avgEntityTemp - 12F)
 			{
-				bTemp = (bTemp + avgEntityTemp) / 2;
+				bTemp = (bTemp + (avgEntityTemp - 12F)) / 2;
 			}
 		}
 		

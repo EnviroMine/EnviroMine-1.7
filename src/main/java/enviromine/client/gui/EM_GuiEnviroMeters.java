@@ -676,7 +676,7 @@ public class EM_GuiEnviroMeters extends Gui
 			} else
 			{
 				Minecraft.getMinecraft().fontRenderer.drawString("Body Temp: " + tracker.bodyTemp + "C", 10, 10, 16777215);
-				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + DB_abientTemp + "C | Cur Biome: " + DB_biomeName + " (" + DB_biomeID + ")", 10, 10 * 2, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + DB_abientTemp + "C (" + (DB_abientTemp + 12F) + "C) | Cur Biome: " + DB_biomeName + " (" + DB_biomeID + ")", 10, 10 * 2, 16777215);
 				Minecraft.getMinecraft().fontRenderer.drawString("Temp Rate: " + DB_tempchange + "C", 10, 10 * 3, 16777215);
 			}
 			

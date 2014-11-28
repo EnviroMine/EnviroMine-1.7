@@ -194,25 +194,27 @@ public class EnviroDataTracker
 		float tnm = enviroData[4];
 		float tpm = enviroData[5];
 		
-		if(bodyTemp - airTemp > 0)
+		float relTemp = airTemp + 12F;
+		
+		if(bodyTemp - relTemp > 0)
 		{
-			float spAmp = Math.abs(bodyTemp - airTemp) > 10F? Math.abs(bodyTemp - airTemp)/10F : 1F;
-			if(bodyTemp - airTemp >= tnm * spAmp)
+			float spAmp = Math.abs(relTemp/bodyTemp)*2F/* > 1F? Math.abs(bodyTemp - relTemp)/5F : 1F*/;
+			if(bodyTemp - relTemp >= tnm * spAmp)
 			{
 				bodyTemp -= tnm * spAmp;
 			} else
 			{
-				bodyTemp = airTemp;
+				bodyTemp = relTemp;
 			}
-		} else if(bodyTemp - airTemp < 0)
+		} else if(bodyTemp - relTemp < 0)
 		{
-			float spAmp = Math.abs(bodyTemp - airTemp) > 10F? Math.abs(bodyTemp - airTemp)/10F : 1F;
-			if(bodyTemp - airTemp <= -tpm * spAmp)
+			float spAmp = Math.abs(relTemp/bodyTemp)*2F/* > 5F? Math.abs(bodyTemp - relTemp)/5F : 1F*/;
+			if(bodyTemp - relTemp <= -tpm * spAmp)
 			{
 				bodyTemp += tpm * spAmp;
 			} else
 			{
-				bodyTemp = airTemp;
+				bodyTemp = relTemp;
 			}
 		}
 		

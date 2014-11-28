@@ -294,15 +294,15 @@ public class EnviroUtils
 	
 	public static double getBiomeTemp(BiomeGenBase biome)
 	{
-		float bTemp = biome.temperature * 2.25F;
+		float bTemp = biome.temperature * 1.75F;
 		
-		if(bTemp > 1.5F)
+		/*if(bTemp > 1F)
 		{
 			bTemp = 30F + ((bTemp - 1F) * 10);
-		} else if(bTemp < -1.5F)
+		} else if(bTemp < -1F)
 		{
 			bTemp = -30F + ((bTemp + 1F) * 10);
-		} else
+		} else*/
 		{
 			bTemp *= 20;
 		}

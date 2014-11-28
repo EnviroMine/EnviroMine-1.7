@@ -83,6 +83,8 @@ public class WorldFeatureGenerator implements IWorldGenerator
 	public void ReplaceCoal(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
 		DimensionProperties dProps = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+		int xOff = chunkX * 16;
+		int zOff = chunkZ * 16;
 		
 		for(int i = 0; i < 16; i++)
 		{
@@ -90,11 +92,11 @@ public class WorldFeatureGenerator implements IWorldGenerator
 			{
 				for(int k = 0; k < 16; k++)
 				{
-					Item item = Item.getItemFromBlock(world.getBlock(i, j, k));
+					Item item = Item.getItemFromBlock(world.getBlock(i + xOff, j, k + zOff));
 					
-					if(world.getBlock(i, j, k) == Blocks.coal_ore || (item != null && SameOre(new ItemStack(item), "oreCoal")))
+					if(world.getBlock(i + xOff, j, k + zOff) == Blocks.coal_ore || (item != null && SameOre(new ItemStack(item), "oreCoal")))
 					{
-						world.setBlock(i, j, k, ObjectHandler.flammableCoal);
+						world.setBlock(i + xOff, j, k + zOff, ObjectHandler.flammableCoal);
 					}
 				}
 			}

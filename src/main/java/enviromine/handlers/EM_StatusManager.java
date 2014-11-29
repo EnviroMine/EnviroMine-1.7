@@ -237,6 +237,10 @@ public class EM_StatusManager
 		
 		boolean isDay = entityLiving.worldObj.isDaytime();
 		
+		//Note: This is offset slightly so that heat peaks after noon.
+		float scale = 1.25F; // Anything above 1 forces the maximum and minimum temperatures to plateau when they're reached
+		float dayPercent = MathHelper.clamp_float((float)(Math.sin(Math.toRadians(((entityLiving.worldObj.getWorldTime()%24000L)/24000D)*360F - 30F))*0.5F + 0.5F)*scale, 0F, 1F);
+		
 		if(entityLiving.worldObj.provider.hasNoSky)
 		{
 			isDay = false;
@@ -634,21 +638,21 @@ public class EM_StatusManager
 				}
 			} else if(entityLiving.posY > 96 && entityLiving.posY < 256)
 			{
-				if(bTemp < 20F)
+				/*if(bTemp < 20F)
 				{
 					bTemp -= (float)(20F * ((entityLiving.posY - 96)/159));
-				} else
+				} else*/
 				{
-					bTemp -= (float)(40F * ((entityLiving.posY - 96)/159));
+					bTemp -= (float)(50F * ((entityLiving.posY - 96)/159));
 				}
 			} else if(entityLiving.posY >= 256)
 			{
-				if(bTemp < 20F)
+				/*if(bTemp < 20F)
 				{
 					bTemp -= 20F;
-				} else
+				} else*/
 				{
-					bTemp -= 40F;
+					bTemp -= 50F;
 				}
 			}
 		}
@@ -688,42 +692,40 @@ public class EM_StatusManager
 		{
 			bTemp -= 2.5F;
 		}
-
-		//TODO Dimension Override  Day/Night Overrides
 		
-		if (dimensionProp != null && dimensionProp.override && !dimensionProp.dayNightTemp) 
+		if (dimensionProp == null || !dimensionProp.override || dimensionProp.dayNightTemp)
 		{ 
-		
-		}
-		else 
-		{	
-			if(!isDay && bTemp > 0F)
+			bTemp -= (1F-dayPercent) * 10F;
+			
+			if(biome.rainfall <= 0F)
+			{
+				bTemp -= (1F-dayPercent) * 30F;
+			}
+			/*if(bTemp > 0F)
 			{
 				if(biome.rainfall == 0.0F)
 				{
-					bTemp /= 9;
+					bTemp /= 1F + (8F * (1F-dayPercent));
 				} else
 				{
-					bTemp /= 2;
+					bTemp /= 1F + (1F-dayPercent);
 				}
-			} else if(!isDay && bTemp <= 0F)
+			} else if(bTemp <= 0F)
 			{
-				bTemp -= 10F;
-			}
-
+				bTemp *= 2F * (1F-dayPercent);
+			}*/
 		}
-
 		
 		if(entityLiving.isInWater())
 		{
-			if(biome.getEnableSnow())
+			/*if(biome.getEnableSnow())
 			{
 				bTemp -= 20F;
 			} else
 			{
 				bTemp -= 10F;
-			}
-			dropSpeed += 0.01F;
+			}*/
+			dropSpeed += 0.005F;
 		}
 		
 		List mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));

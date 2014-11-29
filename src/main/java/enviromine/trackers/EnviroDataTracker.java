@@ -196,9 +196,9 @@ public class EnviroDataTracker
 		
 		float relTemp = airTemp + 12F;
 		
-		if(bodyTemp - relTemp > 0)
+		if(bodyTemp - relTemp > 0) // Cold
 		{
-			float spAmp = Math.abs(relTemp/bodyTemp)*2F/* > 1F? Math.abs(bodyTemp - relTemp)/5F : 1F*/;
+			float spAmp = Math.abs(bodyTemp - relTemp) > 2F? Math.abs(bodyTemp - relTemp)/2F : 1F;
 			if(bodyTemp - relTemp >= tnm * spAmp)
 			{
 				bodyTemp -= tnm * spAmp;
@@ -206,9 +206,9 @@ public class EnviroDataTracker
 			{
 				bodyTemp = relTemp;
 			}
-		} else if(bodyTemp - relTemp < 0)
+		} else if(bodyTemp - relTemp < 0) // Hot
 		{
-			float spAmp = Math.abs(relTemp/bodyTemp)*2F/* > 5F? Math.abs(bodyTemp - relTemp)/5F : 1F*/;
+			float spAmp = Math.abs(bodyTemp - relTemp) > 10F? Math.abs(bodyTemp - relTemp)/10F : 1F;
 			if(bodyTemp - relTemp <= -tpm * spAmp)
 			{
 				bodyTemp += tpm * spAmp;

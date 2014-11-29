@@ -2,6 +2,7 @@ package enviromine;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -294,7 +295,7 @@ public class EnviroUtils
 	
 	public static double getBiomeTemp(BiomeGenBase biome)
 	{
-		float bTemp = biome.temperature * 1.75F;
+		//float bTemp = biome.temperature * 1.75F;
 		
 		/*if(bTemp > 1F)
 		{
@@ -302,13 +303,13 @@ public class EnviroUtils
 		} else if(bTemp < -1F)
 		{
 			bTemp = -30F + ((bTemp + 1F) * 10);
-		} else*/
+		} else
 		{
 			bTemp *= 20;
-		}
+		}*/
 		
-		return bTemp;
-		
+		float maxTemp = 45F;
+		return Math.sin(Math.toRadians(biome.temperature*45F))*maxTemp;
 	}
 	
 	/*

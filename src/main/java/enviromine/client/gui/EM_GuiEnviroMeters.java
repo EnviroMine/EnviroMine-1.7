@@ -178,8 +178,8 @@ public class EM_GuiEnviroMeters extends Gui
 		{
 			int waterBar = MathHelper.ceiling_float_int((tracker.hydration / 100) * barWidth);
 			int heatBar = MathHelper.ceiling_float_int(((tracker.bodyTemp + 50) / 150) * barWidth);
-			int preheatBar = MathHelper.ceiling_float_int(((tracker.airTemp + 50) / 150) * barWidth);
-			int preheatIco = 16- MathHelper.ceiling_float_int(((tracker.airTemp + 50) / 150) * 16);
+			int preheatBar = MathHelper.ceiling_float_int(((tracker.airTemp + 50 + 12) / 150) * barWidth);
+			int preheatIco = 16- MathHelper.ceiling_float_int(((tracker.airTemp + 50 + 12) / 150) * 16);
 			int sanityBar = MathHelper.ceiling_float_int((tracker.sanity / 100) * barWidth);
 			int airBar = MathHelper.ceiling_float_int((tracker.airQuality / 100) * barWidth);
 			

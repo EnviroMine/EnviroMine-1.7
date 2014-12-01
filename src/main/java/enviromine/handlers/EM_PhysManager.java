@@ -218,7 +218,7 @@ public class EM_PhysManager
 			
 			validSlideType = blockProps.slides || ((waterLogged || touchingWater) && blockProps.wetSlide);
 			isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
-		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow) && (waterLogged || touchingWater)))
+		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer) && (waterLogged || touchingWater)))
 		{
 			if(block instanceof BlockAnvil)
 			{
@@ -226,7 +226,7 @@ public class EM_PhysManager
 			} else
 			{
 				validSlideType = true;
-				isMuddy = (block == Blocks.dirt || block == Blocks.snow);
+				isMuddy = (block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer);
 			}
 		}
 		
@@ -549,6 +549,8 @@ public class EM_PhysManager
 					{
 						entityphysblock.field_145810_d = nbtTC;
 					}
+					//world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(entityphysblock.block) + (entityphysblock.meta << 12));
+					world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), entityphysblock.block.stepSound.func_150496_b(), (entityphysblock.block.stepSound.getVolume() + 1.0F) / 2.0F, entityphysblock.block.stepSound.getPitch() * 1.2F);
 					world.spawnEntityInWorld(entityphysblock);
 					
 				} else if(missingBlocks > minThreshold && !world.isRemote && EM_Settings.stoneCracks)

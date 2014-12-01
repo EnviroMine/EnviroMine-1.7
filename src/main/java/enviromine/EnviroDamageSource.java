@@ -15,7 +15,8 @@ public class EnviroDamageSource extends DamageSource
 	public static EnviroDamageSource frostbite = (EnviroDamageSource)(new EnviroDamageSource("frostbite")).setDamageBypassesArmor();
 	public static EnviroDamageSource dehydrate = (EnviroDamageSource)(new EnviroDamageSource("dehydrate")).setDamageBypassesArmor();
 	public static EnviroDamageSource landslide = (EnviroDamageSource)(new EnviroDamageSource("landslide"));
-	public static EnviroDamageSource gasfire = (EnviroDamageSource)(new EnviroDamageSource("gasfire"));
+	public static EnviroDamageSource avalanche = (EnviroDamageSource)(new EnviroDamageSource("avalanche"));
+	public static EnviroDamageSource gasfire = (EnviroDamageSource)(new EnviroDamageSource("gasfire")).setDamageBypassesArmor();
 	public static EnviroDamageSource thething = (EnviroDamageSource)(new EnviroDamageSource("thething")).setDamageBypassesArmor();
 	
 	protected EnviroDamageSource(String par1Str)

@@ -950,12 +950,12 @@ public class EM_EventManager
 			{
 				int seaLvl = 48;
 				
-				if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID)
-				{
-					seaLvl = 256;
-				} else if(EM_Settings.dimensionProperties.containsKey(event.entityLiving.worldObj.provider.dimensionId))
+				if(EM_Settings.dimensionProperties.containsKey(event.entityLiving.worldObj.provider.dimensionId))
 				{
 					seaLvl = MathHelper.ceiling_double_int(EM_Settings.dimensionProperties.get(event.entityLiving.worldObj.provider.dimensionId).sealevel * 0.75F);
+				} else if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID)
+				{
+					seaLvl = 256;
 				}
 				
 				if(event.entityLiving.posY < seaLvl)
@@ -970,10 +970,20 @@ public class EM_EventManager
 					{
 						((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.proMiner, 1);
 					}
+				} else
+				{
+					event.entityLiving.getEntityData().setLong("EM_MINE_DATE", event.entityLiving.worldObj.getTotalWorldTime());
 				}
-			} else if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+			} else
 			{
-				event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+				if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+				{
+					event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+				}
+				if(event.entityLiving.getEntityData().hasKey("EM_MINE_DATE"))
+				{
+					event.entityLiving.getEntityData().removeTag("EM_MINE_DATE");
+				}
 			}
 		}
 		

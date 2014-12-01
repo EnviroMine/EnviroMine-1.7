@@ -272,13 +272,36 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 							j += 1;
 						}
 						
-						if(!this.isBreakingAnvil2 && this.worldObj.canPlaceEntityOnSide(Blocks.anvil, i, j, k, true, 1, (Entity)null, (ItemStack)null) && !BlockFalling.func_149831_e(this.worldObj, i, j - 1, k) && this.worldObj.setBlock(i, j, k, this.block, this.meta, 3))
+						if((this.block == Blocks.snow_layer && this.worldObj.getBlock(i, j, k) == Blocks.snow_layer && this.worldObj.getBlockMetadata(i, j, k) < 15) || (!this.isBreakingAnvil2 && this.worldObj.canPlaceEntityOnSide(Blocks.anvil, i, j, k, true, 1, (Entity)null, (ItemStack)null) && !BlockFalling.func_149831_e(this.worldObj, i, j - 1, k) && this.worldObj.setBlock(i, j, k, this.block, this.meta, 3)))
 						{
+							if(this.block == Blocks.snow_layer && this.worldObj.getBlock(i, j, k) == Blocks.snow_layer && this.worldObj.getBlockMetadata(i, j, k) < 15)
+							{
+								if(this.worldObj.getBlockMetadata(i, j, k) >= 14)
+								{
+									this.worldObj.setBlock(i, j, k, Blocks.snow);
+								} else
+								{
+									this.worldObj.setBlockMetadataWithNotify(i, j, k, this.worldObj.getBlockMetadata(i, j, k) + 1, 3);
+								}
+							}
+							
 							EM_PhysManager.schedulePhysUpdate(this.worldObj, i, j, k, true, earthquake? "Quake" : "Collapse");
 							
-							if(block instanceof BlockFalling)
+							/*if(block instanceof BlockFalling)
 							{
 								((BlockFalling)block).func_149828_a(this.worldObj, i, j, k, this.meta);
+							}*/
+							
+							Block bSurface = null;
+							if(this.worldObj.getBlock(i, j - 1, k) != Blocks.air && this.worldObj.getBlock(i, j - 1, k).getMaterial() != Material.air)
+							{
+								bSurface = this.worldObj.getBlock(i, j -1 , k);
+								this.worldObj.playSoundEffect((double)((float)i + 0.5F), (double)((float)j + 0.5F), (double)((float)k + 0.5F), bSurface.stepSound.func_150496_b(), (bSurface.stepSound.getVolume() + 1.0F) / 2.0F, bSurface.stepSound.getPitch() * 0.5F);
+							}
+							
+							if(bSurface == null || bSurface != this.block)
+							{
+								this.worldObj.playSoundEffect((double)((float)i + 0.5F), (double)((float)j + 0.5F), (double)((float)k + 0.5F), this.block.stepSound.func_150496_b(), (this.block.stepSound.getVolume() + 1.0F) / 2.0F, this.block.stepSound.getPitch() * 0.5F);
 							}
 							
 							if(this.field_145810_d != null && block instanceof ITileEntityProvider)
@@ -345,7 +368,13 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 				
 				if(isLandSlide)
 				{
-					damagesource = EnviroDamageSource.landslide;
+					if(this.block == Blocks.snow || this.block == Blocks.snow_layer)
+					{
+						damagesource = EnviroDamageSource.avalanche;
+					} else
+					{
+						damagesource = EnviroDamageSource.landslide;
+					}
 				} else
 				{
 					damagesource = this.block == Blocks.anvil ? DamageSource.anvil : DamageSource.fallingBlock;

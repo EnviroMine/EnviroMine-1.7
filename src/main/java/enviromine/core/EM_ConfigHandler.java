@@ -155,6 +155,7 @@ public class EM_ConfigHandler
 		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
 		
 		// Config Gas
+		EM_Settings.slowGases = config.get("Gases", "Slow Gases", false, "Normal gases will move extremely slowly and reduce TPS lag").getBoolean(false);
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", false, "Whether to render gases not normally visible").getBoolean(false);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 256, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(256);
 		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 2048, "How many gases can be processed in a single pass per chunk (-1 = infinite)").getInt(-1);

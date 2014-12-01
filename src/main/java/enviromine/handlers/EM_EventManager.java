@@ -1,26 +1,10 @@
 package enviromine.handlers;
 
-import enviromine.EntityPhysicsBlock;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.ModelCamelPack;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.GasBuffer;
-import enviromine.network.packet.PacketAutoOverride;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.Hallucination;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
-
+import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -30,7 +14,12 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -54,22 +43,17 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
-
-import java.awt.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
@@ -93,6 +77,29 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.EnviroUtils;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.client.ModelCamelPack;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.world.Earthquake;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_EventManager
 {
@@ -1480,7 +1487,7 @@ public class EM_EventManager
 	@SideOnly(Side.CLIENT)
 	public void onRender(RenderPlayerEvent.Pre event)
 	{
-		if(event.entityPlayer.isPotionActive(EnviroPotion.insanity) && event.entityPlayer.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2)
+		if(Minecraft.getMinecraft().thePlayer.isPotionActive(EnviroPotion.insanity) && Minecraft.getMinecraft().thePlayer.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2)
 		{
 			event.setCanceled(true);
 			
@@ -1567,9 +1574,9 @@ public class EM_EventManager
 			if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
 			{
 				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-				double diffX = (event.entity.prevPosX + (event.entity.posX - event.entity.prevPosX) * partialTicks) - (player.prevPosX + (player.posX - player.prevPosX) * partialTicks);
-				double diffY = (event.entity.prevPosY + (event.entity.posY - event.entity.prevPosY) * partialTicks) - (player.prevPosY + (player.posY - player.prevPosY) * partialTicks) + (event.entity == player? -0.1D : event.entity.getEyeHeight() + (0.1D * (event.entity.width/0.6D)));
-				double diffZ = (event.entity.prevPosZ + (event.entity.posZ - event.entity.prevPosZ) * partialTicks) - (player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks);
+				double diffX = (event.entity.lastTickPosX + (event.entity.posX - event.entity.lastTickPosX) * partialTicks) - (player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks);
+				double diffY = (event.entity.lastTickPosY + (event.entity.posY - event.entity.lastTickPosY) * partialTicks) - (player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks) + (event.entity instanceof EntityPlayer? -0.1D : event.entity.getEyeHeight() + (0.1D * (event.entity.width/0.6D)));
+				double diffZ = (event.entity.lastTickPosZ + (event.entity.posZ - event.entity.lastTickPosZ) * partialTicks) - (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks);
 				GL11.glTranslated(diffX, diffY, diffZ);
 				GL11.glRotatef(180F, 0F, 0F, 1F);
 				GL11.glRotatef(180F + (event.entity.renderYawOffset + ((event.entity == player && (player.openContainer != player.inventoryContainer)) ? ((event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks) : 0)), 0F, 1F, 0F);

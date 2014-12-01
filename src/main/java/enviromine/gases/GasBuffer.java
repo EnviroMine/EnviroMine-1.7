@@ -2,6 +2,7 @@ package enviromine.gases;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.Level;
 import com.google.common.base.Stopwatch;
 import enviromine.blocks.BlockGas;
@@ -79,7 +80,7 @@ public class GasBuffer
 			{
 				fireBuffer.add(entry);
 			}
-		} else
+		} else if(!EM_Settings.slowGases)
 		{
 			if(!gasBuffer.contains(entry))
 			{
@@ -110,10 +111,19 @@ public class GasBuffer
 			fireCutoff = EM_Settings.gasPassLimit/4;
 		}*/
 		
+		if(fireBuffer.size() >= 25000)
+		{
+			fireBuffer.clear();
+		}
+		
+		if(gasBuffer.size() >= 25000)
+		{
+			gasBuffer.clear();
+		}
 
 		if(EnviroMine.proxy.isClient())
 		{
-			if(debugTime == 0)
+			if(debugTime == 0 && curTick == 1)
 			{
 				if(!timer.isRunning())
 				{
@@ -146,6 +156,11 @@ public class GasBuffer
 		{
 			for(int i = 0; i < fireBuffer.size(); i++)
 			{
+				if(timer.elapsed(TimeUnit.SECONDS)/(float)EM_Settings.gasTickRate >= 0.5F)
+				{
+					break;
+				}
+				
 				int[] entry = fireBuffer.get(i);
 				
 				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
@@ -183,6 +198,11 @@ public class GasBuffer
 		{
 			for(int i = 0; i < gasBuffer.size(); i++)
 			{
+				if(timer.elapsed(TimeUnit.SECONDS)/(float)EM_Settings.gasTickRate >= 0.5F)
+				{
+					break;
+				}
+				
 				int[] entry = gasBuffer.get(i);
 				
 				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);

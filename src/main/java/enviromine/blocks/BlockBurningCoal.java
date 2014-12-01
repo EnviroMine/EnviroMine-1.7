@@ -39,6 +39,14 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     {
         world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + world.rand.nextInt(10), 0);
     }
+
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random p_149745_1_)
+    {
+        return 0;
+    }
 	
     @Override
     public void onEntityWalking(World world, int x, int y, int z, Entity entity)
@@ -85,7 +93,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         	
         	this.tryCatchFire(world, xOff, yOff, zOff, enco, rand, l, fDir.getOpposite());
         	
-        	if(world.rand.nextInt(5) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
+        	if(world.rand.nextInt(20) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
         	{
         		if(world.getBlock(xOff, yOff, zOff) == Blocks.air)
         		{

@@ -123,7 +123,7 @@ public class CamelPackRefillHandler implements IRecipe
 				{
 					return false;
 				}
-			} else if (packFillCur == packFillMax) {
+			} else if (packFillCur >= packFillMax) {
 				return false;
 			}
 		}
@@ -149,13 +149,14 @@ public class CamelPackRefillHandler implements IRecipe
 			return newItem;
 		} else
 		{
-			Iterator<ItemStack> iterator = bottles.iterator();
+			 //NEVER edit the base item properties. It messes with other mods & recipes!
+			/*Iterator<ItemStack> iterator = bottles.iterator();
 			
 			while (iterator.hasNext())
 			{
 				ItemStack bottle = iterator.next();
 				bottle.getItem().setContainerItem(Items.glass_bottle);
-			}
+			}*/
 			
 			int attemptedFill = (packFillCur + (bottles.size() * bottleFill) + (buckets.size() * bucketFill));
 			
@@ -195,7 +196,7 @@ public class CamelPackRefillHandler implements IRecipe
 		
 		if (this.matches((InventoryCrafting)craftMatrix, event.player.worldObj))
 		{
-			if (!craftMatrix.getInventoryName().equals("container.crafting") || !emptyPack)
+			if (!craftMatrix.getInventoryName().equals("container.crafting"))
 			{
 				return;
 			} else
@@ -207,10 +208,16 @@ public class CamelPackRefillHandler implements IRecipe
 					if (slot == null)
 					{
 						continue;
-					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill"))
+					} else if (slot.hasTagCompound() && slot.getTagCompound().hasKey("camelPackFill") && emptyPack)
 					{
 						slot.stackSize += 1;
 						slot.getTagCompound().setInteger("camelPackFill", slot.getTagCompound().getInteger("camelPackFill") - (bottles.size() >= 1 ? bottleFill : bucketFill));
+					} else if(slot.getItem() == Items.potionitem && !emptyPack)
+					{
+						if(!event.player.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle)))
+						{
+							event.player.dropPlayerItemWithRandomChoice(new ItemStack(Items.glass_bottle), false);
+						}
 					}
 				}
 			}

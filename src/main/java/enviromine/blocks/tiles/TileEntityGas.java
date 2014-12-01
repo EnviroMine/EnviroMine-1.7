@@ -28,7 +28,7 @@ public class TileEntityGas extends TileEntity
 {
 	public ArrayList<int[]> gases = new ArrayList<int[]>();
 	public Color color = Color.WHITE;
-	public float opacity = 1.0F;
+	public float opacity = 0F;
 	public float yMax = 1.0F;
 	public float yMin = 0.0F;
 	public int amount = 0;

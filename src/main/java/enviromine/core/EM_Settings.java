@@ -82,6 +82,7 @@ public class EM_Settings
 	public static int gasTickRate = 32; //GasFires are 4x faster than this
 	public static int gasPassLimit = -1;
 	public static boolean gasWaterLike = true;
+	public static boolean slowGases; // Normal gases use random ticks to move
 	
 	//World Gen
 	public static boolean shaftGen = true;

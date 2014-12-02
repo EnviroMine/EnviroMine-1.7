@@ -394,7 +394,7 @@ public class EM_StatusManager
 							temp = getTempFalloff(200, dist, range);
 						}
 						nearLava = true;
-					} else if(block == Blocks.fire)
+					} else if(block == Blocks.fire || block == ObjectHandler.burningCoal)
 					{
 						if(quality > -0.5F)
 						{

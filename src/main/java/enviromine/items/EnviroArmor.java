@@ -134,11 +134,11 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("gasMaskFill"))
 			{
-				armor.getTagCompound().setInteger("gasMaskFill", 200);
+				armor.getTagCompound().setInteger("gasMaskFill", 1000);
 			}
 			if (!armor.getTagCompound().hasKey("gasMaskMax"))
 			{
-				armor.getTagCompound().setInteger("gasMaskMax", 200);
+				armor.getTagCompound().setInteger("gasMaskMax", 1000);
 			}
 		} else if (armor.getItem() == ObjectHandler.hardHat)
 		{
@@ -176,8 +176,9 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			{
 				armor.setTagCompound(new NBTTagCompound());
 			}
-			armor.getTagCompound().setInteger("gasMaskFill", 200);
-			armor.getTagCompound().setInteger("gasMaskMax", 200);
+			armor.getTagCompound().setInteger("gasMaskFill", 1000);
+			armor.getTagCompound().setInteger("gasMaskMax", 1000);
+			player.addStat(EnviroAchievements.breatheEasy, 1);
 		} else if (armor.getItem() == ObjectHandler.hardHat)
 		{
 			player.addStat(EnviroAchievements.safetyFirst, 1);

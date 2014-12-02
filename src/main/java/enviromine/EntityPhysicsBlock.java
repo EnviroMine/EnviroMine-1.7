@@ -283,6 +283,9 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 								{
 									this.worldObj.setBlockMetadataWithNotify(i, j, k, this.worldObj.getBlockMetadata(i, j, k) + 1, 3);
 								}
+							} else if(meta != this.worldObj.getBlockMetadata(i, j, k))
+							{
+								this.worldObj.setBlockMetadataWithNotify(i, j, k, meta, 2);
 							}
 							
 							EM_PhysManager.schedulePhysUpdate(this.worldObj, i, j, k, true, earthquake? "Quake" : "Collapse");

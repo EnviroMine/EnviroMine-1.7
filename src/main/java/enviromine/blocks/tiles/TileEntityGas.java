@@ -751,6 +751,7 @@ public class TileEntityGas extends TileEntity
 					
 					this.addGas(decayGasID, decayNum);
 				}
+				return decayed;
 			} else if(skyLight >= 5 && gasType.airDecay > 0 && gasType.airDecayThresh >= gasArray[1])
 			{
 				decayed = true;
@@ -762,6 +763,7 @@ public class TileEntityGas extends TileEntity
 					
 					this.addGas(decayGasID, decayNum);
 				}
+				return decayed;
 			} else if(this.worldObj.rand.nextInt(100) == 0 && gasType.randDecay > 0 && gasType.randDecayThresh >= gasArray[1])
 			{
 				decayed = true;
@@ -773,6 +775,7 @@ public class TileEntityGas extends TileEntity
 					
 					this.addGas(decayGasID, decayNum);
 				}
+				return decayed;
 			}
 		}
 		return decayed;

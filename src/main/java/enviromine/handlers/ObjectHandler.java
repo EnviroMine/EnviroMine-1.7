@@ -40,6 +40,7 @@ public class ObjectHandler
 	public static Item davyLamp;
 	public static Item gasMeter;
 	public static Item rottenFood;
+	public static Item spoiledMilk;
 	
 	public static ItemArmor camelPack;
 	public static ItemArmor gasMask;
@@ -67,14 +68,15 @@ public class ObjectHandler
 		badWaterBottle = new EnviroItemBadWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.badwater").setCreativeTab(EnviroMine.enviroTab);
 		saltWaterBottle = new EnviroItemSaltWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.saltwater").setCreativeTab(EnviroMine.enviroTab);
 		coldWaterBottle = new EnviroItemColdWaterBottle().setMaxStackSize(1).setUnlocalizedName("enviromine.coldwater").setCreativeTab(EnviroMine.enviroTab);
-		airFilter = new Item().setMaxStackSize(1).setUnlocalizedName("enviromine.airfilter").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:air_filter");
+		airFilter = new Item().setMaxStackSize(16).setUnlocalizedName("enviromine.airfilter").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:air_filter");
 		rottenFood = new RottenFood(1).setMaxStackSize(64).setUnlocalizedName("enviromine.rottenfood").setCreativeTab(EnviroMine.enviroTab).setTextureName("enviromine:rot");
+		spoiledMilk = new ItemSpoiledMilk().setUnlocalizedName("enviromine.spoiledmilk").setCreativeTab(EnviroMine.enviroTab).setTextureName("bucket_milk");
 		
 		camelPackMaterial = EnumHelper.addArmorMaterial("camelPack", 100, new int[]{1, 0, 0, 0}, 0);
 		
 		camelPack = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 1).setTextureName("camel_pack").setUnlocalizedName("enviromine.camelpack").setCreativeTab(null);
 		
-		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("enviromine.gasmask").setCreativeTab(EnviroMine.enviroTab);
+		gasMask = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("gas_mask").setUnlocalizedName("enviromine.gasmask").setCreativeTab(null);
 		hardHat = (ItemArmor)new EnviroArmor(camelPackMaterial, 4, 0).setTextureName("hard_hat").setUnlocalizedName("enviromine.hardhat").setCreativeTab(EnviroMine.enviroTab);
 	}
 	
@@ -85,6 +87,7 @@ public class ObjectHandler
 		GameRegistry.registerItem(coldWaterBottle, "coldWaterBottle");
 		GameRegistry.registerItem(airFilter, "airFilter");
 		GameRegistry.registerItem(rottenFood, "rottenFood");
+		GameRegistry.registerItem(spoiledMilk, "spoiledMilk");
 		GameRegistry.registerItem(camelPack, "camelPack");
 		GameRegistry.registerItem(gasMask, "gasMask");
 		GameRegistry.registerItem(hardHat, "hardHat");
@@ -108,6 +111,22 @@ public class ObjectHandler
 		tag.setString("camelPath", Item.itemRegistry.getNameForObject(camelPack));
 		camelStack2.setTagCompound(tag);
 		EnviroMine.enviroTab.addRawStack(camelStack2);
+		
+		// Empty Mask
+		ItemStack mask = new ItemStack(gasMask);
+		tag = new NBTTagCompound();
+		tag.setInteger("gasMaskFill", 0);
+		tag.setInteger("gasMaskMax", 1000);
+		mask.setTagCompound(tag);
+		EnviroMine.enviroTab.addRawStack(mask);
+		
+		// Full Mask
+		mask = new ItemStack(gasMask);
+		tag = new NBTTagCompound();
+		tag.setInteger("gasMaskFill", 1000);
+		tag.setInteger("gasMaskMax", 1000);
+		mask.setTagCompound(tag);
+		EnviroMine.enviroTab.addRawStack(mask);
 	}
 	
 	public static void initBlocks()
@@ -177,7 +196,7 @@ public class ObjectHandler
 		GameRegistry.addShapelessRecipe(new ItemStack(badWaterBottle, 1, 0), new ItemStack(Items.potionitem, 1, 0), new ItemStack(Blocks.dirt, 1));
 		GameRegistry.addShapelessRecipe(new ItemStack(saltWaterBottle, 1, 0), new ItemStack(Items.potionitem, 1, 0), new ItemStack(Blocks.sand, 1));
 		
-		GameRegistry.addRecipe(new ItemStack(Items.slime_ball, 4, 0), " r ", "rwr", " r ", 'w', new ItemStack(Items.water_bucket, 1, 0), 'r', new ItemStack(rottenFood, 1));
+		GameRegistry.addRecipe(new ItemStack(Items.slime_ball, 4, 0), " r ", "rwr", " r ", 'w', new ItemStack(spoiledMilk, 1, 0), 'r', new ItemStack(rottenFood, 1));
 		GameRegistry.addRecipe(new ItemStack(Blocks.mycelium), "xyx", "yzy", "xyx", 'z', new ItemStack(Blocks.grass), 'x', new ItemStack(Blocks.brown_mushroom_block), 'y', new ItemStack(rottenFood, 1));
 		GameRegistry.addRecipe(new ItemStack(Blocks.mycelium), "xyx", "yzy", "xyx", 'z', new ItemStack(Blocks.grass), 'y', new ItemStack(Blocks.brown_mushroom_block), 'x', new ItemStack(rottenFood, 1));
 		GameRegistry.addRecipe(new ItemStack(Blocks.dirt, 1), "xxx", "xxx", "xxx", 'x', new ItemStack(rottenFood));

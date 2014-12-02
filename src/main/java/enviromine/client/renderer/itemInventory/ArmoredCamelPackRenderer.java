@@ -40,7 +40,7 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 		
 		GL11.glDisable(GL11.GL_LIGHTING); //Forge: Make sure that render states are reset, a renderEffect can derp them up.
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
+		//GL11.glEnable(GL11.GL_BLEND);
 		// ====================== Render item texture ======================
 		IIcon icon = itemStack.getIconIndex();
 		if(icon != null)
@@ -48,7 +48,7 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 			renderItem.renderIcon(0, 0, icon, 16, 16);
 		}
 		
-		GL11.glDisable(GL11.GL_BLEND);
+		//GL11.glDisable(GL11.GL_BLEND);
 		if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("isCamelPack"))
 		{
 			renderFillBar(itemStack);

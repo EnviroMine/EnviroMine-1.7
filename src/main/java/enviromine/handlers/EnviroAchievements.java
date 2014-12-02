@@ -26,6 +26,7 @@ public class EnviroAchievements
 	public static Achievement thatJustHappened; //@ Survive a gas fire
 	public static Achievement itsPitchBlack; 	//@ ???
 	public static Achievement tenSecondRule; 	//@ Eat rotten food
+	public static Achievement breatheEasy; 		//@ Craft a respirator
 	//public static Achievement medicalMarvels; 	// Cure any infection/disease
 	//public static Achievement suckItUpPrincess; // Attack & kill any hostile mob with one or more broken limbs
 	
@@ -35,7 +36,7 @@ public class EnviroAchievements
 		mindOverMatter =   new Achievement("enviromine.MindOverMatter",   "enviromine.MindOverMatter",   -1, 0, Items.ender_eye,          AchievementList.buildSword).registerStat();
 		proMiner =         new Achievement("enviromine.ProMiner",         "enviromine.ProMiner",          0, 0, Items.diamond_pickaxe,  AchievementList.buildPickaxe).registerStat();
 		hardBoiled =       new Achievement("enviromine.HardBoiled",       "enviromine.HardBoiled",        1, 0, Items.egg,                                      null).registerStat();
-		ironArmy =         new Achievement("enviromine.IronArmy",         "enviromine.IronArmy",          2, 0, Items.iron_ingot, AchievementList.buildBetterPickaxe).registerStat();
+		ironArmy =         new Achievement("enviromine.IronArmy",         "enviromine.IronArmy",          2, 0, Items.iron_ingot, 		 AchievementList.acquireIron).registerStat();
 		
 		tradingFavours =   new Achievement("enviromine.TradingFavours",   "enviromine.TradingFavours",   -2, 1, Items.emerald,                                  null).registerStat();
 		iNeededThat =      new Achievement("enviromine.INeededThat",      "enviromine.INeededThat",      -1, 1, Items.shears,                                   null);
@@ -46,13 +47,14 @@ public class EnviroAchievements
 		boreToTheCore =    new Achievement("enviromine.BoreToTheCore",    "enviromine.BoreToTheCore",    -2, 2, ObjectHandler.elevator,       AchievementList.portal).registerStat();
 		intoTheDarkness =  new Achievement("enviromine.IntoTheDarkness",  "enviromine.IntoTheDarkness",  -1, 2, Blocks.torch,                          boreToTheCore).registerStat();
 		thatJustHappened = new Achievement("enviromine.ThatJustHappened", "enviromine.ThatJustHappened",  0, 2, Blocks.fire,                                    null).registerStat();
-		itsPitchBlack =    new Achievement("enviromine.ItsPitchBlack",    "enviromine.ItsPitchBlack",     1, 2, Blocks.redstone_torch,                 boreToTheCore).registerStat();
-		tenSecondRule =    new Achievement("enviromine.TenSecondRule",    "enviromine.TenSecondRule",     2, 2, ObjectHandler.rottenFood,                       null).registerStat();
+		itsPitchBlack =    new Achievement("enviromine.ItsPitchBlack",    "enviromine.ItsPitchBlack",     1, 2, Blocks.skull,                 		   boreToTheCore).registerStat();
+		tenSecondRule =    new Achievement("enviromine.TenSecondRule",    "enviromine.TenSecondRule",     2, 2, ObjectHandler.rottenFood,   AchievementList.buildHoe).registerStat();
+
+		breatheEasy = 	   new Achievement("enviromine.BreatheEasy",      "enviromine.BreatheEasy",      -1, 3, ObjectHandler.gasMask,   AchievementList.acquireIron).registerStat();
+		//medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   -1, 3, Items.potionitem,                              null).registerStat();
+		//suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", "enviromine.SuckItUpPrincess", 1, 3, Items.bone,               AchievementList.buildSword).registerStat();
 		
-		//medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   -2, 3, Items.potionitem,                               null).registerStat();
-		//suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", "enviromine.SuckItUpPrincess", -1, 3, Items.bone,               AchievementList.buildSword).registerStat();
-		
-		page = new AchievementPage("EnviroMine", funwaysFault, mindOverMatter, proMiner, hardBoiled, ironArmy, tradingFavours, iNeededThat, winterIsComing, ohGodWhy, safetyFirst, boreToTheCore, intoTheDarkness, thatJustHappened, itsPitchBlack, tenSecondRule/*, medicalMarvels, suckItUpPrincess*/);
+		page = new AchievementPage("EnviroMine", funwaysFault, mindOverMatter, proMiner, hardBoiled, ironArmy, tradingFavours, iNeededThat, winterIsComing, ohGodWhy, safetyFirst, boreToTheCore, intoTheDarkness, thatJustHappened, itsPitchBlack, tenSecondRule, breatheEasy/*, medicalMarvels, suckItUpPrincess*/);
 		AchievementPage.registerAchievementPage(page);
 	}
 }

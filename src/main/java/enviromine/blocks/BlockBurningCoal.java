@@ -107,8 +107,10 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         			
         			if(gasTile.amount < 10)
         			{
-        				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, 1);
-        				coalTile.fuel -= 1;
+        				int amount = 10 - gasTile.amount;
+        				amount = amount > coalTile.fuel? coalTile.fuel : amount;
+        				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, amount);
+        				coalTile.fuel -= amount;
         			}
         		}
         	}
@@ -169,6 +171,19 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
             }
         }
 	}
+
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+    {
+    	world.setBlock(x, y, z, Blocks.fire);
+		/*TileEntity tile = world.getTileEntity(x, y, z);
+		
+		if(tile != null && tile instanceof TileEntityGas)
+		{
+			TileEntityGas gasTile = (TileEntityGas)tile;
+			gasTile.addGas(0, 10); // Fire
+			gasTile.updateRender();
+		}*/
+    }
 	
     private void tryCatchFire(World world, int x, int y, int z, int p_149841_5_, Random random, int chance, ForgeDirection face)
     {
@@ -248,6 +263,11 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int x, int y, int z, Random rand)
     {
+        if (rand.nextInt(24) == 0)
+        {
+            world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+        }
+        
         float f = (float)x + 0.5F;
         float f1 = (float)y;
         float f2 = (float)z + 0.5F;

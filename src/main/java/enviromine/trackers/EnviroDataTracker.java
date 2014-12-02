@@ -153,31 +153,29 @@ public class EnviroDataTracker
 		// Air checks
 		enviroData[0] += gasAirDiff;
 		gasAirDiff = 0F;
+		airQuality += enviroData[0];
+		
 		ItemStack helmet = trackedEntity.getEquipmentInSlot(4);
 		if(helmet != null && !isCreative)
 		{
-				if(helmet.hasTagCompound() && helmet.getTagCompound().hasKey("gasMaskFill"))
+			if(helmet.hasTagCompound() && helmet.getTagCompound().hasKey("gasMaskFill"))
+			{
+				NBTTagCompound tag = helmet.getTagCompound();
+				int gasMaskFill = tag.getInteger("gasMaskFill");
+				
+				if(gasMaskFill > 0 && airQuality <= 99F)
 				{
-					NBTTagCompound tag = helmet.getTagCompound();
-					int gasMaskFill = tag.getInteger("gasMaskFill");
+					int airDrop = 100 - MathHelper.ceiling_float_int(airQuality);
+					airDrop = gasMaskFill >= airDrop? airDrop : gasMaskFill;
 					
-					if(gasMaskFill > 0 && airQuality <= 99F)
+					if(airDrop > 0)
 					{
-						int airDrop = MathHelper.floor_float(enviroData[0]);
-						
-						if(enviroData[0] <= 0)
-						{
-							enviroData[0] = 0;
-							tag.setInteger("gasMaskFill", (gasMaskFill + airDrop));
-						} else
-						{
-							tag.setInteger("gasMaskFill", 0);
-						}
+						airQuality += airDrop;
+						tag.setInteger("gasMaskFill", (gasMaskFill - airDrop));
 					}
+				}
 			}
 		}
-		
-		airQuality += enviroData[0];
 		
 		if(airQuality <= 0F)
 		{

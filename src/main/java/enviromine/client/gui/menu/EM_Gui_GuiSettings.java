@@ -1,7 +1,6 @@
 package enviromine.client.gui.menu;
 
 import java.math.BigDecimal;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -24,10 +23,11 @@ public class EM_Gui_GuiSettings extends GuiScreen
 	}
 	//id, x, y, width, height, text
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
-	GuiSlider ScaleSlider = new GuiSlider(149, this.width / 2 + 2, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiScaling") + ": ", "x", .5F, 2F, UI_Settings.guiScale, true, true);
+		GuiSlider ScaleSlider = new GuiSlider(149, this.width / 2 + 2, this.height / 6 + 74 - 6, 150, 20, StatCollector.translateToLocal("options.enviromine.guiScaling") + ": ", "x", .5F, 2F, UI_Settings.guiScale, true, true);
 		
 		ScaleSlider.precision = 2;
 		ScaleSlider.updateSlider();
@@ -164,9 +164,8 @@ public class EM_Gui_GuiSettings extends GuiScreen
 		{
 			actionPerformed(Slide);	
 		}
-		
-
 	}
+	
 	@Override
 	public void onGuiClosed() 
 	{

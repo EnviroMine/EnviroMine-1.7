@@ -1625,7 +1625,7 @@ public class EM_EventManager
 				}
 				
 				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)(((float)fill/(float)max)*100));
-				event.toolTip.add("Camel pack: " + disp + "% ("+fill+"/"+max+")");
+				event.toolTip.add("Water: " + disp + "% ("+fill+"/"+max+")");
 			}
 			
 			if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
@@ -1637,11 +1637,11 @@ public class EM_EventManager
 				if(curTime - rotDate <= 0)
 				{
 					event.toolTip.add("Rotten: 0%");
-					event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
+					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				} else
 				{
 					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
-					event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
+					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				}
 			}
 			
@@ -1650,7 +1650,7 @@ public class EM_EventManager
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
 				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
 				int disp = (i <= 0 ? 0 : i > max ? 100 : (int)(i/(max/100F)));
-				event.toolTip.add("Air Filters: " + disp + "%");
+				event.toolTip.add("Filters: " + disp + "%");
 			}
 		}
 	}

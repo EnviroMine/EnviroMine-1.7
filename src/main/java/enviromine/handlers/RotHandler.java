@@ -59,7 +59,10 @@ public class RotHandler
 					rotStack = new ItemStack(Items.rotten_flesh, item.stackSize);
 				} else if(item.getItem() == Items.spider_eye)
 				{
-					rotStack = new ItemStack(Items.fermented_spider_eye);
+					rotStack = new ItemStack(Items.fermented_spider_eye, item.stackSize);
+				} else if(item.getItem() == Items.milk_bucket)
+				{
+					rotStack = new ItemStack(ObjectHandler.spoiledMilk, item.stackSize);
 				} else
 				{
 					rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);

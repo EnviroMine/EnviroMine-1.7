@@ -31,7 +31,7 @@ public class EM_GuiEnviroMeters extends Gui
 	public IResourceManager resourceManager;
 	
 	public static final String guiResource = "textures/gui/status_Gui.png";
-	public static final ResourceLocation gasMaskResource = new ResourceLocation("enviromine", "textures/misc/maskblur2.png");
+	public static final ResourceLocation gasMaskResource = new ResourceLocation("enviromine", "textures/misc/maskblur3.png");
 	public static final ResourceLocation breathMaskResource = new ResourceLocation("enviromine", "textures/misc/breath.png");
 	public static final ResourceLocation bloodshotResource = new ResourceLocation("enviromine", "textures/misc/bloodshot.png");
 	public static final ResourceLocation blurOverlayResource = new ResourceLocation("enviromine", "textures/misc/blur.png");
@@ -843,7 +843,7 @@ public class EM_GuiEnviroMeters extends Gui
 					pauseCnt = 0;
 					pause = false;
 					
-					if(UI_Settings.breathSound == true)
+					if(UI_Settings.breathSound == true && !Minecraft.getMinecraft().isGamePaused())
 					{
 						//ISound sound = null; //TODO ("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F)
 						//mc.getSoundHandler().playSound(sound);
@@ -873,7 +873,7 @@ public class EM_GuiEnviroMeters extends Gui
 			
 			// If Item is Damaged Render Breath onscreen
 			//if(itemstack.getItemDamage() >= itemstack.getMaxDamage() - 1 && this.mc.gameSettings.thirdPersonView == 0)
-			if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && this.mc.gameSettings.thirdPersonView == 0)
+			if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 0 && this.mc.gameSettings.thirdPersonView == 0)
 			{
 				this.mc.renderEngine.bindTexture(breathMaskResource);
 				enviromine.EnviroUtils.drawScreenOverlay(k, l, EnviroUtils.getColorFromRGBA(255, 255, 255, (int)alpha));

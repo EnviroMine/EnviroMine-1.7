@@ -124,6 +124,7 @@ public class EM_ConfigHandler
 		EM_Settings.shaftGen = config.get("World Generation", "Enable Village MineShafts", true, "Generates mineshafts in villages").getBoolean(true);
 		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", true, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(true);
 		EM_Settings.gasGen = config.get("World Generation", "Generate Gases", true).getBoolean(true);
+		EM_Settings.disableCaves = config.get("World Generation", "Disable Cave Dimension", false).getBoolean(false);
 		
 		//General Settings
 		EM_Settings.enablePhysics = config.get(Configuration.CATEGORY_GENERAL, "Enable Physics", true, "Turn physics On/Off").getBoolean(true);
@@ -155,6 +156,7 @@ public class EM_ConfigHandler
 		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
 		
 		// Config Gas
+		EM_Settings.noGases = config.get("Gases", "Disable Gases", false, "Disables all gases and slowly deletes existing pockets").getBoolean(false);
 		EM_Settings.slowGases = config.get("Gases", "Slow Gases", false, "Normal gases will move extremely slowly and reduce TPS lag").getBoolean(false);
 		EM_Settings.renderGases = config.get("Gases", "Render normal gas", false, "Whether to render gases not normally visible").getBoolean(false);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 256, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(256);

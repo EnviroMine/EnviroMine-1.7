@@ -304,6 +304,10 @@ public class BlockGas extends Block implements ITileEntityProvider
 		if(world.isRemote)
 		{
 			return;
+		} else if(EM_Settings.noGases)
+		{
+			world.setBlockToAir(x, y, z);
+			return;
 		}
 		
 		boolean scheduleTick = false;

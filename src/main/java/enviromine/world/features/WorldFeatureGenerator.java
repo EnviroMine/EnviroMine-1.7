@@ -71,7 +71,7 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		
 		ReplaceCoal(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
 		
-		if(EM_Settings.gasGen)
+		if(EM_Settings.gasGen && !EM_Settings.noGases)
 		{
 			for(int i = 4; i >= 0; i--)
 			{

@@ -83,6 +83,7 @@ public class EM_Settings
 	public static int gasPassLimit = -1;
 	public static boolean gasWaterLike = true;
 	public static boolean slowGases; // Normal gases use random ticks to move
+	public static boolean noGases = false;
 	
 	//World Gen
 	public static boolean shaftGen = true;
@@ -151,6 +152,7 @@ public class EM_Settings
 	public static int quakeSpeed = 2;
 	
 	public static boolean finiteWater = false;
+	public static boolean disableCaves = false;
 	
 	public static float convertToFarenheit(float num)
 	{

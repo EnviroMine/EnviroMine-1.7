@@ -22,13 +22,13 @@ public class RotHandler
 		RotProperties rotProps = null;
 		long rotTime = (long)(EM_Settings.foodRotTime * 24000L);
 		
-		if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(item)))
+		if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(item.getItem())))
 		{
-			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(item));
+			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(item.getItem()));
 			rotTime = (long)(rotProps.days * 24000L);
-		} else if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage()))
+		} else if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
 		{
-			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage());
+			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
@@ -45,7 +45,7 @@ public class RotHandler
 			
 			if(UBD == 0)
 			{
-				item.getTagCompound().setLong("EM_ROT_DATE", (world.getTotalWorldTime()/24000L + 1L) * 24000L);
+				item.getTagCompound().setLong("EM_ROT_DATE", (world.getTotalWorldTime()/24000L) * 24000L);
 				item.getTagCompound().setLong("EM_ROT_TIME", rotTime);
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())

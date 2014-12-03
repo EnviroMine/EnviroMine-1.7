@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.tiles.TileEntityBurningCoal;
 import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
 
@@ -93,7 +94,10 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         	
         	this.tryCatchFire(world, xOff, yOff, zOff, enco, rand, l, fDir.getOpposite());
         	
-        	if(world.rand.nextInt(20) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
+        	if(EM_Settings.noGases)
+        	{
+        		coalTile.fuel -= 1;
+        	} else if(world.rand.nextInt(20) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
         	{
         		if(world.getBlock(xOff, yOff, zOff) == Blocks.air)
         		{

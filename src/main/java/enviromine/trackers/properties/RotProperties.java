@@ -45,7 +45,7 @@ public class RotProperties implements SerialisableProperty
 		config.addCustomCategoryComment(category, "");
 		String name = config.get(category, RPName[0], "").getString();
 		int meta = config.get(category, RPName[1], -1).getInt(-1);
-		String rotID = config.get(category, RPName[2], 0).getString();
+		String rotID = config.get(category, RPName[2], "").getString();
 		int rotMeta = config.get(category, RPName[3], 0).getInt(0);
 		int DTR = config.get(category, RPName[4], 0).getInt(0);
 		

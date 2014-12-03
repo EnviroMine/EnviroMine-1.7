@@ -3,13 +3,16 @@ package enviromine.trackers.properties;
 import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.nbt.NBTTagCompound;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+
 import net.minecraftforge.common.config.Configuration;
 
 public class ArmorProperties implements SerialisableProperty
@@ -161,10 +164,17 @@ public class ArmorProperties implements SerialisableProperty
 
 	private static void DetectedArmorGen(ItemArmor armor, String ModID)
 	{
-		String[] classpath = armor.getClass().getCanonicalName().toString().split("\\.");
+		String canonicalName = armor.getClass().getCanonicalName();
+		String path = EM_ConfigHandler.customPath;
+		if (canonicalName != null)
+		{
+			path += canonicalName.split("\\.")[0];
+		} else
+		{
+			path += ModID;
+		}
 		
-		
-		File armorFile = new File(EM_ConfigHandler.customPath + classpath[0] + ".cfg");
+		File armorFile = new File(path + ".cfg");
 		if(!armorFile.exists())
 		{
 			try

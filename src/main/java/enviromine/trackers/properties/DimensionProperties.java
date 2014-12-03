@@ -1,15 +1,18 @@
 package enviromine.trackers.properties;
 
-import java.io.File;
-import java.io.IOException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.WorldProvider;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.config.Configuration;
-import org.apache.logging.log4j.Level;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldProvider;
+
+import java.io.File;
+import java.io.IOException;
+
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
 
 public class DimensionProperties implements SerialisableProperty
 {
@@ -91,16 +94,22 @@ public class DimensionProperties implements SerialisableProperty
 		{
 			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
 			
-			String[] modname = dimension.getClass().getCanonicalName().toString().trim().toLowerCase().split("\\.");
-			
-			//System.out.println(modname[0]);
-			if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig == true)//If Vanilla
+			String canonicalName = dimension.getClass().getCanonicalName();
+			if (canonicalName == null)
 			{
 				SaveConfig(dimension, "Defaults");
-			}
-			else
-			{
-				SaveConfig(dimension, modname[0]);
+			} else {
+				String[] modname = canonicalName.trim().toLowerCase().split("\\.");
+				
+				//System.out.println(modname[0]);
+				if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig)//If Vanilla
+				{
+					SaveConfig(dimension, "Defaults");
+				}
+				else
+				{
+					SaveConfig(dimension, modname[0]);
+				}
 			}
 		}
 	}

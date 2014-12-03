@@ -1,19 +1,8 @@
 package enviromine.core;
 
+import enviromine.trackers.properties.*;
+
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.trackers.properties.RotProperties;
-import enviromine.trackers.properties.StabilityType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +12,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import org.apache.logging.log4j.Level;
 
 public class EM_ConfigHandler
@@ -147,7 +139,7 @@ public class EM_ConfigHandler
 		int minPhysInterval = 6;
 		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
 		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128, "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
-		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)"), minPhysInterval);
+		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval, "The number of ticks between physics update passes (must be " + minPhysInterval + " or more)"), minPhysInterval);
 		EM_Settings.stoneCracks = config.get(PhySetCat, "Stone Cracks Before Falling", true).getBoolean(true);
 		EM_Settings.defaultStability = config.get(PhySetCat, "Default Stability Type (BlockIDs > 175)", "loose").getString();
 		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
@@ -437,11 +429,17 @@ public class EM_ConfigHandler
 		// Check to make sure this is a Data File Before Editing
 		File configFile = new File(customPath + "MyCustom.cfg");
 		
-		String[] classpath = data.getClass().getCanonicalName().toString().toLowerCase().split("\\.");
-		String classname = "";
+		String canonicalName = data.getClass().getCanonicalName();
+		String classname;
 		
-		if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
-		else classname = classpath[0];
+		if (canonicalName == null) {
+			classname = "Vanilla";
+		} else
+		{
+			String[] classpath = canonicalName.toLowerCase().split("\\.");
+			if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
+			else classname = classpath[0];
+		}
 		
 		Configuration config;
 		try

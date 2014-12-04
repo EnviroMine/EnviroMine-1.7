@@ -938,9 +938,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(helmet)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(helmet.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(helmet));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(helmet.getItem()));
 					
 					if(isDay)
 					{
@@ -994,9 +994,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(plate)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(plate.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(plate));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(plate.getItem()));
 					
 					if(isDay)
 					{
@@ -1047,9 +1047,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(legs)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(legs.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(legs));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(legs.getItem()));
 					
 					if(isDay)
 					{
@@ -1100,9 +1100,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(boots)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(boots.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(boots));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(boots.getItem()));
 					
 					if(isDay)
 					{

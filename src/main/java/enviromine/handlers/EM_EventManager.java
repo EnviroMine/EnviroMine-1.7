@@ -1186,15 +1186,15 @@ public class EM_EventManager
 				if(itemUse >= item.getMaxItemUseDuration() - 1)
 				{
 					itemUse = 0;
-					if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item)) || EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage()))
+					if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem())) || EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
 					{
 						ItemProperties itemProps;
-						if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage()))
+						if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
 						{
-							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage());
+							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
 						} else
 						{
-							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item));
+							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()));
 						}
 						
 						if(itemProps.effTemp > 0F)

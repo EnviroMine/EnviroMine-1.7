@@ -87,6 +87,8 @@ public class ItemProperties implements SerialisableProperty
 		float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
 		float effTempCap = (float)config.get(category, IPName[10], 37.00).getDouble(37.00);
 		
+		System.out.println("Loaded property for item: {" + name + "," + meta + "}");
+		
 		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
 		
 		if(meta < 0)
@@ -118,7 +120,7 @@ public class ItemProperties implements SerialisableProperty
 		SaveProperty(configFile, categoryName + ".potions", 	Item.itemRegistry.getNameForObject(Items.potionitem), 	-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
 		SaveProperty(configFile, categoryName + ".melon", 		Item.itemRegistry.getNameForObject(Items.melon), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
 		SaveProperty(configFile, categoryName + ".carrot", 		Item.itemRegistry.getNameForObject(Items.carrot), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, categoryName + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_apple), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
+		SaveProperty(configFile, categoryName + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_carrot), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
 		SaveProperty(configFile, categoryName + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
 		
 		SaveProperty(configFile, categoryName + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);

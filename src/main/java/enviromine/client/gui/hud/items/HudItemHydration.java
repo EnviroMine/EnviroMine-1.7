@@ -3,6 +3,7 @@ package enviromine.client.gui.hud.items;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,11 +22,15 @@ public class HudItemHydration extends HudItem	{
 
 		return "Hydration";
 	}
-
+	
+	 public String getNameLoc()
+	 {
+		 return StatCollector.translateToLocal("options.enviromine.hud.hydration");
+	 }
 	@Override
 	public String getButtonLabel() {
 
-		return "Hydration Bar";
+		return  getNameLoc() + "Bar";
 	}
 
 	@Override

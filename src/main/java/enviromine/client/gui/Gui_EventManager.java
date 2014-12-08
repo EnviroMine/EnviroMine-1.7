@@ -30,6 +30,7 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
+import enviromine.world.ClientQuake;
 
 @SideOnly(Side.CLIENT)
 public class Gui_EventManager 
@@ -105,7 +106,28 @@ public class Gui_EventManager
 
 			return;
 		}
-
+		
+		mc.thePlayer.yOffset = 1.62F;
+		if(ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer) > 0)
+		{
+			if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()))
+			{
+				return;
+			}
+			
+			float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
+			
+			double shakeSpeed = 2D * shakeMult;
+			float offsetY = 0.2F * shakeMult;
+			
+			double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
+			
+			mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
+			mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);
+			mc.thePlayer.cameraYaw = (float)(Math.sin(shake) * offsetY/4F);
+			
+			//super.updateCameraAndRender(partialTick);
+		}
 		
 	 	HUDRegistry.checkForResize();
 

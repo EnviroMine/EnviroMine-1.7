@@ -3,6 +3,7 @@ package enviromine.client.gui.hud.items;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -20,13 +21,18 @@ public class HudItemSanity extends HudItem	{
 	@Override
 	public String getName() {
 
-		return "Sanity";
+		return "Sanity"; 
 	}
 
+	 public String getNameLoc()
+	 {
+		 return StatCollector.translateToLocal("options.enviromine.hud.sanity");	 
+	 }
+	
 	@Override
 	public String getButtonLabel() {
 
-		return "Sanity Bar";
+		return getNameLoc() +" Bar";
 	}
 
 	@Override

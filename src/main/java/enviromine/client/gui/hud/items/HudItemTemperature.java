@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -25,9 +26,14 @@ public class HudItemTemperature extends HudItem {
 		return "Temperature";
 	}
 
+	public String getNameLoc()
+	{
+		 return StatCollector.translateToLocal("options.enviromine.hud.temperature");
+	}
+	 
 	@Override
 	public String getButtonLabel() {
-		return "Temperature Bar";
+		return getNameLoc() +" Bar";
 	}
 
 	@Override

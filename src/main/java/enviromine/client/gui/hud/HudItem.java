@@ -40,6 +40,8 @@ public abstract class HudItem {
      * @return String value for unique identifier of the {@link HudItem}
      */
     public abstract String getName();
+    
+    public abstract String getNameLoc();
 
     /**
      * Display name for the HudItem in config screen

@@ -1,17 +1,14 @@
 package enviromine.handlers.crafting;
 
+import java.util.ArrayList;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class CamelPackRefillHandler implements IRecipe
 {

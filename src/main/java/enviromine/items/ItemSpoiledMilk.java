@@ -18,6 +18,7 @@ public class ItemSpoiledMilk extends Item
     {
         this.setMaxStackSize(1);
         this.setCreativeTab(EnviroMine.enviroTab);
+        this.setContainerItem(Items.bucket);
     }
 
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)

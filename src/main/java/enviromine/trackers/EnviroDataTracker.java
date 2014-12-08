@@ -196,7 +196,7 @@ public class EnviroDataTracker
 		
 		if(bodyTemp - relTemp > 0) // Cold
 		{
-			float spAmp = Math.abs(bodyTemp - relTemp) > 2F? Math.abs(bodyTemp - relTemp)/2F : 1F;
+			float spAmp = Math.abs(bodyTemp - relTemp) > 10F? Math.abs(bodyTemp - relTemp)/10F : 1F;
 			if(bodyTemp - relTemp >= tnm * spAmp)
 			{
 				bodyTemp -= tnm * spAmp;
@@ -422,7 +422,8 @@ public class EnviroDataTracker
 				
 				if (this.side.isClient()) 
 				{
-					playSoundWithTimeCheck(17000, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
+					// This sounds like someone blowing into a mic
+					//playSoundWithTimeCheck(17000, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
 			}
 			

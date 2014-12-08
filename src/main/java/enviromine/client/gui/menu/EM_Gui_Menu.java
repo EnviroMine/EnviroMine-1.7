@@ -46,7 +46,7 @@ public class EM_Gui_Menu extends GuiScreen
 		customEditor.visible = true;			
 	
 		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 44, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
-		this.buttonList.add(new GuiButton(102, this.width / 2 - 90, this.height / 6 + 24, 180, 20, StatCollector.translateToLocal("options.enviromine.soundOptions")+"..."));
+		this.buttonList.add(new GuiButton(102, this.width / 2 - 90, this.height / 6 + 24, 180, 20, StatCollector.translateToLocal("options.enviromine.guiSounds")+"..."));
 		this.buttonList.add(serverSettings);
 		this.buttonList.add(customEditor);
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.done")));

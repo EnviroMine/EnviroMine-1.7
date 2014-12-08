@@ -1,24 +1,23 @@
 package enviromine;
 
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.potion.Potion;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 
 public class EnviroUtils
 {
@@ -295,21 +294,13 @@ public class EnviroUtils
 	
 	public static double getBiomeTemp(BiomeGenBase biome)
 	{
-		//float bTemp = biome.temperature * 1.75F;
+		// You can calibrate temperatures using these
+		// This does not take into account the time of day (These are the midday maximums)
+		float maxTemp = 45F; // Desert
+		float minTemp = -15F;
 		
-		/*if(bTemp > 1F)
-		{
-			bTemp = 30F + ((bTemp - 1F) * 10);
-		} else if(bTemp < -1F)
-		{
-			bTemp = -30F + ((bTemp + 1F) * 10);
-		} else
-		{
-			bTemp *= 20;
-		}*/
-		
-		float maxTemp = 45F;
-		return Math.sin(Math.toRadians(biome.temperature*45F))*maxTemp;
+		// CALCULATE!
+		return biome.temperature >= 0? Math.sin(Math.toRadians(biome.temperature*45F))*maxTemp : Math.sin(Math.toRadians(biome.temperature*45F))*minTemp;
 	}
 	
 	/*

@@ -435,12 +435,12 @@ public class Earthquake
 	
 	public static void TickDay(World world)
 	{
-		if(world.rand.nextInt(EM_Settings.quakeRarity) == 0 && world.playerEntities.size() > 0)
+		if(world.rand.nextInt(EM_Settings.quakeRarity + 1) == 0 && world.playerEntities.size() > 0)
 		{
 			EntityPlayer player = (EntityPlayer)world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 			
-			int posX = MathHelper.floor_double(player.posX) + (world.rand.nextInt(4096) - 2048);
-			int posZ = MathHelper.floor_double(player.posZ) + (world.rand.nextInt(4096) - 2048);
+			int posX = MathHelper.floor_double(player.posX) + (world.rand.nextInt(2048) - 1024);
+			int posZ = MathHelper.floor_double(player.posZ) + (world.rand.nextInt(2048) - 1024);
 			
 			 // Chunk check can be disabled but may cause a large amount of chunks to be generated where the earthquake passes through
 			if(world.getChunkProvider().chunkExists(posX >> 4, posZ >> 4))
@@ -456,7 +456,7 @@ public class Earthquake
 				}
 				
 				new Earthquake(world, posX, posZ, 32 + world.rand.nextInt(128-32), 4 + world.rand.nextInt(32-4), mode);
-				EnviroMine.logger.log(Level.INFO, "Earthquake spawned at (" + posX + "," + posZ + ")");
+				EnviroMine.logger.log(Level.INFO, "Earthquake at (" + posX + "," + posZ + ")");
 			}
 		}
 	}

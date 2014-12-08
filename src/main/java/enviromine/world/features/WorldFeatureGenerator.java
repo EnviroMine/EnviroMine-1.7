@@ -141,7 +141,7 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		if(world.getBlock(rX, rY, rZ) == Blocks.air)
 		{
 			Block bBlock = world.getBlock(rX, rY - 1, rZ);
-			if(rY < 16 && rY > 0)
+			if((rY < 16 && rY > 0) || world.provider.isHellWorld)
 			{
 				if(bBlock.getMaterial() == Material.water)
 				{

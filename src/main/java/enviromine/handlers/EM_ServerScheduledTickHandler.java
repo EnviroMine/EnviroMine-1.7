@@ -12,7 +12,6 @@ public class EM_ServerScheduledTickHandler
 	@SubscribeEvent
 	public void tickEnd(TickEvent.WorldTickEvent tick)
 	{
-		
 		if(tick.side.isServer())
 		{
 			GasBuffer.update();
@@ -26,7 +25,7 @@ public class EM_ServerScheduledTickHandler
 			
 			Earthquake.updateEarthquakes();
 			
-			if(EM_Settings.enableQuakes && tick.world.getTotalWorldTime()%24000 < 100 && MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L) != Earthquake.lastTickDay && tick.world.provider.dimensionId == 0)
+			if(EM_Settings.enableQuakes && tick.world.getTotalWorldTime()%24000 < 100 && MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L) != Earthquake.lastTickDay && !tick.world.provider.isHellWorld)
 			{
 				Earthquake.lastTickDay = MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L);
 				Earthquake.TickDay(tick.world);

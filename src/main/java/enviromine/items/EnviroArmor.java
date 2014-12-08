@@ -2,16 +2,15 @@ package enviromine.items;
 
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.ObjectHandler;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -28,7 +27,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 		super(par2EnumArmorMaterial, par3, par4);
 		this.setMaxDamage(100);
 		//this.setTextureName("enviromine:camel_pack");
-		this.setNoRepair();
+		//this.setNoRepair();
 	}
 	
 	@Override
@@ -87,13 +86,13 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	 */
 	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
 	{
-		if (par1ItemStack.getItem() == ObjectHandler.hardHat && par2ItemStack.getItem() == ObjectHandler.hardHat)
+		if (par1ItemStack.getItem() == ObjectHandler.hardHat && (par2ItemStack.getItem() == ObjectHandler.hardHat || par2ItemStack.getItem() == Items.iron_ingot))
 		{
 			return true;
-		} else if (par1ItemStack.getItem() == ObjectHandler.gasMask && par2ItemStack.getItem() == ObjectHandler.gasMask)
+		} else if (par1ItemStack.getItem() == ObjectHandler.gasMask && (par2ItemStack.getItem() == ObjectHandler.gasMask || par2ItemStack.getItem() == Items.iron_ingot))
 		{
 			return true;
-		} else if (par1ItemStack.getItem() == ObjectHandler.camelPack && par2ItemStack.getItem() == ObjectHandler.camelPack)
+		} else if (par1ItemStack.getItem() == ObjectHandler.camelPack && (par2ItemStack.getItem() == ObjectHandler.camelPack || par2ItemStack.getItem() == Items.leather))
 		{
 			return true;
 		} else

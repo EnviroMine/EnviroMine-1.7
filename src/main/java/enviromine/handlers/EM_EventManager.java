@@ -1502,7 +1502,7 @@ public class EM_EventManager
 			event.setCanceled(true);
 			
 			EntityLivingBase entity = playerMob.get(event.entityPlayer.getCommandSenderName());
-			if(entity == null)
+			if(entity == null || entity.worldObj != event.entityPlayer.worldObj)
 			{
 				BiomeGenBase biome = event.entityPlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(event.entityPlayer.posX), MathHelper.floor_double(event.entityPlayer.posZ));
 				ArrayList<SpawnListEntry> spawnList = (ArrayList<SpawnListEntry>)biome.getSpawnableList(EnumCreatureType.monster);
@@ -1573,8 +1573,17 @@ public class EM_EventManager
 	@SideOnly(Side.CLIENT)
 	public void onRender(RenderLivingEvent.Specials.Pre event)
 	{ 
-		GL11.glPushMatrix();
 		ItemStack plate = event.entity.getEquipmentInSlot(3);
+		EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
+		
+		if(event.entity == thePlayer && Minecraft.getMinecraft().currentScreen != null)
+		{
+			// Prevents the pack from rendering weirdly in the inventory screen
+			return;
+		}
+		
+		GL11.glPushMatrix();
+		
 		if (plate != null && (event.renderer instanceof RenderBiped || event.renderer instanceof RenderPlayer))
 		{
 			if (plate.getItem() == ObjectHandler.camelPack && !(plate.hasTagCompound() && !plate.getTagCompound().hasKey("camelPackFill"))) {
@@ -1585,7 +1594,7 @@ public class EM_EventManager
 			{
 				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 				double diffX = (event.entity.lastTickPosX + (event.entity.posX - event.entity.lastTickPosX) * partialTicks) - (player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks);
-				double diffY = (event.entity.lastTickPosY + (event.entity.posY - event.entity.lastTickPosY) * partialTicks) - (player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks) + (event.entity instanceof EntityPlayer? -0.1D : event.entity.getEyeHeight() + (0.1D * (event.entity.width/0.6D)));
+				double diffY = (event.entity.lastTickPosY + (event.entity.posY - event.entity.lastTickPosY) * partialTicks) - (player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks) + (event.entity == thePlayer? -0.1D : event.entity.getEyeHeight() + (event.entity instanceof EntityPlayer? -0.1D : (0.1D * (event.entity.width/0.6D))));
 				double diffZ = (event.entity.lastTickPosZ + (event.entity.posZ - event.entity.lastTickPosZ) * partialTicks) - (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks);
 				GL11.glTranslated(diffX, diffY, diffZ);
 				GL11.glRotatef(180F, 0F, 0F, 1F);

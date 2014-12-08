@@ -47,7 +47,7 @@ public class RotProperties implements SerialisableProperty
 		int meta = config.get(category, RPName[1], -1).getInt(-1);
 		String rotID = config.get(category, RPName[2], "").getString();
 		int rotMeta = config.get(category, RPName[3], 0).getInt(0);
-		int DTR = config.get(category, RPName[4], 0).getInt(0);
+		int DTR = config.get(category, RPName[4], 0, "Set this to -1 to disable rotting on this item").getInt(0);
 		
 		RotProperties entry = new RotProperties(name, meta, rotID, rotMeta, DTR);
 		

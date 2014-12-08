@@ -87,8 +87,6 @@ public class ItemProperties implements SerialisableProperty
 		float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
 		float effTempCap = (float)config.get(category, IPName[10], 37.00).getDouble(37.00);
 		
-		System.out.println("Loaded property for item: {" + name + "," + meta + "}");
-		
 		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
 		
 		if(meta < 0)

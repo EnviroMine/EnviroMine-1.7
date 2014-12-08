@@ -1,12 +1,11 @@
 package enviromine.gases.types;
 
 import java.awt.Color;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-
 import enviromine.gases.EnviroGas;
+import enviromine.handlers.ObjectHandler;
 
 public class GasHydrogenSulfide extends EnviroGas
 {
@@ -23,12 +22,12 @@ public class GasHydrogenSulfide extends EnviroGas
 	{
 		super.applyEffects(entityLiving, amplifier);
 		
-		if(entityLiving.worldObj.isRemote)
+		if(entityLiving.worldObj.isRemote || entityLiving.isEntityUndead() || (entityLiving.getEquipmentInSlot(4) != null && entityLiving.getEquipmentInSlot(4).getItem() == ObjectHandler.gasMask))
 		{
 			return;
 		}
 		
-		if(amplifier > 3 && entityLiving.getRNG().nextInt(100) == 0)
+		if(amplifier >= 5 && entityLiving.getRNG().nextInt(100) == 0)
 		{
 			if(amplifier >= 10)
 			{

@@ -193,9 +193,9 @@ public class EM_ConfigHandler
 		EM_Settings.quakeMode = config.get(EarSetCat, "Mode", 2, "Changes how quakes are created (-1 = random, 0 = wave normal, 1 = centre normal, 2 = centre tear, 3 = wave tear)").getInt(2);
 		EM_Settings.quakeDelay = config.get(EarSetCat, "Tick delay", 10).getInt(10);
 		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", 2).getInt(2);
-		if(EM_Settings.quakeRarity <= 0)
+		if(EM_Settings.quakeRarity < 0)
 		{
-			EM_Settings.quakeRarity = 1;
+			EM_Settings.quakeRarity = 0;
 		}
 		if(EM_Settings.quakeSpeed <= 0)
 		{

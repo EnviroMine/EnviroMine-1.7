@@ -1,17 +1,13 @@
 package enviromine.handlers.crafting;
 
-import net.minecraft.inventory.IInventory;
+import java.util.ArrayList;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
 import enviromine.handlers.ObjectHandler;
-
-import java.util.ArrayList;
 
 public class GaskMaskRefillHandler implements IRecipe
 {
@@ -67,11 +63,9 @@ public class GaskMaskRefillHandler implements IRecipe
 		
 		if (mask == null || maskFill >= maskMax)
 		{
-			System.out.println("Mask not present or already full!");
 			return false;
 		} else if (maskFill + (filters.size() * filterFill) >= maskMax + filterFill)
 		{
-			System.out.println("Too many filters (" + (maskFill + (filters.size() * filterFill)) + " / " + (maskMax - filterFill));
 			return false;
 		}
 	    else if(mask != null && filters.size() >= 1)

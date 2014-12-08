@@ -261,10 +261,10 @@ public class EM_StatusManager
 				blockLightLev = chunk.getSavedLightValue(EnumSkyBlock.Block, i & 0xf, j, k & 0xf);
 			}
 		}
-		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null )
+		
+		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) == null)
 		{
-			//TODO Override DimensionProp
-			if(dimensionProp.override && dimensionProp.darkAffectSanity)
+			if(dimensionProp == null || !dimensionProp.override || dimensionProp.darkAffectSanity)
 			{
 			   sanityStartRate = -0.01F;
 			   sanityRate = -0.01F;
@@ -277,12 +277,11 @@ public class EM_StatusManager
 			{
 				for(int z = -range; z <= range; z++)
 				{
-					
 					if(y == 0)
 					{
 						Chunk testChunk = entityLiving.worldObj.getChunkFromBlockCoords((i + x), (k + z));
 						BiomeGenBase checkBiome = testChunk.getBiomeGenForWorldCoords((i + x) & 15, (k + z) & 15, entityLiving.worldObj.getWorldChunkManager());
-						//TODO Changed for Overriding Biomes
+						
 						if(checkBiome != null)
 						{
 							BiomeProperties biomeOverride = null;
@@ -290,15 +289,16 @@ public class EM_StatusManager
 							{
 								biomeOverride = EM_Settings.biomeProperties.get(checkBiome.biomeID);
 							}
+							
 							if(biomeOverride != null && biomeOverride.biomeOveride)
 							{
 								surBiomeTemps += biomeOverride.ambientTemp;
-								//System.out.print(biomeOverride.ambientTemp);
 							}
 							else
 							{
 								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
 							}
+							
 							biomeTempChecks += 1;
 						}
 					}
@@ -606,54 +606,26 @@ public class EM_StatusManager
 			quality = 2F;
 		}
 		
-		//float bTemp = biome.temperature * 2.25F;
-		
-		//TODO (Changed for Biome overrides) Moved to EnviroUtils.. called above
-		//float bTemp = (surBiomeTemps / biomeTempChecks)* 2.25F;
-		
 
 		float bTemp = (surBiomeTemps / biomeTempChecks);
-		/*		
-		if(bTemp > 1.5F)
-		{
-			bTemp = 30F + ((bTemp - 1F) * 10);
-		} else if(bTemp < -1.5F)
-		{
-			bTemp = -30F + ((bTemp + 1F) * 10);
-		} else
-		{
-			bTemp *= 20;
-		}
-		*/
+		
 		if(!entityLiving.worldObj.provider.isHellWorld)
 		{
 			if(entityLiving.posY <= 48)
 			{
-				if(bTemp < 20F)
+				if(45F - bTemp > 0)
 				{
-					bTemp += (50 * (1 - (entityLiving.posY / 48)));
-				} else
-				{
-					bTemp += (20 * (1 - (entityLiving.posY / 48)));
+					bTemp += (45F - bTemp) * (1F - (entityLiving.posY / 48F));
 				}
 			} else if(entityLiving.posY > 96 && entityLiving.posY < 256)
 			{
-				/*if(bTemp < 20F)
+				if(-45F - bTemp < 0)
 				{
-					bTemp -= (float)(20F * ((entityLiving.posY - 96)/159));
-				} else*/
-				{
-					bTemp -= (float)(50F * ((entityLiving.posY - 96)/159));
+					bTemp -= MathHelper.abs(-45F - bTemp) * ((entityLiving.posY - 96F)/159F);
 				}
 			} else if(entityLiving.posY >= 256)
 			{
-				/*if(bTemp < 20F)
-				{
-					bTemp -= 20F;
-				} else*/
-				{
-					bTemp -= 50F;
-				}
+				bTemp = bTemp < -45F? bTemp : -45F;
 			}
 		}
 		
@@ -667,7 +639,6 @@ public class EM_StatusManager
 			}
 		}
 		
-		//TODO Dimension Override  WeatherOverrides
 		if (dimensionProp != null && dimensionProp.override && !dimensionProp.weatherAffectsTemp) 
 		{
 
@@ -681,7 +652,7 @@ public class EM_StatusManager
 				
 				if(entityLiving.worldObj.canBlockSeeTheSky(i, j, k))
 				{
-					dropSpeed += 0.01F;
+					dropSpeed = 0.01F;
 				}
 			}
 		
@@ -701,31 +672,11 @@ public class EM_StatusManager
 			{
 				bTemp -= (1F-dayPercent) * 30F;
 			}
-			/*if(bTemp > 0F)
-			{
-				if(biome.rainfall == 0.0F)
-				{
-					bTemp /= 1F + (8F * (1F-dayPercent));
-				} else
-				{
-					bTemp /= 1F + (1F-dayPercent);
-				}
-			} else if(bTemp <= 0F)
-			{
-				bTemp *= 2F * (1F-dayPercent);
-			}*/
 		}
 		
 		if(entityLiving.isInWater())
 		{
-			/*if(biome.getEnableSnow())
-			{
-				bTemp -= 20F;
-			} else
-			{
-				bTemp -= 10F;
-			}*/
-			dropSpeed += 0.005F;
+			dropSpeed = 0.01F;
 		}
 		
 		List mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));
@@ -1190,8 +1141,13 @@ public class EM_StatusManager
 				{
 					dehydrateBonus += biomeProp.dehydrateRate;
 					
-					if(biomeProp.tempRate > 0)	riseSpeed += biomeProp.tempRate;
-					else dropSpeed += biomeProp.tempRate;
+					if(biomeProp.tempRate > 0)
+					{
+						riseSpeed += biomeProp.tempRate;
+					} else
+					{
+						dropSpeed += biomeProp.tempRate;
+					}
 					
 					sanityRate += biomeProp.sanityRate;
 				}

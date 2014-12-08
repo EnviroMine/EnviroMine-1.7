@@ -32,8 +32,19 @@ public class RotHandler
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood || item.getItem() == Items.fermented_spider_eye) && rotProps == null) || (rotTime < 0 && rotProps != null) || item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh)
+		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood || item.getItem() == Items.fermented_spider_eye) && rotProps == null) || rotTime < 0 || ((item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh) && rotProps == null))
 		{
+			if(item.getTagCompound() != null)
+			{
+				if(item.getTagCompound().hasKey("EM_ROT_DATE"))
+				{
+					item.getTagCompound().removeTag("EM_ROT_DATE");
+				}
+				if(item.getTagCompound().hasKey("EM_ROT_TIME"))
+				{
+					item.getTagCompound().removeTag("EM_ROT_TIME");
+				}
+			}
 			return item;
 		} else
 		{
@@ -67,7 +78,12 @@ public class RotHandler
 				{
 					rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);
 				}
-				rotStack.setStackDisplayName("Rotten " + item.getDisplayName());
+				
+				if(rotStack.getItem() == ObjectHandler.rottenFood)
+				{
+					rotStack.setStackDisplayName("Rotten " + item.getDisplayName());
+				}
+				
 				return rotStack;
 			} else
 			{

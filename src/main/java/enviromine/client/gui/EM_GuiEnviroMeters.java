@@ -155,7 +155,7 @@ public class EM_GuiEnviroMeters extends Gui
 		if(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false)
 		{
 			
-		} else if(ticktimer == 1)
+		} else if(ticktimer == 1 && Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().thePlayer.isDead)
 		{
 			tracker = EM_StatusManager.lookupTrackerFromUsername(Minecraft.getMinecraft().thePlayer.getCommandSenderName());
 			if(tracker == null)
@@ -712,35 +712,35 @@ public class EM_GuiEnviroMeters extends Gui
 			if(tracker.bodyTemp >= 39)
 			{
 				int grad = 0;
-				if(tracker.bodyTemp >= 41F)
+				if(tracker.bodyTemp >= 43F)
 				{
-					grad = 210;
+					grad = 255;
 				} else
 				{
-					grad = (int)((1F - (Math.abs(3 - (tracker.bodyTemp - 39)) / 3)) * 96);
+					grad = MathHelper.floor_float((tracker.bodyTemp - 39F)/6F * 255F);
 				}
 				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, grad));
 				
 			} else if(tracker.bodyTemp <= 35)
 			{
 				int grad = 0;
-				if(tracker.bodyTemp <= 32F)
+				if(tracker.bodyTemp <= 30F)
 				{
-					grad = 210;
+					grad = 255;
 				} else
 				{
-					grad = (int)((Math.abs(3 - (tracker.bodyTemp - 32)))) * 64;
+					grad = MathHelper.floor_float(Math.abs(5F - (tracker.bodyTemp - 30F))/5F * 255F);
 				}
 				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(125, 255, 255, grad));
 			}
 			if(tracker.airQuality < 50F)
 			{
-				int grad = (int)((50 - tracker.airQuality) / 15 * 64);
+				int grad = MathHelper.floor_float((50F - tracker.airQuality)/50F * 255F);
 				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(32, 96, 0, grad));
 			}
 			if(tracker.sanity < 50F)
 			{
-				int grad = (int)((50 - tracker.sanity) / 15 * 64);
+				int grad = MathHelper.floor_float((50F - tracker.sanity)/50F * 255F);
 				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(200, 0, 249, grad));
 			}
 		}

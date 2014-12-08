@@ -1,21 +1,35 @@
 package enviromine.client.gui;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
+import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
+import enviromine.client.gui.hud.HUDRegistry;
+import enviromine.client.gui.hud.HudItem;
+import enviromine.client.gui.hud.items.GasMaskHud;
 import enviromine.client.gui.menu.EM_Gui_Menu;
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-
-import org.apache.logging.log4j.Level;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.trackers.EnviroDataTracker;
 
 @SideOnly(Side.CLIENT)
 public class Gui_EventManager 
@@ -64,7 +78,158 @@ public class Gui_EventManager
 			}
 	
 		}	
-	}	
+	}
+	
+
+    
+    
+	private int scaledwidth, scaledheight;
+	
+	public static int scaleTranslateX, scaleTranslateY;
+	
+    private Minecraft mc = Minecraft.getMinecraft();
+    
+	public static final ResourceLocation guiResource = new ResourceLocation("enviromine", "textures/gui/status_Gui.png");
+	public static final ResourceLocation blurOverlayResource = new ResourceLocation("enviromine", "textures/misc/blur.png");
+	
+	public static EnviroDataTracker tracker = null;
+    
+    
+    @SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onGuiRender(RenderGameOverlayEvent.Post event)
+	{
+
+		if(event.type != ElementType.HELMET || event.isCancelable())
+		{
+
+			return;
+		}
+
+		
+	 	HUDRegistry.checkForResize();
+
+
+		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
+		{
+			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getCommandSenderName());
+			
+			if(player != null)
+			{
+				tracker.trackedEntity = player;
+				tracker.isDisabled = false;
+				tracker.loadNBTTags();
+			} else
+			{
+				tracker.resetData();
+				EM_StatusManager.saveAndRemoveTracker(tracker);
+				tracker = null;
+			}
+		}
+		
+		if(tracker == null)
+		{
+			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
+			{
+//				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
+				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
+			}
+		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
+		{
+			tracker = null;
+		}
+		else
+		{
+
+			ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+			scaledwidth = scaleRes.getScaledWidth();
+			scaledheight = scaleRes.getScaledHeight();
+			
+			HudItem.blinkTick++;
+	
+			// Render GasMask Overlays
+			if(UI_Settings.overlay)
+			{
+				GasMaskHud.renderGasMask(scaleRes, mc);
+			}
+						
+			// Render Hud Items	
+			for (HudItem huditem : HUDRegistry.getActiveHudItemList()) 
+			{
+				if (mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) 
+				{
+					continue;
+				}
+
+				if (mc.thePlayer.ridingEntity instanceof EntityLivingBase) 
+				{
+					if (huditem.shouldDrawOnMount()) 
+					{
+						//	Overlay overlay = OverlayHandler.getHudItemByID(huditem.getOverlayID());
+    				
+    				
+						if(UI_Settings.overlay) 
+						{
+							Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
+							huditem.renderScreenOverlay(scaledheight, scaledheight);
+						}
+    				
+						Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
+						huditem.fixBounds();
+						
+						GL11.glPushMatrix();
+						
+							float transx = (float) ( huditem.posX - (huditem.posX * UI_Settings.guiScale));
+							float transy = (float) (huditem.posY - (huditem.posY * UI_Settings.guiScale));
+
+							GL11.glTranslated(transx,transy, 0);
+							
+							GL11.glScalef((float) UI_Settings.guiScale, (float) UI_Settings.guiScale, (float) UI_Settings.guiScale);
+							
+							huditem.fixBounds();
+								huditem.render();
+							
+						GL11.glPopMatrix();
+					}
+				} else 
+				{
+					if (huditem.shouldDrawAsPlayer()) 
+					{
+
+						//Overlay overlay = OverlayHandler.getHudItemByID(huditem.getOverlayID());
+    				
+						if(UI_Settings.overlay) 
+						{
+							Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
+							huditem.renderScreenOverlay(scaledwidth, scaledheight);
+						}
+    				 				
+						Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
+
+						
+						GL11.glPushMatrix();
+						
+						float transx = (float) ( huditem.posX - (huditem.posX * UI_Settings.guiScale));
+						float transy = (float) (huditem.posY - (huditem.posY * UI_Settings.guiScale));
+
+						GL11.glTranslated(transx,transy, 0);
+
+						GL11.glScalef((float) UI_Settings.guiScale, (float) UI_Settings.guiScale, (float) UI_Settings.guiScale);
+
+						huditem.fixBounds();
+							huditem.render();
+							
+							GL11.glTranslated(0, 0, 0);
+						GL11.glPopMatrix();
+					}
+				}
+			}	
+    	
+		}
+
+	}
+    
+
 	
 }
 

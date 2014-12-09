@@ -1,5 +1,7 @@
 package enviromine.core.proxies;
 
+import java.util.Iterator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
@@ -9,6 +11,9 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -22,9 +27,13 @@ import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
 import enviromine.blocks.tiles.TileEntityFreezer;
-import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.SaveController;
+import enviromine.client.gui.hud.HUDRegistry;
+import enviromine.client.gui.hud.items.HudItemAirQuality;
+import enviromine.client.gui.hud.items.HudItemHydration;
+import enviromine.client.gui.hud.items.HudItemSanity;
+import enviromine.client.gui.hud.items.HudItemTemperature;
 import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.client.renderer.tileentity.RenderGasHandler;
 import enviromine.client.renderer.tileentity.RenderSpecialHandler;
@@ -36,8 +45,6 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
-import java.util.Iterator;
-import org.apache.logging.log4j.Level;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
@@ -69,7 +76,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public void registerEventHandlers()
 	{
 		super.registerEventHandlers();
-		MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()));
+		//MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()));
 		MinecraftForge.EVENT_BUS.register(new ObjectHandler());
 		MinecraftForge.EVENT_BUS.register(new Gui_EventManager());
 		FMLCommonHandler.instance().bus().register(new EnviroKeybinds());
@@ -87,13 +94,9 @@ public class EM_ClientProxy extends EM_CommonProxy
 		super.init(event);
 		EnviroKeybinds.Init();
         
-		if (!SaveController.loadConfig(SaveController.UISettingsData)) 
-        {
-        	SaveController.saveConfig(SaveController.UISettingsData);	
-        }
-		
-			
 		initRenderers();
+		registerHudItems();	
+
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -142,6 +145,16 @@ public class EM_ClientProxy extends EM_CommonProxy
 				}
 			}
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void registerHudItems()
+	{
+        HUDRegistry.registerHudItem(new HudItemTemperature());
+        HUDRegistry.registerHudItem(new HudItemHydration());
+        HUDRegistry.registerHudItem(new HudItemSanity());
+        HUDRegistry.registerHudItem(new HudItemAirQuality());
+        HUDRegistry.setInitialLoadComplete(true);
 	}
 	
 	@Override

@@ -23,7 +23,7 @@ public class UI_Settings {
 	public static boolean ShowDebug = false;
 	public static boolean breathSound = true;
 	public static int breathPause = 300;
-	public static float breathVolume = .75F;
+	public static float breathVolume = 0.75F;
 	public static boolean minimalHud =  false;
 	public static int screenWidth;
 	public static int screenHeight;

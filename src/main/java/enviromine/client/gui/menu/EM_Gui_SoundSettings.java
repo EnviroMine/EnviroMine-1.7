@@ -22,7 +22,9 @@ public class EM_Gui_SoundSettings extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		GuiSlider maskSlider = new GuiSlider(149, this.width / 2 - 152, this.height / 6 + 24, 150, 20, StatCollector.translateToLocal("options.enviromine.breathVol") + ": ", "%", 0F, 100F, UI_Settings.breathVolume, false, true);
+		float volume = UI_Settings.breathVolume * 100;
+		
+		GuiSlider maskSlider = new GuiSlider(149, this.width / 2 - 152, this.height / 6 + 24, 150, 20, StatCollector.translateToLocal("options.enviromine.breathVol") + ": ", "%", 0F, 100F, volume, false, true);
 		maskSlider.updateSlider();
 		this.buttonList.add(maskSlider);
 		
@@ -46,7 +48,7 @@ public class EM_Gui_SoundSettings extends GuiScreen
 				{
 					GuiSlider slider = (GuiSlider)par1GuiButton;
 					
-					UI_Settings.breathVolume = (float)slider.getValue();
+					UI_Settings.breathVolume = (float)slider.getValue() / 100;
 					
 					break;
 				}

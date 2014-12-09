@@ -11,7 +11,8 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
-import enviromine.client.gui.UI_Settings;
+import enviromine.client.gui.hud.HUDRegistry;
+import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EnviroMine;
 
 public class SaveController {
@@ -46,10 +47,13 @@ public class SaveController {
             NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
 
             UI_Settings.readFromNBT(nbt.getCompoundTag(UISettingsData));
-            
+            HUDRegistry.readFromNBT(nbt.getCompoundTag(UISettingsData));
             // New HUD Settings will be here
             
-            
+            for (HudItem item : HUDRegistry.getHudItemList()) {
+                NBTTagCompound itemNBT = nbt.getCompoundTag(item.getName());
+                item.loadFromNBT(itemNBT);
+            }       
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,9 +83,15 @@ public class SaveController {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             NBTTagCompound globalNBT = new NBTTagCompound();
+            	HUDRegistry.writeToNBT(globalNBT);
             	UI_Settings.writeToNBT(globalNBT);
             	nbt.setTag(UISettingsData, globalNBT);
-
+               
+            	for (HudItem item : HUDRegistry.getHudItemList()) {
+                    NBTTagCompound itemNBT = new NBTTagCompound();
+                    item.saveToNBT(itemNBT);
+                    nbt.setTag(item.getName(), itemNBT);
+                }
            // New HUD Settings will be here
             
             

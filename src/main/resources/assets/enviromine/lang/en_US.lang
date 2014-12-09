@@ -99,6 +99,13 @@ options.enviromine.guiSounds=Sound Settings
 options.enviromine.physSound=Physics Sounds
 options.enviromine.breathVol=Breath Volume
 
+options.enviromine.hud.temperature=Temperature
+options.enviromine.hud.sanity=Sanity
+options.enviromine.hud.hydration=Hydration
+options.enviromine.hud.air=Air Quality
+options.enviromine.hud.resetDefault=Reset Defaults
+options.enviromine.hud.resetDefault.desc=Reset all Hud Items to their default locations
+
 deathmessage.enviromine.suffocate=%s suffocated to death
 deathmessage.enviromine.frostbite=%s froze to death
 deathmessage.enviromine.dehydrate=%s died of thirst

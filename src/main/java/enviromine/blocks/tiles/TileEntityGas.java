@@ -1,5 +1,8 @@
 package enviromine.blocks.tiles;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -13,18 +16,16 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+
+import org.apache.logging.log4j.Level;
+
 import enviromine.blocks.BlockGas;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
-import enviromine.utils.EnviroUtils;
-
-import java.awt.Color;
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.Level;
+import enviromine.utils.RenderAssist;
 
 public class TileEntityGas extends TileEntity
 {
@@ -86,7 +87,7 @@ public class TileEntityGas extends TileEntity
 				EnviroGas gas = EnviroGasDictionary.gasList[gasArray[0]];
 				float opacity =  gas.getOpacity()*gasArray[1];
 				opacity = opacity >= 1.0F? 1.0F : opacity;
-				fCol = EnviroUtils.blendColors(fCol.getRGB(), gas.color.getRGB(), opacity / 0.5F);
+				fCol = RenderAssist.blendColors(fCol.getRGB(), gas.color.getRGB(), opacity / 0.5F);
 			}
 		}
 		

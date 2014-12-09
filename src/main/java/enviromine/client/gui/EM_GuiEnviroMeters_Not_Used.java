@@ -2,6 +2,7 @@ package enviromine.client.gui;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -12,20 +13,23 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EnviroUtils;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
+import enviromine.utils.EnviroUtils;
+import enviromine.utils.RenderAssist;
 import enviromine.world.ClientQuake;
 
-public class EM_GuiEnviroMeters extends Gui
+public class EM_GuiEnviroMeters_Not_Used extends Gui
 {
 	public Minecraft mc;
 	public IResourceManager resourceManager;
@@ -47,7 +51,7 @@ public class EM_GuiEnviroMeters extends Gui
 	
 	public static EnviroDataTracker tracker = null;
 	
-	public EM_GuiEnviroMeters(Minecraft mc, IResourceManager resManager)
+	public EM_GuiEnviroMeters_Not_Used(Minecraft mc, IResourceManager resManager)
 	{
 		this.mc = mc;
 		this.resourceManager = resManager;
@@ -717,7 +721,7 @@ public class EM_GuiEnviroMeters extends Gui
 				{
 					grad = MathHelper.floor_float((tracker.bodyTemp - 39F)/6F * 255F);
 				}
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, grad));
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(255, 255, 255, grad));
 				
 			} else if(tracker.bodyTemp <= 35)
 			{
@@ -729,17 +733,17 @@ public class EM_GuiEnviroMeters extends Gui
 				{
 					grad = MathHelper.floor_float(Math.abs(5F - (tracker.bodyTemp - 30F))/5F * 255F);
 				}
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(125, 255, 255, grad));
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(125, 255, 255, grad));
 			}
 			if(tracker.airQuality < 50F)
 			{
 				int grad = MathHelper.floor_float((50F - tracker.airQuality)/50F * 255F);
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(32, 96, 0, grad));
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(32, 96, 0, grad));
 			}
 			if(tracker.sanity < 50F)
 			{
 				int grad = MathHelper.floor_float((50F - tracker.sanity)/50F * 255F);
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(200, 0, 249, grad));
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(200, 0, 249, grad));
 			}
 		}
 		
@@ -747,7 +751,7 @@ public class EM_GuiEnviroMeters extends Gui
 		if(infection && this.mc.gameSettings.thirdPersonView == 0)
 		{
 			int A = (int) RenderPulse();
-			EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(220, 3, 3, A));
+			RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(220, 3, 3, A));
 			
 			//this.mc.renderEngine.bindTexture(bloodshotResource);
 			//EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, 100));
@@ -766,7 +770,7 @@ public class EM_GuiEnviroMeters extends Gui
 				{
 					this.mc.renderEngine.bindTexture(gasMaskResource);
 					//Draw gasMask Overlay
-					EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, 255));
+					RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(255, 255, 255, 255));
 				}
 			}
 		}
@@ -874,7 +878,7 @@ public class EM_GuiEnviroMeters extends Gui
 			if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 0 && this.mc.gameSettings.thirdPersonView == 0)
 			{
 				this.mc.renderEngine.bindTexture(breathMaskResource);
-				enviromine.EnviroUtils.drawScreenOverlay(k, l, EnviroUtils.getColorFromRGBA(255, 255, 255, (int)alpha));
+				RenderAssist.drawScreenOverlay(k, l, RenderAssist.getColorFromRGBA(255, 255, 255, (int)alpha));
 			}
 		}
 	}

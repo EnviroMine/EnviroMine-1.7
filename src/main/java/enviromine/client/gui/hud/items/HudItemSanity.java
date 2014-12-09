@@ -7,13 +7,13 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import enviromine.EnviroUtils;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.UI_Settings;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EM_Settings;
 import enviromine.utils.Alignment;
+import enviromine.utils.EnviroUtils;
 import enviromine.utils.RenderAssist;
 
 public class HudItemSanity extends HudItem	{
@@ -94,7 +94,7 @@ public class HudItemSanity extends HudItem	{
 	public void render() 
 	{
 		GL11.glPushMatrix();	
-		int sanityBar = MathHelper.ceiling_float_int((Gui_EventManager.tracker.hydration / 100) * this.getWidth());
+		int sanityBar = MathHelper.ceiling_float_int((Gui_EventManager.tracker.sanity / 100) * this.getWidth());
 		
 		int frameBorder = 4;
 		if(this.isBlinking())
@@ -174,8 +174,8 @@ public class HudItemSanity extends HudItem	{
 		
 		if(Gui_EventManager.tracker.sanity < 50F)
 		{
-			int grad = (int)((50 - Gui_EventManager.tracker.sanity) / 15 * 64);
-			EnviroUtils.drawScreenOverlay(scaledwidth, scaledheight, EnviroUtils.getColorFromRGBA(200, 0, 249, grad));
+			int grad = (int)((50F - Gui_EventManager.tracker.sanity) / 50 * 255F);
+			RenderAssist.drawScreenOverlay(scaledwidth, scaledheight, RenderAssist.getColorFromRGBA(200, 0, 249, grad));
 		}
 	}
 

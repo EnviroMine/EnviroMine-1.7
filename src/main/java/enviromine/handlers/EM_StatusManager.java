@@ -3,6 +3,7 @@ package enviromine.handlers;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -34,13 +35,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
+
 import com.google.common.base.Stopwatch;
+
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.UI_Settings;
+import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.PacketEnviroMine;
@@ -51,6 +53,7 @@ import enviromine.trackers.properties.BlockProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
+import enviromine.utils.EnviroUtils;
 
 public class EM_StatusManager
 {
@@ -1226,7 +1229,7 @@ public class EM_StatusManager
 		if(EnviroMine.proxy.isClient() && entityLiving.getCommandSenderName().equals(Minecraft.getMinecraft().thePlayer.getCommandSenderName()) && timer.isRunning())
 		{
 			timer.stop();
-			EM_GuiEnviroMeters.DB_timer = timer.toString();
+			Debug_Info.DB_timer = timer.toString();
 			timer.reset();
 		}
 		return data;

@@ -3,18 +3,22 @@ package enviromine.gases;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import org.apache.logging.log4j.Level;
-import com.google.common.base.Stopwatch;
-import enviromine.blocks.BlockGas;
-import enviromine.client.gui.EM_GuiEnviroMeters;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_PhysManager;
-import enviromine.handlers.ObjectHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
+
+import com.google.common.base.Stopwatch;
+
+import enviromine.blocks.BlockGas;
+import enviromine.client.gui.hud.items.Debug_Info;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_PhysManager;
+import enviromine.handlers.ObjectHandler;
 
 /**
  * @author Funwayguy
@@ -241,10 +245,10 @@ public class GasBuffer
 		if(EnviroMine.proxy.isClient() && debugTime >= debugInterval && timer.isRunning())
 		{
 			timer.stop();
-			EM_GuiEnviroMeters.DB_gasTimer = timer.toString();
-			EM_GuiEnviroMeters.DB_gasUpdates = debugUpdatesCaptured;
-			EM_GuiEnviroMeters.DB_gasBuffer = gasBuffer.size();
-			EM_GuiEnviroMeters.DB_gasBuffer = fireBuffer.size();
+			Debug_Info.DB_gasTimer = timer.toString();
+			Debug_Info.DB_gasUpdates = debugUpdatesCaptured;
+			Debug_Info.DB_gasBuffer = gasBuffer.size();
+			Debug_Info.DB_gasBuffer = fireBuffer.size();
 			timer.reset();
 			debugTime = 0;
 		} else if(EnviroMine.proxy.isClient() && curTick == 1)

@@ -1,12 +1,5 @@
 package enviromine;
 
-import enviromine.client.gui.EM_GuiFakeDeath;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.EM_StatusManager;
-import enviromine.handlers.EnviroAchievements;
-import enviromine.trackers.EnviroDataTracker;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,9 +9,15 @@ import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.client.gui.EM_GuiFakeDeath;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.EM_StatusManager;
+import enviromine.handlers.EnviroAchievements;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.utils.RenderAssist;
 
 public class EnviroPotion extends Potion
 {
@@ -40,7 +39,7 @@ public class EnviroPotion extends Potion
 		EnviroPotion.frostbite = ((EnviroPotion)new EnviroPotion(EM_Settings.frostBitePotionID, true, 8171462).setPotionName("potion.enviromine.frostbite")).setIconIndex(0, 0);
 		EnviroPotion.dehydration = ((EnviroPotion)new EnviroPotion(EM_Settings.dehydratePotionID, true, 3035801).setPotionName("potion.enviromine.dehydration")).setIconIndex(1, 0);
 		EnviroPotion.insanity = ((EnviroPotion)new EnviroPotion(EM_Settings.insanityPotionID, true, 5578058).setPotionName("potion.enviromine.insanity")).setIconIndex(2, 0);
-		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, EnviroUtils.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.enviromine.heatstroke")).setIconIndex(3, 0);
+		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, RenderAssist.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.enviromine.heatstroke")).setIconIndex(3, 0);
 		EnviroPotion.hypothermia = ((EnviroPotion)new EnviroPotion(EM_Settings.hypothermiaPotionID, true, 8171462).setPotionName("potion.enviromine.hypothermia")).setIconIndex(4, 0);
 	}
 	

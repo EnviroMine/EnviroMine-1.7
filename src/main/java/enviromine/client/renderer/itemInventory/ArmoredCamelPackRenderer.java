@@ -8,9 +8,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
-import enviromine.EnviroUtils;
-
 import org.lwjgl.opengl.GL11;
+
+import enviromine.utils.RenderAssist;
 
 public class ArmoredCamelPackRenderer implements IItemRenderer
 {
@@ -105,8 +105,8 @@ public class ArmoredCamelPackRenderer implements IItemRenderer
 		Tessellator tessellator = Tessellator.instance;
 		//int l = 255 - k << 16 | k << 8;
 		//int i1 = (255 - k) / 4 << 16 | 16128;
-		this.renderQuad(tessellator, 0 + x, 1 + y, width + 1, height, EnviroUtils.getColorFromRGBA(172, 172, 172, 255));
-		this.renderQuad(tessellator, 0 + x, 0 + y, width, height, EnviroUtils.getColorFromRGBA(42, 85, 210, k));
+		this.renderQuad(tessellator, 0 + x, 1 + y, width + 1, height, RenderAssist.getColorFromRGBA(172, 172, 172, 255));
+		this.renderQuad(tessellator, 0 + x, 0 + y, width, height, RenderAssist.getColorFromRGBA(42, 85, 210, k));
 		this.renderQuad(tessellator, 0 + x, 0 + y, width, height - j1, 0);
 		//GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
 		GL11.glEnable(GL11.GL_ALPHA_TEST);

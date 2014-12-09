@@ -4,10 +4,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import enviromine.EnviroUtils;
 import enviromine.client.gui.UI_Settings;
+import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.OverlayHandler;
 import enviromine.handlers.ObjectHandler;
+import enviromine.utils.EnviroUtils;
+import enviromine.utils.RenderAssist;
 
 
 public class GasMaskHud 
@@ -20,7 +22,7 @@ public class GasMaskHud
 
     private static int alpha;
     
-    public static void renderGasMask(ScaledResolution scaleRes, Minecraft mc)
+    public static void renderGasMask(int screenWidth, int screenHeight, Minecraft mc)
     {
 
     	ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(3);
@@ -30,13 +32,13 @@ public class GasMaskHud
 			if(itemstack.getItem() == ObjectHandler.gasMask)
 			{
 				
-				Renderbreath(scaleRes, mc, itemstack);
+				Renderbreath(screenWidth, screenHeight, mc, itemstack);
 				
 				if(mc.gameSettings.thirdPersonView == 0)
 				{
 					mc.renderEngine.bindTexture(gasMaskResource);
 					//Draw gasMask Overlay
-					EnviroUtils.drawScreenOverlay(scaleRes.getScaledWidth(), scaleRes.getScaledHeight(), EnviroUtils.getColorFromRGBA(255, 255, 255, 255));
+					RenderAssist.drawScreenOverlay(screenWidth, screenHeight, RenderAssist.getColorFromRGBA(255, 255, 255, 255));
 				}
 			}
 		}
@@ -44,7 +46,7 @@ public class GasMaskHud
     	
     }
     
-    public static void Renderbreath(ScaledResolution scaleRes, Minecraft mc, ItemStack itemstack)
+    public static void Renderbreath(int screenWidth, int screenHeight, Minecraft mc, ItemStack itemstack)
     {
 		mc.renderEngine.bindTexture(breathMaskResource);
 
@@ -60,7 +62,7 @@ public class GasMaskHud
 		if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && mc.gameSettings.thirdPersonView == 0)
 		{
 			alpha = OverlayHandler.PulseWave(maskBreathing);
-			EnviroUtils.drawScreenOverlay(scaleRes.getScaledWidth(), scaleRes.getScaledHeight(), maskBreathing.getRGBA(alpha));
+			RenderAssist.drawScreenOverlay(screenWidth, screenHeight, maskBreathing.getRGBA(alpha));
 		}
 
     }

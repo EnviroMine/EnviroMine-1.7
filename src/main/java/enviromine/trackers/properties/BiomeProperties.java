@@ -2,12 +2,13 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.io.IOException;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
-import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.utils.EnviroUtils;
 
 
 public class BiomeProperties implements SerialisableProperty

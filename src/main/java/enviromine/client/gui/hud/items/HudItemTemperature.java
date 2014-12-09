@@ -10,13 +10,13 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import enviromine.EnviroUtils;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.UI_Settings;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EM_Settings;
 import enviromine.utils.Alignment;
+import enviromine.utils.EnviroUtils;
 import enviromine.utils.RenderAssist;
 
 public class HudItemTemperature extends HudItem {
@@ -192,18 +192,32 @@ public class HudItemTemperature extends HudItem {
 	@Override
 	public void renderScreenOverlay(int scaledwidth, int scaledheight) {
 		
-		if(Gui_EventManager.tracker.bodyTemp <= 35)
+		
+		if(Gui_EventManager.tracker.bodyTemp >= 39)
 		{
 			int grad = 0;
-			if(Gui_EventManager.tracker.bodyTemp <= 32F)
+			if(Gui_EventManager.tracker.bodyTemp >= 43F)
 			{
-				grad = 210;
+				grad = 255;
 			} else
 			{
-				grad = (int)((Math.abs(3 - (Gui_EventManager.tracker.bodyTemp - 32)))) * 64;
+				grad = MathHelper.floor_float((Gui_EventManager.tracker.bodyTemp - 39F)/6F * 255F);
 			}
-			EnviroUtils.drawScreenOverlay(scaledwidth, scaledheight, EnviroUtils.getColorFromRGBA(125, 255, 255, grad));
+			RenderAssist.drawScreenOverlay(scaledwidth, scaledheight, RenderAssist.getColorFromRGBA(255, 255, 255, grad));
+			
+		} else if(Gui_EventManager.tracker.bodyTemp <= 35)
+		{
+			int grad = 0;
+			if(Gui_EventManager.tracker.bodyTemp <= 30F)
+			{
+				grad = 255;
+			} else
+			{
+				grad = MathHelper.floor_float(Math.abs(5F - (Gui_EventManager.tracker.bodyTemp - 30F))/5F * 255F);
+			}
+			RenderAssist.drawScreenOverlay(scaledwidth, scaledheight, RenderAssist.getColorFromRGBA(125, 255, 255, grad));
 		}
+
 	}
 
 

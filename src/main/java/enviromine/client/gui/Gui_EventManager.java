@@ -24,12 +24,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
+import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.client.gui.hud.items.GasMaskHud;
 import enviromine.client.gui.menu.EM_Gui_Menu;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
+import enviromine.utils.RenderAssist;
 import enviromine.world.ClientQuake;
 
 @SideOnly(Side.CLIENT)
@@ -84,8 +86,6 @@ public class Gui_EventManager
 
     
     
-	private int scaledwidth, scaledheight;
-	
 	public static int scaleTranslateX, scaleTranslateY;
 	
     private Minecraft mc = Minecraft.getMinecraft();
@@ -163,16 +163,16 @@ public class Gui_EventManager
 		else
 		{
 
-			ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-			scaledwidth = scaleRes.getScaledWidth();
-			scaledheight = scaleRes.getScaledHeight();
+			//ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+			//scaledwidth = scaleRes.getScaledWidth();
+			//scaledheight = scaleRes.getScaledHeight();
 			
 			HudItem.blinkTick++;
 	
 			// Render GasMask Overlays
 			if(UI_Settings.overlay)
 			{
-				GasMaskHud.renderGasMask(scaleRes, mc);
+				GasMaskHud.renderGasMask(HUDRegistry.screenHeight, HUDRegistry.screenHeight, mc);
 			}
 						
 			// Render Hud Items	
@@ -192,12 +192,13 @@ public class Gui_EventManager
     				
 						if(UI_Settings.overlay) 
 						{
-							Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
-							huditem.renderScreenOverlay(scaledheight, scaledheight);
+							RenderAssist.bindTexture(huditem.getResource("TintOverlay"));
+							//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
+							huditem.renderScreenOverlay(HUDRegistry.screenHeight, HUDRegistry.screenHeight);
 						}
     				
-						Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
-						huditem.fixBounds();
+						//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
+						RenderAssist.bindTexture(huditem.getResource(""));
 						
 						GL11.glPushMatrix();
 						
@@ -222,16 +223,18 @@ public class Gui_EventManager
     				
 						if(UI_Settings.overlay) 
 						{
-							Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
-							huditem.renderScreenOverlay(scaledwidth, scaledheight);
+							RenderAssist.bindTexture(huditem.getResource("TintOverlay"));
+							//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
+							huditem.renderScreenOverlay(HUDRegistry.screenWidth, HUDRegistry.screenHeight);
 						}
-    				 				
-						Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
+    				 		
+						RenderAssist.bindTexture(huditem.getResource(""));
+						//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
 
 						
 						GL11.glPushMatrix();
 						
-						float transx = (float) ( huditem.posX - (huditem.posX * UI_Settings.guiScale));
+						float transx = (float) (huditem.posX - (huditem.posX * UI_Settings.guiScale));
 						float transy = (float) (huditem.posY - (huditem.posY * UI_Settings.guiScale));
 
 						GL11.glTranslated(transx,transy, 0);
@@ -245,8 +248,12 @@ public class Gui_EventManager
 						GL11.glPopMatrix();
 					}
 				}
-			}	
+				
+				
+			}// For hud Items	
     	
+			
+			Debug_Info.ShowDebugText(event, mc);
 		}
 
 	}

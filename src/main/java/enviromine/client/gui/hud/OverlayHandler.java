@@ -1,8 +1,8 @@
 package enviromine.client.gui.hud;
 
 import net.minecraft.util.ResourceLocation;
-import enviromine.EnviroUtils;
 import enviromine.client.gui.Gui_EventManager;
+import enviromine.utils.RenderAssist;
 
 public class OverlayHandler
 {
@@ -47,7 +47,7 @@ public class OverlayHandler
 		
 		public int getRGBA(int alpha)
 		{
-			return EnviroUtils.getColorFromRGBA(this.R, this.G, this.B , alpha);
+			return RenderAssist.getColorFromRGBA(this.R, this.G, this.B , alpha);
 		}
 		
 		public OverlayHandler setPulseVar(int amplitude, int interval, int peakWait, int peakSpeed, int baseSpeed)

@@ -17,17 +17,15 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
-import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.gases.GasBuffer;
 import enviromine.handlers.ObjectHandler;
+import enviromine.utils.EnviroUtils;
 
 import java.awt.Color;
 import java.util.ArrayList;

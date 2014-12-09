@@ -1,9 +1,8 @@
 package enviromine.trackers.properties;
 
-import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
-
+import enviromine.utils.EnviroUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;

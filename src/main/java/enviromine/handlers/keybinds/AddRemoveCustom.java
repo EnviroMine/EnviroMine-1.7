@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.EnviroUtils;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EnviroMine;
+import enviromine.utils.EnviroUtils;
 
 public class AddRemoveCustom
 {

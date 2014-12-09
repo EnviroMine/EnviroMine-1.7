@@ -1,12 +1,25 @@
 package enviromine.handlers;
 
-import enviromine.EntityPhysicsBlock;
-import enviromine.client.gui.EM_GuiEnviroMeters;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.StabilityType;
-import net.minecraft.block.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockAnvil;
+import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockEndPortal;
+import net.minecraft.block.BlockEndPortalFrame;
+import net.minecraft.block.BlockFalling;
+import net.minecraft.block.BlockGlowstone;
+import net.minecraft.block.BlockGravel;
+import net.minecraft.block.BlockLadder;
+import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.BlockMobSpawner;
+import net.minecraft.block.BlockObsidian;
+import net.minecraft.block.BlockPortal;
+import net.minecraft.block.BlockSign;
+import net.minecraft.block.BlockWeb;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -20,11 +33,17 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-import com.google.common.base.Stopwatch;
+
 import org.apache.logging.log4j.Level;
+
+import com.google.common.base.Stopwatch;
+
+import enviromine.EntityPhysicsBlock;
+import enviromine.client.gui.hud.items.Debug_Info;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.StabilityType;
 
 public class EM_PhysManager
 {
@@ -1147,9 +1166,9 @@ public class EM_PhysManager
 		if(EnviroMine.proxy.isClient() && debugTime >= debugInterval && timer.isRunning())
 		{
 			timer.stop();
-			EM_GuiEnviroMeters.DB_physTimer = timer.toString();
-			EM_GuiEnviroMeters.DB_physUpdates = debugUpdatesCaptured;
-			EM_GuiEnviroMeters.DB_physBuffer = physSchedule.size();
+			Debug_Info.DB_physTimer = timer.toString();
+			Debug_Info.DB_physUpdates = debugUpdatesCaptured;
+			Debug_Info.DB_physBuffer = physSchedule.size();
 			timer.reset();
 			debugTime = 0;
 		} else if(EnviroMine.proxy.isClient())

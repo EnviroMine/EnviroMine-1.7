@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -75,8 +76,10 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -85,7 +88,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.client.ModelCamelPack;
 import enviromine.core.EM_Settings;
@@ -98,6 +100,7 @@ import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
+import enviromine.utils.EnviroUtils;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 

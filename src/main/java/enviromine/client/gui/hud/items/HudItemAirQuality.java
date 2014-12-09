@@ -7,13 +7,13 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import enviromine.EnviroUtils;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.UI_Settings;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EM_Settings;
 import enviromine.utils.Alignment;
+import enviromine.utils.EnviroUtils;
 import enviromine.utils.RenderAssist;
 
 public class HudItemAirQuality extends HudItem	{
@@ -173,8 +173,9 @@ public class HudItemAirQuality extends HudItem	{
 
 		if(Gui_EventManager.tracker.airQuality < 50F)
 		{
-			int grad = (int)((50 - Gui_EventManager.tracker.airQuality) / 15 * 64);
-			EnviroUtils.drawScreenOverlay(scaledwidth, scaledheight, EnviroUtils.getColorFromRGBA(32, 96, 0, grad));
+			//int grad = (int)((50 - Gui_EventManager.tracker.airQuality) / 15 * 64);
+			int grad = (int)((50F - Gui_EventManager.tracker.airQuality) / 50 * 255);
+			RenderAssist.drawScreenOverlay(scaledwidth, scaledheight, RenderAssist.getColorFromRGBA(32, 96, 0, grad));
 		}
 	}
 

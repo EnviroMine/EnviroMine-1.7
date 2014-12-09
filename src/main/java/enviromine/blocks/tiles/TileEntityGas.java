@@ -13,15 +13,17 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import enviromine.EnviroUtils;
 import enviromine.blocks.BlockGas;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
+import enviromine.utils.EnviroUtils;
+
 import java.awt.Color;
 import java.util.ArrayList;
+
 import org.apache.logging.log4j.Level;
 
 public class TileEntityGas extends TileEntity

@@ -13,10 +13,6 @@ import java.util.List;
 
 public class EnviroCommand extends CommandBase
 {
-	public EnviroCommand()
-	{
-	}
-
 	@Override
 	public String getCommandName()
 	{
@@ -26,7 +22,7 @@ public class EnviroCommand extends CommandBase
 	@Override
 	public String getCommandUsage(ICommandSender sender)
 	{
-		return "/envirostat <playername, me> <add, set> <temp, sanity, water, air> <float>";
+		return "/envirostat <playername> <add, set> <temp, sanity, water, air> <float>";
 	}
 	
 	@Override
@@ -45,15 +41,7 @@ public class EnviroCommand extends CommandBase
 			return;
 		}
 		
-		String target = "";
-		if(astring[0].equalsIgnoreCase("me") )
-		{
-			target = sender.getCommandSenderName();
-		}
-		else
-		{
-			target = astring[0];
-		}
+		String target = astring[0];
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(target);
 		

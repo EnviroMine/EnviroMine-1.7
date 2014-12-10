@@ -2,17 +2,14 @@ package enviromine.core;
 
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,20 +24,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.core.commands.CommandPhysics;
-import enviromine.core.commands.EnviroCommand;
+import enviromine.core.commands.*;
 import enviromine.core.proxies.EM_CommonProxy;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
-import enviromine.network.packet.PacketAutoOverride;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.network.packet.PacketServerOverride;
+import enviromine.network.packet.*;
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.DimensionProperties;
-import enviromine.utils.ModIdentification;
+import enviromine.utils.EnviroUtils;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
@@ -51,7 +44,7 @@ public class EnviroMine
 {
 	public static Logger logger;
 	public static BiomeGenBase caves;
-	public static CreativeTabs enviroTab = new EnviroTab("enviromine.enviroTab");
+	public static EnviroTab enviroTab = new EnviroTab("enviromine.enviroTab");
 	
 	@Instance(EM_Settings.ModID)
 	public static EnviroMine instance;
@@ -107,10 +100,8 @@ public class EnviroMine
 		
 		EnviroAchievements.InitAchievements();
 		
-		ModIdentification.init();
-		
-		caves = (new BiomeGenCaves(23)).setColor(16711680).setBiomeName("Caves").setDisableRain().setTemperatureRainfall(1.0F, 0.0F);
-		//GameRegistry.addBiome(caves); TODO
+		caves = (new BiomeGenCaves(23)).setColor(0).setBiomeName("Caves").setDisableRain().setTemperatureRainfall(1.0F, 0.0F);
+		//GameRegistry.addBiome(caves);
 		BiomeDictionary.registerBiomeType(caves, Type.WASTELAND);
 		
 		
@@ -153,5 +144,6 @@ public class EnviroMine
 		
 		manager.registerCommand(new CommandPhysics());
 		manager.registerCommand(new EnviroCommand());
+		manager.registerCommand(new QuakeCommand());
 	}
 }

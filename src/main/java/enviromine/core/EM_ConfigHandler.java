@@ -1,18 +1,8 @@
 package enviromine.core;
 
+import enviromine.trackers.properties.*;
+
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.trackers.properties.RotProperties;
-import enviromine.trackers.properties.StabilityType;
-import enviromine.utils.ModIdentification;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,6 +12,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import org.apache.logging.log4j.Level;
 
 public class EM_ConfigHandler
@@ -123,6 +116,7 @@ public class EM_ConfigHandler
 		EM_Settings.shaftGen = config.get("World Generation", "Enable Village MineShafts", true, "Generates mineshafts in villages").getBoolean(true);
 		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", true, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(true);
 		EM_Settings.gasGen = config.get("World Generation", "Generate Gases", true).getBoolean(true);
+		EM_Settings.disableCaves = config.get("World Generation", "Disable Cave Dimension", false).getBoolean(false);
 		
 		//General Settings
 		EM_Settings.enablePhysics = config.get(Configuration.CATEGORY_GENERAL, "Enable Physics", true, "Turn physics On/Off").getBoolean(true);
@@ -131,12 +125,12 @@ public class EM_ConfigHandler
 		EM_Settings.enableHydrate = config.get(Configuration.CATEGORY_GENERAL, "Allow Hydration", true).getBoolean(true);
 		EM_Settings.enableBodyTemp = config.get(Configuration.CATEGORY_GENERAL, "Allow Body Temperature", true).getBoolean(true);
 		EM_Settings.enableAirQ = config.get(Configuration.CATEGORY_GENERAL, "Allow Air Quality", true, "True/False to turn Enviromine Trackers for Sanity, Air Quality, Hydration, and Body Temperature.").getBoolean(true);
-		EM_Settings.trackNonPlayer = config.get(Configuration.CATEGORY_GENERAL, "Track NonPlayer entitys", false, "Track enviromine properties on Non-player entites(mobs & animals)").getBoolean(false);
+		EM_Settings.trackNonPlayer = config.get(Configuration.CATEGORY_GENERAL, "Track NonPlayer entities", false, "Track enviromine properties on Non-player entities(mobs & animals)").getBoolean(false);
 		EM_Settings.updateCheck = config.get(Configuration.CATEGORY_GENERAL, "Check For Updates", true).getBoolean(true);
 		EM_Settings.physBlockID = config.get(Configuration.CATEGORY_GENERAL, "EntityPhysicsBlock ID", EntityRegistry.findGlobalUniqueEntityId()).getInt(EntityRegistry.findGlobalUniqueEntityId());
 		EM_Settings.villageAssist = config.get(Configuration.CATEGORY_GENERAL, "Enable villager assistance", true).getBoolean(true);
 		EM_Settings.foodSpoiling = config.get(Configuration.CATEGORY_GENERAL, "Enable food spoiling", true).getBoolean(true);
-		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7D).getDouble(7D);
+		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7).getInt(7);
 		EM_Settings.torchesBurn = config.get(Configuration.CATEGORY_GENERAL, "Torches burn", true).getBoolean(true);
 		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
 		
@@ -145,7 +139,7 @@ public class EM_ConfigHandler
 		int minPhysInterval = 6;
 		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
 		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128, "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
-		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval , "The number of ticks between physics update passes (must be "+minPhysInterval+" or more)"), minPhysInterval);
+		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval, "The number of ticks between physics update passes (must be " + minPhysInterval + " or more)"), minPhysInterval);
 		EM_Settings.stoneCracks = config.get(PhySetCat, "Stone Cracks Before Falling", true).getBoolean(true);
 		EM_Settings.defaultStability = config.get(PhySetCat, "Default Stability Type (BlockIDs > 175)", "loose").getString();
 		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
@@ -154,10 +148,12 @@ public class EM_ConfigHandler
 		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
 		
 		// Config Gas
-		EM_Settings.renderGases = config.get("Gases", "Render normal gas", false, "Whether to render gases not normally visable").getBoolean(false);
+		EM_Settings.noGases = config.get("Gases", "Disable Gases", false, "Disables all gases and slowly deletes existing pockets").getBoolean(false);
+		EM_Settings.slowGases = config.get("Gases", "Slow Gases", false, "Normal gases will move extremely slowly and reduce TPS lag").getBoolean(false);
+		EM_Settings.renderGases = config.get("Gases", "Render normal gas", false, "Whether to render gases not normally visible").getBoolean(false);
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", 256, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(256);
-		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", -1, "How many gases can be processed in a single pass (-1 = infinite)").getInt(-1);
-		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", false, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(false);
+		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 2048, "How many gases can be processed in a single pass per chunk (-1 = infinite)").getInt(-1);
+		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", true, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(true);
 		
 		// Potion ID's
 		EM_Settings.hypothermiaPotionID = -1;
@@ -187,6 +183,7 @@ public class EM_ConfigHandler
 		String ConSetCat = "Config";
 		EM_Settings.genArmorConfigs = config.get(ConSetCat, "Generate Armor Configs", true, "Will attempt to find and generate blank configs for any custom armors loaded before EnviroMine.").getBoolean(true);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
+		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
 		
 		// Earthquake
 		String EarSetCat = "Earthquakes";
@@ -196,9 +193,9 @@ public class EM_ConfigHandler
 		EM_Settings.quakeMode = config.get(EarSetCat, "Mode", 2, "Changes how quakes are created (-1 = random, 0 = wave normal, 1 = centre normal, 2 = centre tear, 3 = wave tear)").getInt(2);
 		EM_Settings.quakeDelay = config.get(EarSetCat, "Tick delay", 10).getInt(10);
 		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", 2).getInt(2);
-		if(EM_Settings.quakeRarity <= 0)
+		if(EM_Settings.quakeRarity < 0)
 		{
-			EM_Settings.quakeRarity = 1;
+			EM_Settings.quakeRarity = 0;
 		}
 		if(EM_Settings.quakeSpeed <= 0)
 		{
@@ -426,12 +423,23 @@ public class EM_ConfigHandler
 	}
 
 	
-	public static String SaveMyCustom(String type, String name, String modname, Object[] data)
+	public static String SaveMyCustom(String type, String name, Object[] data)
 	{
-		if(modname.trim() == "Minecraft") modname = "Defaults";
-
+		
 		// Check to make sure this is a Data File Before Editing
-		File configFile = new File(customPath + modname +".cfg");
+		File configFile = new File(customPath + "MyCustom.cfg");
+		
+		String canonicalName = data.getClass().getCanonicalName();
+		String classname;
+		
+		if (canonicalName == null) {
+			classname = "Vanilla";
+		} else
+		{
+			String[] classpath = canonicalName.toLowerCase().split("\\.");
+			if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
+			else classname = classpath[0];
+		}
 		
 		Configuration config;
 		try
@@ -484,7 +492,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameEntityCat, modname + ":" + name);
+				config.addCustomCategoryComment(nameEntityCat, classname + ":" + name);
 				EntityProperties.SaveProperty(config, nameEntityCat, (Integer)data[0], true, true, true, true, false, false, 0.0D, 0.0D, 37.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 				returnValue = "Saved";
 			}
@@ -500,7 +508,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameItemCat, modname + ":" + name);
+				config.addCustomCategoryComment(nameItemCat, classname + ":" + name);
 					ItemProperties.SaveProperty(config, nameItemCat, (String)data[0], (Integer)data[1], false, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 37.00);
 				returnValue = "Saved";
 			}
@@ -515,7 +523,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else
 			{
-				config.addCustomCategoryComment(nameArmorCat, modname + ":" + name);
+				config.addCustomCategoryComment(nameArmorCat, classname + ":" + name);
 					ArmorProperties.SaveProperty(config, nameArmorCat, (String)data[0], 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00);
 				returnValue = "Saved";
 			}

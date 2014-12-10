@@ -29,7 +29,7 @@ public class BlockDavyLamp extends Block implements ITileEntityProvider
 	public BlockDavyLamp(Material material)
 	{
 		super(material);
-		this.setHardness(5.0F);
+		this.setHardness(0.0F);
 		this.setStepSound(Block.soundTypeMetal);
 	}
 	

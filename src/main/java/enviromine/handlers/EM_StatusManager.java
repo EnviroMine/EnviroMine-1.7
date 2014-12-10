@@ -3,6 +3,7 @@ package enviromine.handlers;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
@@ -34,13 +35,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
+
 import com.google.common.base.Stopwatch;
+
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.UI_Settings;
+import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.network.packet.PacketEnviroMine;
@@ -51,6 +53,7 @@ import enviromine.trackers.properties.BlockProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
+import enviromine.utils.EnviroUtils;
 
 public class EM_StatusManager
 {
@@ -183,7 +186,7 @@ public class EM_StatusManager
 		
 		float[] data = new float[8];
 		
-		float sanityRate = -0.005F;
+		float sanityRate = 0F;
 		float sanityStartRate = sanityRate;
 		
 		float quality = 0;
@@ -237,6 +240,10 @@ public class EM_StatusManager
 		
 		boolean isDay = entityLiving.worldObj.isDaytime();
 		
+		//Note: This is offset slightly so that heat peaks after noon.
+		float scale = 1.25F; // Anything above 1 forces the maximum and minimum temperatures to plateau when they're reached
+		float dayPercent = MathHelper.clamp_float((float)(Math.sin(Math.toRadians(((entityLiving.worldObj.getWorldTime()%24000L)/24000D)*360F - 30F))*0.5F + 0.5F)*scale, 0F, 1F);
+		
 		if(entityLiving.worldObj.provider.hasNoSky)
 		{
 			isDay = false;
@@ -257,10 +264,10 @@ public class EM_StatusManager
 				blockLightLev = chunk.getSavedLightValue(EnumSkyBlock.Block, i & 0xf, j, k & 0xf);
 			}
 		}
-		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) != null )
+		
+		if(!isDay && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) == null)
 		{
-			//TODO Override DimensionProp
-			if(dimensionProp.override && dimensionProp.darkAffectSanity)
+			if(dimensionProp == null || !dimensionProp.override || dimensionProp.darkAffectSanity)
 			{
 			   sanityStartRate = -0.01F;
 			   sanityRate = -0.01F;
@@ -273,12 +280,11 @@ public class EM_StatusManager
 			{
 				for(int z = -range; z <= range; z++)
 				{
-					
 					if(y == 0)
 					{
 						Chunk testChunk = entityLiving.worldObj.getChunkFromBlockCoords((i + x), (k + z));
 						BiomeGenBase checkBiome = testChunk.getBiomeGenForWorldCoords((i + x) & 15, (k + z) & 15, entityLiving.worldObj.getWorldChunkManager());
-						//TODO Changed for Overriding Biomes
+						
 						if(checkBiome != null)
 						{
 							BiomeProperties biomeOverride = null;
@@ -286,15 +292,16 @@ public class EM_StatusManager
 							{
 								biomeOverride = EM_Settings.biomeProperties.get(checkBiome.biomeID);
 							}
+							
 							if(biomeOverride != null && biomeOverride.biomeOveride)
 							{
 								surBiomeTemps += biomeOverride.ambientTemp;
-								//System.out.print(biomeOverride.ambientTemp);
 							}
 							else
 							{
 								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
 							}
+							
 							biomeTempChecks += 1;
 						}
 					}
@@ -379,7 +386,7 @@ public class EM_StatusManager
 							}
 						}
 						
-					} else if(block == Blocks.flowing_lava || block == Blocks.lava)
+					} else if(block == Blocks.flowing_lava || block == Blocks.lava || block == ObjectHandler.fireGasBlock)
 					{
 						if(quality > -1)
 						{
@@ -390,7 +397,7 @@ public class EM_StatusManager
 							temp = getTempFalloff(200, dist, range);
 						}
 						nearLava = true;
-					} else if(block == Blocks.fire)
+					} else if(block == Blocks.fire || block == ObjectHandler.burningCoal)
 					{
 						if(quality > -0.5F)
 						{
@@ -402,7 +409,7 @@ public class EM_StatusManager
 							
 							
 						}
-					} else if((block == Blocks.torch || block == Blocks.lit_furnace))
+					} else if((block == ObjectHandler.fireTorch || block == Blocks.torch || block == Blocks.lit_furnace))
 					{
 						if(quality > -0.25F)
 						{
@@ -602,54 +609,26 @@ public class EM_StatusManager
 			quality = 2F;
 		}
 		
-		//float bTemp = biome.temperature * 2.25F;
-		
-		//TODO (Changed for Biome overrides) Moved to EnviroUtils.. called above
-		//float bTemp = (surBiomeTemps / biomeTempChecks)* 2.25F;
-		
 
 		float bTemp = (surBiomeTemps / biomeTempChecks);
-		/*		
-		if(bTemp > 1.5F)
-		{
-			bTemp = 30F + ((bTemp - 1F) * 10);
-		} else if(bTemp < -1.5F)
-		{
-			bTemp = -30F + ((bTemp + 1F) * 10);
-		} else
-		{
-			bTemp *= 20;
-		}
-		*/
+		
 		if(!entityLiving.worldObj.provider.isHellWorld)
 		{
 			if(entityLiving.posY <= 48)
 			{
-				if(bTemp < 20F)
+				if(45F - bTemp > 0)
 				{
-					bTemp += (50 * (1 - (entityLiving.posY / 48)));
-				} else
-				{
-					bTemp += (20 * (1 - (entityLiving.posY / 48)));
+					bTemp += (45F - bTemp) * (1F - (entityLiving.posY / 48F));
 				}
 			} else if(entityLiving.posY > 96 && entityLiving.posY < 256)
 			{
-				if(bTemp < 20F)
+				if(-45F - bTemp < 0)
 				{
-					bTemp -= (float)(20F * ((entityLiving.posY - 96)/159));
-				} else
-				{
-					bTemp -= (float)(40F * ((entityLiving.posY - 96)/159));
+					bTemp -= MathHelper.abs(-45F - bTemp) * ((entityLiving.posY - 96F)/159F);
 				}
 			} else if(entityLiving.posY >= 256)
 			{
-				if(bTemp < 20F)
-				{
-					bTemp -= 20F;
-				} else
-				{
-					bTemp -= 40F;
-				}
+				bTemp = bTemp < -45F? bTemp : -45F;
 			}
 		}
 		
@@ -659,23 +638,25 @@ public class EM_StatusManager
 		{
 			if(((EntityPlayer)entityLiving).isPlayerSleeping())
 			{
-				bTemp += 5F;
+				bTemp += 10F;
 			}
 		}
 		
-		//TODO Dimension Override  WeatherOverrides
 		if (dimensionProp != null && dimensionProp.override && !dimensionProp.weatherAffectsTemp) 
 		{
 
 		}
 		else 
 		{
-			if(entityLiving.worldObj.isRaining() && entityLiving.worldObj.canBlockSeeTheSky(i, j, k) && biome.rainfall != 0.0F)
+			if(entityLiving.worldObj.isRaining() && biome.rainfall != 0.0F)
 			{
-				
 				bTemp -= 10F;
-				dropSpeed = 0.005F;
 				animalHostility = -1;
+				
+				if(entityLiving.worldObj.canBlockSeeTheSky(i, j, k))
+				{
+					dropSpeed = 0.01F;
+				}
 			}
 		
 		} // Dimension Overrides End
@@ -685,41 +666,19 @@ public class EM_StatusManager
 		{
 			bTemp -= 2.5F;
 		}
-
-		//TODO Dimension Override  Day/Night Overrides
 		
-		if (dimensionProp != null && dimensionProp.override && !dimensionProp.dayNightTemp) 
+		if (dimensionProp == null || !dimensionProp.override || dimensionProp.dayNightTemp)
 		{ 
-		
-		}
-		else 
-		{	
-			if(!isDay && bTemp > 0F)
+			bTemp -= (1F-dayPercent) * 10F;
+			
+			if(biome.rainfall <= 0F)
 			{
-				if(biome.rainfall == 0.0F)
-				{
-					bTemp /= 9;
-				} else
-				{
-					bTemp /= 2;
-				}
-			} else if(!isDay && bTemp <= 0F)
-			{
-				bTemp -= 10F;
+				bTemp -= (1F-dayPercent) * 30F;
 			}
-
 		}
-
 		
-		if((entityLiving.worldObj.getBlock(i, j, k) == Blocks.water || entityLiving.worldObj.getBlock(i, j, k) == Blocks.flowing_water) && entityLiving.posY > 48)
+		if(entityLiving.isInWater())
 		{
-			if(biome.getEnableSnow())
-			{
-				bTemp -= 10F;
-			} else
-			{
-				bTemp -= 5F;
-			}
 			dropSpeed = 0.01F;
 		}
 		
@@ -895,9 +854,9 @@ public class EM_StatusManager
 		{
 			avgEntityTemp /= validEntities;
 			
-			if(bTemp < avgEntityTemp)
+			if(bTemp < avgEntityTemp - 12F)
 			{
-				bTemp = (bTemp + avgEntityTemp) / 2;
+				bTemp = (bTemp + (avgEntityTemp - 12F)) / 2;
 			}
 		}
 		
@@ -933,9 +892,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(helmet)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(helmet.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(helmet));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(helmet.getItem()));
 					
 					if(isDay)
 					{
@@ -989,9 +948,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(plate)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(plate.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(plate));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(plate.getItem()));
 					
 					if(isDay)
 					{
@@ -1042,9 +1001,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(legs)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(legs.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(legs));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(legs.getItem()));
 					
 					if(isDay)
 					{
@@ -1095,9 +1054,9 @@ public class EM_StatusManager
 					}
 				}
 				
-				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(boots)))
+				if(EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(boots.getItem())))
 				{
-					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(boots));
+					ArmorProperties props = EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(boots.getItem()));
 					
 					if(isDay)
 					{
@@ -1185,8 +1144,13 @@ public class EM_StatusManager
 				{
 					dehydrateBonus += biomeProp.dehydrateRate;
 					
-					if(biomeProp.tempRate > 0)	riseSpeed += biomeProp.tempRate;
-					else dropSpeed += biomeProp.tempRate;
+					if(biomeProp.tempRate > 0)
+					{
+						riseSpeed += biomeProp.tempRate;
+					} else
+					{
+						dropSpeed += biomeProp.tempRate;
+					}
 					
 					sanityRate += biomeProp.sanityRate;
 				}
@@ -1265,7 +1229,7 @@ public class EM_StatusManager
 		if(EnviroMine.proxy.isClient() && entityLiving.getCommandSenderName().equals(Minecraft.getMinecraft().thePlayer.getCommandSenderName()) && timer.isRunning())
 		{
 			timer.stop();
-			EM_GuiEnviroMeters.DB_timer = timer.toString();
+			Debug_Info.DB_timer = timer.toString();
 			timer.reset();
 		}
 		return data;

@@ -34,7 +34,7 @@
     ]
   },
    
-  "enviromine.gag": {
+  "gag": {
     "category": "player",
     "sounds": [
       "gag1",

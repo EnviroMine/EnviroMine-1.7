@@ -2,13 +2,11 @@ package enviromine.core.proxies;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.RecipeSorter;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-
 import enviromine.client.gui.UpdateNotification;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_ServerScheduledTickHandler;
@@ -16,6 +14,7 @@ import enviromine.handlers.crafting.CamelPackExpandHandler;
 import enviromine.handlers.crafting.CamelPackIntegrationHandler;
 import enviromine.handlers.crafting.CamelPackRefillHandler;
 import enviromine.handlers.crafting.GaskMaskRefillHandler;
+import enviromine.handlers.crafting.LampLightingHandler;
 
 public class EM_CommonProxy
 {
@@ -57,6 +56,8 @@ public class EM_CommonProxy
 		RecipeSorter.register("enviromine:maskRefill", GaskMaskRefillHandler.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 		GameRegistry.addRecipe(tmp4);
 		FMLCommonHandler.instance().bus().register(tmp4);
+		
+		FMLCommonHandler.instance().bus().register(new LampLightingHandler());
 	}
 	
 	public void preInit(FMLPreInitializationEvent event)

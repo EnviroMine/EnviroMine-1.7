@@ -195,7 +195,7 @@ public class MapGenModifiedRavine extends MapGenBase
 	@Override
 	protected void func_151538_a(World p_151538_1_, int p_151538_2_, int p_151538_3_, int p_151538_4_, int p_151538_5_, Block[] p_151538_6_)
 	{
-		if (this.rand.nextInt(50) == 0)
+		if (this.rand.nextInt(30) == 0)
 		{
 			double d0 = (double)(p_151538_2_ * 16 + this.rand.nextInt(16));
 			double d1 = (double)(this.rand.nextInt(this.rand.nextInt(168) + 8) + 20);

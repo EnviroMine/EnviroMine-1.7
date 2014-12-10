@@ -1,21 +1,22 @@
 package enviromine.trackers.properties;
 
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.utils.EnviroUtils;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.nbt.NBTTagCompound;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraftforge.common.config.Configuration;
-import enviromine.EnviroUtils;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.utils.ModIdentification;
 
-public class ArmorProperties
+public class ArmorProperties implements SerialisableProperty
 {
-	public final Item item;
+	public Item item;
 	public String name;
 	public float nightTemp;
 	public float shadeTemp;
@@ -31,6 +32,11 @@ public class ArmorProperties
 	static String[] APName;
 	
 	public static String categoryName = "armor";
+	
+	public ArmorProperties(NBTTagCompound tags)
+	{
+		this.ReadFromNBT(tags);
+	}
 	
 	public ArmorProperties(Item item, String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air, boolean allowCamelPack)
 	{
@@ -85,7 +91,6 @@ public class ArmorProperties
 		
 		ArmorProperties entry = new ArmorProperties((Item)item, name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
 		EM_Settings.armorProperties.put(name, entry);
-		
 	}
 	
 	public static void SaveProperty(Configuration config, String catName, String name, double nightTemp, double shadeTemp, double sunTemp, double nightMult, double shadeMult, double sunMult, double sanity, double air)
@@ -137,17 +142,14 @@ public class ArmorProperties
 		while(itemList.hasNext())
 		{
 			theitem = (Item) itemList.next();
-			//String[] Names = SplitObjectName(Item.itemRegistry.getNameForObject(theitem));
-			String modname  = ModIdentification.nameFromObject((Object) theitem);
+			String[] Names = SplitObjectName(Item.itemRegistry.getNameForObject(theitem));
 			
-			//if(!Names[0].equalsIgnoreCase("minecraft")) // Ignore Minecraft Items
-			if(modname.trim() != "Minecraft")
+			if(!Names[0].equalsIgnoreCase("minecraft")) // Ignore Minecraft Items
 			{
 				if(theitem instanceof ItemArmor)
 				{
 					
-					//DetectedArmorGen((ItemArmor)theitem, Names[0]);
-					DetectedArmorGen((ItemArmor)theitem, modname);
+					DetectedArmorGen((ItemArmor)theitem, Names[0]);
 					//armorCount += 1;
 				}
 			}
@@ -161,8 +163,17 @@ public class ArmorProperties
 
 	private static void DetectedArmorGen(ItemArmor armor, String ModID)
 	{
+		String canonicalName = armor.getClass().getCanonicalName();
+		String path = EM_ConfigHandler.customPath;
+		if (canonicalName != null)
+		{
+			path += canonicalName.split("\\.")[0];
+		} else
+		{
+			path += ModID;
+		}
 		
-		File armorFile = new File(EM_ConfigHandler.customPath + ModID + ".cfg");
+		File armorFile = new File(path + ".cfg");
 		if(!armorFile.exists())
 		{
 			try
@@ -198,5 +209,38 @@ public class ArmorProperties
 	{
 		String[] nameArr = splitName.split(":");
 		return nameArr;
+	}
+
+	@Override
+	public NBTTagCompound WriteToNBT()
+	{
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setString("name", Item.itemRegistry.getNameForObject(item));
+		tags.setFloat("nightTemp", nightTemp);
+		tags.setFloat("shadeTemp", shadeTemp);
+		tags.setFloat("sunTemp", sunTemp);
+		tags.setFloat("nightMult", nightMult);
+		tags.setFloat("shadeMult", shadeMult);
+		tags.setFloat("sunMult", sunMult);
+		tags.setFloat("sanity", sanity);
+		tags.setFloat("air", air);
+		tags.setBoolean("allowCamelPack", allowCamelPack);
+		return tags;
+	}
+
+	@Override
+	public void ReadFromNBT(NBTTagCompound tags)
+	{
+		this.name = tags.getString("name");
+		item = (Item)Item.itemRegistry.getObject(this.name);
+		this.nightTemp = tags.getFloat("nightTemp");
+		this.shadeTemp = tags.getFloat("shadeTemp");
+		this.sunTemp = tags.getFloat("sunTemp");
+		this.nightMult = tags.getFloat("nightMult");
+		this.shadeMult = tags.getFloat("shadeMult");
+		this.sunMult = tags.getFloat("sunMult");
+		this.sanity = tags.getFloat("sanity");
+		this.air = tags.getFloat("air");
+		this.allowCamelPack = tags.getBoolean("allowCamelPack");
 	}
 }

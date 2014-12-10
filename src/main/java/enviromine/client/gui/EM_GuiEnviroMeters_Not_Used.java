@@ -2,6 +2,7 @@ package enviromine.client.gui;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -12,26 +13,29 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EnviroUtils;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.EnviroDataTracker;
+import enviromine.utils.EnviroUtils;
+import enviromine.utils.RenderAssist;
 import enviromine.world.ClientQuake;
 
-public class EM_GuiEnviroMeters extends Gui
+public class EM_GuiEnviroMeters_Not_Used extends Gui
 {
 	public Minecraft mc;
 	public IResourceManager resourceManager;
 	
 	public static final String guiResource = "textures/gui/status_Gui.png";
-	public static final ResourceLocation gasMaskResource = new ResourceLocation("enviromine", "textures/misc/maskblur2.png");
+	public static final ResourceLocation gasMaskResource = new ResourceLocation("enviromine", "textures/misc/maskblur3.png");
 	public static final ResourceLocation breathMaskResource = new ResourceLocation("enviromine", "textures/misc/breath.png");
 	public static final ResourceLocation bloodshotResource = new ResourceLocation("enviromine", "textures/misc/bloodshot.png");
 	public static final ResourceLocation blurOverlayResource = new ResourceLocation("enviromine", "textures/misc/blur.png");
@@ -47,7 +51,7 @@ public class EM_GuiEnviroMeters extends Gui
 	
 	public static EnviroDataTracker tracker = null;
 	
-	public EM_GuiEnviroMeters(Minecraft mc, IResourceManager resManager)
+	public EM_GuiEnviroMeters_Not_Used(Minecraft mc, IResourceManager resManager)
 	{
 		this.mc = mc;
 		this.resourceManager = resManager;
@@ -67,21 +71,19 @@ public class EM_GuiEnviroMeters extends Gui
 		{
 			if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()))
 			{
-				return;
+			} else
+			{
+				float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
+				
+				double shakeSpeed = 2D * shakeMult;
+				float offsetY = 0.2F * shakeMult;
+				
+				double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
+				
+				mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
+				mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);
+				mc.thePlayer.cameraYaw = (float)(Math.sin(shake) * offsetY/4F);
 			}
-			
-			float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
-			
-			double shakeSpeed = 2D * shakeMult;
-			float offsetY = 0.2F * shakeMult;
-			
-			double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
-			
-			mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
-			mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);
-			mc.thePlayer.cameraYaw = (float)(Math.sin(shake) * offsetY/4F);
-			
-			//super.updateCameraAndRender(partialTick);
 		}
 		
 		// count gui ticks
@@ -155,7 +157,7 @@ public class EM_GuiEnviroMeters extends Gui
 		if(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false)
 		{
 			
-		} else if(ticktimer == 1)
+		} else if(ticktimer == 1 && Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().thePlayer.isDead)
 		{
 			tracker = EM_StatusManager.lookupTrackerFromUsername(Minecraft.getMinecraft().thePlayer.getCommandSenderName());
 			if(tracker == null)
@@ -178,8 +180,8 @@ public class EM_GuiEnviroMeters extends Gui
 		{
 			int waterBar = MathHelper.ceiling_float_int((tracker.hydration / 100) * barWidth);
 			int heatBar = MathHelper.ceiling_float_int(((tracker.bodyTemp + 50) / 150) * barWidth);
-			int preheatBar = MathHelper.ceiling_float_int(((tracker.airTemp + 50) / 150) * barWidth);
-			int preheatIco = 16- MathHelper.ceiling_float_int(((tracker.airTemp + 50) / 150) * 16);
+			int preheatBar = MathHelper.ceiling_float_int(((tracker.airTemp + 50 + 12) / 150) * barWidth);
+			int preheatIco = 16- MathHelper.ceiling_float_int(((tracker.airTemp + 50 + 12) / 150) * 16);
 			int sanityBar = MathHelper.ceiling_float_int((tracker.sanity / 100) * barWidth);
 			int airBar = MathHelper.ceiling_float_int((tracker.airQuality / 100) * barWidth);
 			
@@ -676,7 +678,7 @@ public class EM_GuiEnviroMeters extends Gui
 			} else
 			{
 				Minecraft.getMinecraft().fontRenderer.drawString("Body Temp: " + tracker.bodyTemp + "C", 10, 10, 16777215);
-				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + DB_abientTemp + "C | Cur Biome: " + DB_biomeName + " (" + DB_biomeID + ")", 10, 10 * 2, 16777215);
+				Minecraft.getMinecraft().fontRenderer.drawString("Ambient Temp: " + DB_abientTemp + "C (" + (DB_abientTemp + 12F) + "C) | Cur Biome: " + DB_biomeName + " (" + DB_biomeID + ")", 10, 10 * 2, 16777215);
 				Minecraft.getMinecraft().fontRenderer.drawString("Temp Rate: " + DB_tempchange + "C", 10, 10 * 3, 16777215);
 			}
 			
@@ -712,36 +714,36 @@ public class EM_GuiEnviroMeters extends Gui
 			if(tracker.bodyTemp >= 39)
 			{
 				int grad = 0;
-				if(tracker.bodyTemp >= 41F)
+				if(tracker.bodyTemp >= 43F)
 				{
-					grad = 210;
+					grad = 255;
 				} else
 				{
-					grad = (int)((1F - (Math.abs(3 - (tracker.bodyTemp - 39)) / 3)) * 96);
+					grad = MathHelper.floor_float((tracker.bodyTemp - 39F)/6F * 255F);
 				}
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, grad));
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(255, 255, 255, grad));
 				
 			} else if(tracker.bodyTemp <= 35)
 			{
 				int grad = 0;
-				if(tracker.bodyTemp <= 32F)
+				if(tracker.bodyTemp <= 30F)
 				{
-					grad = 210;
+					grad = 255;
 				} else
 				{
-					grad = (int)((Math.abs(3 - (tracker.bodyTemp - 32)))) * 64;
+					grad = MathHelper.floor_float(Math.abs(5F - (tracker.bodyTemp - 30F))/5F * 255F);
 				}
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(125, 255, 255, grad));
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(125, 255, 255, grad));
 			}
 			if(tracker.airQuality < 50F)
 			{
-				int grad = (int)((50 - tracker.airQuality) / 15 * 64);
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(32, 96, 0, grad));
+				int grad = MathHelper.floor_float((50F - tracker.airQuality)/50F * 255F);
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(32, 96, 0, grad));
 			}
 			if(tracker.sanity < 50F)
 			{
-				int grad = (int)((50 - tracker.sanity) / 15 * 64);
-				EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(200, 0, 249, grad));
+				int grad = MathHelper.floor_float((50F - tracker.sanity)/50F * 255F);
+				RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(200, 0, 249, grad));
 			}
 		}
 		
@@ -749,7 +751,7 @@ public class EM_GuiEnviroMeters extends Gui
 		if(infection && this.mc.gameSettings.thirdPersonView == 0)
 		{
 			int A = (int) RenderPulse();
-			EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(220, 3, 3, A));
+			RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(220, 3, 3, A));
 			
 			//this.mc.renderEngine.bindTexture(bloodshotResource);
 			//EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, 100));
@@ -768,7 +770,7 @@ public class EM_GuiEnviroMeters extends Gui
 				{
 					this.mc.renderEngine.bindTexture(gasMaskResource);
 					//Draw gasMask Overlay
-					EnviroUtils.drawScreenOverlay(width, height, EnviroUtils.getColorFromRGBA(255, 255, 255, 255));
+					RenderAssist.drawScreenOverlay(width, height, RenderAssist.getColorFromRGBA(255, 255, 255, 255));
 				}
 			}
 		}
@@ -843,7 +845,7 @@ public class EM_GuiEnviroMeters extends Gui
 					pauseCnt = 0;
 					pause = false;
 					
-					if(UI_Settings.breathSound == true)
+					if(UI_Settings.breathSound == true && !Minecraft.getMinecraft().isGamePaused())
 					{
 						//ISound sound = null; //TODO ("enviromine:gasmask", (float)player.posX, (float)player.posY, (float)player.posZ, EM_Settings.breathVolume, 1.0F)
 						//mc.getSoundHandler().playSound(sound);
@@ -873,10 +875,10 @@ public class EM_GuiEnviroMeters extends Gui
 			
 			// If Item is Damaged Render Breath onscreen
 			//if(itemstack.getItemDamage() >= itemstack.getMaxDamage() - 1 && this.mc.gameSettings.thirdPersonView == 0)
-			if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && this.mc.gameSettings.thirdPersonView == 0)
+			if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 0 && this.mc.gameSettings.thirdPersonView == 0)
 			{
 				this.mc.renderEngine.bindTexture(breathMaskResource);
-				enviromine.EnviroUtils.drawScreenOverlay(k, l, EnviroUtils.getColorFromRGBA(255, 255, 255, (int)alpha));
+				RenderAssist.drawScreenOverlay(k, l, RenderAssist.getColorFromRGBA(255, 255, 255, (int)alpha));
 			}
 		}
 	}

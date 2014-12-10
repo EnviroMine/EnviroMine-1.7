@@ -153,31 +153,29 @@ public class EnviroDataTracker
 		// Air checks
 		enviroData[0] += gasAirDiff;
 		gasAirDiff = 0F;
+		airQuality += enviroData[0];
+		
 		ItemStack helmet = trackedEntity.getEquipmentInSlot(4);
 		if(helmet != null && !isCreative)
 		{
-				if(helmet.hasTagCompound() && helmet.getTagCompound().hasKey("gasMaskFill"))
+			if(helmet.hasTagCompound() && helmet.getTagCompound().hasKey("gasMaskFill"))
+			{
+				NBTTagCompound tag = helmet.getTagCompound();
+				int gasMaskFill = tag.getInteger("gasMaskFill");
+				
+				if(gasMaskFill > 0 && airQuality <= 99F)
 				{
-					NBTTagCompound tag = helmet.getTagCompound();
-					int gasMaskFill = tag.getInteger("gasMaskFill");
+					int airDrop = 100 - MathHelper.ceiling_float_int(airQuality);
+					airDrop = gasMaskFill >= airDrop? airDrop : gasMaskFill;
 					
-					if(gasMaskFill > 0 && airQuality <= 99F)
+					if(airDrop > 0)
 					{
-						int airDrop = MathHelper.floor_float(enviroData[0]);
-						
-						if(enviroData[0] <= 0)
-						{
-							enviroData[0] = 0;
-							tag.setInteger("gasMaskFill", (gasMaskFill + airDrop));
-						} else
-						{
-							tag.setInteger("gasMaskFill", 0);
-						}
+						airQuality += airDrop;
+						tag.setInteger("gasMaskFill", (gasMaskFill - airDrop));
 					}
+				}
 			}
 		}
-		
-		airQuality += enviroData[0];
 		
 		if(airQuality <= 0F)
 		{
@@ -194,25 +192,27 @@ public class EnviroDataTracker
 		float tnm = enviroData[4];
 		float tpm = enviroData[5];
 		
-		if(bodyTemp - airTemp > 0)
+		float relTemp = airTemp + 12F;
+		
+		if(bodyTemp - relTemp > 0) // Cold
 		{
-			float spAmp = Math.abs(bodyTemp - airTemp) > 10F? Math.abs(bodyTemp - airTemp)/10F : 1F;
-			if(bodyTemp - airTemp >= tnm * spAmp)
+			float spAmp = Math.abs(bodyTemp - relTemp) > 10F? Math.abs(bodyTemp - relTemp)/10F : 1F;
+			if(bodyTemp - relTemp >= tnm * spAmp)
 			{
 				bodyTemp -= tnm * spAmp;
 			} else
 			{
-				bodyTemp = airTemp;
+				bodyTemp = relTemp;
 			}
-		} else if(bodyTemp - airTemp < 0)
+		} else if(bodyTemp - relTemp < 0) // Hot
 		{
-			float spAmp = Math.abs(bodyTemp - airTemp) > 10F? Math.abs(bodyTemp - airTemp)/10F : 1F;
-			if(bodyTemp - airTemp <= -tpm * spAmp)
+			float spAmp = Math.abs(bodyTemp - relTemp) > 10F? Math.abs(bodyTemp - relTemp)/10F : 1F;
+			if(bodyTemp - relTemp <= -tpm * spAmp)
 			{
 				bodyTemp += tpm * spAmp;
 			} else
 			{
-				bodyTemp = airTemp;
+				bodyTemp = relTemp;
 			}
 		}
 		
@@ -325,7 +325,7 @@ public class EnviroDataTracker
 			if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
 			{
 				int fill = plate.getTagCompound().getInteger("camelPackFill");
-				if(fill > 0 && hydration <= 99F - EM_Settings.hydrationMult)
+				if(fill > 0 && hydration <= 100F - EM_Settings.hydrationMult)
 				{
 					plate.getTagCompound().setInteger("camelPackFill", fill-1);
 					hydrate((float)EM_Settings.hydrationMult);
@@ -422,7 +422,8 @@ public class EnviroDataTracker
 				
 				if (this.side.isClient()) 
 				{
-					playSoundWithTimeCheck(17000, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
+					// This sounds like someone blowing into a mic
+					//playSoundWithTimeCheck(17000, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
 			}
 			

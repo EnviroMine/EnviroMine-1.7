@@ -45,7 +45,8 @@ public class EM_Gui_Menu extends GuiScreen
 		serverSettings.visible = true;
 		customEditor.visible = true;			
 	
-		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 50 - 6, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
+		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 44, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
+		this.buttonList.add(new GuiButton(102, this.width / 2 - 90, this.height / 6 + 24, 180, 20, StatCollector.translateToLocal("options.enviromine.guiSounds")+"..."));
 		this.buttonList.add(serverSettings);
 		this.buttonList.add(customEditor);
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.done")));
@@ -72,6 +73,10 @@ public class EM_Gui_Menu extends GuiScreen
 		else if (par1GuiButton.id == 101)
 		{
 			this.mc.displayGuiScreen(new EM_Gui_GuiSettings(this));	
+		}
+		else if (par1GuiButton.id == 102)
+		{
+			this.mc.displayGuiScreen(new EM_Gui_SoundSettings(this));	
 		}
 		else if (par1GuiButton.id == 200)
 		{

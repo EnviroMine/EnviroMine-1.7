@@ -3,6 +3,8 @@ package enviromine.world.chunk;
 import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.SHROOM;
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE;
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAVA;
 import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.NETHER_LAVA;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -18,7 +20,9 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
+import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
+import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
@@ -501,6 +505,23 @@ public class ChunkProviderCaves implements IChunkProvider
 		 int i2;
 		 
 		 MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(worldObj, hellRNG, k, l));
+
+        if (TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, LAVA) && this.hellRNG.nextInt(8) == 0)
+        {
+            k1 = k + this.hellRNG.nextInt(16) + 8;
+            l1 = this.hellRNG.nextInt(this.hellRNG.nextInt(248) + 8);
+            i2 = l + this.hellRNG.nextInt(16) + 8;
+            (new WorldGenLakes(Blocks.lava)).generate(this.worldObj, this.hellRNG, k1, l1, i2);
+        }
+        
+        doGen = TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, DUNGEON);
+        for (k1 = 0; doGen && k1 < 8; ++k1)
+        {
+            l1 = k + this.hellRNG.nextInt(16) + 8;
+            i2 = this.hellRNG.nextInt(256);
+            int j2 = l + this.hellRNG.nextInt(16) + 8;
+            (new WorldGenDungeons()).generate(this.worldObj, this.hellRNG, l1, i2, j2);
+        }
 		 
 		 doGen = TerrainGen.decorate(worldObj, hellRNG, k, l, SHROOM);
 		 if (doGen && this.hellRNG.nextInt(1) == 0)
@@ -520,7 +541,7 @@ public class ChunkProviderCaves implements IChunkProvider
 		 }
 		 
 		 int j2;
-		 WorldGenMinable worldgenminable = new WorldGenMinable(Blocks.monster_egg, 13, Blocks.stone);
+		 WorldGenMinable worldgenminable = new WorldGenMinable(Blocks.monster_egg, 24, Blocks.stone);
 		 for (k1 = 0; k1 < 48; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
@@ -529,7 +550,7 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(ObjectHandler.flammableCoal, 13, Blocks.stone);
+		 worldgenminable = new WorldGenMinable(ObjectHandler.flammableCoal, 16, Blocks.stone);
 		 for (k1 = 0; k1 < 32; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
@@ -538,7 +559,7 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(Blocks.iron_ore, 13, Blocks.stone);
+		 worldgenminable = new WorldGenMinable(Blocks.iron_ore, 16, Blocks.stone);
 		 for (k1 = 0; k1 < 24; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
@@ -547,16 +568,7 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(Blocks.gold_ore, 13, Blocks.stone);
-		 for (k1 = 0; k1 < 12; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(108) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.lapis_ore, 13, Blocks.stone);
+		 worldgenminable = new WorldGenMinable(Blocks.lapis_ore, 12, Blocks.stone);
 		 for (k1 = 0; k1 < 12; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
@@ -565,7 +577,7 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(Blocks.redstone_ore, 13, Blocks.stone);
+		 worldgenminable = new WorldGenMinable(Blocks.redstone_ore, 12, Blocks.stone);
 		 for (k1 = 0; k1 < 12; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
@@ -574,8 +586,8 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(Blocks.diamond_ore, 13, Blocks.stone);
-		 for (k1 = 0; k1 < 6; ++k1)
+		 worldgenminable = new WorldGenMinable(Blocks.gold_ore, 8, Blocks.stone);
+		 for (k1 = 0; k1 < 8; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
 			 i2 = this.hellRNG.nextInt(246) + 10;
@@ -583,8 +595,17 @@ public class ChunkProviderCaves implements IChunkProvider
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(Blocks.emerald_ore, 13, Blocks.stone);
+		 worldgenminable = new WorldGenMinable(Blocks.diamond_ore, 8, Blocks.stone);
 		 for (k1 = 0; k1 < 3; ++k1)
+		 {
+			 l1 = k + this.hellRNG.nextInt(16);
+			 i2 = this.hellRNG.nextInt(246) + 10;
+			 j2 = l + this.hellRNG.nextInt(16);
+			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
+		 }
+		 
+		 worldgenminable = new WorldGenMinable(Blocks.emerald_ore, 4, Blocks.stone);
+		 for (k1 = 0; k1 < 1; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
 			 i2 = this.hellRNG.nextInt(246) + 10;

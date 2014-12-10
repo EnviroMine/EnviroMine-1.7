@@ -1,117 +1,154 @@
 package enviromine.network.packet;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
-import cpw.mods.fml.common.FMLCommonHandler;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-
 import enviromine.core.EM_Settings;
 import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
-import enviromine.network.packet.encoders.IPacketEncoder;
-
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-
-import org.apache.logging.log4j.Level;
-
-import com.google.common.base.Strings;
+import enviromine.trackers.properties.SerialisableProperty;
 
 public class PacketAutoOverride extends PacketServerOverride implements IMessage
 {
 	public PacketAutoOverride()
 	{
-		
-	}
-	
-	public PacketAutoOverride(EntityPlayerMP player)
-	{
-		super(player);
-		if (FMLCommonHandler.instance().getSide().isServer())
+		if (!EnviroMine.proxy.isClient())
 		{
-			readFromSettings();
+			this.tags = readFromSettings();
 		}
 	}
 	
-	private void readFromSettings()
+	private NBTTagCompound readFromSettings()
 	{
+		NBTTagCompound nTags = new NBTTagCompound();
 		Field[] fields = EM_Settings.class.getFields();
 		
-		for (int i = 0; i < fields.length; i++)
+		for (Field f : fields)
 		{
-			ShouldOverride annotation = fields[i].getAnnotation(ShouldOverride.class);
-			if (annotation != null)
+			try
 			{
-				IPacketEncoder encoder;
-				String classPath = annotation.value();
-				if (Strings.isNullOrEmpty(classPath))
+				ShouldOverride anno = f.getAnnotation(ShouldOverride.class);
+				Class[] clazzes;
+				
+				if(anno != null)
 				{
-					if (fields[i].getType() == String.class)
-					{
-						classPath = "enviromine.network.packet.encoders.StringEncoder";
-					} else if (fields[i].getType() == int.class)
-					{
-						classPath = "enviromine.network.packet.encoders.IntEncoder";
-					} else if (fields[i].getType() == boolean.class)
-					{
-						classPath = "enviromine.network.packet.encoders.BoolEncoder";
-					} else if (fields[i].getType() == float.class)
-					{
-						classPath = "enviromine.network.packet.encoders.FloatEncoder";
-					} else
-					{
-						EnviroMine.logger.log(Level.ERROR, fields[i].getName() + " has an unkown type - skipping");
-					}
+					clazzes = anno.value();
+				} else
+				{
+					continue;
 				}
 				
-				try
+				if(!f.isAccessible()) // This is causing problems for some reason...
 				{
-					Object obj = Class.forName(classPath).newInstance();
-					if (obj instanceof IPacketEncoder)
-					{
-						encoder = (IPacketEncoder)obj;
-						
-						String[] strs = data.get(classPath);
-						if (strs != null) {
-							strs = appendArrayToArray(strs, new String[]{fields[i].getName(), encoder.encode(fields[i].get(null))});
-						} else {
-							strs = new String[]{fields[i].getName(), encoder.encode(fields[i].get(null))};
-						}
-						data.put(classPath, strs);
-					}
-				} catch (ClassNotFoundException e)
+					EnviroMine.logger.log(Level.WARN, "Field " + f.getName() + " is protected and cannot be synced!");
+					continue;
+				} else if(!Modifier.isStatic(f.getModifiers()))
 				{
-					EnviroMine.logger.log(Level.ERROR, "Error encoding: " + classPath + " is not a vaid class. (On field: " + fields[i].getName() + ")");
-				} catch (InstantiationException e)
-				{
-					EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-				} catch (IllegalAccessException e)
-				{
-					EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
-				} catch (NullPointerException e)
-				{
-					EnviroMine.logger.log(Level.ERROR, "Error encoding: An error occoured getting encoder class", e);
+					EnviroMine.logger.log(Level.WARN, "Cannot sync non-static field " + f.getName() + "!");
+					continue;
 				}
+				
+				if(f.getType() == HashMap.class)
+				{
+					HashMap map = (HashMap)f.get(null);
+					Set keys = map.keySet();
+					Iterator iterator = keys.iterator();
+					NBTTagList nbtList = new NBTTagList();
+					
+					while(iterator.hasNext())
+					{
+						NBTTagCompound entry = new NBTTagCompound();
+						Object keyObj = iterator.next();
+						Object valObj = map.get(keyObj);
+						this.setNBTValue(entry, "key", keyObj);
+						this.setNBTValue(entry, "value", valObj);
+						nbtList.appendTag(entry);
+					}
+					
+					nTags.setTag(f.getName(), nbtList);
+				} else if(f.getType() == ArrayList.class)
+				{
+					ArrayList list = (ArrayList)f.get(null);
+					Iterator iterator = list.iterator();
+					NBTTagList nbtList = new NBTTagList();
+					
+					while(iterator.hasNext())
+					{
+						NBTTagCompound entry = new NBTTagCompound();
+						Object valObj = iterator.next();
+						this.setNBTValue(entry, "value", valObj);
+						nbtList.appendTag(entry);
+					}
+					
+					nTags.setTag(f.getName(), nbtList);
+				} else
+				{
+					this.setNBTValue(nTags, f.getName(), f.get(null));
+				}
+			} catch(Exception e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "An error occured while syncing setting " + f.getName(), e);
 			}
 		}
+		
+		return nTags;
 	}
-	
-	private static <T> T[] appendArrayToArray(T[] array, T[] newArray)
+		
+	public void setNBTValue(NBTTagCompound tag, String key, Object value)
 	{
-		Class clazz = array.getClass().getComponentType();
-		T[] temp = (T[])Array.newInstance(clazz, array.length+newArray.length);
-		for (int i = 0; i < array.length; i++)
+		if(key == null || key.length() <= 0 || value == null)
 		{
-			temp[i] = array[i];
-		}
-		for (int i = 0; i < newArray.length; i++)
-		{
-			temp[array.length + i] = newArray[i];
+			EnviroMine.logger.log(Level.ERROR, "Tried to set NBTTagCompound without a value and or key!");
+			return;
 		}
 		
-		return temp;
+		if(value instanceof Boolean)
+		{
+			tag.setBoolean(key, (Boolean)value);
+		} else if(value instanceof Integer)
+		{
+			tag.setInteger(key, (Integer)value);
+		} else if(value instanceof String)
+		{
+			tag.setString(key, (String)value);
+		} else if(value instanceof Byte)
+		{
+			tag.setByte(key, (Byte)value);
+		} else if(value instanceof Float)
+		{
+			tag.setFloat(key, (Float)value);
+		} else if(value instanceof Double)
+		{
+			tag.setDouble(key, (Double)value);
+		} else if(value instanceof Short)
+		{
+			tag.setShort(key, (Short)value);
+		} else if(value instanceof Long)
+		{
+			tag.setLong(key, (Long)value);
+		} else if(value instanceof Byte[])
+		{
+			tag.setByteArray(key, (byte[])value);
+		} else if(value instanceof NBTBase)
+		{
+			tag.setTag(key, (NBTBase)value);
+		} else if(value instanceof SerialisableProperty)
+		{
+			tag.setTag(key, ((SerialisableProperty)value).WriteToNBT());
+		} else
+		{
+			EnviroMine.logger.log(Level.ERROR, "Cannot set NBTTagCompound a value type of " + value.getClass().getSimpleName());
+		}
 	}
 	
 	public static class Handler implements IMessageHandler<PacketAutoOverride, IMessage>

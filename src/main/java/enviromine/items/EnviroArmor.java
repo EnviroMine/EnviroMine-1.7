@@ -1,8 +1,11 @@
 package enviromine.items;
 
+import enviromine.handlers.EnviroAchievements;
+import enviromine.handlers.ObjectHandler;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,8 +13,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.handlers.EnviroAchievements;
-import enviromine.handlers.ObjectHandler;
 
 public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmorTextureProvider
 {
@@ -26,7 +27,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 		super(par2EnumArmorMaterial, par3, par4);
 		this.setMaxDamage(100);
 		//this.setTextureName("enviromine:camel_pack");
-		this.setNoRepair();
+		//this.setNoRepair();
 	}
 	
 	@Override
@@ -85,13 +86,13 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 	 */
 	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
 	{
-		if (par1ItemStack.getItem() == ObjectHandler.hardHat && par2ItemStack.getItem() == ObjectHandler.hardHat)
+		if (par1ItemStack.getItem() == ObjectHandler.hardHat && (par2ItemStack.getItem() == ObjectHandler.hardHat || par2ItemStack.getItem() == Items.iron_ingot))
 		{
 			return true;
-		} else if (par1ItemStack.getItem() == ObjectHandler.gasMask && par2ItemStack.getItem() == ObjectHandler.gasMask)
+		} else if (par1ItemStack.getItem() == ObjectHandler.gasMask && (par2ItemStack.getItem() == ObjectHandler.gasMask || par2ItemStack.getItem() == Items.iron_ingot))
 		{
 			return true;
-		} else if (par1ItemStack.getItem() == ObjectHandler.camelPack && par2ItemStack.getItem() == ObjectHandler.camelPack)
+		} else if (par1ItemStack.getItem() == ObjectHandler.camelPack && (par2ItemStack.getItem() == ObjectHandler.camelPack || par2ItemStack.getItem() == Items.leather))
 		{
 			return true;
 		} else
@@ -112,7 +113,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				int meta = armor.getItemDamage() > 0 ? 100-armor.getItemDamage() : 0;
+				int meta = armor.getItemDamage() > 0 ? 100 - armor.getItemDamage() : 0;
 				armor.getTagCompound().setInteger("camelPackFill", meta);
 				armor.setItemDamage(0);
 			}
@@ -132,11 +133,11 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("gasMaskFill"))
 			{
-				armor.getTagCompound().setInteger("gasMaskFill", 200);
+				armor.getTagCompound().setInteger("gasMaskFill", 1000);
 			}
 			if (!armor.getTagCompound().hasKey("gasMaskMax"))
 			{
-				armor.getTagCompound().setInteger("gasMaskMax", 200);
+				armor.getTagCompound().setInteger("gasMaskMax", 1000);
 			}
 		} else if (armor.getItem() == ObjectHandler.hardHat)
 		{
@@ -156,7 +157,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			}
 			if (!armor.getTagCompound().hasKey("camelPackFill"))
 			{
-				int meta = armor.getItemDamage() > 0 ? 100-armor.getItemDamage() : 0;
+				int meta = armor.getItemDamage() > 0 ? 100 - armor.getItemDamage() : 0;
 				armor.getTagCompound().setInteger("camelPackFill", meta);
 				armor.setItemDamage(0);
 			}
@@ -174,9 +175,9 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			{
 				armor.setTagCompound(new NBTTagCompound());
 			}
-			armor.getTagCompound().setInteger("gasMaskFill", 200);
-			armor.getTagCompound().setInteger("gasMaskMax", 200);
-			
+			armor.getTagCompound().setInteger("gasMaskFill", 1000);
+			armor.getTagCompound().setInteger("gasMaskMax", 1000);
+			player.addStat(EnviroAchievements.breatheEasy, 1);
 		} else if (armor.getItem() == ObjectHandler.hardHat)
 		{
 			player.addStat(EnviroAchievements.safetyFirst, 1);

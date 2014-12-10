@@ -62,7 +62,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
 		
 		tempScalebutton.displayString = I18n.format("options.enviromine.tempScale", new Object[0]) + ": " + I18n.format("options.enviromine.tempScale." + (UI_Settings.useFarenheit == true ? "f" : "c"), new Object[0]);
 		this.buttonList.add(tempScalebutton);
-		showstatusbutton.displayString = I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine." + (UI_Settings.ShowText && !UI_Settings.minimalHud? "visible" : "hidden"), new Object[0]);
+		showstatusbutton.displayString = I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine." + (UI_Settings.ShowText ? "visible" : "hidden"), new Object[0]);
 		this.buttonList.add(showstatusbutton);
 		showdebugbutton.displayString = I18n.format("options.enviromine.debug", new Object[0]) + ": " + I18n.format("options.enviromine." + (UI_Settings.ShowDebug? "visible" : "hidden"), new Object[0]);
 		this.buttonList.add(showdebugbutton);
@@ -136,10 +136,20 @@ public class EM_Gui_GuiSettings extends GuiScreen
 					par1GuiButton.displayString = I18n.format("options.enviromine.status", new Object[0]) + ": " + I18n.format("options.enviromine." + (UI_Settings.ShowText? "visible" : "hidden"), new Object[0]);
 					break;
 				case 157:
-					this.mc.displayGuiScreen(new EM_Gui_Bars(this));
+					this.mc.displayGuiScreen(new EM_Gui_Hud_Items(this));
 					break;
 				case 158:
 					UI_Settings.minimalHud = !UI_Settings.minimalHud;
+					if(UI_Settings.minimalHud)
+					{
+						UI_Settings.ShowGuiIcons = true;
+						UI_Settings.ShowText = true;
+					}
+					else
+					{
+						UI_Settings.ShowText = false;
+					}
+					
 					par1GuiButton.displayString = I18n.format("options.enviromine.minBars", new Object[0]) + ": " + I18n.format("options.enviromine." + (UI_Settings.minimalHud? "on" : "off"), new Object[0]);
 					this.mc.displayGuiScreen(new EM_Gui_GuiSettings(this.parentGuiScreen));
 					break;
@@ -170,7 +180,7 @@ public class EM_Gui_GuiSettings extends GuiScreen
 	@Override
 	public void onGuiClosed() 
 	{
-		SaveController.saveConfig("UI_Settings");
+		SaveController.saveConfig(SaveController.UISettingsData);
 	}
 	
 	

@@ -7,22 +7,22 @@ import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 import java.util.Random;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.blocks.tiles.TileEntityBurningCoal;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.gases.EnviroGasDictionary;
-import enviromine.handlers.ObjectHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.blocks.tiles.TileEntityBurningCoal;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.core.EM_Settings;
+import enviromine.gases.EnviroGasDictionary;
+import enviromine.handlers.ObjectHandler;
 
 public class BlockBurningCoal extends Block implements ITileEntityProvider
 {
@@ -40,27 +40,17 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     {
         world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + world.rand.nextInt(10), 0);
     }
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-    {
-    	double f = 0.125;
-        AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
-        
-        if(bounds != null)
-        {
-        	return bounds.contract(f, f, f);
-        } else
-        {
-        	return null;
-        }
-    }
-    
+
     /**
-     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     * Returns the quantity of items to drop on block destruction.
      */
+    public int quantityDropped(Random p_149745_1_)
+    {
+        return 0;
+    }
+	
     @Override
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    public void onEntityWalking(World world, int x, int y, int z, Entity entity)
     {
     	entity.setFire(10);
     }
@@ -78,6 +68,9 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
 		if(!world.scheduledUpdatesAreImmediate)
 		{
 			world.scheduleBlockUpdateWithPriority(x, y, z, this, this.tickRate(world) + rand.nextInt(10), 0);
+		} else
+		{
+			return;
 		}
         
         TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);
@@ -101,7 +94,10 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         	
         	this.tryCatchFire(world, xOff, yOff, zOff, enco, rand, l, fDir.getOpposite());
         	
-        	if(world.rand.nextInt(5) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
+        	if(EM_Settings.noGases)
+        	{
+        		coalTile.fuel -= 1;
+        	} else if(world.rand.nextInt(20) == 0 && (world.getBlock(xOff, yOff, zOff) == Blocks.air || world.getBlock(xOff, yOff, zOff) instanceof BlockGas))
         	{
         		if(world.getBlock(xOff, yOff, zOff) == Blocks.air)
         		{
@@ -115,8 +111,10 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         			
         			if(gasTile.amount < 10)
         			{
-        				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, 1);
-        				coalTile.fuel -= 1;
+        				int amount = 10 - gasTile.amount;
+        				amount = amount > coalTile.fuel? coalTile.fuel : amount;
+        				gasTile.addGas(EnviroGasDictionary.carbonMonoxide.gasID, amount);
+        				coalTile.fuel -= amount;
         			}
         		}
         	}
@@ -177,6 +175,19 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
             }
         }
 	}
+
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+    {
+    	world.setBlock(x, y, z, Blocks.fire);
+		/*TileEntity tile = world.getTileEntity(x, y, z);
+		
+		if(tile != null && tile instanceof TileEntityGas)
+		{
+			TileEntityGas gasTile = (TileEntityGas)tile;
+			gasTile.addGas(0, 10); // Fire
+			gasTile.updateRender();
+		}*/
+    }
 	
     private void tryCatchFire(World world, int x, int y, int z, int p_149841_5_, Random random, int chance, ForgeDirection face)
     {
@@ -256,6 +267,11 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int x, int y, int z, Random rand)
     {
+        if (rand.nextInt(24) == 0)
+        {
+            world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+        }
+        
         float f = (float)x + 0.5F;
         float f1 = (float)y;
         float f2 = (float)z + 0.5F;

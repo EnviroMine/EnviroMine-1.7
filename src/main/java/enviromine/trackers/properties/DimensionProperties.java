@@ -1,36 +1,32 @@
 package enviromine.trackers.properties;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-
-import net.minecraft.world.WorldProvider;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.config.Configuration;
-
-import org.apache.logging.log4j.Level;
-
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.registry.GameData;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-import enviromine.utils.ModIdentification;
 
-public class DimensionProperties
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldProvider;
+
+import java.io.File;
+import java.io.IOException;
+
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
+
+public class DimensionProperties implements SerialisableProperty
 {
 	public int id;
 	public boolean override;
 	public boolean trackSanity;
 	public boolean darkAffectSanity;
-	public double sanityMultiplyer;
+	public float sanityMultiplyer;
 	public boolean trackAirQuality;
-	public double airMulti;
+	public float airMulti;
 	public boolean trackHydration;
-	public double hydrationMulti;
+	public float hydrationMulti;
 	public boolean trackTemp;
-	public double tempMulti;
+	public float tempMulti;
 	public boolean dayNightTemp;
 	public boolean weatherAffectsTemp;
 	public boolean mineshaftGen;
@@ -40,7 +36,12 @@ public class DimensionProperties
 	
 	public static String categoryName = "dimensions";
 	
-	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, 	double sanityMultiplyer, boolean trackAirQuality, double airMulti, boolean trackHydration, double hydrationMulti, boolean trackTemp, double tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
+	public DimensionProperties(NBTTagCompound tags)
+	{
+		this.ReadFromNBT(tags);
+	}
+	
+	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMultiplyer, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
 	{
 		this.id = id;
 		this.override = override;
@@ -93,17 +94,23 @@ public class DimensionProperties
 		{
 			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
 			
-			String modname  = ModIdentification.nameFromObject((Object) dimension);
-
-			if(modname.trim() == "Minecraft")
+			String canonicalName = dimension.getClass().getCanonicalName();
+			if (canonicalName == null)
 			{
 				SaveConfig(dimension, "Defaults");
+			} else {
+				String[] modname = canonicalName.trim().toLowerCase().split("\\.");
+				
+				//System.out.println(modname[0]);
+				if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig)//If Vanilla
+				{
+					SaveConfig(dimension, "Defaults");
+				}
+				else
+				{
+					SaveConfig(dimension, modname[0]);
+				}
 			}
-			else
-			{
-				SaveConfig(dimension, modname);
-			}
-			
 		}
 	}
 	
@@ -187,13 +194,13 @@ public class DimensionProperties
 		boolean override = config.get(category, DMName[1], false).getBoolean(false);
 		boolean trackSanity = config.get(category, DMName[2], true).getBoolean(true);
 		boolean darkAffectSanity = config.get(category, DMName[3], true).getBoolean(true);
-		double sanityMulti = config.get(category, DMName[4], 1.0D).getDouble(1.0D);
+		float sanityMulti = (float)config.get(category, DMName[4], 1.0D).getDouble(1.0D);
 		boolean trackAirQuality = config.get(category, DMName[5], true).getBoolean(true);
-		double airMulti = config.get(category, DMName[6], 1.0D).getDouble(1.0D);
+		float airMulti = (float)config.get(category, DMName[6], 1.0D).getDouble(1.0D);
 		boolean trackHydration = config.get(category, DMName[7], true).getBoolean(true);
-		double hydrationMulti = config.get(category, DMName[8], 1.0D).getDouble(1.0D);
+		float hydrationMulti = (float)config.get(category, DMName[8], 1.0D).getDouble(1.0D);
 		boolean trackTemp = config.get(category, DMName[9], true).getBoolean(true);
-		double tempMulti = config.get(category, DMName[10], 1.0D).getDouble(1.0D);
+		float tempMulti = (float)config.get(category, DMName[10], 1.0D).getDouble(1.0D);
 		boolean dayNightTemp = config.get(category, DMName[11], true).getBoolean(true);
 		boolean weatherAffectsTemp = config.get(category, DMName[12], true).getBoolean(true);
 		boolean mineshaftGen = config.get(category, DMName[13], true).getBoolean(true);
@@ -201,5 +208,45 @@ public class DimensionProperties
 		
 		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel);
 		EM_Settings.dimensionProperties.put(id, entry);
+	}
+
+	@Override
+	public NBTTagCompound WriteToNBT()
+	{
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setInteger("id", this.id);
+		tags.setBoolean("override", this.override);
+		tags.setBoolean("trackSanity", this.trackSanity);
+		tags.setBoolean("darkAffectSanity", this.darkAffectSanity);
+		tags.setFloat("sanityMultiplyer", this.sanityMultiplyer);
+		tags.setBoolean("trackAirQuality", this.trackAirQuality);
+		tags.setFloat("airMulti", this.airMulti);
+		tags.setBoolean("trackHydration", this.trackHydration);
+		tags.setFloat("hydrationMulti", this.hydrationMulti);
+		tags.setBoolean("trackTemp", this.trackTemp);
+		tags.setFloat("tempMulti", this.tempMulti);
+		tags.setBoolean("weatherAffectsTemp", this.weatherAffectsTemp);
+		tags.setBoolean("mineshaftGen", this.mineshaftGen);
+		tags.setInteger("sealevel", this.sealevel);
+		return tags;
+	}
+
+	@Override
+	public void ReadFromNBT(NBTTagCompound tags)
+	{
+		this.id = tags.getInteger("id");
+		this.override = tags.getBoolean("override");
+		this.trackSanity = tags.getBoolean("trackSanity");
+		this.darkAffectSanity = tags.getBoolean("darkAffectSanity");
+		this.sanityMultiplyer = tags.getFloat("sanityMultiplyer");
+		this.trackAirQuality = tags.getBoolean("trackAirQuality");
+		this.airMulti = tags.getFloat("airMulti");
+		this.trackHydration = tags.getBoolean("trackHydration");
+		this.hydrationMulti = tags.getFloat("hydrationMulti");
+		this.trackTemp = tags.getBoolean("trackTemp");
+		this.tempMulti = tags.getFloat("tempMulti");
+		this.weatherAffectsTemp = tags.getBoolean("weatherAffectsTemp");
+		this.mineshaftGen = tags.getBoolean("mineshaftGen");
+		this.sealevel = tags.getInteger("sealevel");
 	}
 }

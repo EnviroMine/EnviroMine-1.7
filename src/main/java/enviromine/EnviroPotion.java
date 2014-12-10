@@ -11,11 +11,13 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.client.gui.EM_GuiFakeDeath;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.trackers.EnviroDataTracker;
+import enviromine.utils.RenderAssist;
 
 public class EnviroPotion extends Potion
 {
@@ -37,7 +39,7 @@ public class EnviroPotion extends Potion
 		EnviroPotion.frostbite = ((EnviroPotion)new EnviroPotion(EM_Settings.frostBitePotionID, true, 8171462).setPotionName("potion.enviromine.frostbite")).setIconIndex(0, 0);
 		EnviroPotion.dehydration = ((EnviroPotion)new EnviroPotion(EM_Settings.dehydratePotionID, true, 3035801).setPotionName("potion.enviromine.dehydration")).setIconIndex(1, 0);
 		EnviroPotion.insanity = ((EnviroPotion)new EnviroPotion(EM_Settings.insanityPotionID, true, 5578058).setPotionName("potion.enviromine.insanity")).setIconIndex(2, 0);
-		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, EnviroUtils.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.enviromine.heatstroke")).setIconIndex(3, 0);
+		EnviroPotion.heatstroke = ((EnviroPotion)new EnviroPotion(EM_Settings.heatstrokePotionID, true, RenderAssist.getColorFromRGBA(255, 0, 0, 255)).setPotionName("potion.enviromine.heatstroke")).setIconIndex(3, 0);
 		EnviroPotion.hypothermia = ((EnviroPotion)new EnviroPotion(EM_Settings.hypothermiaPotionID, true, 8171462).setPotionName("potion.enviromine.hypothermia")).setIconIndex(4, 0);
 	}
 	
@@ -151,12 +153,19 @@ public class EnviroPotion extends Potion
 			
 			int chance = 50 / (effect.getAmplifier() + 1);
 			
+			chance = chance > 0? chance : 1;
+			
 			if(entityLiving.getRNG().nextInt(chance) == 0)
 			{
 				if(effect.getAmplifier() >= 1)
 				{
 					entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
 				}
+			}
+			
+			if(effect.getAmplifier() >= 2 && entityLiving.getRNG().nextInt(1000) == 0 && EnviroMine.proxy.isClient())
+			{
+				displayFakeDeath();
 			}
 			
 			String sound = "";
@@ -262,6 +271,15 @@ public class EnviroPotion extends Potion
 					player.worldObj.playSoundEffect(entityLiving.posX + rndX, entityLiving.posY + rndY, entityLiving.posZ + rndZ, sound, 1.0F, (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F + 1.0F);
 				}
 			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private static void displayFakeDeath()
+	{
+		if(Minecraft.getMinecraft().currentScreen == null)
+		{
+			Minecraft.getMinecraft().displayGuiScreen(new EM_GuiFakeDeath());
 		}
 	}
 	

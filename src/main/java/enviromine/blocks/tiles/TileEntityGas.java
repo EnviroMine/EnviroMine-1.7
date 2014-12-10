@@ -1,5 +1,8 @@
 package enviromine.blocks.tiles;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -13,22 +16,22 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import enviromine.EnviroUtils;
+
+import org.apache.logging.log4j.Level;
+
 import enviromine.blocks.BlockGas;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.handlers.ObjectHandler;
-import java.awt.Color;
-import java.util.ArrayList;
-import org.apache.logging.log4j.Level;
+import enviromine.utils.RenderAssist;
 
 public class TileEntityGas extends TileEntity
 {
 	public ArrayList<int[]> gases = new ArrayList<int[]>();
 	public Color color = Color.WHITE;
-	public float opacity = 1.0F;
+	public float opacity = 0F;
 	public float yMax = 1.0F;
 	public float yMin = 0.0F;
 	public int amount = 0;
@@ -84,7 +87,7 @@ public class TileEntityGas extends TileEntity
 				EnviroGas gas = EnviroGasDictionary.gasList[gasArray[0]];
 				float opacity =  gas.getOpacity()*gasArray[1];
 				opacity = opacity >= 1.0F? 1.0F : opacity;
-				fCol = EnviroUtils.blendColors(fCol.getRGB(), gas.color.getRGB(), opacity / 0.5F);
+				fCol = RenderAssist.blendColors(fCol.getRGB(), gas.color.getRGB(), opacity / 0.5F);
 			}
 		}
 		
@@ -751,6 +754,7 @@ public class TileEntityGas extends TileEntity
 					
 					this.addGas(decayGasID, decayNum);
 				}
+				return decayed;
 			} else if(skyLight >= 5 && gasType.airDecay > 0 && gasType.airDecayThresh >= gasArray[1])
 			{
 				decayed = true;
@@ -762,6 +766,7 @@ public class TileEntityGas extends TileEntity
 					
 					this.addGas(decayGasID, decayNum);
 				}
+				return decayed;
 			} else if(this.worldObj.rand.nextInt(100) == 0 && gasType.randDecay > 0 && gasType.randDecayThresh >= gasArray[1])
 			{
 				decayed = true;
@@ -773,6 +778,7 @@ public class TileEntityGas extends TileEntity
 					
 					this.addGas(decayGasID, decayNum);
 				}
+				return decayed;
 			}
 		}
 		return decayed;

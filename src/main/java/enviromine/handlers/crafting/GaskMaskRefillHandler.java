@@ -1,24 +1,23 @@
 package enviromine.handlers.crafting;
 
-import net.minecraft.inventory.IInventory;
+import java.util.ArrayList;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
 import enviromine.handlers.ObjectHandler;
-
-import java.util.ArrayList;
 
 public class GaskMaskRefillHandler implements IRecipe
 {
 	public boolean isArmor;
 	public int maskFill;
+	public int maskMax;
 	public ArrayList<ItemStack> filters = new ArrayList<ItemStack>();
 	public ItemStack mask;
+	public int filterFill = 500;
+	public ItemStack output;
 	
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
@@ -28,12 +27,12 @@ public class GaskMaskRefillHandler implements IRecipe
 			return false;
 		}
 		
-		
+		this.output = null;
 		this.isArmor = false;
 		this.maskFill = 0;
+		this.maskMax = 1000;
 		this.mask = null;
 		this.filters.clear();
-		boolean hasMask = false;
 		
 		for (int i = inv.getSizeInventory() - 1; i >= 0; i--)
 		{
@@ -44,14 +43,14 @@ public class GaskMaskRefillHandler implements IRecipe
 				continue;
 			} else if (item.hasTagCompound() && item.getTagCompound().hasKey("gasMaskFill"))
 			{
-				if (hasMask)
+				if (mask != null)
 				{
 					return false;
 				} else
 				{
 					mask = item.copy();
 					maskFill = item.getTagCompound().getInteger("gasMaskFill");
-					hasMask = true;
+					maskMax = (mask.getTagCompound().hasKey("gasMaskMax")? mask.getTagCompound().getInteger("gasMaskMax") : 1000);
 				}
 			} else if (item.getItem() == ObjectHandler.airFilter)
 			{
@@ -62,38 +61,36 @@ public class GaskMaskRefillHandler implements IRecipe
 			}
 		}
 		
-		if (maskFill == 200 || !hasMask || mask == null)
+		if (mask == null || maskFill >= maskMax)
 		{
 			return false;
-		} else if (maskFill + (filters.size() * 100) >= 300)
+		} else if (maskFill + (filters.size() * filterFill) >= maskMax + filterFill)
 		{
 			return false;
-		} 
-		//else if (maskFill + 100 > 200)
-		//{
-		//	return false;
-		//}
-	    else
+		}
+	    else if(mask != null && filters.size() >= 1)
 		{
-			return hasMask && filters.size() >= 1;
+			output = mask.copy();
+			if ((maskFill +(filters.size() * filterFill)) <= maskMax)
+			{
+					output.getTagCompound().setInteger("gasMaskFill", (maskFill + (filters.size() * filterFill)));
+			} else
+			{
+					output.getTagCompound().setInteger("gasMaskFill", maskMax);
+			}
+			
+			return true;
+		} else
+		{
+			return false;
 		}
 	}
 	
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		this.matches(inv, null);
-		
-			if ((maskFill +(filters.size() * 100))  <= 200) //Max 200 
-			{
-					mask.getTagCompound().setInteger("gasMaskFill", (maskFill + (filters.size() * 100)));
-					return mask;
-			} else
-			{
-					mask.getTagCompound().setInteger("gasMaskFill", 200);
-					return mask;
-			}
-		}
+		return output;
+	}
 	
 	
 	@Override
@@ -105,13 +102,15 @@ public class GaskMaskRefillHandler implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return null;
+		return output;
 	}
 	
 	@SubscribeEvent
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event)
 	{
-		IInventory craftMatrix = event.craftMatrix;
+		// This is completely redundant...
+		
+		/*IInventory craftMatrix = event.craftMatrix;
 		if (!(craftMatrix instanceof InventoryCrafting))
 		{
 			return;
@@ -136,6 +135,6 @@ public class GaskMaskRefillHandler implements IRecipe
 					}
 				}
 			}
-		}
+		}*/
 	}
 }

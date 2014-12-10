@@ -43,6 +43,7 @@ achievement.enviromine.ItsPitchBlack=It's Pitch Black
 achievement.enviromine.TenSecondRule=10 Second Rule
 achievement.enviromine.MedicalMarvels=Medical Marvels
 achievement.enviromine.SuckItUpPrincess=Suck It Up Princess
+achievement.enviromine.BreatheEasy=Breathe Easy
 
 achievement.enviromine.FunwaysFault.desc=Survive a cave in
 achievement.enviromine.MindOverMatter.desc=Kill 5 hostile mobs with Insanity III
@@ -61,6 +62,7 @@ achievement.enviromine.ItsPitchBlack.desc=???
 achievement.enviromine.TenSecondRule.desc=Eat rotten food
 achievement.enviromine.MedicalMarvels.desc=Cure any infection or disease
 achievement.enviromine.SuckItUpPrincess.desc=Kill a hostile mob while having one or more broken limbs
+achievement.enviromine.BreatheEasy.desc=Craft a respirator
 
 options.enviromine.on=On
 options.enviromine.off=Off
@@ -93,11 +95,22 @@ options.enviromine.barPos.hydration=Hydration Bar
 options.enviromine.barPos.temprature=Temprature Bar
 options.enviromine.barPos.sanity=Sanity Bar
 options.enviromine.barPos.airQuality=Air Quality Bar
+options.enviromine.guiSounds=Sound Settings
+options.enviromine.physSound=Physics Sounds
+options.enviromine.breathVol=Breath Volume
+
+options.enviromine.hud.temperature=Temperature
+options.enviromine.hud.sanity=Sanity
+options.enviromine.hud.hydration=Hydration
+options.enviromine.hud.air=Air Quality
+options.enviromine.hud.resetDefault=Reset Defaults
+options.enviromine.hud.resetDefault.desc=Reset all Hud Items to their default locations
 
 deathmessage.enviromine.suffocate=%s suffocated to death
 deathmessage.enviromine.frostbite=%s froze to death
 deathmessage.enviromine.dehydrate=%s died of thirst
 deathmessage.enviromine.landslide=%s was crushed in a landslide
+deathmessage.enviromine.landslide=%s was buried in an avalanche
 deathmessage.enviromine.organfailure=%s died of organ failure
 deathmessage.enviromine.heatstroke=%s's brain was cooked by heatstroke
 deathmessage.enviromine.bleedout=%s bled out

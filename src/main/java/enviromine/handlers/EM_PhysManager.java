@@ -1,11 +1,8 @@
 package enviromine.handlers;
 
-import enviromine.EntityPhysicsBlock;
-import enviromine.client.gui.EM_GuiEnviroMeters;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.StabilityType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
@@ -37,13 +34,16 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.logging.log4j.Level;
 
 import com.google.common.base.Stopwatch;
+
+import enviromine.EntityPhysicsBlock;
+import enviromine.client.gui.hud.items.Debug_Info;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.StabilityType;
 
 public class EM_PhysManager
 {
@@ -234,7 +234,7 @@ public class EM_PhysManager
 			
 			validSlideType = blockProps.slides || ((waterLogged || touchingWater) && blockProps.wetSlide);
 			isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
-		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow) && (waterLogged || touchingWater)))
+		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer) && (waterLogged || touchingWater)))
 		{
 			if(block instanceof BlockAnvil)
 			{
@@ -242,7 +242,7 @@ public class EM_PhysManager
 			} else
 			{
 				validSlideType = true;
-				isMuddy = (block == Blocks.dirt || block == Blocks.snow);
+				isMuddy = (block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer);
 			}
 		}
 		
@@ -564,8 +564,9 @@ public class EM_PhysManager
 					if(tile != null)
 					{
 						entityphysblock.field_145810_d = nbtTC;
-						world.removeTileEntity(x, y, z);
 					}
+					//world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(entityphysblock.block) + (entityphysblock.meta << 12));
+					world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), entityphysblock.block.stepSound.func_150496_b(), (entityphysblock.block.stepSound.getVolume() + 1.0F) / 2.0F, entityphysblock.block.stepSound.getPitch() * 1.2F);
 					world.spawnEntityInWorld(entityphysblock);
 					
 				} else if(missingBlocks > minThreshold && !world.isRemote && EM_Settings.stoneCracks)
@@ -1165,9 +1166,9 @@ public class EM_PhysManager
 		if(EnviroMine.proxy.isClient() && debugTime >= debugInterval && timer.isRunning())
 		{
 			timer.stop();
-			EM_GuiEnviroMeters.DB_physTimer = timer.toString();
-			EM_GuiEnviroMeters.DB_physUpdates = debugUpdatesCaptured;
-			EM_GuiEnviroMeters.DB_physBuffer = physSchedule.size();
+			Debug_Info.DB_physTimer = timer.toString();
+			Debug_Info.DB_physUpdates = debugUpdatesCaptured;
+			Debug_Info.DB_physBuffer = physSchedule.size();
 			timer.reset();
 			debugTime = 0;
 		} else if(EnviroMine.proxy.isClient())

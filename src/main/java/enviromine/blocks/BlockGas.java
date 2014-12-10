@@ -17,17 +17,15 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
-import enviromine.EnviroUtils;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGas;
 import enviromine.gases.EnviroGasDictionary;
 import enviromine.gases.GasBuffer;
 import enviromine.handlers.ObjectHandler;
+import enviromine.utils.EnviroUtils;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -124,9 +122,9 @@ public class BlockGas extends Block implements ITileEntityProvider
 	
 	public float getOpacity(IBlockAccess blockAccess, int i, int j, int k)
 	{
-		if(blockAccess.getBlock(i, k, k) == ObjectHandler.gasBlock && !EM_Settings.renderGases)
+		if(EM_Settings.renderGases)
 		{
-			return 0;
+			return 0.75F;
 		} else
 		{
 			TileEntity tile = blockAccess.getTileEntity(i, j, k);
@@ -303,6 +301,10 @@ public class BlockGas extends Block implements ITileEntityProvider
 	{
 		if(world.isRemote)
 		{
+			return;
+		} else if(EM_Settings.noGases)
+		{
+			world.setBlockToAir(x, y, z);
 			return;
 		}
 		
@@ -638,22 +640,24 @@ public class BlockGas extends Block implements ITileEntityProvider
     
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World p_149734_1_, int i, int j, int k, Random rand)
+    public void randomDisplayTick(World world, int i, int j, int k, Random rand)
     {
     	if(this == ObjectHandler.fireGasBlock)
     	{
+            if (rand.nextInt(24) == 0)
+            {
+                world.playSound((double)((float)i + 0.5F), (double)((float)j + 0.5F), (double)((float)k + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+            }
+            
 	        double d0 = (double)((float)i + 0.5F);
 	        double d1 = (double)((float)j + 0.5F);
 	        double d2 = (double)((float)k + 0.5F);
 	        
-    		for(int pass = 0; pass < 3; pass++)
-    		{
-		        double d3 = rand.nextDouble() - 0.5D;
-		        double d4 = rand.nextDouble() - 0.5D;
-		        
-		        p_149734_1_.spawnParticle("largesmoke", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-		        p_149734_1_.spawnParticle("flame", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-    		}
+	        double d3 = rand.nextDouble() - 0.5D;
+	        double d4 = rand.nextDouble() - 0.5D;
+	        
+	        world.spawnParticle("largesmoke", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+	        world.spawnParticle("flame", d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
     	}
     }
 	

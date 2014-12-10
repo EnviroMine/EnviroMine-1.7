@@ -1,14 +1,13 @@
 package enviromine.trackers.properties;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
-
 import org.apache.logging.log4j.Level;
-
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 
 
-public class BlockProperties
+public class BlockProperties implements SerialisableProperty
 {
 	public boolean hasPhys;
 	
@@ -38,6 +37,11 @@ public class BlockProperties
 	static String[] BPName;
 	
 	public static String categoryName = "blocks";
+	
+	public BlockProperties(NBTTagCompound tags)
+	{
+		this.ReadFromNBT(tags);
+	}
 	
 	public BlockProperties(String name, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, String dropName, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide)
 	{
@@ -149,5 +153,43 @@ public class BlockProperties
 		config.get(category, BPName[9], stability).getString();
 		config.get(category, BPName[10], slides).getBoolean(false);
 		config.get(category, BPName[11], wetSlides).getBoolean(false);
+	}
+
+	@Override
+	public NBTTagCompound WriteToNBT()
+	{
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setString("name", this.name);
+		tags.setInteger("metaData", this.meta);
+		tags.setString("dropName", this.dropName);
+		tags.setInteger("dropMeta", this.dropMeta);
+		tags.setInteger("dropNum", this.dropNum);
+		tags.setBoolean("enableTemp", this.enableTemp);
+		tags.setFloat("temp", this.temp);
+		tags.setFloat("air", this.air);
+		tags.setFloat("sanity", this.sanity);
+		tags.setBoolean("holdsOthers", this.holdsOthers);
+		tags.setBoolean("slides", this.slides);
+		tags.setBoolean("canHang", this.canHang);
+		tags.setBoolean("wetSlide", this.wetSlide);
+		return tags;
+	}
+
+	@Override
+	public void ReadFromNBT(NBTTagCompound tags)
+	{
+		this.name = tags.getString("name");
+		this.meta = tags.getInteger("metaData");
+		this.dropName = tags.getString("dropName");
+		this.dropMeta = tags.getInteger("dropMeta");
+		this.dropNum = tags.getInteger("dropNum");
+		this.enableTemp = tags.getBoolean("enableTemp");
+		this.temp = tags.getFloat("temp");
+		this.air = tags.getFloat("air");
+		this.sanity = tags.getFloat("sanity");
+		this.holdsOthers = tags.getBoolean("holdsOthers");
+		this.slides = tags.getBoolean("slides");
+		this.canHang = tags.getBoolean("canHang");
+		this.wetSlide = tags.getBoolean("wetSlide");
 	}
 }

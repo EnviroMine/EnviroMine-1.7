@@ -274,7 +274,7 @@ public class MineshaftBuilder
 		DimensionProperties dProps = EM_Settings.dimensionProperties.get(this.world.provider.dimensionId);
 		int seaLvl = dProps != null? dProps.sealevel : 64;
 		
-		if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < seaLvl * 0.75F || seaLvl < 24)
+		if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < (float)seaLvl * 0.75F || seaLvl < 24)
 		{
 			return false;
 		}

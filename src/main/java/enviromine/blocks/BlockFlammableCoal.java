@@ -1,5 +1,6 @@
 package enviromine.blocks;
 
+import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,12 +13,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.core.EM_Settings;
 import enviromine.gases.EnviroGasDictionary;
+import enviromine.handlers.EM_PhysManager;
 import enviromine.handlers.ObjectHandler;
-
-import java.util.Random;
 
 public class BlockFlammableCoal extends BlockOre
 {
@@ -94,6 +94,23 @@ public class BlockFlammableCoal extends BlockOre
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block nBlock)
 	{
+		if(world.scheduledUpdatesAreImmediate)
+		{
+			return;
+		} else
+		{
+			if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
+			{
+				return;
+			} else if(EM_PhysManager.chunkDelay.containsKey("" + (x >> 4) + "," + (z >> 4)))
+			{
+				if(EM_PhysManager.chunkDelay.get("" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
+				{
+					return;
+				}
+			}
+		}
+		
 		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++)
 		{
 			int xOff = ForgeDirection.VALID_DIRECTIONS[i].offsetX + x;
@@ -104,7 +121,7 @@ public class BlockFlammableCoal extends BlockOre
 			
 			if(ObjectHandler.igniteList.containsKey(block) && (ObjectHandler.igniteList.get(block).isEmpty() || ObjectHandler.igniteList.get(block).contains(meta)))
 			{
-				world.setBlock(x, y, z, ObjectHandler.burningCoal, 0, 2);
+				world.setBlock(x, y, z, ObjectHandler.burningCoal, 0, 3);
 				return;
 			}
 		}

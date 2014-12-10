@@ -17,6 +17,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import enviromine.blocks.tiles.TileEntityElevator;
+import enviromine.core.EM_Settings;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.TeleportHandler;
@@ -55,6 +56,12 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			playerMP = (EntityPlayerMP)player;
 		} else
 		{
+			return true;
+		}
+		
+		if(EM_Settings.disableCaves)
+		{
+			player.addChatMessage(new ChatComponentText("The cave dimension has been disabled by the server owner!"));
 			return true;
 		}
 		

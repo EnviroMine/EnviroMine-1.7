@@ -6,6 +6,8 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.world.chunk.ChunkProviderCaves;
 import enviromine.world.chunk.WorldChunkManagerCaves;
+import net.minecraft.client.Minecraft;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -24,16 +26,20 @@ public class WorldProviderCaves extends WorldProvider
 		this.dimensionId = EM_Settings.caveDimID;
 	}
 	
-	@SideOnly(Side.CLIENT)
-	
 	/**
 	 * Return Vec3D with biome specific fog color
 	 */
+	@SideOnly(Side.CLIENT)
 	@Override
 	public Vec3 getFogColor(float par1, float par2)
 	{
-		//return this.worldObj.getWorldVec3Pool().getVecFromPool(0.20000000298023224D, 0.029999999329447746D, 0.029999999329447746D);
-		return Vec3.createVectorHelper(0D, 0D, 0D);
+		if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.nightVision))
+		{
+			return Vec3.createVectorHelper(1D, 1D, 1D);
+		} else
+		{
+			return Vec3.createVectorHelper(0D, 0D, 0D);
+		}
 	}
 	
 	/**

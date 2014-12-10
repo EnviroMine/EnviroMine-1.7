@@ -1,11 +1,18 @@
 package enviromine.core.proxies;
 
+import java.util.Iterator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -15,15 +22,18 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
 import enviromine.blocks.tiles.TileEntityFreezer;
-import enviromine.client.gui.EM_GuiEnviroMeters;
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.SaveController;
+import enviromine.client.gui.hud.HUDRegistry;
+import enviromine.client.gui.hud.items.HudItemAirQuality;
+import enviromine.client.gui.hud.items.HudItemHydration;
+import enviromine.client.gui.hud.items.HudItemSanity;
+import enviromine.client.gui.hud.items.HudItemTemperature;
 import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.client.renderer.tileentity.RenderGasHandler;
 import enviromine.client.renderer.tileentity.RenderSpecialHandler;
@@ -31,10 +41,10 @@ import enviromine.client.renderer.tileentity.TileEntityDavyLampRenderer;
 import enviromine.client.renderer.tileentity.TileEntityElevatorRenderer;
 import enviromine.client.renderer.tileentity.TileEntityEskyRenderer;
 import enviromine.client.renderer.tileentity.TileEntityFreezerRenderer;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.keybinds.EnviroKeybinds;
-
-import java.util.Iterator;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
@@ -66,7 +76,7 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public void registerEventHandlers()
 	{
 		super.registerEventHandlers();
-		MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()));
+		//MinecraftForge.EVENT_BUS.register(new EM_GuiEnviroMeters(Minecraft.getMinecraft(), Minecraft.getMinecraft().getResourceManager()));
 		MinecraftForge.EVENT_BUS.register(new ObjectHandler());
 		MinecraftForge.EVENT_BUS.register(new Gui_EventManager());
 		FMLCommonHandler.instance().bus().register(new EnviroKeybinds());
@@ -84,13 +94,9 @@ public class EM_ClientProxy extends EM_CommonProxy
 		super.init(event);
 		EnviroKeybinds.Init();
         
-		if (!SaveController.loadConfig(SaveController.UISettingsData)) 
-        {
-        	SaveController.saveConfig(SaveController.UISettingsData);	
-        }
-		
-			
 		initRenderers();
+		registerHudItems();	
+
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -122,9 +128,33 @@ public class EM_ClientProxy extends EM_CommonProxy
 			Object itemArmor = tmp.next();
 			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1)
 			{
-				MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+				String name = Item.itemRegistry.getNameForObject(itemArmor);
+				
+				if(EM_Settings.armorProperties.containsKey(name) && EM_Settings.armorProperties.get(name).allowCamelPack)
+				{
+					IItemRenderer iRenderer = MinecraftForgeClient.getItemRenderer(new ItemStack((ItemArmor)itemArmor), ItemRenderType.INVENTORY);
+					
+					if(iRenderer != null)
+					{
+						EnviroMine.logger.log(Level.WARN, "Item " + name + " aready has a custom ItemRenderer associated with it!");
+						EnviroMine.logger.log(Level.WARN, "EnviroMine will be unable to overlay the camel pack UI when attached!");
+					} else
+					{
+						MinecraftForgeClient.registerItemRenderer((Item)itemArmor, new ArmoredCamelPackRenderer());
+					}
+				}
 			}
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void registerHudItems()
+	{
+        HUDRegistry.registerHudItem(new HudItemTemperature());
+        HUDRegistry.registerHudItem(new HudItemHydration());
+        HUDRegistry.registerHudItem(new HudItemSanity());
+        HUDRegistry.registerHudItem(new HudItemAirQuality());
+        HUDRegistry.setInitialLoadComplete(true);
 	}
 	
 	@Override

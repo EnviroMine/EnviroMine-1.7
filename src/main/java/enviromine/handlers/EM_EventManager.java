@@ -1,25 +1,10 @@
 package enviromine.handlers;
 
-import enviromine.EntityPhysicsBlock;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.EnviroUtils;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.ModelCamelPack;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.GasBuffer;
-import enviromine.network.packet.PacketAutoOverride;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.Hallucination;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
+import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
@@ -28,10 +13,13 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -40,6 +28,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -55,21 +44,19 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-
-import java.awt.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -89,8 +76,33 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.client.ModelCamelPack;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.utils.EnviroUtils;
+import enviromine.world.Earthquake;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_EventManager
 {
@@ -106,38 +118,45 @@ public class EM_EventManager
 				chunkPhys = (EM_PhysManager.chunkDelay.get("" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
 			
-			if (event.entity instanceof EntityPlayerMP) {
-				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden) {
+			// [DISABLED] Reason: Player entities are also created when changing dimensions/worlds so this would call the mass sync whenever that happens!
+			/*if (event.entity instanceof EntityPlayerMP)
+			{
+				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden)
+				{
 					EM_Settings.armorProperties.clear();
 					EM_Settings.blockProperties.clear();
 					EM_Settings.itemProperties.clear();
 					EM_Settings.livingProperties.clear();
 					EM_Settings.stabilityTypes.clear();
 					EM_ConfigHandler.initConfig();
-				} else {
+				} else if(EM_Settings.enableConfigOverride && !EnviroMine.proxy.isClient())
+				{
 					EntityPlayerMP player = (EntityPlayerMP)event.entity;
-					EnviroMine.instance.network.sendTo(new PacketAutoOverride(player), player);
+					EnviroMine.instance.network.sendTo(new PacketAutoOverride(), player);
 				}
-			}
+			}*/
 		}
 		
-		if(event.entity instanceof EntityItem)
+		if(EM_Settings.foodSpoiling)
 		{
-			EntityItem item = (EntityItem)event.entity;
-			ItemStack rotStack = RotHandler.doRot(event.world, item.getEntityItem());
-			
-			if(item.getEntityItem() != rotStack)
+			if(event.entity instanceof EntityItem)
 			{
-				item.setEntityItemStack(rotStack);
+				EntityItem item = (EntityItem)event.entity;
+				ItemStack rotStack = RotHandler.doRot(event.world, item.getEntityItem());
+				
+				if(item.getEntityItem() != rotStack)
+				{
+					item.setEntityItemStack(rotStack);
+				}
+			} else if(event.entity instanceof EntityPlayer)
+			{
+				IInventory invo = ((EntityPlayer)event.entity).inventory;
+				RotHandler.rotInvo(event.world, invo);
+			} else if(event.entity instanceof IInventory)
+			{
+				IInventory invo = (IInventory)event.entity;
+				RotHandler.rotInvo(event.world, invo);
 			}
-		} else if(event.entity instanceof EntityPlayer)
-		{
-			IInventory invo = ((EntityPlayer)event.entity).inventory;
-			RotHandler.rotInvo(event.world, invo);
-		} else if(event.entity instanceof IInventory)
-		{
-			IInventory invo = (IInventory)event.entity;
-			RotHandler.rotInvo(event.world, invo);
 		}
 		
 		if(event.entity instanceof EntityLivingBase)
@@ -378,7 +397,7 @@ public class EM_EventManager
 	{
 		ItemStack item = event.entityPlayer.getCurrentEquippedItem();
 		
-		if(event.action == Action.RIGHT_CLICK_BLOCK)
+		if(event.action == Action.RIGHT_CLICK_BLOCK && EM_Settings.foodSpoiling)
 		{
 			TileEntity tile = event.entityPlayer.worldObj.getTileEntity(event.x, event.y, event.z);
 			
@@ -460,7 +479,7 @@ public class EM_EventManager
 			return;
 		}
 		
-		if(event.target != null && event.target instanceof IInventory)
+		if(event.target != null && event.target instanceof IInventory && EM_Settings.foodSpoiling)
 		{
 			IInventory chest = (IInventory)event.target;
 			
@@ -602,9 +621,9 @@ public class EM_EventManager
 						item.setItemDamage(0);
 						player.setCurrentItemOrArmor(0, item);
 					} else if (!player.inventory.addItemStackToInventory(new ItemStack(newItem)))
-                    {
-                        player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
-                    }
+					{
+						player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
+					}
 					
 					event.setCanceled(true);
 				}
@@ -835,7 +854,11 @@ public class EM_EventManager
 			{
 				if(Minecraft.getMinecraft().thePlayer.isPotionActive(EnviroPotion.insanity))
 				{
-					if(event.entityLiving.getRNG().nextInt(75) == 0)
+					int chance = 100 / (Minecraft.getMinecraft().thePlayer.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() + 1);
+					
+					chance = chance > 0? chance : 1;
+					
+					if(event.entityLiving.getRNG().nextInt(chance) == 0)
 					{
 						new Hallucination(event.entityLiving);
 					}
@@ -863,7 +886,10 @@ public class EM_EventManager
 				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.fireTorch), 0, Item.getItemFromBlock(Blocks.torch), 0);
 			}*/
 			
-			RotHandler.rotInvo(event.entityLiving.worldObj, invo);
+			if(EM_Settings.foodSpoiling)
+			{
+				RotHandler.rotInvo(event.entityLiving.worldObj, invo);
+			}
 			
 			if(event.entityLiving.getEntityData().hasKey("EM_SAFETY"))
 			{
@@ -927,12 +953,12 @@ public class EM_EventManager
 			{
 				int seaLvl = 48;
 				
-				if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID)
-				{
-					seaLvl = 256;
-				} else if(EM_Settings.dimensionProperties.containsKey(event.entityLiving.worldObj.provider.dimensionId))
+				if(EM_Settings.dimensionProperties.containsKey(event.entityLiving.worldObj.provider.dimensionId))
 				{
 					seaLvl = MathHelper.ceiling_double_int(EM_Settings.dimensionProperties.get(event.entityLiving.worldObj.provider.dimensionId).sealevel * 0.75F);
+				} else if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID)
+				{
+					seaLvl = 256;
 				}
 				
 				if(event.entityLiving.posY < seaLvl)
@@ -947,10 +973,20 @@ public class EM_EventManager
 					{
 						((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.proMiner, 1);
 					}
+				} else
+				{
+					event.entityLiving.getEntityData().setLong("EM_MINE_DATE", event.entityLiving.worldObj.getTotalWorldTime());
 				}
-			} else if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+			} else
 			{
-				event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+				if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+				{
+					event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+				}
+				if(event.entityLiving.getEntityData().hasKey("EM_MINE_DATE"))
+				{
+					event.entityLiving.getEntityData().removeTag("EM_MINE_DATE");
+				}
 			}
 		}
 		
@@ -1153,15 +1189,15 @@ public class EM_EventManager
 				if(itemUse >= item.getMaxItemUseDuration() - 1)
 				{
 					itemUse = 0;
-					if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item)) || EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage()))
+					if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem())) || EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
 					{
 						ItemProperties itemProps;
-						if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage()))
+						if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
 						{
-							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item) + "," + item.getItemDamage());
+							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
 						} else
 						{
-							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item));
+							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()));
 						}
 						
 						if(itemProps.effTemp > 0F)
@@ -1438,7 +1474,11 @@ public class EM_EventManager
 	{
 		if(event.entity.getEntityData().getBoolean("EM_Hallucination"))
 		{
-			Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			ResourceLocation resLoc = new ResourceLocation(event.name);
+			if(new File(resLoc.getResourcePath()).exists())
+			{
+				Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(event.name), 1.0F, (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.2F + 1.0F, (float)event.entity.posX, (float)event.entity.posY, (float)event.entity.posZ));
+			}
 			event.setCanceled(true);
 		}
 	}
@@ -1454,27 +1494,121 @@ public class EM_EventManager
 		}
 	}
 	
+	HashMap<String, EntityLivingBase> playerMob = new HashMap<String, EntityLivingBase>();
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onRender(RenderPlayerEvent.Pre event)
+	{
+		if(Minecraft.getMinecraft().thePlayer.isPotionActive(EnviroPotion.insanity) && Minecraft.getMinecraft().thePlayer.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2)
+		{
+			event.setCanceled(true);
+			
+			EntityLivingBase entity = playerMob.get(event.entityPlayer.getCommandSenderName());
+			if(entity == null || entity.worldObj != event.entityPlayer.worldObj)
+			{
+				BiomeGenBase biome = event.entityPlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(event.entityPlayer.posX), MathHelper.floor_double(event.entityPlayer.posZ));
+				ArrayList<SpawnListEntry> spawnList = (ArrayList<SpawnListEntry>)biome.getSpawnableList(EnumCreatureType.monster);
+				
+				if(spawnList.size() <= 0)
+				{
+					entity = new EntityZombie(event.entityPlayer.worldObj);
+				} else
+				{
+					int spawnIndex = event.entityPlayer.getRNG().nextInt(spawnList.size());
+					try
+					{
+						entity = (EntityLiving)spawnList.get(spawnIndex).entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {event.entityPlayer.worldObj});
+					} catch(Exception e)
+					{
+						entity = new EntityZombie(event.entityPlayer.worldObj);
+					}
+				}
+				
+				playerMob.put(event.entityPlayer.getCommandSenderName(), entity);
+			}
+			entity.renderYawOffset = event.entityPlayer.renderYawOffset;
+			entity.prevRenderYawOffset = event.entityPlayer.prevRenderYawOffset;
+			entity.cameraPitch = event.entityPlayer.cameraPitch;
+			entity.posX = event.entityPlayer.posX;
+			entity.posY = event.entityPlayer.posY - event.entityPlayer.yOffset;
+			entity.posZ = event.entityPlayer.posZ;
+			entity.prevPosX = event.entityPlayer.prevPosX;
+			entity.prevPosY = event.entityPlayer.prevPosY - event.entityPlayer.yOffset;
+			entity.prevPosZ = event.entityPlayer.prevPosZ;
+			entity.lastTickPosX = event.entityPlayer.lastTickPosX;
+			entity.lastTickPosY = event.entityPlayer.lastTickPosY - event.entityPlayer.yOffset;
+			entity.lastTickPosZ = event.entityPlayer.lastTickPosZ;
+			entity.rotationPitch = event.entityPlayer.rotationPitch;
+			entity.prevRotationPitch = event.entityPlayer.prevRotationPitch;
+			entity.rotationYaw = event.entityPlayer.rotationYaw;
+			entity.prevRotationYaw = event.entityPlayer.prevRotationYaw;
+			entity.rotationYawHead = event.entityPlayer.rotationYawHead;
+			entity.prevRotationYawHead = event.entityPlayer.prevRotationYawHead;
+			entity.limbSwingAmount = event.entityPlayer.limbSwingAmount;
+			entity.prevLimbSwingAmount = event.entityPlayer.prevLimbSwingAmount;
+			entity.limbSwing = event.entityPlayer.limbSwing;
+			entity.prevSwingProgress = event.entityPlayer.prevSwingProgress;
+			entity.swingProgress = event.entityPlayer.swingProgress;
+			entity.swingProgressInt = event.entityPlayer.swingProgressInt;
+			ItemStack[] equipped = event.entityPlayer.getLastActiveItems();
+			entity.setCurrentItemOrArmor(0, event.entityPlayer.getHeldItem());
+			entity.setCurrentItemOrArmor(1, equipped[0]);
+			entity.setCurrentItemOrArmor(2, equipped[1]);
+			entity.setCurrentItemOrArmor(3, equipped[2]);
+			entity.setCurrentItemOrArmor(4, equipped[3]);
+			entity.motionX = event.entityPlayer.motionX;
+			entity.motionY = event.entityPlayer.motionY;
+			entity.motionZ = event.entityPlayer.motionZ;
+			entity.ticksExisted = event.entityPlayer.ticksExisted;
+			GL11.glPushMatrix();
+			//GL11.glRotatef(180F, 0F, 1F, 0F);
+			//GL11.glRotatef(180F - (event.entityPlayer.renderYawOffset + (event.entityPlayer.renderYawOffset - event.entityPlayer.prevRenderYawOffset) * partialTicks), 0F, 1F, 0F);
+			RenderManager.instance.renderEntitySimple(entity, partialTicks);
+			GL11.glPopMatrix();
+		} else
+		{
+			playerMob.clear();
+		}
+	}
+	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onRender(RenderLivingEvent.Specials.Pre event)
 	{ 
-		GL11.glPushMatrix();
 		ItemStack plate = event.entity.getEquipmentInSlot(3);
-		if (plate != null && (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill")) && (event.renderer instanceof RenderBiped || event.renderer instanceof RenderPlayer))
+		EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
+		
+		if(event.entity == thePlayer && Minecraft.getMinecraft().currentScreen != null)
 		{
-            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-    		double diffX = (event.entity.prevPosX + (event.entity.posX - event.entity.prevPosX) * partialTicks) - (player.prevPosX + (player.posX - player.prevPosX) * partialTicks); 
-    		double diffY = (event.entity.prevPosY + (event.entity.posY - event.entity.prevPosY) * partialTicks) - (player.prevPosY + (player.posY - player.prevPosY) * partialTicks) + (event.entity == player? -0.1D : event.entity.getEyeHeight() + (0.1D * (event.entity.width/0.6D))); 
-            double diffZ = (event.entity.prevPosZ + (event.entity.posZ - event.entity.prevPosZ) * partialTicks) - (player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks);
-            GL11.glTranslated(diffX, diffY, diffZ);
-			GL11.glRotatef(180F, 0F, 0F, 1F);
-			GL11.glRotatef(180F + (event.entity.renderYawOffset + (event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks), 0F, 1F, 0F);
-            GL11.glScaled(event.entity.width/0.6D, event.entity.width/0.6D, event.entity.width/0.6D);
-            if(event.entity.isSneaking())
-            {
-            	GL11.glRotatef(30F, 1F, 0F, 0F);
-            }
-			ModelCamelPack.RenderPack(event.entity, 0, 0, 0, 0, 0, .06325f);
+			// Prevents the pack from rendering weirdly in the inventory screen
+			return;
+		}
+		
+		GL11.glPushMatrix();
+		
+		if (plate != null && (event.renderer instanceof RenderBiped || event.renderer instanceof RenderPlayer))
+		{
+			if (plate.getItem() == ObjectHandler.camelPack && !(plate.hasTagCompound() && !plate.getTagCompound().hasKey("camelPackFill"))) {
+				plate.getItem().onUpdate(plate, event.entity.worldObj, event.entity, 3, false);
+			}
+			
+			if (plate.hasTagCompound() && plate.getTagCompound().hasKey("camelPackFill"))
+			{
+				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+				double diffX = (event.entity.lastTickPosX + (event.entity.posX - event.entity.lastTickPosX) * partialTicks) - (player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks);
+				double diffY = (event.entity.lastTickPosY + (event.entity.posY - event.entity.lastTickPosY) * partialTicks) - (player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks) + (event.entity == thePlayer? -0.1D : event.entity.getEyeHeight() + (event.entity instanceof EntityPlayer? -0.1D : (0.1D * (event.entity.width/0.6D))));
+				double diffZ = (event.entity.lastTickPosZ + (event.entity.posZ - event.entity.lastTickPosZ) * partialTicks) - (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks);
+				GL11.glTranslated(diffX, diffY, diffZ);
+				GL11.glRotatef(180F, 0F, 0F, 1F);
+				GL11.glRotatef(180F + (event.entity.renderYawOffset + ((event.entity == player && (player.openContainer != player.inventoryContainer)) ? ((event.entity.renderYawOffset - event.entity.prevRenderYawOffset) * partialTicks) : 0)), 0F, 1F, 0F);
+				GL11.glScaled(event.entity.width/0.6D, event.entity.width/0.6D, event.entity.width/0.6D);
+				if(event.entity.isSneaking())
+				{
+					GL11.glRotatef(30F, 1F, 0F, 0F);
+				}
+				ModelCamelPack.RenderPack(event.entity, 0, 0, 0, 0, 0, .06325f);
+			}
 		}
 		GL11.glPopMatrix();
 	}
@@ -1483,9 +1617,9 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void WorldRenderLast(RenderWorldLastEvent event)
+	public void RenderTickEvent(TickEvent.RenderTickEvent event)
 	{
-		partialTicks = event.partialTicks;
+		partialTicks = event.renderTickTime;
 	}
 	
 	@SubscribeEvent
@@ -1503,7 +1637,7 @@ public class EM_EventManager
 				}
 				
 				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)(((float)fill/(float)max)*100));
-				event.toolTip.add("Camel pack: " + disp + "% ("+fill+"/"+max+")");
+				event.toolTip.add("Water: " + disp + "% ("+fill+"/"+max+")");
 			}
 			
 			if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
@@ -1514,10 +1648,12 @@ public class EM_EventManager
 				
 				if(curTime - rotDate <= 0)
 				{
-					event.toolTip.add("Rotten: 0%");
+					event.toolTip.add("Rotten: 0% (Day " + MathHelper.floor_double((curTime - rotDate)/24000L) + "/" + MathHelper.floor_double(rotTime/24000L) + ")");
+					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				} else
 				{
-					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%");
+					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "% (Day " + MathHelper.floor_double((curTime - rotDate)/24000L) + "/" + MathHelper.floor_double(rotTime/24000L) + ")");
+					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				}
 			}
 			
@@ -1526,7 +1662,7 @@ public class EM_EventManager
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
 				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
 				int disp = (i <= 0 ? 0 : i > max ? 100 : (int)(i/(max/100F)));
-				event.toolTip.add("Air Filters: " + disp + "%");
+				event.toolTip.add("Filters: " + disp + "%");
 			}
 		}
 	}

@@ -1,182 +1,43 @@
 package enviromine.network.packet;
 
+import io.netty.buffer.ByteBuf;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayerMP;
-
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-
-import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
-import enviromine.network.packet.encoders.IPacketEncoder;
-
-import io.netty.buffer.ByteBuf;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.logging.log4j.Level;
+import enviromine.trackers.properties.SerialisableProperty;
 
 public class PacketServerOverride implements IMessage
 {
-	private EntityPlayerMP player;
-	protected Map<String, String[]> data = new HashMap<String, String[]>();
+	protected NBTTagCompound tags = new NBTTagCompound();
 	
 	public PacketServerOverride()
 	{
 	}
 	
-	public PacketServerOverride(EntityPlayerMP player)
-	{
-		this.player = player;
-	}
-	
-	public PacketServerOverride(EntityPlayerMP player, Map<String, String[]> custom)
-	{
-		this.player = player;
-		this.data = custom == null ? this.data : custom;
-	}
-	
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		String str = ByteBufUtils.readUTF8String(buf);
-		String[] strs = str.split(";;");
-		
-		for (String type : strs)
-		{
-			String[] tmp = type.split("::");
-			if (tmp.length >= 3)
-			{
-				int length = 0;
-				try
-				{
-					length = Integer.parseInt(tmp[1]);
-				} catch (NumberFormatException e)
-				{
-					e.printStackTrace();
-				}
-				String[] temp = new String[length];
-				for (int i = 0; i < length; i++)
-				{
-					temp[i] = tmp[i + 2];
-				}
-				this.data.put(tmp[0], temp);
-			}
-		}
-	}
-	
-	private String getDataAsString()
-	{
-		Iterator<String> iterator = data.keySet().iterator();
-		String info = "";
-		while (iterator.hasNext())
-		{
-			String key = iterator.next();
-			if (!info.equals(""))
-			{
-				info += ";;";
-			}
-			
-			String[] tmpData = data.get(key);
-			
-			String tmp = (key + "::" + tmpData.length);
-			for (int i = 0; i < tmpData.length; i++)
-			{
-				tmp += "::" + tmpData[i];
-			}
-			
-			info += tmp;
-		}
-		
-		return info;
+		tags = ByteBufUtils.readTag(buf);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		String info = getDataAsString();
-		
-		if (info.length() > 2000)
-		{
-			if (data.size() <= 1)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000! ("+info.length()+")");
-				if (info.length() <= 10000) {
-					EnviroMine.logger.log(Level.ERROR, "Packet data:\n"+info);
-				} else {
-					String name = EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt";
-					EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file "+name);
-					
-					try
-					{
-						FileWriter writer = new FileWriter(name);
-						writer.write(info);
-						writer.close();
-					} catch (IOException e)
-					{
-						e.printStackTrace();
-					}
-				}
-				
-				return;
-			} else
-			{
-				Map<String, String[]> newData = new HashMap<String, String[]>();
-				Iterator<String> iterator = data.keySet().iterator();
-				while (iterator.hasNext())
-				{
-					if (info.length() <= 2000)
-					{
-						break;
-					} else if (data.size() <= 1)
-					{
-						EnviroMine.logger.log(Level.ERROR, "Packet has a string with length > 2000! ("+info.length()+")");
-						if (info.length() <= 10000) {
-							EnviroMine.logger.log(Level.ERROR, "Packet data:\n"+info);
-						} else {
-							String name = EM_ConfigHandler.configPath+"/packetError_"+getFormattedDate()+".txt";
-							EnviroMine.logger.log(Level.ERROR, "Packet length is > 10000! Writing to file "+name);
-							
-							try
-							{
-								FileWriter writer = new FileWriter(name);
-								writer.write(info);
-								writer.close();
-							} catch (IOException e)
-							{
-								e.printStackTrace();
-							}
-						}
-						return;
-					} else
-					{
-						String key = iterator.next();
-						newData.put(key, data.get(key));
-						iterator.remove();
-						info = getDataAsString();
-					}
-				}
-				
-				IMessage packet = new PacketServerOverride(this.player, this.data);
-				EnviroMine.instance.network.sendTo(packet, player);
-			}
-		}
-		
-		ByteBufUtils.writeUTF8String(buf, info);
-	}
-	
-	private String getFormattedDate()
-	{
-		Calendar c = Calendar.getInstance();
-		return c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"_"+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+		ByteBufUtils.writeTag(buf, tags);
 	}
 	
 	public static class Handler implements IMessageHandler<PacketServerOverride, IMessage>
@@ -184,23 +45,110 @@ public class PacketServerOverride implements IMessage
 		@Override
 		public IMessage onMessage(PacketServerOverride message, MessageContext ctx)
 		{
-			Iterator<String> iterator = message.data.keySet().iterator();
-			while (iterator.hasNext())
+			if(!EnviroMine.proxy.isClient())
 			{
-				String key = iterator.next();
+				EnviroMine.logger.log(Level.WARN, "AutoOverride attempted to run serverside! This should not happen!");
+				return null;
+			}
+			
+			NBTTagCompound tags = message.tags;
+			
+			Field[] fields = EM_Settings.class.getDeclaredFields();
+			
+			for(Field f : fields)
+			{
 				try
 				{
-					String[] strs = message.data.get(key);
-					for (int i = 0; i < strs.length; i += 2)
+					ShouldOverride anno = f.getAnnotation(ShouldOverride.class);
+					Class[] clazzes;
+					
+					if(anno != null)
 					{
-						decodeCustom(key, EM_Settings.class.getDeclaredField(strs[i]), strs[i + 1]);
+						clazzes = anno.value();
+					} else
+					{
+						continue;
 					}
-				} catch (NoSuchFieldException e)
+					
+					if(!f.isAccessible()) // This is causing problems for some reason...
+					{
+						EnviroMine.logger.log(Level.WARN, "Field " + f.getName() + " is protected and cannot be synced!");
+						continue;
+					} else if(!Modifier.isStatic(f.getModifiers()))
+					{
+						EnviroMine.logger.log(Level.WARN, "Cannot sync non-static field " + f.getName() + "!");
+						continue;
+					}
+					
+					if(f.getType() == HashMap.class)
+					{
+						if(clazzes.length < 2)
+						{
+							EnviroMine.logger.log(Level.ERROR, "Annotation for field " + f.getName() + " (" + f.getType().getName() + ") is missing class types!");
+							continue;
+						}
+						
+						NBTTagList nbtList = tags.getTagList(f.getName(), 10);
+						HashMap map = new HashMap();
+						
+						for(int i = 0; i < nbtList.tagCount(); i++)
+						{
+							NBTTagCompound tag = nbtList.getCompoundTagAt(i);
+							Object keyObj = this.getNBTValue(tag, "key", clazzes[0]);
+							Object valObj = this.getNBTValue(tag, "value", clazzes[1]);
+							
+							if(keyObj == null || valObj == null)
+							{
+								EnviroMine.logger.log(Level.WARN, "Position " + i + " in HashMap " + f.getName() + " returned a null entry! Skipping...");
+								continue;
+							}
+							
+							map.put(keyObj, valObj);
+						}
+						
+						f.set(null, map);
+					} else if(f.getType() == ArrayList.class)
+					{
+						if(clazzes.length < 1)
+						{
+							EnviroMine.logger.log(Level.ERROR, "Annotation for field " + f.getName() + " is missing class types!");
+							continue;
+						}
+						
+						Class clazz = clazzes[0];
+						NBTTagList nbtList = tags.getTagList(f.getName(), 10);
+						ArrayList list = new ArrayList();
+						
+						for(int i = 0; i < nbtList.tagCount(); i++)
+						{
+							NBTTagCompound tag = nbtList.getCompoundTagAt(i);
+							Object valObj = this.getNBTValue(tag, "value", clazz);
+							
+							if(valObj == null)
+							{
+								EnviroMine.logger.log(Level.WARN, "Position " + i + " in ArrayList " + f.getName() + " returned a null entry! Skipping...");
+								continue;
+							}
+							
+							list.add(valObj);
+						}
+						
+						f.set(null, list);
+					} else
+					{
+						Object value = this.getNBTValue(tags, f.getName(), f.getType());
+						
+						if(value == null)
+						{
+							EnviroMine.logger.log(Level.WARN, "Field " + f.getName() + " returned a null value! Skipping...");
+							continue;
+						}
+						
+						f.set(null, value);
+					}
+				} catch(Exception e)
 				{
-					e.printStackTrace();
-				} catch (SecurityException e)
-				{
-					e.printStackTrace();
+					EnviroMine.logger.log(Level.ERROR, "An error occured while syncing setting " + f.getName(), e);
 				}
 			}
 			
@@ -209,28 +157,65 @@ public class PacketServerOverride implements IMessage
 			return null; //Reply
 		}
 		
-		private void decodeCustom(String clazz, Field field, String msg)
+		/**
+		 * Returns the value of the given key and class type. If the class type implements SerialisableProperty then it will return a new instance
+		 * of that object from the NBTTagCompound stored under said key.
+		 * @param tag
+		 * @param key
+		 * @param clazz
+		 * @return
+		 */
+		public Object getNBTValue(NBTTagCompound tag, String key, Class clazz)
 		{
-			try
+			if(key == null || key.length() <= 0 || !tag.hasKey(key))
 			{
-				Object obj = Class.forName(clazz).newInstance();
-				if (obj instanceof IPacketEncoder)
+				return null;
+			}
+			
+			if(clazz == Boolean.class ||clazz == boolean.class)
+			{
+				return tag.getBoolean(key);
+			} else if(clazz == Integer.class || clazz == int.class)
+			{
+				return tag.getInteger(key);
+			} else if(clazz == String.class)
+			{
+				return tag.getString(key);
+			} else if(clazz == Byte.class || clazz == byte.class)
+			{
+				return tag.getByte(key);
+			} else if(clazz == Float.class || clazz == float.class)
+			{
+				return tag.getFloat(key);
+			} else if(clazz == Double.class || clazz == double.class)
+			{
+				return tag.getDouble(key);
+			} else if(clazz == Short.class || clazz == short.class)
+			{
+				return tag.getShort(key);
+			} else if(clazz == Long.class || clazz == long.class)
+			{
+				return tag.getLong(key);
+			} else if(clazz == Byte[].class || clazz == byte[].class)
+			{
+				return tag.getByteArray(key);
+			} else if(clazz.isAssignableFrom(NBTBase.class))
+			{
+				return tag.getTag(key);
+			} else if(clazz.isAssignableFrom(SerialisableProperty.class))
+			{
+				try
 				{
-					IPacketEncoder encoder = (IPacketEncoder)obj;
-					field.set(null, encoder.decode(msg, field.get(null)));
+					Constructor ctor = clazz.getConstructor(NBTTagCompound.class);
+					return ctor.newInstance(tag.getCompoundTag(key));
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "An error occured while trying to instantiate " + clazz.getSimpleName(), e);
+					return null;
 				}
-			} catch (ClassNotFoundException e)
+			} else
 			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding: Class " + clazz + " is not valid");
-			} catch (InstantiationException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding", e);
-			} catch (IllegalAccessException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding", e);
-			} catch (NullPointerException e)
-			{
-				EnviroMine.logger.log(Level.ERROR, "Error decoding", e);
+				return null;
 			}
 		}
 	}

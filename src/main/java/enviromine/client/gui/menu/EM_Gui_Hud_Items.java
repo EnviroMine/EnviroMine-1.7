@@ -172,10 +172,6 @@ public class EM_Gui_Hud_Items extends GuiScreen implements GuiYesNoCallback
 			hudCnt++;
 		}
 		
-		//this.drawString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.barPos.hydration") +": ", this.width / 2 - 75 - 22, this.height / 6 + 24, 16777215);
-		//this.drawString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.barPos.temprature") +": ", this.width / 2 - 75 - 22, this.height / 6 + 48, 16777215);
-		//this.drawString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.barPos.sanity") +": ", this.width / 2 - 75 - 22, this.height / 6 + 72, 16777215);
-		//this.drawString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.barPos.airQuality") +": ", this.width / 2 - 75 - 22, this.height / 6 + 96, 16777215);
 		
 		super.drawScreen(par1, par2, par3);
 	}

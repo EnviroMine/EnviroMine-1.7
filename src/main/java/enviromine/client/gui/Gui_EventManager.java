@@ -163,10 +163,6 @@ public class Gui_EventManager
 		else
 		{
 
-			//ScaledResolution scaleRes = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-			//scaledwidth = scaleRes.getScaledWidth();
-			//scaledheight = scaleRes.getScaledHeight();
-			
 			HudItem.blinkTick++;
 	
 			// Render GasMask Overlays
@@ -187,17 +183,14 @@ public class Gui_EventManager
 				{
 					if (huditem.shouldDrawOnMount()) 
 					{
-						//	Overlay overlay = OverlayHandler.getHudItemByID(huditem.getOverlayID());
-    				
+   				
     				
 						if(UI_Settings.overlay) 
 						{
 							RenderAssist.bindTexture(huditem.getResource("TintOverlay"));
-							//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
 							huditem.renderScreenOverlay(HUDRegistry.screenHeight, HUDRegistry.screenHeight);
 						}
     				
-						//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
 						RenderAssist.bindTexture(huditem.getResource(""));
 						
 						GL11.glPushMatrix();
@@ -219,18 +212,13 @@ public class Gui_EventManager
 					if (huditem.shouldDrawAsPlayer()) 
 					{
 
-						//Overlay overlay = OverlayHandler.getHudItemByID(huditem.getOverlayID());
-    				
 						if(UI_Settings.overlay) 
 						{
 							RenderAssist.bindTexture(huditem.getResource("TintOverlay"));
-							//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource("TintOverlay"));
 							huditem.renderScreenOverlay(HUDRegistry.screenWidth, HUDRegistry.screenHeight);
 						}
     				 		
 						RenderAssist.bindTexture(huditem.getResource(""));
-						//Minecraft.getMinecraft().renderEngine.bindTexture(huditem.getResource(""));
-
 						
 						GL11.glPushMatrix();
 						

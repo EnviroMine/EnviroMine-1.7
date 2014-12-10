@@ -29,6 +29,15 @@ public class RenderAssist {
      */
     public static float zLevel;
 
+    /** 
+     *  Draws an unfilled Circle
+     *  
+     * @param posX
+     * @param posY
+     * @param radius
+     * @param num_segments
+     * @param color
+     */
     public static void drawUnfilledCircle(float posX, float posY, float radius, int num_segments, int color) {
         float f = (color >> 24 & 255) / 255.0F;
         float f1 = (color >> 16 & 255) / 255.0F;
@@ -55,6 +64,14 @@ public class RenderAssist {
         GL11.glDisable(GL11.GL_BLEND);
     }
 
+    /**
+     *  Drawys a filled Circle
+     * @param posX
+     * @param posY
+     * @param radius
+     * @param num_segments
+     * @param color
+     */
     public static void drawCircle(float posX, float posY, float radius, int num_segments, int color) {
         float f = (color >> 24 & 255) / 255.0F;
         float f1 = (color >> 16 & 255) / 255.0F;
@@ -276,6 +293,14 @@ public class RenderAssist {
 		return getColorFromRGBA(R, G, B, A);
 	}
 	
+	/**
+	 * 
+	 * @param R
+	 * @param G
+	 * @param B
+	 * @param A
+	 * @return
+	 */
 	public static int getColorFromRGBA(int R, int G, int B, int A)
 	{
 		if(R > 255)
@@ -327,6 +352,13 @@ public class RenderAssist {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @param ratio
+	 * @return
+	 */
 	public static Color blendColors(int a, int b, float ratio)
 	{
 		if(ratio > 1f)
@@ -357,10 +389,12 @@ public class RenderAssist {
 		//return A << 24 | R << 16 | G << 8 | B;
 	}
 	
-	/**
-	 * drawScreenBlur(Width, Height, Image, Alpha, Red, Green, Blue)
-	 * Draws Full Screen Screen Overlay
-	 */
+/**
+ * 
+ * @param width
+ * @param height
+ * @param color
+ */
 	@SideOnly(Side.CLIENT)
 	public static void drawScreenOverlay(int par1, int par2, int par5)
 	{

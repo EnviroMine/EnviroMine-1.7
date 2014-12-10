@@ -56,15 +56,7 @@ public class GuiScreenReposition extends GuiScreen {
 							+ Alignment.calculateAlignment(mouseX, mouseY),
 					width / 2, 26, 16777215);
 		}
-		//hudItem.render();
-		
-		/*
-		if (axisAlign) {
-			int x = oldPosX + hudItem.getWidth() / 2;
-			int y = oldPosY + hudItem.getHeight() / 2;
-			drawRect(x - 1, 0, x + 1, height, 1073741824);
-			drawRect(0, y - 1, width, y + 1, 1073741824);
-		}*/
+
 	}
 
 	@Override

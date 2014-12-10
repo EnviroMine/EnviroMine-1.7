@@ -153,6 +153,7 @@ public class EM_Settings
 	
 	public static boolean finiteWater = false;
 	public static boolean disableCaves = false;
+	public static boolean disableThing = false;
 	
 	public static float convertToFarenheit(float num)
 	{

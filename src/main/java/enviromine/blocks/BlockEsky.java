@@ -30,6 +30,7 @@ public class BlockEsky extends BlockContainer implements ITileEntityProvider
 	public BlockEsky(Material material)
 	{
 		super(material);
+		this.setHardness(3.0F);
 	}
 	
 	/**

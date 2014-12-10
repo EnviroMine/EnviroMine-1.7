@@ -611,24 +611,26 @@ public class EM_StatusManager
 		
 
 		float bTemp = (surBiomeTemps / biomeTempChecks);
+		float highTemp = -30F; // Max temp at high altitude
+		float lowTemp = 30F; // Min temp at low altitude (Geothermal Heating)
 		
 		if(!entityLiving.worldObj.provider.isHellWorld)
 		{
-			if(entityLiving.posY <= 48)
+			if(entityLiving.posY < 48)
 			{
-				if(45F - bTemp > 0)
+				if(lowTemp - bTemp > 0)
 				{
-					bTemp += (45F - bTemp) * (1F - (entityLiving.posY / 48F));
+					bTemp += (lowTemp - bTemp) * (1F - (entityLiving.posY / 48F));
 				}
-			} else if(entityLiving.posY > 96 && entityLiving.posY < 256)
+			} else if(entityLiving.posY > 90 && entityLiving.posY < 256)
 			{
-				if(-45F - bTemp < 0)
+				if(highTemp - bTemp < 0)
 				{
-					bTemp -= MathHelper.abs(-45F - bTemp) * ((entityLiving.posY - 96F)/159F);
+					bTemp -= MathHelper.abs(highTemp - bTemp) * ((entityLiving.posY - 90F)/166F);
 				}
 			} else if(entityLiving.posY >= 256)
 			{
-				bTemp = bTemp < -45F? bTemp : -45F;
+				bTemp = bTemp < highTemp? bTemp : highTemp;
 			}
 		}
 		
@@ -667,7 +669,7 @@ public class EM_StatusManager
 			bTemp -= 2.5F;
 		}
 		
-		if (dimensionProp == null || !dimensionProp.override || dimensionProp.dayNightTemp)
+		if (!entityLiving.worldObj.provider.isHellWorld && (dimensionProp == null || !dimensionProp.override || dimensionProp.dayNightTemp))
 		{ 
 			bTemp -= (1F-dayPercent) * 10F;
 			
@@ -675,11 +677,6 @@ public class EM_StatusManager
 			{
 				bTemp -= (1F-dayPercent) * 30F;
 			}
-		}
-		
-		if(entityLiving.isInWater())
-		{
-			dropSpeed = 0.01F;
 		}
 		
 		List mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));
@@ -1093,6 +1090,21 @@ public class EM_StatusManager
 			bTemp *= (1F + tempMultTotal);
 			bTemp += addTemp;
 			fireProt = 1F - fireProt/18F;
+		}
+		
+		if(entityLiving.isInWater())
+		{
+			if(bTemp > 25F)
+			{
+				if(bTemp > 50F)
+				{
+					bTemp -= 50F;
+				} else
+				{
+					bTemp = 25F;
+				}
+			}
+			dropSpeed = 0.01F;
 		}
 		
 		float tempFin = 0F;

@@ -23,13 +23,6 @@ public class HandlingTheThing
 	
 	public static void stalkPlayer(EntityPlayer player)
 	{
-		if(player.dimension != EM_Settings.caveDimID || player.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
-		{
-			player.getEntityData().setBoolean("EM_THING_TARGET", false);
-			player.getEntityData().setInteger("EM_THING", 0);
-			return;
-		}
-		
 		boolean flag = false;
 		
 		// Check if Halloween or Friday 13th. Guarantees attack if true!
@@ -38,11 +31,22 @@ public class HandlingTheThing
 			flag = true;
 		}
 		
+		if((EM_Settings.disableThing && !flag) && player.dimension != EM_Settings.caveDimID || player.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
+		{
+			if(player != null && player.getEntityData() != null)
+			{
+				player.getEntityData().setBoolean("EM_THING_TARGET", false);
+				player.getEntityData().setInteger("EM_THING", 0);
+			}
+			return;
+		}
+		
 		if(!player.getEntityData().getBoolean("EM_THING_TARGET") && !flag)
 		{
-			if(player.worldObj.rand.nextInt(player.worldObj.difficultySetting == EnumDifficulty.HARD? 1000 : 100000) == 0) // If you are REALLY unlucky you will be attacked at any time!
+			if(player.worldObj.getWorldTime()%6000 == 0 && (player.worldObj.rand.nextInt(player.worldObj.difficultySetting == EnumDifficulty.HARD? 1000 : 100000) == 0)) // If you are REALLY unlucky you will be attacked at any time!
 			{
 				player.getEntityData().setBoolean("EM_THING_TARGET", true);
+				player.addStat(EnviroAchievements.itsPitchBlack, 1);
 			}
 			return;
 		} else
@@ -83,6 +87,7 @@ public class HandlingTheThing
 			} else
 			{
 				darkness = 0;
+				player.getEntityData().setBoolean("EM_THING_TARGET", false);
 			}
 			
 			if(player.isPotionActive(Potion.blindness) && darkness < 2000)

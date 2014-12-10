@@ -27,7 +27,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 	public BlockElevator(Material par2Material)
 	{
 		super(par2Material);
-		this.setHardness(5.0F);
+		this.setHardness(3.0F);
 		this.setStepSound(Block.soundTypeMetal);
 		this.setLightLevel(1F);
 	}

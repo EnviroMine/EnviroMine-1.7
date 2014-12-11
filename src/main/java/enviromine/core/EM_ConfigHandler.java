@@ -1,17 +1,17 @@
 package enviromine.core;
 
 import enviromine.trackers.properties.*;
-
+import enviromine.trackers.properties.helpers.PropertyBase;
+import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -24,13 +24,25 @@ public class EM_ConfigHandler
 	public static String customPath = configPath + "CustomProperties/";
 	
 	// Categories for Custom Objects
-	static String armorCat = ArmorProperties.categoryName;
 	static String blockCat = BlockProperties.categoryName;
 	static String entityCat = EntityProperties.categoryName;
 	static String itemsCat = ItemProperties.categoryName;
 	static String rotCat = RotProperties.categoryName;
 	static String dimensionCat = DimensionProperties.categoryName;
-	static String biomeCat = BiomeProperties.categoryName;
+	
+	static HashMap<String, PropertyBase> propTypes;
+	
+	/**
+	 * Register all property types and their category names here. The rest is handled automatically.
+	 */
+	static
+	{
+		propTypes = new HashMap<String, PropertyBase>();
+		
+		propTypes.put(CaveGenProperties.base.categoryName(), CaveGenProperties.base);
+		propTypes.put(BiomeProperties.base.categoryName(), BiomeProperties.base);
+		propTypes.put(ArmorProperties.base.categoryName(), ArmorProperties.base);
+	}
 	
 	public static int initConfig()
 	{
@@ -60,6 +72,19 @@ public class EM_ConfigHandler
 		
 		// Load Main Config File And this will go though changes
 		File configFile = new File(configPath + "EnviroMine.cfg");
+		
+		Iterator<PropertyBase> iterator = propTypes.values().iterator();
+		
+		while(iterator.hasNext())
+		{
+			PropertyBase props = iterator.next();
+			
+			if(!props.useCustomConfigs())
+			{
+				props.customLoad();
+			}
+		}
+		
 		loadGeneralConfig(configFile);
 		
 		int Total = EM_Settings.armorProperties.size() + EM_Settings.blockProperties.size() + EM_Settings.livingProperties.size() + EM_Settings.itemProperties.size() + EM_Settings.biomeProperties.size() + EM_Settings.dimensionProperties.size();
@@ -70,25 +95,21 @@ public class EM_ConfigHandler
 	private static void setPropertyConfigNames()
 	{
 		DimensionProperties.setConfigNames();
-		BiomeProperties.setConfigNames();
 		ItemProperties.setConfigNames();
 		EntityProperties.setConfigNames();
 		RotProperties.setConfigNames();
 		BlockProperties.setConfigNames();
-		ArmorProperties.setConfigNames();
 		StabilityType.setConfigNames();
 	}
 	
 	public static void loadDefaultCategories(Configuration config)
 	{
 		// Load Default Categories
-		config.addCustomCategoryComment(armorCat, "Custom armor properties");
 		config.addCustomCategoryComment(blockCat, "Custom block properties");
 		config.addCustomCategoryComment(entityCat, "Custom entity properties");
 		config.addCustomCategoryComment(itemsCat, "Custom item properties");
 		config.addCustomCategoryComment(rotCat, "Custom spoiling properties");
 		config.addCustomCategoryComment(dimensionCat, "Custom Dimension properties");
-		config.addCustomCategoryComment(biomeCat, "Custom Biome properties");
 	}
 	
 	public static void loadGeneralConfig(File file)
@@ -112,7 +133,6 @@ public class EM_ConfigHandler
 		config.load();
 		
 		//World Generation
-		
 		EM_Settings.shaftGen = config.get("World Generation", "Enable Village MineShafts", true, "Generates mineshafts in villages").getBoolean(true);
 		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", true, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(true);
 		EM_Settings.gasGen = config.get("World Generation", "Generate Gases", true).getBoolean(true);
@@ -181,7 +201,7 @@ public class EM_ConfigHandler
 		
 		// Config Options
 		String ConSetCat = "Config";
-		EM_Settings.genArmorConfigs = config.get(ConSetCat, "Generate Armor Configs", true, "Will attempt to find and generate blank configs for any custom armors loaded before EnviroMine.").getBoolean(true);
+		EM_Settings.genConfigs = config.get(ConSetCat, "Generate Blank Configs", true, "Will attempt to find and generate blank configs for any custom items/blocks/etc loaded before EnviroMine").getBoolean(true);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
 		
@@ -322,15 +342,10 @@ public class EM_ConfigHandler
 				
 				//EnviroMine.logger.log(Level.INFO, "Loading Config File: " + customFiles.getAbsolutePath());
 				
-			} catch(NullPointerException e)
+			} catch(Exception e)
 			{
 				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
-				return;
-			} catch(StringIndexOutOfBoundsException e)
-			{
-				e.printStackTrace();
-				EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!");
+				EnviroMine.logger.log(Level.ERROR, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!", e);
 				return;
 			}
 			
@@ -350,22 +365,17 @@ public class EM_ConfigHandler
 				catagory.add(nameListData.next());
 			}
 			
-			// Now Read/Save Each Category And Add into Proper Hash Maps
-			
-			for(int x = 0; x <= (catagory.size() - 1); x++)
+			for(int x = 0; x < catagory.size(); x++)
 			{
-				String CurCat = catagory.get(x);
+				String CurCat = catagory.get(x); // Why is this becoming lowercase?!
 				
-				if(!((String)CurCat).isEmpty() && ((String)CurCat).contains(Configuration.CATEGORY_SPLITTER))
+				if(!CurCat.isEmpty() && CurCat.contains(Configuration.CATEGORY_SPLITTER))
 				{
 					String parent = CurCat.split("\\" + Configuration.CATEGORY_SPLITTER)[0];
 					
 					if(parent.equals(blockCat))
 					{
 						BlockProperties.LoadProperty(config, catagory.get(x));
-					} else if(parent.equals(armorCat))
-					{
-						ArmorProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(itemsCat))
 					{
 						ItemProperties.LoadProperty(config, catagory.get(x));
@@ -378,9 +388,10 @@ public class EM_ConfigHandler
 					} else if(parent.equals(dimensionCat))
 					{
 						DimensionProperties.LoadProperty(config, catagory.get(x));
-					} else if(parent.equals(biomeCat))
+					} else if(propTypes.containsKey(parent) && propTypes.get(parent).useCustomConfigs())
 					{
-						BiomeProperties.LoadProperty(config, catagory.get(x));
+						PropertyBase property = propTypes.get(parent);
+						property.LoadProperty(config, catagory.get(x));
 					} else
 					{
 						EnviroMine.logger.log(Level.WARN, "Failed to load object " + CurCat);
@@ -391,6 +402,26 @@ public class EM_ConfigHandler
 			
 			config.save();
 		}
+	}
+	
+	public static ArrayList<String> getSubCategories(Configuration config, String mainCat)
+	{
+		ArrayList<String> category = new ArrayList<String>();
+		Set<String> nameList = config.getCategoryNames();
+		Iterator<String> nameListData = nameList.iterator();
+		
+		// add Categories to a List 
+		while(nameListData.hasNext())
+		{
+			String catName = nameListData.next();
+			
+			if(catName.startsWith(mainCat + "."))
+			{
+				category.add(catName);
+			}
+		}
+		
+		return category;
 	}
 	
 	public static void loadDefaultProperties()
@@ -421,9 +452,16 @@ public class EM_ConfigHandler
 
 			ItemProperties.SaveDefaults(config);
 			EntityProperties.SaveDefaults(config);
-			ArmorProperties.SaveDefaults(config);
+			//ArmorProperties.SaveDefaults(config);
 		
 		config.save();
+		
+		Iterator<PropertyBase> iterator = propTypes.values().iterator();
+		
+		while(iterator.hasNext())
+		{
+			iterator.next().GenDefaults();
+		}
 	}
 
 	
@@ -519,16 +557,16 @@ public class EM_ConfigHandler
 			
 		} else if(type.equalsIgnoreCase("ARMOR"))
 		{
-			String nameArmorCat = armorCat + "." + name;
+			// We can't remove configs as of yet through the new system. That will be up to the new UI
+			/*String nameArmorCat = ArmorProperties.base.categoryName() + "." + name;
 			
 			if(config.hasCategory(nameArmorCat) == true)
 			{
 				config.removeCategory(config.getCategory(nameArmorCat));
 				returnValue = "Removed";
-			} else
+			} else*/
 			{
-				config.addCustomCategoryComment(nameArmorCat, classname + ":" + name);
-					ArmorProperties.SaveProperty(config, nameArmorCat, (String)data[0], 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00);
+				ArmorProperties.base.generateEmpty(config, Item.itemRegistry.getObject((String)data[0]));
 				returnValue = "Saved";
 			}
 		}

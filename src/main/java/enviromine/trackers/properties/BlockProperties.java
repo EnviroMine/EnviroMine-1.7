@@ -5,6 +5,7 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.helpers.SerialisableProperty;
 
 
 public class BlockProperties implements SerialisableProperty

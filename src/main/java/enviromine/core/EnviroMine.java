@@ -24,14 +24,17 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import enviromine.EnviroPotion;
-import enviromine.core.commands.*;
+import enviromine.core.commands.CommandPhysics;
+import enviromine.core.commands.EnviroCommand;
+import enviromine.core.commands.QuakeCommand;
 import enviromine.core.proxies.EM_CommonProxy;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
-import enviromine.network.packet.*;
+import enviromine.network.packet.PacketAutoOverride;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.network.packet.PacketServerOverride;
 import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.utils.EnviroUtils;
 import enviromine.world.WorldProviderCaves;
@@ -118,14 +121,13 @@ public class EnviroMine
 	{
 		proxy.postInit(event);
 		
-		if(EM_Settings.genArmorConfigs)
+		/*if(EM_Settings.genArmorConfigs)
 		{
 			ArmorProperties.SearchForModdedArmors();
-		}
+		}*/
 		
 		ObjectHandler.LoadIgnitionSources();
 		DimensionProperties.SearchForDimensions();
-		BiomeProperties.SearchForBiomes();
 		
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.armorProperties.size() + " armor properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.blockProperties.size() + " block properties");

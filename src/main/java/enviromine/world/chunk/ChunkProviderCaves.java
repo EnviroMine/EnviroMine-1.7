@@ -32,7 +32,9 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import java.util.List;
 import java.util.Random;
+import enviromine.core.EM_Settings;
 import enviromine.handlers.ObjectHandler;
+import enviromine.trackers.properties.CaveGenProperties;
 
 public class ChunkProviderCaves implements IChunkProvider
 {
@@ -541,16 +543,22 @@ public class ChunkProviderCaves implements IChunkProvider
 		 }
 		 
 		 int j2;
-		 WorldGenMinable worldgenminable = new WorldGenMinable(Blocks.monster_egg, 24, Blocks.stone);
-		 for (k1 = 0; k1 < 48; ++k1)
+		 
+		 for(int index = 0; index < EM_Settings.caveGenProperties.size(); index++)
 		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
+			 CaveGenProperties oreProps = EM_Settings.caveGenProperties.get(index);
+			 
+			 WorldGenMinable worldgenminable = new WorldGenMinable(oreProps.ore, oreProps.size, oreProps.source);
+			 for (k1 = 0; k1 < oreProps.veins; ++k1)
+			 {
+				 l1 = k + this.hellRNG.nextInt(16);
+				 i2 = this.hellRNG.nextInt(oreProps.maxY - oreProps.minY) + oreProps.minY;
+				 j2 = l + this.hellRNG.nextInt(16);
+				 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
+			 }
 		 }
 		 
-		 worldgenminable = new WorldGenMinable(ObjectHandler.flammableCoal, 16, Blocks.stone);
+		 /*worldgenminable = new WorldGenMinable(ObjectHandler.flammableCoal, 16, Blocks.stone);
 		 for (k1 = 0; k1 < 32; ++k1)
 		 {
 			 l1 = k + this.hellRNG.nextInt(16);
@@ -611,7 +619,7 @@ public class ChunkProviderCaves implements IChunkProvider
 			 i2 = this.hellRNG.nextInt(246) + 10;
 			 j2 = l + this.hellRNG.nextInt(16);
 			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
+		 }*/
 		 
 		 MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldObj, hellRNG, k, l));
 		 MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false));

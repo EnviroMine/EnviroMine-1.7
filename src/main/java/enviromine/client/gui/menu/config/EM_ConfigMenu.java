@@ -21,6 +21,7 @@ public class EM_ConfigMenu extends GuiScreen
 		ArrayList<File> configFiles = ConfigMenuUtils.getCustomConfigs();
 		
 		//TODO: List all the config files as buttons for the given page
+		// Also list the stability types file for editing
 	}
 	
 	@Override

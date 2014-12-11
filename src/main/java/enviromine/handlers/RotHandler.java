@@ -112,7 +112,7 @@ public class RotHandler
 			{
 				ItemStack rotItem = doRot(world, slotItem);
 				
-				if(rotItem != slotItem)
+				if(rotItem == null || rotItem.getItem() != slotItem.getItem())
 				{
 					inventory.setInventorySlotContents(i, rotItem);
 					flag = true;

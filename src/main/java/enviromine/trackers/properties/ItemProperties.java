@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 import enviromine.core.EM_Settings;
+import enviromine.trackers.properties.helpers.SerialisableProperty;
 
 public class ItemProperties implements SerialisableProperty
 {

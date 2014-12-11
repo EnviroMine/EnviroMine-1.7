@@ -202,6 +202,10 @@ public class EM_ConfigHandler
 			EM_Settings.quakeSpeed = 1;
 		}
 		
+		// Easter Eggs!
+		String eggCat = "Easter Eggs";
+		EM_Settings.disableThing = !config.getBoolean("Cave Dimension Grue", eggCat, true, "Disable the (extremely rare) grue in the cave dimension (ignored on Halloween or Friday 13th)");
+		
 		// REMOVE OLD Settings if they exist
 		// Sound
 		if(config.hasCategory("Sound Options")) config.removeCategory(config.getCategory("Sound Options"));

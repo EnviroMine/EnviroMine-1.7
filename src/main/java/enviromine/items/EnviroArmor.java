@@ -169,6 +169,7 @@ public class EnviroArmor extends ItemArmor //implements ITextureProvider, IArmor
 			{
 				armor.getTagCompound().setBoolean("isCamelPack", true);
 			}
+			player.addStat(EnviroAchievements.keepYourCool, 1);
 		} else if (armor.getItem() == ObjectHandler.gasMask)
 		{
 			if (!armor.hasTagCompound())

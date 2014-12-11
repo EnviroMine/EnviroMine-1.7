@@ -168,7 +168,7 @@ public class Gui_EventManager
 			// Render GasMask Overlays
 			if(UI_Settings.overlay)
 			{
-				GasMaskHud.renderGasMask(HUDRegistry.screenHeight, HUDRegistry.screenHeight, mc);
+				GasMaskHud.renderGasMask(HUDRegistry.screenWidth, HUDRegistry.screenHeight, mc);
 			}
 						
 			// Render Hud Items	
@@ -188,7 +188,7 @@ public class Gui_EventManager
 						if(UI_Settings.overlay) 
 						{
 							RenderAssist.bindTexture(huditem.getResource("TintOverlay"));
-							huditem.renderScreenOverlay(HUDRegistry.screenHeight, HUDRegistry.screenHeight);
+							huditem.renderScreenOverlay(HUDRegistry.screenWidth, HUDRegistry.screenHeight);
 						}
     				
 						RenderAssist.bindTexture(huditem.getResource(""));

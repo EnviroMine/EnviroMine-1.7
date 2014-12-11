@@ -23,11 +23,12 @@ public class EnviroAchievements
 	public static Achievement ohGodWhy; 		//@ Play disk 11
 	public static Achievement safetyFirst; 		//@ Craft a hardhat
 	public static Achievement boreToTheCore; 	//@ Enter the cave dimension
-	public static Achievement intoTheDarkness; 	//@ Travel 1K from cave entrance and make it back alive
+	public static Achievement intoTheDarkness; 	//@ Travel 1K from cave dimension entrance and make it back alive
 	public static Achievement thatJustHappened; //@ Survive a gas fire
-	public static Achievement itsPitchBlack; 	//@ ???
+	public static Achievement itsPitchBlack; 	//@ Travel 250 blocks in complete darkness in the cave dimension or encounter the Grue
 	public static Achievement tenSecondRule; 	//@ Eat rotten food
 	public static Achievement breatheEasy; 		//@ Craft a respirator
+	public static Achievement keepYourCool;		//@ Craft a camel pack
 	//public static Achievement medicalMarvels; 	// Cure any infection/disease
 	//public static Achievement suckItUpPrincess; // Attack & kill any hostile mob with one or more broken limbs
 	
@@ -52,7 +53,8 @@ public class EnviroAchievements
 		tenSecondRule =    new Achievement("enviromine.TenSecondRule",    "enviromine.TenSecondRule",     2, 2, ObjectHandler.rottenFood,   AchievementList.buildHoe).registerStat();
 
 		breatheEasy = 	   new Achievement("enviromine.BreatheEasy",      "enviromine.BreatheEasy",      -2, 3, ObjectHandler.gasMask,   AchievementList.acquireIron).registerStat();
-		//medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   -1, 3, Items.potionitem,                              null).registerStat();
+		keepYourCool = 	   new Achievement("enviromine.KeepYourCool",     "enviromine.KeepYourCool",     -1, 3, ObjectHandler.camelPack,     AchievementList.killCow).registerStat();
+		//medicalMarvels =   new Achievement("enviromine.MedicalMarvels",   "enviromine.MedicalMarvels",   0, 3, Items.potionitem,                              null).registerStat();
 		//suckItUpPrincess = new Achievement("enviromine.SuckItUpPrincess", "enviromine.SuckItUpPrincess", 1, 3, Items.bone,               AchievementList.buildSword).registerStat();
 		
 		page = new AchievementPage("EnviroMine", funwaysFault, mindOverMatter, proMiner, hardBoiled, ironArmy, tradingFavours, iNeededThat, winterIsComing, ohGodWhy, safetyFirst, boreToTheCore, intoTheDarkness, thatJustHappened, itsPitchBlack, tenSecondRule, breatheEasy/*, medicalMarvels, suckItUpPrincess*/);

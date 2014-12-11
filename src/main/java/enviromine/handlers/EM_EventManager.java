@@ -254,6 +254,11 @@ public class EM_EventManager
 			{
 				event.entityLiving.getEntityData().removeTag("EM_BOILED");
 			}
+			
+			if(event.entityLiving.getEntityData().hasKey("EM_PITCH"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_PITCH");
+			}
 		}
 		
 		if(event.entityLiving instanceof EntityMob && event.source.getEntity() != null && event.source.getEntity() instanceof EntityPlayer)
@@ -947,6 +952,26 @@ public class EM_EventManager
 			} else if(event.entityLiving.getEntityData().hasKey("EM_BOILED"))
 			{
 				event.entityLiving.getEntityData().removeTag("EM_BOILED");
+			}
+			
+			if(event.entityLiving.worldObj.provider.dimensionId == EM_Settings.caveDimID && event.entityLiving.worldObj.getBlockLightValue(MathHelper.floor_double(event.entityLiving.posX), MathHelper.floor_double(event.entityLiving.posY), MathHelper.floor_double(event.entityLiving.posZ)) < 1)
+			{
+				int x = MathHelper.floor_double(event.entityLiving.posX);
+				int y = MathHelper.floor_double(event.entityLiving.posY);
+				int z = MathHelper.floor_double(event.entityLiving.posZ);
+				
+				if(!event.entityLiving.getEntityData().hasKey("EM_PITCH"))
+				{
+					event.entityLiving.getEntityData().setIntArray("EM_PITCH", new int[]{x, y, z});
+				}
+				
+				if(event.entityLiving.getDistance(x, y, z) >= 250)
+				{
+					((EntityPlayer)event.entityLiving).addStat(EnviroAchievements.itsPitchBlack, 1);
+				}
+			} else if(event.entityLiving.getEntityData().hasKey("EM_PITCH"))
+			{
+				event.entityLiving.getEntityData().removeTag("EM_PITCH");
 			}
 			
 			if(EM_Settings.enableAirQ && EM_Settings.enableBodyTemp && EM_Settings.enableHydrate && EM_Settings.enableSanity && EM_Settings.enableLandslide && EM_Settings.enablePhysics && EM_Settings.enableQuakes)

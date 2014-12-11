@@ -30,6 +30,7 @@ public class BlockFreezer extends BlockContainer implements ITileEntityProvider
 	public BlockFreezer(Material material)
 	{
 		super(material);
+		this.setHardness(3.0F);
 	}
 
     /**

@@ -45,6 +45,11 @@ public class SaveController {
         }
         try {
             NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
+            
+            if (nbt.hasNoTags() || !nbt.hasKey(UISettingsData))
+            {
+            	return false;
+            }
 
             UI_Settings.readFromNBT(nbt.getCompoundTag(UISettingsData));
             HUDRegistry.readFromNBT(nbt.getCompoundTag(UISettingsData));

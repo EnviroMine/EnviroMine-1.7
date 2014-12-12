@@ -33,6 +33,9 @@ public class UpdateNotification
 		
 		hasChecked = true;
 		
+		
+		UpdatePage.display();
+		
 		// DO NOT CHANGE THIS!
 		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
 		{

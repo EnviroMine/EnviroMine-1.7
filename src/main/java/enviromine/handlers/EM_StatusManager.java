@@ -3,10 +3,10 @@ package enviromine.handlers;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -35,9 +35,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.EnumPlantType;
-
 import com.google.common.base.Stopwatch;
-
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.EnviroPotion;
@@ -316,10 +314,6 @@ public class EM_StatusManager
 					Block block = Blocks.air;
 					int meta = 0;
 					
-					// These need to be here to reset
-					boolean isCustom = false;
-					BlockProperties blockProps = null;
-					
 					block = entityLiving.worldObj.getBlock(i + x, j + y, k + z);
 					
 					if(block != Blocks.air)
@@ -329,6 +323,8 @@ public class EM_StatusManager
 					
 					if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta) || EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block)))
 					{
+						BlockProperties blockProps = null;
+						
 						if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
 						{
 							blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block) + "," + meta);
@@ -337,15 +333,6 @@ public class EM_StatusManager
 							blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block));
 						}
 						
-						if(blockProps.meta == meta || blockProps.meta == -1)
-						{
-							isCustom = true;
-						}
-						
-					}
-					
-					if(isCustom && blockProps != null)
-					{
 						if(blockProps.air > 0F)
 						{
 							leaves += (blockProps.air/0.1F);
@@ -385,125 +372,9 @@ public class EM_StatusManager
 								}
 							}
 						}
-						
-					} else if(block == Blocks.flowing_lava || block == Blocks.lava || block == ObjectHandler.fireGasBlock)
-					{
-						if(quality > -1)
-						{
-							quality = -1;
-						}
-						if(temp < getTempFalloff(200, dist, range))
-						{
-							temp = getTempFalloff(200, dist, range);
-						}
-						nearLava = true;
-					} else if(block == Blocks.fire || block == ObjectHandler.burningCoal)
-					{
-						if(quality > -0.5F)
-						{
-							quality = -0.5F;
-						}
-						if(temp < getTempFalloff(100, dist, range))
-						{
-							temp = getTempFalloff(100, dist, range);
-							
-							
-						}
-					} else if((block == ObjectHandler.fireTorch || block == Blocks.torch || block == Blocks.lit_furnace))
-					{
-						if(quality > -0.25F)
-						{
-							quality = -0.25F;
-						}
-						if(temp < getTempFalloff(75, dist, range))
-						{
-							temp = getTempFalloff(75, dist, range);
-							
-						}
-					} else if(block instanceof BlockLeavesBase || block instanceof BlockFlower || block == Blocks.waterlily || block == Blocks.grass)
-					{
-						boolean isPlant = true;
-						
-						if(block instanceof BlockFlower & sBoost <= 0.1F)
-						{
-							if(((BlockFlower)block).getPlantType(entityLiving.worldObj, i, j, k) == EnumPlantType.Plains)
-							{
-								if(isDay)
-								{
-									sBoost = 0.1F;
-								}
-								
-								isPlant = false;
-								leaves += 0.1;
-							} else
-							{
-								isPlant = false;
-							}
-						}
-						
-						if(isPlant)
-						{
-							leaves += 1;
-						}
-					} else if(block == Blocks.netherrack)
-					{
-						if(temp < getTempFalloff(50, dist, range))
-						{
-							temp = getTempFalloff(50, dist, range);
-							
-						}
-					} else if(block == Blocks.flowing_water || block == Blocks.water || (block == Blocks.cauldron && meta > 0))
-					{
-						animalHostility = -1;
-					} else if(block == Blocks.snow_layer)
-					{
-						cooling += getTempFalloff(0.01F, dist, range);
-					} else if(block == Blocks.snow || block == Blocks.ice)
-					{
-						cooling += getTempFalloff(0.015F, dist, range);
-					} else if(block == Blocks.flower_pot && (meta == 1 || meta == 2))
-					{
-						if(meta == 1 || meta == 2)
-						{
-							if(isDay)
-							{
-								if(sBoost < 0.1F)
-								{
-									sBoost = 0.1F;
-								}
-							}
-							leaves += 1;
-						} else if(meta != 0 && !(meta >= 7 && meta <= 10))
-						{
-							leaves += 1;
-						}
-					} else if(block == Blocks.skull)
-					{
-						if(sanityRate <= sanityStartRate && sanityRate > -0.1F)
-						{
-							sanityRate = -0.1F;
-						}
-					} else if(block == Blocks.soul_sand)
-					{
-						if(sanityRate <= sanityStartRate && sanityRate > -0.05F)
-						{
-							sanityRate = -0.05F;
-						}
-					} else if(block == Blocks.web)
-					{
-						if(sanityRate <= sanityStartRate && sanityRate > -0.01F)
-						{
-							sanityRate = -0.01F;
-						}
-					} else if(block == Blocks.dragon_egg)
-					{
-						if(sBoost < 1F)
-						{
-							sBoost = 1F;
-						}
 					}
 					
-					if(block == Blocks.flowing_lava || block == Blocks.lava)
+					if(block.getMaterial() == Material.lava)
 					{
 						nearLava = true;
 					}

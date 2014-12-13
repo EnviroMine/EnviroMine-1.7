@@ -137,7 +137,7 @@ public class ObjectHandler
 		
 		elevator = new BlockElevator(Material.iron).setBlockName("enviromine.elevator").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("iron_block");
 		
-		davyLampBlock = new BlockDavyLamp(Material.redstoneLight).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab);
+		davyLampBlock = new BlockDavyLamp(Material.redstoneLight).setLightLevel(1.0F).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab);
 		davyLamp = new ItemDavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);
 		
 		flammableCoal = new BlockFlammableCoal();

@@ -1,5 +1,6 @@
 package enviromine.core;
 
+import java.util.Iterator;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
@@ -36,6 +37,7 @@ import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.helpers.PropertyBase;
 import enviromine.utils.EnviroUtils;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
@@ -127,12 +129,19 @@ public class EnviroMine
 		}*/
 		
 		ObjectHandler.LoadIgnitionSources();
-		DimensionProperties.SearchForDimensions();
 		
+		if(EM_Settings.genConfigs)
+		{
+			EM_ConfigHandler.initConfig();
+		}
+		//DimensionProperties.SearchForDimensions();
+
+		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.stabilityTypes.size() + " stability types");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.armorProperties.size() + " armor properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.blockProperties.size() + " block properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.livingProperties.size() + " entity properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.itemProperties.size() + " item properties");
+		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.rotProperties.size() + " rot properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.biomeProperties.size() + " biome properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.dimensionProperties.size() + " dimension properties");
 	}

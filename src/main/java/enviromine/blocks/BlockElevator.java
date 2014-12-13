@@ -73,7 +73,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		if(j > 10 - meta && player.dimension == 0)
+		if((j > 10 - meta || EM_Settings.limitElevatorY) && player.dimension == 0)
 		{
 			player.addChatMessage(new ChatComponentText("Elevator must be built near bedrock."));
 			return true;

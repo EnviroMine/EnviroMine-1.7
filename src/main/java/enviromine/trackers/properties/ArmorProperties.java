@@ -1,21 +1,20 @@
 package enviromine.trackers.properties;
 
+import java.io.File;
+import java.util.Iterator;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.helpers.PropertyBase;
 import enviromine.trackers.properties.helpers.SerialisableProperty;
 import enviromine.utils.EnviroUtils;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.nbt.NBTTagCompound;
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import org.apache.logging.log4j.Level;
-import net.minecraftforge.common.config.Configuration;
 
 public class ArmorProperties implements SerialisableProperty, PropertyBase
 {
@@ -62,12 +61,6 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		this.sanity = sanity;
 		this.air = air;
 		this.allowCamelPack = allowCamelPack;
-	}
-	
-	private static String[] SplitObjectName(String splitName)
-	{
-		String[] nameArr = splitName.split(":");
-		return nameArr;
 	}
 
 	@Override
@@ -152,7 +145,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		config.get(category, APName[7], sanity).getDouble(sanity);
 		config.get(category, APName[8], air).getDouble(air);
 	}
-
+	
 	@Override
 	public void GenDefaults()
 	{
@@ -168,7 +161,14 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 			}
 			
 			ItemArmor armor = (ItemArmor)regItem;
-			String[] regName = SplitObjectName(Item.itemRegistry.getNameForObject(armor));
+			String[] regName = Item.itemRegistry.getNameForObject(armor).split(":");
+			
+			if(regName.length <= 0)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + armor.getUnlocalizedName());
+				continue;
+			}
+			
 			File armorFile = new File(EM_ConfigHandler.customPath + regName[0] + ".cfg");
 			
 			if(!armorFile.exists())
@@ -176,10 +176,10 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 				try
 				{
 					armorFile.createNewFile();
-				} catch(IOException e)
+				} catch(Exception e)
 				{
 					e.printStackTrace();
-					return;
+					continue;
 				}
 			}
 			
@@ -254,7 +254,8 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 				}
 			} else if(EM_Settings.genConfigs)
 			{
-				config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();
+				this.generateEmpty(config, armor);
+				/*config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();
 				config.get(catName, APName[1], 0.0D).getDouble(0.0D);
 				config.get(catName, APName[2], 0.0D).getDouble(0.0D);
 				config.get(catName, APName[3], 0.0D).getDouble(0.0D);
@@ -267,7 +268,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 				if(armor.armorType == 1)
 				{
 					config.get(catName, APName[9], true).getBoolean(true);
-				}
+				}*/
 			}
 			
 			config.save();
@@ -277,7 +278,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return null;
+		return new File(EM_ConfigHandler.customPath + "Armor.cfg");
 	}
 
 	@Override
@@ -291,7 +292,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 	{
 		if(obj == null || !(obj instanceof ItemArmor))
 		{
-			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non armor object!");
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non armor object!", new Exception());
 			return;
 		}
 		
@@ -309,6 +310,11 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		config.get(catName, APName[6], 1.0D).getDouble(1.0D);
 		config.get(catName, APName[7], 0.0D).getDouble(0.0D);
 		config.get(catName, APName[8], 0.0D).getDouble(0.0D);
+		
+		if(armor.armorType == 1)
+		{
+			config.get(catName, APName[9], true).getBoolean(true);
+		}
 	}
 
 	@Override

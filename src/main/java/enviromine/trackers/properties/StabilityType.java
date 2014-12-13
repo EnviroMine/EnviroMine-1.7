@@ -15,6 +15,7 @@ import enviromine.core.EnviroMine;
 
 public class StabilityType
 {
+	public String name;
 	public boolean enablePhysics;
 	public int supportDist;
 	public int minFall;
@@ -25,8 +26,9 @@ public class StabilityType
 	/** Stability properties:<br>0 ({@link Boolean}) Enable Physics <br>1 ({@link Int}) Max Support Distance <br>2 ({@link Int}) Min Missing Blocks To Fall <br>3 ({@link Int}) Max Missing Blocks To Fall <br>4 ({@link Boolean}) Can Hang <br>5 ({@link Boolean}) Holds Others Up */
 	static String[] SPName;
 	
-	public StabilityType(boolean enablePhysics, int supportDist, int minFall, int maxFall, boolean canHang, boolean holdOther)
+	public StabilityType(String name, boolean enablePhysics, int supportDist, int minFall, int maxFall, boolean canHang, boolean holdOther)
 	{
+		this.name = name;
 		this.enablePhysics = enablePhysics;
 		this.supportDist = supportDist;
 		this.minFall = minFall;
@@ -93,7 +95,7 @@ public class StabilityType
 			boolean canHang = config.get(currentCat, SPName[4], false).getBoolean(false);
 			boolean holdOther = config.get(currentCat, SPName[5], false).getBoolean(false);
 			
-			EM_Settings.stabilityTypes.put(currentCat, new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+			EM_Settings.stabilityTypes.put(currentCat, new StabilityType(currentCat.split("\\.")[0], physEnable, supportDist, minFall, maxFall, canHang, holdOther));
 		}
 		
 		config.save();
@@ -108,7 +110,7 @@ public class StabilityType
 		boolean canHang = config.get("sand-like", SPName[4], false).getBoolean(false);
 		boolean holdOther = config.get("sand-like", SPName[5], false).getBoolean(false);
 		
-		EM_Settings.stabilityTypes.put("sand-like", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+		EM_Settings.stabilityTypes.put("sand-like", new StabilityType("sand-like", physEnable, supportDist, minFall, maxFall, canHang, holdOther));
 		
 		physEnable = config.get("loose", SPName[0], true).getBoolean(true);
 		supportDist = config.get("loose", SPName[1], 1).getInt(1);
@@ -117,7 +119,7 @@ public class StabilityType
 		canHang = config.get("loose", SPName[4], false).getBoolean(false);
 		holdOther = config.get("loose", SPName[5], false).getBoolean(false);
 		
-		EM_Settings.stabilityTypes.put("loose", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+		EM_Settings.stabilityTypes.put("loose", new StabilityType("loose", physEnable, supportDist, minFall, maxFall, canHang, holdOther));
 		
 		physEnable = config.get("average", SPName[0], true).getBoolean(true);
 		supportDist = config.get("average", SPName[1], 2).getInt(2);
@@ -126,7 +128,7 @@ public class StabilityType
 		canHang = config.get("average", SPName[4], false).getBoolean(false);
 		holdOther = config.get("average", SPName[5], false).getBoolean(false);
 		
-		EM_Settings.stabilityTypes.put("average", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+		EM_Settings.stabilityTypes.put("average", new StabilityType("average", physEnable, supportDist, minFall, maxFall, canHang, holdOther));
 		
 		physEnable = config.get("strong", SPName[0], true).getBoolean(true);
 		supportDist = config.get("strong", SPName[1], 3).getInt(3);
@@ -135,6 +137,24 @@ public class StabilityType
 		canHang = config.get("strong", SPName[4], true).getBoolean(true);
 		holdOther = config.get("strong", SPName[5], false).getBoolean(false);
 		
-		EM_Settings.stabilityTypes.put("strong", new StabilityType(physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+		EM_Settings.stabilityTypes.put("strong", new StabilityType("strong", physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+		
+		physEnable = config.get("none", SPName[0], false).getBoolean(false);
+		supportDist = config.get("none", SPName[1], 3).getInt(3);
+		minFall = config.get("none", SPName[2], 0).getInt(0);
+		maxFall = config.get("none", SPName[3], 0).getInt(0);
+		canHang = config.get("none", SPName[4], true).getBoolean(true);
+		holdOther = config.get("none", SPName[5], false).getBoolean(false);
+		
+		EM_Settings.stabilityTypes.put("none", new StabilityType("none", physEnable, supportDist, minFall, maxFall, canHang, holdOther));
+		
+		physEnable = config.get("glowstone", SPName[0], false).getBoolean(false);
+		supportDist = config.get("glowstone", SPName[1], 3).getInt(3);
+		minFall = config.get("glowstone", SPName[2], 0).getInt(0);
+		maxFall = config.get("glowstone", SPName[3], 0).getInt(0);
+		canHang = config.get("glowstone", SPName[4], true).getBoolean(true);
+		holdOther = config.get("glowstone", SPName[5], true).getBoolean(true);
+		
+		EM_Settings.stabilityTypes.put("glowstone", new StabilityType("glowstone", physEnable, supportDist, minFall, maxFall, canHang, holdOther));
 	}
 }

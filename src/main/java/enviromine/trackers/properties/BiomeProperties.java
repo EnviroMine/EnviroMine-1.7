@@ -189,7 +189,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 	{
 		if(obj == null || !(obj instanceof BiomeGenBase))
 		{
-			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non biome object!");
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non biome object!", new Exception());
 			return;
 		}
 		

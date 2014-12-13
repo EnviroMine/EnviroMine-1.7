@@ -32,7 +32,7 @@ public class RotHandler
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood || item.getItem() == Items.fermented_spider_eye) && rotProps == null) || rotTime < 0 || ((item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh) && rotProps == null))
+		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood || item.getItem() == Items.fermented_spider_eye || item.getItem() == Items.milk_bucket) && rotProps == null) || rotTime < 0 || ((item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh) && rotProps == null))
 		{
 			if(item.getTagCompound() != null)
 			{
@@ -62,9 +62,9 @@ public class RotHandler
 			} else if(UBD + rotTime < world.getTotalWorldTime())
 			{
 				ItemStack rotStack;
-				if(rotProps != null && Item.itemRegistry.getObject(rotProps.rotID) != null)
+				if(rotProps != null)
 				{
-					rotStack = new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
+					rotStack = Item.itemRegistry.getObject(rotProps.rotID) == null? null : new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
 				} else if(item.getItem() == Items.beef || item.getItem() == Items.chicken || item.getItem() == Items.porkchop || item.getItem() == Items.fish || item.getItem() == Items.cooked_beef || item.getItem() == Items.cooked_chicken || item.getItem() == Items.cooked_porkchop || item.getItem() == Items.cooked_fished)
 				{
 					rotStack = new ItemStack(Items.rotten_flesh, item.stackSize);
@@ -79,7 +79,7 @@ public class RotHandler
 					rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);
 				}
 				
-				if(rotStack.getItem() == ObjectHandler.rottenFood)
+				if(rotStack != null && rotStack.getItem() == ObjectHandler.rottenFood)
 				{
 					rotStack.setStackDisplayName("Rotten " + item.getDisplayName());
 				}

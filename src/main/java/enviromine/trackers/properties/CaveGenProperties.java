@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_ConfigHandler;
@@ -12,6 +13,7 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.properties.helpers.PropertyBase;
+import enviromine.utils.EnviroUtils;
 
 public class CaveGenProperties implements PropertyBase
 {
@@ -25,7 +27,9 @@ public class CaveGenProperties implements PropertyBase
 	
 	// Declare property fields
 	public Block ore;
+	public int oreMeta;
 	public Block source;
+	public int srcMeta;
 	public int veins;
 	public int size;
 	public int minY;
@@ -41,10 +45,12 @@ public class CaveGenProperties implements PropertyBase
 		}
 	}
 	
-	public CaveGenProperties(String id, String source, int veins, int size, int minY, int maxY)
+	public CaveGenProperties(String id, int oreMeta, String source, int srcMeta, int veins, int size, int minY, int maxY)
 	{
 		this.ore = (Block)Block.blockRegistry.getObject(id);
+		this.oreMeta = oreMeta;
 		this.source = (Block)Block.blockRegistry.getObject(source);
+		this.srcMeta = srcMeta;
 		this.veins = veins;
 		this.size = size;
 		this.minY = minY;
@@ -67,13 +73,15 @@ public class CaveGenProperties implements PropertyBase
 	public void LoadProperty(Configuration config, String category)
 	{
 		String nID = config.get(category, CGPNames[0], "minecraft:stone").getString();
-		String nSource = config.get(category, CGPNames[1], "minecraft:stone").getString();
-		int nVeins = config.get(category, CGPNames[2], 4).getInt();
-		int nSize = config.get(category, CGPNames[3], 4).getInt();
-		int nMinY = config.get(category, CGPNames[4], 10).getInt();
-		int nMaxY = config.get(category, CGPNames[5], 246).getInt();
+		int nOreM = MathHelper.clamp_int(config.get(category, CGPNames[1], 0).getInt(), 0, 15);
+		String nSource = config.get(category, CGPNames[2], "minecraft:stone").getString();
+		int nSrcM = config.get(category, CGPNames[3], 0).getInt();
+		int nVeins = config.get(category, CGPNames[4], 4).getInt();
+		int nSize = config.get(category, CGPNames[5], 4).getInt();
+		int nMinY = config.get(category, CGPNames[6], 10).getInt();
+		int nMaxY = config.get(category, CGPNames[7], 246).getInt();
 		
-		CaveGenProperties entry = new CaveGenProperties(nID, nSource, nVeins, nSize, nMinY, nMaxY);
+		CaveGenProperties entry = new CaveGenProperties(nID, nOreM, nSource, nSrcM, nVeins, nSize, nMinY, nMaxY);
 		EM_Settings.caveGenProperties.add(entry);
 	}
 
@@ -95,28 +103,18 @@ public class CaveGenProperties implements PropertyBase
 				
 				config.load();
 				
-				if(!config.hasCategory(this.categoryName() + ".Silverfish"))
-				{
-					String catName = this.categoryName() + ".Silverfish";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.monster_egg));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 48);
-					config.get(catName, CGPNames[3], 24);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
-				}
-				
 				if(!config.hasCategory(this.categoryName() + ".Coal"))
 				{
 					String catName = this.categoryName() + ".Coal";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(ObjectHandler.flammableCoal));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 32);
-					config.get(catName, CGPNames[3], 16);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 32);
+					config.get(catName, CGPNames[5], 16);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				if(!config.hasCategory(this.categoryName() + ".Iron"))
@@ -124,11 +122,13 @@ public class CaveGenProperties implements PropertyBase
 					String catName = this.categoryName() + ".Iron";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.iron_ore));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 24);
-					config.get(catName, CGPNames[3], 16);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 24);
+					config.get(catName, CGPNames[5], 16);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				if(!config.hasCategory(this.categoryName() + ".Lapis"))
@@ -136,11 +136,13 @@ public class CaveGenProperties implements PropertyBase
 					String catName = this.categoryName() + ".Lapis";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.redstone_ore));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 12);
-					config.get(catName, CGPNames[3], 8);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 12);
+					config.get(catName, CGPNames[5], 8);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				if(!config.hasCategory(this.categoryName() + ".Redstone"))
@@ -148,11 +150,13 @@ public class CaveGenProperties implements PropertyBase
 					String catName = this.categoryName() + ".Redstone";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.redstone_ore));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 12);
-					config.get(catName, CGPNames[3], 12);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 12);
+					config.get(catName, CGPNames[5], 12);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				if(!config.hasCategory(this.categoryName() + ".Gold"))
@@ -160,11 +164,13 @@ public class CaveGenProperties implements PropertyBase
 					String catName = this.categoryName() + ".Gold";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.gold_ore));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 8);
-					config.get(catName, CGPNames[3], 8);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 8);
+					config.get(catName, CGPNames[5], 8);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				if(!config.hasCategory(this.categoryName() + ".Diamonds"))
@@ -172,11 +178,13 @@ public class CaveGenProperties implements PropertyBase
 					String catName = this.categoryName() + ".Diamonds";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.diamond_ore));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 4);
-					config.get(catName, CGPNames[3], 8);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 4);
+					config.get(catName, CGPNames[5], 8);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				if(!config.hasCategory(this.categoryName() + ".Emeralds"))
@@ -184,11 +192,27 @@ public class CaveGenProperties implements PropertyBase
 					String catName = this.categoryName() + ".Emeralds";
 					
 					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.emerald_ore));
-					config.get(catName, CGPNames[1], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[2], 2);
-					config.get(catName, CGPNames[3], 4);
-					config.get(catName, CGPNames[4], 10);
-					config.get(catName, CGPNames[5], 246);
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 2);
+					config.get(catName, CGPNames[5], 4);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
+				}
+				
+				if(!config.hasCategory(this.categoryName() + ".Silverfish")) // Must be last so as to not interfere with ores
+				{
+					String catName = this.categoryName() + ".Silverfish";
+					
+					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.monster_egg));
+					config.get(catName, CGPNames[1], 0);
+					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+					config.get(catName, CGPNames[3], 0);
+					config.get(catName, CGPNames[4], 48);
+					config.get(catName, CGPNames[5], 24);
+					config.get(catName, CGPNames[6], 10);
+					config.get(catName, CGPNames[7], 246);
 				}
 				
 				config.save();
@@ -215,6 +239,24 @@ public class CaveGenProperties implements PropertyBase
 	@Override
 	public void generateEmpty(Configuration config, Object obj)
 	{
+		if(obj == null || !(obj instanceof Block))
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non block object!", new Exception());
+			return;
+		}
+		
+		Block block = (Block)obj;
+		
+		String catName = this.categoryName() + "." + EnviroUtils.replaceULN(block.getUnlocalizedName());
+		
+		config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.iron_ore));
+		config.get(catName, CGPNames[1], 0);
+		config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+		config.get(catName, CGPNames[3], 0);
+		config.get(catName, CGPNames[4], 24);
+		config.get(catName, CGPNames[5], 16);
+		config.get(catName, CGPNames[6], 10);
+		config.get(catName, CGPNames[7], 246);
 	}
 
 	@Override
@@ -249,8 +291,6 @@ public class CaveGenProperties implements PropertyBase
 		}
 		
 		config.save();
-		
-		System.out.println("Loaded " + EM_Settings.caveGenProperties.size() + " custom ore generations");
 	}
 	
 	/**
@@ -260,12 +300,14 @@ public class CaveGenProperties implements PropertyBase
 	{
 		EM_Settings.caveGenProperties = new ArrayList<CaveGenProperties>();
 		
-		CGPNames = new String[6];
+		CGPNames = new String[8];
 		CGPNames[0] = "01.Ore Name";
-		CGPNames[1] = "02.Source Block";
-		CGPNames[2] = "03.Veins Per Chunk";
-		CGPNames[3] = "04.Veins Size";
-		CGPNames[4] = "05.Min Y";
-		CGPNames[5] = "06.Max Y";
+		CGPNames[1] = "02.Ore Metadata";
+		CGPNames[2] = "03.Source Block";
+		CGPNames[3] = "04.Source Metadata";
+		CGPNames[4] = "03.Veins Per Chunk";
+		CGPNames[5] = "04.Veins Size";
+		CGPNames[6] = "05.Min Y";
+		CGPNames[7] = "06.Max Y";
 	}
 }

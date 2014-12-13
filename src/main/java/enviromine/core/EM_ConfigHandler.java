@@ -24,11 +24,9 @@ public class EM_ConfigHandler
 	public static String customPath = configPath + "CustomProperties/";
 	
 	// Categories for Custom Objects
-	static String blockCat = BlockProperties.categoryName;
 	static String entityCat = EntityProperties.categoryName;
 	static String itemsCat = ItemProperties.categoryName;
 	static String rotCat = RotProperties.categoryName;
-	static String dimensionCat = DimensionProperties.categoryName;
 	
 	static HashMap<String, PropertyBase> propTypes;
 	
@@ -42,6 +40,8 @@ public class EM_ConfigHandler
 		propTypes.put(CaveGenProperties.base.categoryName(), CaveGenProperties.base);
 		propTypes.put(BiomeProperties.base.categoryName(), BiomeProperties.base);
 		propTypes.put(ArmorProperties.base.categoryName(), ArmorProperties.base);
+		propTypes.put(BlockProperties.base.categoryName(), BlockProperties.base);
+		propTypes.put(DimensionProperties.base.categoryName(), DimensionProperties.base);
 	}
 	
 	public static int initConfig()
@@ -94,22 +94,18 @@ public class EM_ConfigHandler
 	
 	private static void setPropertyConfigNames()
 	{
-		DimensionProperties.setConfigNames();
 		ItemProperties.setConfigNames();
 		EntityProperties.setConfigNames();
 		RotProperties.setConfigNames();
-		BlockProperties.setConfigNames();
 		StabilityType.setConfigNames();
 	}
 	
 	public static void loadDefaultCategories(Configuration config)
 	{
 		// Load Default Categories
-		config.addCustomCategoryComment(blockCat, "Custom block properties");
 		config.addCustomCategoryComment(entityCat, "Custom entity properties");
 		config.addCustomCategoryComment(itemsCat, "Custom item properties");
 		config.addCustomCategoryComment(rotCat, "Custom spoiling properties");
-		config.addCustomCategoryComment(dimensionCat, "Custom Dimension properties");
 	}
 	
 	public static void loadGeneralConfig(File file)
@@ -137,6 +133,7 @@ public class EM_ConfigHandler
 		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", true, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(true);
 		EM_Settings.gasGen = config.get("World Generation", "Generate Gases", true).getBoolean(true);
 		EM_Settings.disableCaves = config.get("World Generation", "Disable Cave Dimension", false).getBoolean(false);
+		EM_Settings.limitElevatorY = config.get("World Generation", "Limit Elevator Height", true).getBoolean(true);
 		
 		//General Settings
 		EM_Settings.enablePhysics = config.get(Configuration.CATEGORY_GENERAL, "Enable Physics", true, "Turn physics On/Off").getBoolean(true);
@@ -373,10 +370,7 @@ public class EM_ConfigHandler
 				{
 					String parent = CurCat.split("\\" + Configuration.CATEGORY_SPLITTER)[0];
 					
-					if(parent.equals(blockCat))
-					{
-						BlockProperties.LoadProperty(config, catagory.get(x));
-					} else if(parent.equals(itemsCat))
+					if(parent.equals(itemsCat))
 					{
 						ItemProperties.LoadProperty(config, catagory.get(x));
 					} else if(parent.equals(entityCat))
@@ -385,9 +379,6 @@ public class EM_ConfigHandler
 					} else if(parent.equals(rotCat))
 					{
 						RotProperties.LoadProperty(config, catagory.get(x));
-					} else if(parent.equals(dimensionCat))
-					{
-						DimensionProperties.LoadProperty(config, catagory.get(x));
 					} else if(propTypes.containsKey(parent) && propTypes.get(parent).useCustomConfigs())
 					{
 						PropertyBase property = propTypes.get(parent);
@@ -508,18 +499,16 @@ public class EM_ConfigHandler
 		
 		if(type.equalsIgnoreCase("BLOCK"))
 		{
-			String nameULCat = blockCat + "." + name + " " + (Integer)data[1];
+			/*String nameULCat = blockCat + "." + name + " " + (Integer)data[1];
 			
 			if(config.hasCategory(nameULCat) == true)
 			{
 				config.removeCategory(config.getCategory(nameULCat));
 				returnValue = "Removed";
-			} else
+			} else*/
 			{
-
-				//config.addCustomCategoryComment(nameULCat, classname + ":" + name);
-					int metadata = (Integer)data[1];
-					BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
+				int metadata = (Integer)data[1];
+				//BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
 				returnValue = "Saved";
 
 			}

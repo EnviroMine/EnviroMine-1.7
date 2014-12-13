@@ -112,21 +112,19 @@ public class Gui_EventManager
 		{
 			if(mc.thePlayer == null || mc.thePlayer.isPlayerSleeping() || !mc.thePlayer.onGround || (mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame()))
 			{
-				return;
+			} else
+			{
+				float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
+				
+				double shakeSpeed = 2D * shakeMult;
+				float offsetY = 0.2F * shakeMult;
+				
+				double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
+				
+				mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
+				mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);
+				mc.thePlayer.cameraYaw = (float)(Math.sin(shake) * offsetY/4F);
 			}
-			
-			float shakeMult = ClientQuake.GetQuakeShake(mc.theWorld, mc.thePlayer);
-			
-			double shakeSpeed = 2D * shakeMult;
-			float offsetY = 0.2F * shakeMult;
-			
-			double shake = (int)(mc.theWorld.getTotalWorldTime()%24000L) * shakeSpeed;
-			
-			mc.thePlayer.yOffset -= (Math.sin(shake) * (offsetY/2F)) + (offsetY/2F);
-			mc.thePlayer.cameraPitch = (float)(Math.sin(shake) * offsetY/4F);
-			mc.thePlayer.cameraYaw = (float)(Math.sin(shake) * offsetY/4F);
-			
-			//super.updateCameraAndRender(partialTick);
 		}
 		
 	 	HUDRegistry.checkForResize();

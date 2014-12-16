@@ -168,7 +168,7 @@ public class Gui_EventManager
 			// Render GasMask Overlays
 			if(UI_Settings.overlay)
 			{
-				GasMaskHud.renderGasMask(HUDRegistry.screenWidth, HUDRegistry.screenHeight, mc);
+				GasMaskHud.renderGasMask(mc);
 			}
 						
 			// Render Hud Items	

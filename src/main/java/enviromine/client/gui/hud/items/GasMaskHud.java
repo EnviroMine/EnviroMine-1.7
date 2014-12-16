@@ -22,9 +22,10 @@ public class GasMaskHud
 
     private static int alpha;
     
-    public static void renderGasMask(int screenWidth, int screenHeight, Minecraft mc)
+    public static void renderGasMask(Minecraft mc)
     {
-
+        ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        
     	ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(3);
 		
 		if(itemstack != null && itemstack.getItem() != null)
@@ -32,13 +33,13 @@ public class GasMaskHud
 			if(itemstack.getItem() == ObjectHandler.gasMask)
 			{
 				
-				Renderbreath(screenWidth, screenHeight, mc, itemstack);
+				Renderbreath(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), mc, itemstack);
 				
 				if(mc.gameSettings.thirdPersonView == 0)
 				{
 					mc.renderEngine.bindTexture(gasMaskResource);
 					//Draw gasMask Overlay
-					RenderAssist.drawScreenOverlay(screenWidth, screenHeight, RenderAssist.getColorFromRGBA(255, 255, 255, 255));
+					RenderAssist.drawScreenOverlay(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), RenderAssist.getColorFromRGBA(255, 255, 255, 255));
 				}
 			}
 		}

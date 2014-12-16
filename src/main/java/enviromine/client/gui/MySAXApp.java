@@ -1,8 +1,5 @@
 package enviromine.client.gui;
-import java.io.FileReader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
@@ -10,6 +7,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import enviromine.client.gui.UpdatePage.WordPressPost;
+
 
 public class MySAXApp extends DefaultHandler
 {
@@ -82,20 +82,42 @@ public class MySAXApp extends DefaultHandler
     		*/
     }
 
+    int count = 0;
     public void endElement (String uri, String name, String qName)
     {
-    	if(qName.equalsIgnoreCase("item"))
+    	if(qName.equalsIgnoreCase("item") && count <= 10 && item)
     	{
+    		System.out.println(item +":"+ count +":"+ title  +":"+ link  +":"+ creator  +":"+  pubDate  +":"+ description);
     		item = false;
+    		
+    		UpdatePage test = new UpdatePage();
+    		//WordPressPost var = new WordPressPost(title, link, creator, pubDate, description);
+    		
+    		WordPressPost post = test.new WordPressPost(title, description, link, pubDate, creator);
+    		
+    		UpdatePage.Posts.add(count, post);
+    		
+    		title = ""; link = ""; creator = ""; pubDate = ""; description = "";
+    		
+    		count++;
+    		
+    		for(WordPressPost postit : UpdatePage.Posts)
+    		{
+    			
+    			
+    			System.out.println(postit.title);
+    			
+    		}
     	}
     	
-    	/*
-    	if ("".equals (uri))
-    		System.out.println("End element: " + qName);
-    	else
-    		ystem.out.println("End element:   {" + uri + "}" + name);
-    		*/
     }
+    
+    
+    private String title;
+    private String link;
+    private String creator;
+    private String pubDate;
+    private String description;
     
     public void characters (char ch[], int start, int length)
     {
@@ -104,24 +126,28 @@ public class MySAXApp extends DefaultHandler
     	{
     		String vart = new String(ch, start, length);
     		System.out.println(vart);
+    		title = vart;
     		bTitle = false;
     	}
     	else if(bLink)
     	{
     		String vart = new String(ch, start, length);
     		System.out.println(vart);
+    		link = vart;
     		bLink = false;
     	}
     	else if (bCreator)
     	{
     		String vart = new String(ch, start, length);
     		System.out.println(vart);
+    		creator = vart;
     		bCreator = false;
     	}
     	else if(bPubDate)
     	{
     		String vart = new String(ch, start, length);
     		System.out.println(vart);
+    		pubDate = vart;
     		bPubDate = false;
     	}
     	else if(bDescription)
@@ -129,6 +155,7 @@ public class MySAXApp extends DefaultHandler
     		String vart = new String(ch, start, length);
     	     String nohtml = vart.toString().replaceAll("\\<.*?>","");
     	     System.out.println(StringEscapeUtils.unescapeHtml4(nohtml));
+    	     description = nohtml;
     		//System.out.println(nohtml);
     		bDescription = false;
     	}

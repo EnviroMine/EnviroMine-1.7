@@ -2,10 +2,9 @@ package enviromine.client.gui.menu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
-
+import enviromine.client.gui.menu.update.NewsPage;
 import enviromine.core.EnviroMine;
 
 public class EM_Gui_Menu extends GuiScreen
@@ -43,8 +42,9 @@ public class EM_Gui_Menu extends GuiScreen
 		customEditor.enabled = false;	
 		
 		serverSettings.visible = true;
-		customEditor.visible = true;			
-	
+		customEditor.visible = true;
+		
+		this.buttonList.add(new GuiButton(103, this.width / 2 - 90, this.height / 6 + 4, 180, 20, StatCollector.translateToLocal("options.enviromine.newsPage")+"..."));
 		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 44, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
 		this.buttonList.add(new GuiButton(102, this.width / 2 - 90, this.height / 6 + 24, 180, 20, StatCollector.translateToLocal("options.enviromine.guiSounds")+"..."));
 		this.buttonList.add(serverSettings);
@@ -78,10 +78,15 @@ public class EM_Gui_Menu extends GuiScreen
 		{
 			this.mc.displayGuiScreen(new EM_Gui_SoundSettings(this));	
 		}
+		else if (par1GuiButton.id == 103)
+		{
+			this.mc.displayGuiScreen(new NewsPage(this));
+		}
 		else if (par1GuiButton.id == 200)
 		{
 			this.mc.displayGuiScreen(parentGuiScreen);
 		}
+
 	}
 	
 	@Override

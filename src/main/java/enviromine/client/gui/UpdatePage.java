@@ -23,7 +23,43 @@ import enviromine.core.EnviroMine;
 
 public class UpdatePage {
 	
+	public static ArrayList<WordPressPost> Posts = new ArrayList<WordPressPost>();
+	
+	public class WordPressPost
+	{
+		 String title;
+		 String description;
+		 String link;
+		 String date;
+		 String creator;
+		
+		
+		
+		public WordPressPost(String title, String description,	String link, String date, String creator)
+		{
+			this.title = title;
+			this.description = description;
+			this.link = link;
+			this.date = date;
+			this.creator = creator;
+			
+			System.out.println( this.title  +":"+ this.link  +":"+ this.creator  +":"+  this.date  +":"+ this.description);
+		}
+		
+		public String getTitle()
+		{
+			return this.title;
+		}
+
+		public String getDescription()
+		{
+			return this.description;
+		}
+	}
+	
+	
 	static boolean hasChecked = false;
+
 	
 	public static void display()
 	{
@@ -252,4 +288,6 @@ public class UpdatePage {
 		}
 	}
 	
+
+
 }

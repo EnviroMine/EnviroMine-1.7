@@ -51,19 +51,18 @@ public class GasMaskHud
     {
 		mc.renderEngine.bindTexture(breathMaskResource);
 
-		if(maskBreathing.phase == 0)
-		{
-			if(UI_Settings.breathSound == true)
-			{
-				mc.thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
-			}
-		}
-		
-		
 		if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && mc.gameSettings.thirdPersonView == 0)
 		{
 			alpha = OverlayHandler.PulseWave(maskBreathing);
 			RenderAssist.drawScreenOverlay(screenWidth, screenHeight, maskBreathing.getRGBA(alpha));
+			
+			if(maskBreathing.phase == 0)
+			{
+				if(UI_Settings.breathSound == true)
+				{
+					mc.thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
+				}
+			}
 		}
 
     }

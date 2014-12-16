@@ -25,19 +25,19 @@ public class ModIdentification
   {
     for (ModContainer mod : Loader.instance().getModList())
     {
-      addSource(mod.getSource().getName(), mod.getName());
+      modSource_Name.put(mod.getSource().getName(), mod.getName());
+      modSource_ID.put(mod.getSource().getName(), mod.getModId());
     }
-    addSource("1.6.2.jar", "Minecraft");
-    addSource("1.6.3.jar", "Minecraft");
-    addSource("1.6.4.jar", "Minecraft");
-    addSource("1.7.2.jar", "Minecraft");
-    addSource("Forge", "Minecraft");
-  }
-  
-  public void addSource(String name, String ID)
-  {
-    modSource_Name.put(name, ID);
-    modSource_ID.put(name, ID);
+    modSource_Name.put("1.6.2.jar", "Minecraft");
+    modSource_Name.put("1.6.3.jar", "Minecraft");
+    modSource_Name.put("1.6.4.jar", "Minecraft");
+    modSource_Name.put("1.7.2.jar", "Minecraft");
+    modSource_Name.put("Forge", "Minecraft");
+    modSource_ID.put("1.6.2.jar", "Minecraft");
+    modSource_ID.put("1.6.3.jar", "Minecraft");
+    modSource_ID.put("1.6.4.jar", "Minecraft");
+    modSource_ID.put("1.7.2.jar", "Minecraft");
+    modSource_ID.put("Forge", "Minecraft");
   }
   
   public static String nameFromObject(Object obj)

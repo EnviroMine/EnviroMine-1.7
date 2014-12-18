@@ -4,10 +4,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-
+import enviromine.client.gui.menu.update.UpdatePage;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 
@@ -21,6 +20,7 @@ import org.apache.logging.log4j.Level;
 public class UpdateNotification
 {
 	boolean hasChecked = false;
+	public static String version;
 	
 	@SuppressWarnings("unused")
 	@SubscribeEvent
@@ -60,7 +60,7 @@ public class UpdateNotification
 				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
 			}*/
 			
-			String version = data[0].trim();
+			version = data[0].trim();
 			String http = data[1].trim();
 			
 			int verStat = compareVersions(EM_Settings.Version, version);
@@ -150,7 +150,7 @@ public class UpdateNotification
 		return pageSplit;
 	}
 	
-	public int compareVersions(String oldVer, String newVer)
+	public static int compareVersions(String oldVer, String newVer)
 	{
 		int result = 0;
 		int[] oldNum;

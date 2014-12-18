@@ -1,18 +1,28 @@
 package enviromine.client.gui.menu.update;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.client.gui.UpdatePage;
-import enviromine.client.gui.UpdatePage.WordPressPost;
+import enviromine.client.gui.UpdateNotification;
+import enviromine.client.gui.menu.update.UpdatePage.WordPressPost;
+import enviromine.core.EM_Settings;
+import enviromine.utils.RenderAssist;
 
 public class PostGuiList extends GuiListExtended{
 	
@@ -20,20 +30,101 @@ public class PostGuiList extends GuiListExtended{
 	private WordPressPost lastPost;
 	private WordPressPost curPost;
 	
-	public PostGuiList(Minecraft mc, int x, int y,	int p_i45010_4_, int p_i45010_5_, int p_i45010_6_, ArrayList<WordPressPost> Post) 
+	public PostGuiList(Minecraft mc, int x, int y,	int p_i45010_4_, int p_i45010_5_, int p_i45010_6_, int tab) 
 	{
-		super(mc, x, y, p_i45010_4_, p_i45010_5_,	p_i45010_6_);
+		super(mc, x, y, p_i45010_4_, p_i45010_5_,	Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
 	
-		for(WordPressPost post : UpdatePage.Posts)
+		if(NewsPage.tabSelection == 150) DisplayWordPressNews(mc);
+		else if (NewsPage.tabSelection == 151) EnviromineVersions(mc);
+		else if (NewsPage.tabSelection == 152) DisplayChangeLog(mc);
+		
+	}
+	
+	
+	public void EnviromineVersions(Minecraft mc)
+	{
+		int verStat = UpdateNotification.compareVersions(EM_Settings.Version, UpdateNotification.version);
+		
+		if(verStat == -1)
 		{
-			curPost = post;
+			LineList.add(new PostGuiList.Row("Your current version is "+ EM_Settings.Version, null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row(StatCollector.translateToLocalFormatted("updatemsg.enviromine.avalible",UpdateNotification.version), null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row("Check changlog for whats new.", null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row("Download new version on our wiki!", null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row("https://github.com/Funwayguy/EnviroMine/wiki/Downloads", null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row("https://enviromine.wordpress.com/", null));
 			
 			
-			LineList.add(new PostGuiList.Row(curPost, lastPost));
-			lastPost = curPost;
+
+		} else if(verStat == 0)
+		{
+			LineList.add(new PostGuiList.Row("EnviroMine " + EM_Settings.Version + " is up to date", null));
+		} else if(verStat == 1)
+		{
+			LineList.add(new PostGuiList.Row("EnviroMine " + EM_Settings.Version + " is a debug version", null));
+		} else if(verStat == -2)
+		{
+			LineList.add(new PostGuiList.Row("An error occured while parsing EnviroMine's version file!", null));
+		}		
+
+	}
+	
+	public void DisplayChangeLog(Minecraft mc)
+	{
+		List wordWrap = mc.fontRenderer.listFormattedStringToWidth(UpdatePage.changeLog,300);
+		
+		addWordWrap(wordWrap);
+	}
+	
+	public void DisplayWordPressNews(Minecraft mc)
+	{
+		String allPostLines = ""; 
+		
+		for(WordPressPost post : UpdatePage.Posts)
+		{ 
+			LineList.add(new PostGuiList.Row(EnumChatFormatting.BOLD.UNDERLINE +  post.getTitle(), "title"));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row("Posted: "+ EnumChatFormatting.ITALIC + post.getPubDate(), "date"));
+			LineList.add(new PostGuiList.Row(" ",null));			
+			
+			//String test = .replaceAll("&nbsp;", "");
+			
+			List wordWrap = mc.fontRenderer.listFormattedStringToWidth(post.getDescription(),300);
+			
+			addWordWrap(wordWrap);
+			
+			LineList.add(new PostGuiList.Row(" ",null));
+			
+			LineList.add(new PostGuiList.Row(EnumChatFormatting.ITALIC + "Posted by: "+ post.getCreator(), "creator"));
+			
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			LineList.add(new PostGuiList.Row(" ",null));
+			
 		}
+		
 	}
 
+	
+	private void addWordWrap(List wordWrap)
+	{
+		Iterator wrapped = wordWrap.iterator();
+		while (wrapped.hasNext())
+		{
+			Object line = wrapped.next();
+		
+
+			LineList.add(new PostGuiList.Row(line.toString(),null));
+		}
+	}
+	
 	@Override
 	public IGuiListEntry getListEntry(int p_148180_1_) {
 
@@ -50,14 +141,8 @@ public class PostGuiList extends GuiListExtended{
 	@Override
 	  protected int getContentHeight()
 	  {
-		int Total = 0;
-		for(WordPressPost post : UpdatePage.Posts)
-		{
-			List test = Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(post.getDescription(),300);
-   			Total += (test.size() * Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) + 40;
-		}
-		return Total;
-		  //return this.getSize() * this.slotHeight + this.headerPadding;
+		
+		 return this.getSize() * Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + this.headerPadding;
 	  }
 	   /**
      * Gets the width of the list
@@ -79,47 +164,43 @@ public class PostGuiList extends GuiListExtended{
 			private WordPressPost post;
 			private WordPressPost lastPost;
 			Minecraft mc = Minecraft.getMinecraft();
-			public static int LastYpos = 0;			
+			public static int LastYpos = 0;	
+			private String line;
+			private String type;
 
-		 	public Row(WordPressPost post, WordPressPost lastPost)
+		 	public Row(String line, String type)
 		 	{
 		 		
-		 		this.post = post;
-		 		this.lastPost = lastPost;
+		 		this.line = line;
+		 		this.type = type;
 		 	}
+	
 		 	
+	
 		 	@Override
 		 	public void drawEntry(int p_148279_1_, int p_148279_2_,	int p_148279_3_, int p_148279_4_, int p_148279_5_,	Tessellator p_148279_6_, int p_148279_7_, int p_148279_8_,	boolean p_148279_9_) 
 		 	{
-				int cnt = 0;
-				
-				
-	               if (this.post != null)
-	                {
-	            	  // int nextYpos = p_148279_3_;
-	            	   
-	            	   if(this.lastPost != null)
-	            	   {
-	       					List lastPostString = mc.fontRenderer.listFormattedStringToWidth(lastPost.getDescription(),300);
-	       					
-	       					LastYpos = lastPostString.size() * mc.fontRenderer.FONT_HEIGHT; 
-	            	   }
-	       				
-	       			
-	       			
-	       				mc.fontRenderer.drawString(post.getTitle(), 140, p_148279_3_ + LastYpos ,16777215 );
-	    			
-	       				mc.fontRenderer.drawSplitString(post.getDescription(),145, p_148279_3_ + mc.fontRenderer.FONT_HEIGHT + LastYpos, 300, 16777215);
-	    			
-	       				//nextYpos += (test.size() * mc.fontRenderer.FONT_HEIGHT) + (mc.fontRenderer.FONT_HEIGHT * 2);
-	    	
-	       				
-	       				//LastYpos = ((test.size() * mc.fontRenderer.FONT_HEIGHT) + (mc.fontRenderer.FONT_HEIGHT * 2))*2;
-	       				
-	       				System.out.println(post.getTitle() +":"+ p_148279_3_ +":"+ LastYpos);
-	    
-	       				cnt++;         
-	                }
+		 		
+		 		
+		 		
+		 		
+		 		if(type == "title")
+		 		{
+		 			mc.fontRenderer.drawString(line, 140, p_148279_3_, RenderAssist.getColorFromRGBA(246, 255, 0, 255) );
+		 		}
+		 		else if (type == "creator")
+		 		{
+		 			mc.fontRenderer.drawString(line, 140, p_148279_3_, RenderAssist.getColorFromRGBA(53, 219, 161, 255) );
+		 		}
+		 		else if (type == "date")
+		 		{
+		 			mc.fontRenderer.drawString(line, 140, p_148279_3_, RenderAssist.getColorFromRGBA(71, 134, 186, 255) );
+		 		}
+		 		else
+		 		{
+		 			mc.fontRenderer.drawString(line, 140, p_148279_3_,16777215 );
+		 		}
+		 		
 		 	}
 
 		 	@Override

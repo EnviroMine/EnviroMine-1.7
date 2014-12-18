@@ -1,4 +1,4 @@
-package enviromine.client.gui;
+package enviromine.client.gui.menu.update;
 import java.io.StringReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -8,13 +8,13 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import enviromine.client.gui.UpdatePage.WordPressPost;
+import enviromine.client.gui.menu.update.UpdatePage.WordPressPost;
 
 
-public class MySAXApp extends DefaultHandler
+public class WordPressParser extends DefaultHandler
 {
 
-    public MySAXApp ()
+    public WordPressParser ()
     {
     	super();
     }
@@ -22,7 +22,7 @@ public class MySAXApp extends DefaultHandler
     public static void main (String page)	throws Exception
     {
     	XMLReader xr = XMLReaderFactory.createXMLReader();
-    	MySAXApp handler = new MySAXApp();
+    	WordPressParser handler = new WordPressParser();
     	xr.setContentHandler(handler);
     	xr.setErrorHandler(handler);
 
@@ -51,35 +51,25 @@ public class MySAXApp extends DefaultHandler
     	
     	if(qName.equalsIgnoreCase("title") && item)
     	{
-    		System.out.print(qName +":");
     		bTitle = true;
     	}  
     	else if(qName.equalsIgnoreCase("link") && item)
     	{
-    		System.out.print(qName +":");
     		bLink = true;
     	}
     	else if(qName.equalsIgnoreCase("dc:creator") && item)
     	{
-    		System.out.print(qName +":");
     		bCreator = true;
     	}    	
     	else if(qName.equalsIgnoreCase("pubDate") && item)
     	{
-    		System.out.print(qName +":");
     		bPubDate = true;
     	}
-    	else if(qName.equalsIgnoreCase("description") && item)
+    	else if(qName.equalsIgnoreCase("content:encoded") && item)
     	{
-    		System.out.print(qName +":");
     		bDescription = true;
     	}
-    	/*
-    	if ("".equals (uri))
-    		System.out.println("Start element: " + qName);
-    	else
-    		System.out.println("Start element: {" + uri + "}" + name);
-    		*/
+
     }
 
     int count = 0;
@@ -87,27 +77,16 @@ public class MySAXApp extends DefaultHandler
     {
     	if(qName.equalsIgnoreCase("item") && count <= 10 && item)
     	{
-    		System.out.println(item +":"+ count +":"+ title  +":"+ link  +":"+ creator  +":"+  pubDate  +":"+ description);
     		item = false;
     		
-    		UpdatePage test = new UpdatePage();
-    		//WordPressPost var = new WordPressPost(title, link, creator, pubDate, description);
-    		
-    		WordPressPost post = test.new WordPressPost(title, description, link, pubDate, creator);
+    		UpdatePage outer = new UpdatePage();
+    		WordPressPost post = outer.new WordPressPost(title, description, link, pubDate, creator);
     		
     		UpdatePage.Posts.add(count, post);
     		
     		title = ""; link = ""; creator = ""; pubDate = ""; description = "";
     		
     		count++;
-    		
-    		for(WordPressPost postit : UpdatePage.Posts)
-    		{
-    			
-    			
-    			System.out.println(postit.title);
-    			
-    		}
     	}
     	
     }
@@ -125,64 +104,42 @@ public class MySAXApp extends DefaultHandler
     	if(bTitle)
     	{
     		String vart = new String(ch, start, length);
-    		System.out.println(vart);
     		title = vart;
     		bTitle = false;
     	}
     	else if(bLink)
     	{
     		String vart = new String(ch, start, length);
-    		System.out.println(vart);
     		link = vart;
     		bLink = false;
     	}
     	else if (bCreator)
     	{
     		String vart = new String(ch, start, length);
-    		System.out.println(vart);
-    		creator = vart;
+   		creator = vart;
     		bCreator = false;
     	}
     	else if(bPubDate)
     	{
     		String vart = new String(ch, start, length);
-    		System.out.println(vart);
+				vart =StringEscapeUtils.unescapeXml(vart); 
+				vart = vart.toString().replaceAll("\\<.*?>","");
+				vart =StringEscapeUtils.unescapeHtml4(vart);
+				vart = vart.toString().replaceAll("\u00a0","");
     		pubDate = vart;
     		bPubDate = false;
     	}
     	else if(bDescription)
     	{
     		String vart = new String(ch, start, length);
-    	     String nohtml = vart.toString().replaceAll("\\<.*?>","");
-    	     System.out.println(StringEscapeUtils.unescapeHtml4(nohtml));
-    	     description = nohtml;
-    		//System.out.println(nohtml);
+    			vart =StringEscapeUtils.unescapeXml(vart); 
+    			vart = vart.toString().replaceAll("\\<.*?>","");
+    			vart =StringEscapeUtils.unescapeHtml4(vart);
+    			vart = vart.toString().replaceAll("\u00a0","");
+    			vart = vart.toString().replaceAll("Filed under:.*","");
+    	     description = vart;
     		bDescription = false;
     	}
-    	/*
-	System.out.print("Characters:    \"");
-	for (int i = start; i < start + length; i++) {
-	    switch (ch[i]) {
-	    case '\\':
-		System.out.print("\\\\");
-		break;
-	    case '"':
-		System.out.print("\\\"");
-		break;
-	    case '\n':
-		System.out.print("\\n");
-		break;
-	    case '\r':
-		System.out.print("\\r");
-		break;
-	    case '\t':
-		System.out.print("\\t");
-		break;
-	    default:
-		System.out.print(ch[i]);
-		break;
-	    }
-	}
-	System.out.print("\"\n");*/
+  
     }
 }

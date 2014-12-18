@@ -80,7 +80,7 @@ public class EM_Gui_Menu extends GuiScreen
 		}
 		else if (par1GuiButton.id == 103)
 		{
-			this.mc.displayGuiScreen(new NewsPage(this));
+			this.mc.displayGuiScreen(new NewsPage(this, 150));
 		}
 		else if (par1GuiButton.id == 200)
 		{

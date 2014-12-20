@@ -11,11 +11,12 @@ import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.helpers.PropertyBase;
 import enviromine.trackers.properties.helpers.SerialisableProperty;
 import enviromine.utils.EnviroUtils;
+import enviromine.utils.ModIdentification;
 
 
 public class BiomeProperties implements SerialisableProperty, PropertyBase
 {
-	public static BiomeProperties base = new BiomeProperties();
+	public static final BiomeProperties base = new BiomeProperties();
 	static String[] BOName;
 	
 	public int id;
@@ -113,9 +114,10 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void LoadProperty(Configuration config, String category)
 	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
 		int id = config.get(category, BOName[0], 0).getInt(0);
 		boolean biomeOveride = config.get(category, BOName[1], false).getBoolean(false);
-		String waterQ = config.get(category, BOName[2], "clean", "Water Quality: dirty, salt, cold, clean").getString();
+		String waterQ = config.get(category, BOName[2], "clean", "Water Quality: dirty, salty, cold, clean").getString();
 		float ambTemp = (float)config.get(category, BOName[3], 25.00, "Biome temperature in celsius (Player body temp is offset by + 12C)").getDouble(25.00);
 		float tempRate = (float)config.get(category, BOName[4], 0.0).getDouble(0.0);
 		float sanRate = (float)config.get(category, BOName[5], 0.0).getDouble(0.0);
@@ -131,7 +133,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 	{
 		config.get(category, BOName[0], this.id).getInt(0);
 		config.get(category, BOName[1], this.biomeOveride).getBoolean(this.biomeOveride);
-		config.get(category, BOName[2], this.waterQuality, "Water Quality: dirty, salt, cold, clean").getString();
+		config.get(category, BOName[2], this.waterQuality, "Water Quality: dirty, salty, cold, clean").getString();
 		config.get(category, BOName[3], this.ambientTemp, "Biome temperature in celsius (Player body temp is offset by + 12C)").getDouble(this.ambientTemp);
 		config.get(category, BOName[4], this.tempRate).getDouble(this.tempRate);
 		config.get(category, BOName[5], this.sanityRate).getDouble(this.sanityRate);
@@ -141,34 +143,40 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void GenDefaults()
 	{
-		File file = GetDefaultFile();
+		BiomeGenBase[] biomeArray = BiomeGenBase.getBiomeGenArray();
 		
-		try
+		for(int p = 0; p < biomeArray.length; p++)
 		{
-			if(file.createNewFile())
+			BiomeGenBase biome = biomeArray[p];
+			
+			if(biome == null)
 			{
-				Configuration config = new Configuration(file, true);
-				
-				config.load();
-				
-				BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
-				
-				for(int p = 0; p < BiomeArray.length; p++)
-				{
-					if(BiomeArray[p] == null)
-					{
-						continue;
-					}
-					
-					generateEmpty(config, BiomeArray[p]);
-				}
-				
-				config.save();
+				continue;
 			}
-		} catch(Exception e)
-		{
-			EnviroMine.logger.log(Level.ERROR, "An error occured while generating defaults for " + this.getClass().getSimpleName(), e);
-			return;
+			
+			String modID = ModIdentification.idFromObject(biome);
+			
+			File file = new File(EM_ConfigHandler.customPath + modID + ".cfg");
+			
+			if(!file.exists())
+			{
+				try
+				{
+					file.createNewFile();
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for biome '" + biome.biomeName + "'", e);
+					continue;
+				}
+			}
+			
+			Configuration config = new Configuration(file, true);
+			
+			config.load();
+			
+			generateEmpty(config, biome);
+			
+			config.save();
 		}
 	}
 
@@ -199,7 +207,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 		
 		config.get(catName, BOName[0], biome.biomeID).getInt(biome.biomeID);
 		config.get(catName, BOName[1], false).getBoolean(false);
-		config.get(catName, BOName[2], EnviroUtils.getBiomeWater(biome), "Water Quality: dirty, salt, cold, clean").getString();
+		config.get(catName, BOName[2], EnviroUtils.getBiomeWater(biome), "Water Quality: dirty, salty, cold, clean").getString();
 		config.get(catName, BOName[3], EnviroUtils.getBiomeTemp(biome), "Biome temperature in celsius (Player body temp is offset by + 12C)").getDouble(25.00);
 		config.get(catName, BOName[4], 0.0).getDouble(0.0);
 		config.get(catName, BOName[5], 0.0).getDouble(0.0);

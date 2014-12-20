@@ -1,12 +1,24 @@
 package enviromine.trackers.properties;
 
+import java.io.File;
+import java.util.Iterator;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
+import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.helpers.PropertyBase;
 import enviromine.trackers.properties.helpers.SerialisableProperty;
+import enviromine.utils.ModIdentification;
 
-public class EntityProperties implements SerialisableProperty
+public class EntityProperties implements SerialisableProperty, PropertyBase
 {
+	public static final EntityProperties base = new EntityProperties();
+	static String[] EPName;
+	
 	public int id;
 	public boolean shouldTrack;
 	public boolean dehydration;
@@ -23,14 +35,19 @@ public class EntityProperties implements SerialisableProperty
 	public float ambHydration;
 	public float hitHydration;
 	
-	/** Entity properties:<br>00 ({@link Int}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
-	static String[] EPName;
-	
-	public static String categoryName = "entity";
-	
 	public EntityProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
+	}
+	
+	public EntityProperties()
+	{
+		// THIS CONSTRUCTOR IS FOR STATIC PURPOSES ONLY!
+		
+		if(base != null && base != this)
+		{
+			throw new IllegalStateException();
+		}
 	}
 	
 	public EntityProperties(int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, float aSanity, float hSanity, float aTemp, float hTemp, float aAir, float hAir, float aHyd, float hHyd)
@@ -50,76 +67,6 @@ public class EntityProperties implements SerialisableProperty
 		this.hitAir = hAir;
 		this.ambHydration = aHyd;
 		this.hitHydration = hHyd;
-	}
-	
-	/**Set up config names for Entity properties:<br>00 ({@link Int}) EntityID<br>01 ({@link Boolean}) Enable EnviroTracker<br>02 ({@link Boolean}) Enable Dehydration<br>03 ({@link Boolean}) Enable BodyTemp<br>04 ({@link Boolean}) Enable Air Quality<br>05 ({@link Boolean}) Immune To Frost<br>06 ({@link Boolean}) Immune To Heat<br>07 ({@link Double}) Ambient Sanity<br>08 ({@link Double}) Hit Sanity<br>09 ({@link Double}) Ambient Temperature<br>10 ({@link Double}) Hit Temperature<br>11 ({@link Double}) Ambient Air<br>12 ({@link Double}) Hit Air<br>13 ({@link Double}) Ambient Hydration<br>14 ({@link Double}) Hit Hydration */
-	public static void setConfigNames()
-	{
-		EPName = new String[15];
-		EPName[0] = "01.Entity ID";
-		EPName[1] = "02.Enable EnviroTracker";
-		EPName[2] = "03.Enable Dehydration";
-		EPName[3] = "04.Enable BodyTemp";
-		EPName[4] = "05.Enable Air Quality";
-		EPName[5] = "06.Immune To Frost";
-		EPName[6] = "07.Immune To Heat";
-		EPName[7] = "08.Ambient Sanity";
-		EPName[8] = "09.Hit Sanity";
-		EPName[9] = "10.Ambient Temperature";
-		EPName[10] = "11.Hit Temperature";
-		EPName[11] = "12.Ambient Air";
-		EPName[12] = "13.Hit Air";
-		EPName[13] = "14.Ambient Hydration";
-		EPName[14] = "15.Hit Hydration";
-	}
-	
-	
-	public static void LoadProperty(Configuration config, String catagory)
-	{
-		config.addCustomCategoryComment(catagory, "");
-		int id = config.get(catagory, EPName[0], 0).getInt(0);
-		boolean track = config.get(catagory, EPName[1], true).getBoolean(true);
-		boolean dehydration = config.get(catagory, EPName[2], true).getBoolean(true);
-		boolean bodyTemp = config.get(catagory, EPName[3], true).getBoolean(true);
-		boolean airQ = config.get(catagory, EPName[4], true).getBoolean(true);
-		boolean immuneToFrost = config.get(catagory, EPName[5], false).getBoolean(false);
-		boolean immuneToHeat = config.get(catagory, EPName[6], false).getBoolean(false);
-		float aSanity = (float)config.get(catagory, EPName[7], 0.0D).getDouble(0.0D);
-		float hSanity = (float)config.get(catagory, EPName[8], 0.0D).getDouble(0.0D);
-		float aTemp = (float)config.get(catagory, EPName[9], 37.0D, "Overridden by body temp").getDouble(37.0D);
-		float hTemp = (float)config.get(catagory, EPName[10], 0.0D).getDouble(0.0D);
-		float aAir = (float)config.get(catagory, EPName[11], 0.0D).getDouble(0.0D);
-		float hAir = (float)config.get(catagory, EPName[12], 0.0D).getDouble(0.0D);
-		float aHyd = (float)config.get(catagory, EPName[13], 0.0D).getDouble(0.0D);
-		float hHyd = (float)config.get(catagory, EPName[14], 0.0D).getDouble(0.0D);
-		
-		EntityProperties entry = new EntityProperties(id, track, dehydration, bodyTemp, airQ, immuneToFrost, immuneToHeat, aSanity, hSanity, aTemp, hTemp, aAir, hAir, aHyd, hHyd);
-		EM_Settings.livingProperties.put(id, entry);
-	}
-	
-	public static void SaveProperty(Configuration config, String catName, int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, double aSanity, double hSanity, double aTemp, double hTemp, double aAir, double hAir, double aHyd, double hHyd)
-	{
-		config.get(catName, EPName[0], id).getInt(id);
-		config.get(catName, EPName[1], track).getBoolean(track);
-		config.get(catName, EPName[2], dehydration).getBoolean(dehydration);
-		config.get(catName, EPName[3], bodyTemp).getBoolean(bodyTemp);
-		config.get(catName, EPName[4], airQ).getBoolean(airQ);
-		config.get(catName, EPName[5], immuneToFrost).getBoolean(immuneToFrost);
-		config.get(catName, EPName[6], immuneToHeat).getBoolean(immuneToHeat);
-		config.get(catName, EPName[7], aSanity).getDouble(aSanity);
-		config.get(catName, EPName[8], hSanity).getDouble(hSanity);
-		config.get(catName, EPName[9], aTemp, "Overridden by body temp").getDouble(aTemp);
-		config.get(catName, EPName[10], hTemp).getDouble(hTemp);
-		config.get(catName, EPName[11], aAir).getDouble(aAir);
-		config.get(catName, EPName[12], hAir).getDouble(hAir);
-		config.get(catName, EPName[13], aHyd).getDouble(aHyd);
-		config.get(catName, EPName[14], hHyd).getDouble(hHyd);
-	}
-	
-	public static void SaveDefaults(Configuration configFile)
-	{
-		SaveProperty(configFile, categoryName + ".blaze",		61, false, false, false, false, true, true, -0.01, 0.0, 75.0, 0.1, -0.05, 0.0, -0.01, -0.01);
-		SaveProperty(configFile, categoryName + ".wither", 	64,	false, false, false, false, true, true, -0.1, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	}
 
 	@Override
@@ -164,4 +111,296 @@ public class EntityProperties implements SerialisableProperty
 		this.hitHydration = tags.getFloat("hitHydration");
 	}
 
+	@Override
+	public String categoryName()
+	{
+		return "entity";
+	}
+
+	@Override
+	public String categoryDescription()
+	{
+		return "Custom properties for entities";
+	}
+
+	@Override
+	public void LoadProperty(Configuration config, String category)
+	{
+		int id = config.get(category, EPName[0], 0).getInt(0);
+		boolean track = config.get(category, EPName[1], true).getBoolean(true);
+		boolean dehydration = config.get(category, EPName[2], true).getBoolean(true);
+		boolean bodyTemp = config.get(category, EPName[3], true).getBoolean(true);
+		boolean airQ = config.get(category, EPName[4], true).getBoolean(true);
+		boolean immuneToFrost = config.get(category, EPName[5], false).getBoolean(false);
+		boolean immuneToHeat = config.get(category, EPName[6], false).getBoolean(false);
+		float aSanity = (float)config.get(category, EPName[7], 0.0D).getDouble(0.0D);
+		float hSanity = (float)config.get(category, EPName[8], 0.0D).getDouble(0.0D);
+		float aTemp = (float)config.get(category, EPName[9], 37.0D, "Overridden by body temp").getDouble(37.0D);
+		float hTemp = (float)config.get(category, EPName[10], 0.0D).getDouble(0.0D);
+		float aAir = (float)config.get(category, EPName[11], 0.0D).getDouble(0.0D);
+		float hAir = (float)config.get(category, EPName[12], 0.0D).getDouble(0.0D);
+		float aHyd = (float)config.get(category, EPName[13], 0.0D).getDouble(0.0D);
+		float hHyd = (float)config.get(category, EPName[14], 0.0D).getDouble(0.0D);
+		
+		EntityProperties entry = new EntityProperties(id, track, dehydration, bodyTemp, airQ, immuneToFrost, immuneToHeat, aSanity, hSanity, aTemp, hTemp, aAir, hAir, aHyd, hHyd);
+		EM_Settings.livingProperties.put(id, entry);
+	}
+
+	@Override
+	public void SaveProperty(Configuration config, String category)
+	{
+		config.get(category, EPName[0], id).getInt(id);
+		config.get(category, EPName[1], shouldTrack).getBoolean(shouldTrack);
+		config.get(category, EPName[2], dehydration).getBoolean(dehydration);
+		config.get(category, EPName[3], bodyTemp).getBoolean(bodyTemp);
+		config.get(category, EPName[4], airQ).getBoolean(airQ);
+		config.get(category, EPName[5], immuneToFrost).getBoolean(immuneToFrost);
+		config.get(category, EPName[6], immuneToHeat).getBoolean(immuneToHeat);
+		config.get(category, EPName[7], ambSanity).getDouble(ambSanity);
+		config.get(category, EPName[8], hitSanity).getDouble(hitSanity);
+		config.get(category, EPName[9], ambTemp, "Overridden by body temp").getDouble(ambTemp);
+		config.get(category, EPName[10], hitTemp).getDouble(hitTemp);
+		config.get(category, EPName[11], ambAir).getDouble(ambAir);
+		config.get(category, EPName[12], hitAir).getDouble(hitAir);
+		config.get(category, EPName[13], ambHydration).getDouble(ambHydration);
+		config.get(category, EPName[14], hitHydration).getDouble(hitHydration);
+	}
+
+	@Override
+	public void GenDefaults()
+	{
+		Iterator iterator = EntityList.IDtoClassMapping.keySet().iterator();
+		
+		while(iterator.hasNext())
+		{
+			int eID = (Integer)iterator.next();
+			Class clazz = (Class)EntityList.IDtoClassMapping.get(eID);
+			
+			if(clazz == null || !EntityLivingBase.class.isAssignableFrom(clazz))
+			{
+				continue;
+			}
+			
+			String modID = ModIdentification.idFromObject(clazz);
+			String eName = EntityList.getStringFromID(eID);
+			
+			File file = new File(EM_ConfigHandler.customPath + modID + ".cfg");
+			
+			if(!file.exists())
+			{
+				try
+				{
+					file.createNewFile();
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for default entities", e);
+					continue;
+				}
+			}
+			
+			String catName = this.categoryName() + "." + eName;
+			
+			Configuration config = new Configuration(file, true);
+			
+			config.load();
+			
+			if(eID == 65) // Bat
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], -0.05D).getDouble(-0.05D);
+				config.get(catName, EPName[8], 0D).getDouble(0D);
+				config.get(catName, EPName[9], 37D, "Overridden by body temp").getDouble(37D);
+				config.get(catName, EPName[10], 0D).getDouble(0D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], 0D).getDouble(0D);
+				config.get(catName, EPName[14], 0D).getDouble(0D);
+			} else if(eID == 54) // Zombie
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], -0.1D).getDouble(-0.1D);
+				config.get(catName, EPName[8], -1D).getDouble(-1D);
+				config.get(catName, EPName[9], 10D, "Overridden by body temp").getDouble(10D);
+				config.get(catName, EPName[10], 0D).getDouble(0D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], 0D).getDouble(0D);
+				config.get(catName, EPName[14], 0D).getDouble(0D);
+			} else if(eID == 51) // Skeleton
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], -0.1D).getDouble(-0.1D);
+				config.get(catName, EPName[8], -1D).getDouble(-1D);
+				config.get(catName, EPName[9], 10D, "Overridden by body temp").getDouble(10D);
+				config.get(catName, EPName[10], 0D).getDouble(0D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], 0D).getDouble(0D);
+				config.get(catName, EPName[14], 0D).getDouble(0D);
+			} else if(eID == 57) // Zombie Pigman
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], -0.1D).getDouble(-0.1D);
+				config.get(catName, EPName[8], -1D).getDouble(-1D);
+				config.get(catName, EPName[9], 10D, "Overridden by body temp").getDouble(10D);
+				config.get(catName, EPName[10], 0D).getDouble(0D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], 0D).getDouble(0D);
+				config.get(catName, EPName[14], 0D).getDouble(0D);
+			} else if(eID == 58) // Enderman
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], -0.5D).getDouble(-0.5D);
+				config.get(catName, EPName[8], -5D).getDouble(-5D);
+				config.get(catName, EPName[9], 10D, "Overridden by body temp").getDouble(10D);
+				config.get(catName, EPName[10], 0D).getDouble(0D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], 0D).getDouble(0D);
+				config.get(catName, EPName[14], 0D).getDouble(0D);
+			} else if(eID == 61) // Blaze
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], 0D).getDouble(0D);
+				config.get(catName, EPName[8], 0D).getDouble(0D);
+				config.get(catName, EPName[9], 100D, "Overridden by body temp").getDouble(100D);
+				config.get(catName, EPName[10], 0.5D).getDouble(0.5D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], -0.1D).getDouble(-0.1D);
+				config.get(catName, EPName[14], -1D).getDouble(-1D);
+			} else if(eID == 97) // Snowman
+			{
+				config.get(catName, EPName[0], eID).getInt(eID);
+				config.get(catName, EPName[1], false).getBoolean(false);
+				config.get(catName, EPName[2], false).getBoolean(false);
+				config.get(catName, EPName[3], false).getBoolean(false);
+				config.get(catName, EPName[4], false).getBoolean(false);
+				config.get(catName, EPName[5], true).getBoolean(true);
+				config.get(catName, EPName[6], true).getBoolean(true);
+				config.get(catName, EPName[7], 0D).getDouble(0D);
+				config.get(catName, EPName[8], 0D).getDouble(0D);
+				config.get(catName, EPName[9], -1D, "Overridden by body temp").getDouble(-1D);
+				config.get(catName, EPName[10], -0.5D).getDouble(-0.5D);
+				config.get(catName, EPName[11], 0D).getDouble(0D);
+				config.get(catName, EPName[12], 0D).getDouble(0D);
+				config.get(catName, EPName[13], 0D).getDouble(0D);
+				config.get(catName, EPName[14], 0D).getDouble(0D);
+			} else if(EM_Settings.genConfigs)
+			{
+				this.generateEmpty(config, eID);
+			}
+			
+			config.save();
+		}
+	}
+
+	@Override
+	public File GetDefaultFile()
+	{
+		return new File(EM_ConfigHandler.customPath + "Entities.cfg");
+	}
+
+	@Override
+	public boolean hasDefault(Object obj)
+	{
+		return false;
+	}
+
+	@Override
+	public void generateEmpty(Configuration config, Object obj)
+	{
+		if(obj == null || !(obj instanceof Integer))
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non EntityLivingBase id!", new Exception());
+			return;
+		}
+		
+		int id = (Integer)obj;
+		String category = this.categoryName() + "." + EntityList.getStringFromID(id);
+		
+		config.get(category, EPName[0], id).getInt(id);
+		config.get(category, EPName[1], false).getBoolean(false);
+		config.get(category, EPName[2], false).getBoolean(false);
+		config.get(category, EPName[3], false).getBoolean(false);
+		config.get(category, EPName[4], false).getBoolean(false);
+		config.get(category, EPName[5], true).getBoolean(true);
+		config.get(category, EPName[6], true).getBoolean(true);
+		config.get(category, EPName[7], 0D).getDouble(0D);
+		config.get(category, EPName[8], 0D).getDouble(hitSanity);
+		config.get(category, EPName[9], 35D, "Overridden by body temp").getDouble(35D);
+		config.get(category, EPName[10], 0D).getDouble(0D);
+		config.get(category, EPName[11], 0D).getDouble(0D);
+		config.get(category, EPName[12], 0D).getDouble(0D);
+		config.get(category, EPName[13], 0D).getDouble(0D);
+		config.get(category, EPName[14], 0D).getDouble(0D);
+	}
+
+	@Override
+	public boolean useCustomConfigs()
+	{
+		return true;
+	}
+
+	@Override
+	public void customLoad()
+	{
+	}
+	
+	static
+	{
+		EPName = new String[15];
+		EPName[0] = "01.Entity ID";
+		EPName[1] = "02.Enable EnviroTracker";
+		EPName[2] = "03.Enable Dehydration";
+		EPName[3] = "04.Enable BodyTemp";
+		EPName[4] = "05.Enable Air Quality";
+		EPName[5] = "06.Immune To Frost";
+		EPName[6] = "07.Immune To Heat";
+		EPName[7] = "08.Ambient Sanity";
+		EPName[8] = "09.Hit Sanity";
+		EPName[9] = "10.Ambient Temperature";
+		EPName[10] = "11.Hit Temperature";
+		EPName[11] = "12.Ambient Air";
+		EPName[12] = "13.Hit Air";
+		EPName[13] = "14.Ambient Hydration";
+		EPName[14] = "15.Hit Hydration";
+	}
 }

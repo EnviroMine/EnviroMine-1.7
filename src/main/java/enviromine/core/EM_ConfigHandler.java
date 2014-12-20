@@ -1,9 +1,5 @@
 package enviromine.core;
 
-import enviromine.trackers.properties.*;
-import enviromine.trackers.properties.helpers.PropertyBase;
-import net.minecraft.item.Item;
-import net.minecraft.potion.Potion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,10 +8,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.logging.log4j.Level;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import enviromine.trackers.properties.ArmorProperties;
+import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.CaveGenProperties;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.trackers.properties.EntityProperties;
+import enviromine.trackers.properties.ItemProperties;
+import enviromine.trackers.properties.RotProperties;
+import enviromine.trackers.properties.StabilityType;
+import enviromine.trackers.properties.helpers.PropertyBase;
 
 public class EM_ConfigHandler
 {
@@ -24,8 +33,6 @@ public class EM_ConfigHandler
 	public static String customPath = configPath + "CustomProperties/";
 	
 	// Categories for Custom Objects
-	static String entityCat = EntityProperties.categoryName;
-	static String itemsCat = ItemProperties.categoryName;
 	static String rotCat = RotProperties.categoryName;
 	
 	static HashMap<String, PropertyBase> propTypes;
@@ -42,6 +49,8 @@ public class EM_ConfigHandler
 		propTypes.put(ArmorProperties.base.categoryName(), ArmorProperties.base);
 		propTypes.put(BlockProperties.base.categoryName(), BlockProperties.base);
 		propTypes.put(DimensionProperties.base.categoryName(), DimensionProperties.base);
+		propTypes.put(EntityProperties.base.categoryName(), EntityProperties.base);
+		propTypes.put(ItemProperties.base.categoryName(), ItemProperties.base);
 	}
 	
 	public static int initConfig()
@@ -94,8 +103,6 @@ public class EM_ConfigHandler
 	
 	private static void setPropertyConfigNames()
 	{
-		ItemProperties.setConfigNames();
-		EntityProperties.setConfigNames();
 		RotProperties.setConfigNames();
 		StabilityType.setConfigNames();
 	}
@@ -103,8 +110,6 @@ public class EM_ConfigHandler
 	public static void loadDefaultCategories(Configuration config)
 	{
 		// Load Default Categories
-		config.addCustomCategoryComment(entityCat, "Custom entity properties");
-		config.addCustomCategoryComment(itemsCat, "Custom item properties");
 		config.addCustomCategoryComment(rotCat, "Custom spoiling properties");
 	}
 	
@@ -234,6 +239,10 @@ public class EM_ConfigHandler
 
 	}
 	
+	/**
+	 * @deprecated Use config.getInt(...) instead as it provides min & max value caps
+	 */
+	@Deprecated
 	private static int getConfigIntWithMinInt(Property prop, int min)
 	{
 		if (prop.getInt(min) >= min) {
@@ -370,13 +379,7 @@ public class EM_ConfigHandler
 				{
 					String parent = CurCat.split("\\" + Configuration.CATEGORY_SPLITTER)[0];
 					
-					if(parent.equals(itemsCat))
-					{
-						ItemProperties.LoadProperty(config, catagory.get(x));
-					} else if(parent.equals(entityCat))
-					{
-						EntityProperties.LoadProperty(config, catagory.get(x));
-					} else if(parent.equals(rotCat))
+					if(parent.equals(rotCat))
 					{
 						RotProperties.LoadProperty(config, catagory.get(x));
 					} else if(propTypes.containsKey(parent) && propTypes.get(parent).useCustomConfigs())
@@ -440,10 +443,6 @@ public class EM_ConfigHandler
 		
 			// Load Default Categories
 			loadDefaultCategories(config);
-
-			ItemProperties.SaveDefaults(config);
-			EntityProperties.SaveDefaults(config);
-			//ArmorProperties.SaveDefaults(config);
 		
 		config.save();
 		
@@ -509,38 +508,39 @@ public class EM_ConfigHandler
 			{
 				int metadata = (Integer)data[1];
 				//BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
+				BlockProperties.base.generateEmpty(config, Block.blockRegistry.getObject((String)data[2]));
 				returnValue = "Saved";
 
 			}
 		} else if(type.equalsIgnoreCase("ENTITY"))
 		{
 			
-			String nameEntityCat = entityCat + "." + name;
+			/*String nameEntityCat = entityCat + "." + name;
 			
 			if(config.hasCategory(nameEntityCat) == true)
 			{
 				config.removeCategory(config.getCategory(nameEntityCat));
 				returnValue = "Removed";
-			} else
+			} else*/
 			{
-				config.addCustomCategoryComment(nameEntityCat, classname + ":" + name);
-				EntityProperties.SaveProperty(config, nameEntityCat, (Integer)data[0], true, true, true, true, false, false, 0.0D, 0.0D, 37.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+				//config.addCustomCategoryComment(nameEntityCat, classname + ":" + name);
+				//EntityProperties.SaveProperty(config, nameEntityCat, (Integer)data[0], true, true, true, true, false, false, 0.0D, 0.0D, 37.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 				returnValue = "Saved";
 			}
 			
 		} else if(type.equalsIgnoreCase("ITEM"))
 		{
-			
-			String nameItemCat = itemsCat + "." + name;
+			/*String nameItemCat = itemsCat + "." + name;
 			
 			if(config.hasCategory(nameItemCat) == true)
 			{
 				config.removeCategory(config.getCategory(nameItemCat));
 				returnValue = "Removed";
-			} else
+			} else*/
 			{
-				config.addCustomCategoryComment(nameItemCat, classname + ":" + name);
-					ItemProperties.SaveProperty(config, nameItemCat, (String)data[0], (Integer)data[1], false, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 37.00);
+				//config.addCustomCategoryComment(nameItemCat, classname + ":" + name);
+				//ItemProperties.SaveProperty(config, nameItemCat, (String)data[0], (Integer)data[1], false, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 37.00);
+				ItemProperties.base.generateEmpty(config, Item.itemRegistry.getObject((String)data[0]));
 				returnValue = "Saved";
 			}
 			

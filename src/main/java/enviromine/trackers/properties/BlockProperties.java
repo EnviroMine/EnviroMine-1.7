@@ -22,7 +22,7 @@ import enviromine.utils.EnviroUtils;
 
 public class BlockProperties implements SerialisableProperty, PropertyBase
 {
-	public static BlockProperties base = new BlockProperties();
+	public static final BlockProperties base = new BlockProperties();
 	static String[] BPName;
 	
 	public boolean hasPhys;
@@ -140,6 +140,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void LoadProperty(Configuration config, String category)
 	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
 		String name = config.get(category, BPName[0], "").getString();
 		int metaData = config.get(category, BPName[1], 0).getInt(0);
 		String dropName = config.get(category, BPName[2], "").getString();
@@ -241,7 +242,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 					blockFile.createNewFile();
 				} catch(Exception e)
 				{
-					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + block.getLocalizedName(), e);
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + block.getUnlocalizedName(), e);
 					continue;
 				}
 			}
@@ -295,7 +296,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[9], defStability.name).getString();
 				config.get(category, BPName[10], false).getBoolean(false);
 				config.get(category, BPName[11], false).getBoolean(false);
-			} else if(block == Blocks.netherrack)
+			} else if(block == Blocks.netherrack || block == Blocks.nether_brick || block == Blocks.nether_brick_fence || block == Blocks.nether_brick_stairs)
 			{
 				config.get(category, BPName[0], Block.blockRegistry.getNameForObject(block)).getString();
 				config.get(category, BPName[1], -1).getInt(0);
@@ -431,7 +432,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "minecraft.cfg");
+		return new File(EM_ConfigHandler.customPath + "Blocks.cfg");
 	}
 
 	@Override

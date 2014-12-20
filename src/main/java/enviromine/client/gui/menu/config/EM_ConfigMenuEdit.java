@@ -14,7 +14,7 @@ public class EM_ConfigMenuEdit extends GuiScreen
 	public EM_ConfigMenuEdit(File file)
 	{
 		conFile = file;
-		config = new Configuration(conFile);
+		config = new Configuration(conFile, true);
 	}
 	
 	@Override

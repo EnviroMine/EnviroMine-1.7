@@ -18,7 +18,7 @@ import enviromine.utils.EnviroUtils;
 
 public class ArmorProperties implements SerialisableProperty, PropertyBase
 {
-	public static ArmorProperties base = new ArmorProperties();
+	public static final ArmorProperties base = new ArmorProperties();
 	static String[] APName;
 	
 	public Item item;
@@ -111,6 +111,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void LoadProperty(Configuration config, String category)
 	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
 		String name = config.get(category, APName[0], "").getString();
 		float nightTemp = (float)config.get(category, APName[1], 0.00).getDouble(0.00);
 		float shadeTemp = (float)config.get(category, APName[2], 0.00).getDouble(0.00);

@@ -148,8 +148,7 @@ public class EnviroUtils
 	
 	public static String replaceULN(String unlocalizedName)
 	{
-		String newName = unlocalizedName.replaceAll("\\.+", "\\_");
-		return newName;
+		return unlocalizedName.replaceAll("\\.+", "\\_");
 	}
 	
 	public static float convertToFarenheit(float num)

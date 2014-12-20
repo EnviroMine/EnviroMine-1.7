@@ -17,15 +17,9 @@ import enviromine.utils.EnviroUtils;
 
 public class CaveGenProperties implements PropertyBase
 {
-	// Declare static fields
-	/**
-	 * This is so we can use the interface methods like static ones
-	 * DO NOT use for any other purpose!
-	 */
-	public static CaveGenProperties base = new CaveGenProperties();
-	public static String[] CGPNames;
+	public static final CaveGenProperties base = new CaveGenProperties();
+	static String[] CGPNames;
 	
-	// Declare property fields
 	public Block ore;
 	public int oreMeta;
 	public Block source;
@@ -72,6 +66,7 @@ public class CaveGenProperties implements PropertyBase
 	@Override
 	public void LoadProperty(Configuration config, String category)
 	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
 		String nID = config.get(category, CGPNames[0], "minecraft:stone").getString();
 		int nOreM = MathHelper.clamp_int(config.get(category, CGPNames[1], 0).getInt(), 0, 15);
 		String nSource = config.get(category, CGPNames[2], "minecraft:stone").getString();
@@ -88,6 +83,14 @@ public class CaveGenProperties implements PropertyBase
 	@Override
 	public void SaveProperty(Configuration config, String category)
 	{
+		config.get(category, CGPNames[0], Block.blockRegistry.getIDForObject(ore));
+		config.get(category, CGPNames[1], oreMeta);
+		config.get(category, CGPNames[2], Block.blockRegistry.getNameForObject(source));
+		config.get(category, CGPNames[3], srcMeta);
+		config.get(category, CGPNames[4], veins);
+		config.get(category, CGPNames[5], size);
+		config.get(category, CGPNames[6], minY);
+		config.get(category, CGPNames[7], maxY);
 	}
 
 	@Override

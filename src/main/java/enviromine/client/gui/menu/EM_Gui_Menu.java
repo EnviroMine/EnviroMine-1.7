@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
+import enviromine.client.gui.UpdateNotification;
 import enviromine.client.gui.menu.update.NewsPage;
 import enviromine.core.EnviroMine;
 
@@ -44,7 +45,9 @@ public class EM_Gui_Menu extends GuiScreen
 		serverSettings.visible = true;
 		customEditor.visible = true;
 		
-		this.buttonList.add(new GuiButton(103, this.width / 2 - 90, this.height / 6 + 4, 180, 20, StatCollector.translateToLocal("options.enviromine.newsPage")+"..."));
+		String newPost = UpdateNotification.isNewPost() ? "(New Post)" : "";
+		
+		this.buttonList.add(new GuiButton(103, this.width / 2 - 90, this.height / 6 + 4, 180, 20, StatCollector.translateToLocal("options.enviromine.newsPage")+"..."+ newPost));
 		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 44, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));
 		this.buttonList.add(new GuiButton(102, this.width / 2 - 90, this.height / 6 + 24, 180, 20, StatCollector.translateToLocal("options.enviromine.guiSounds")+"..."));
 		this.buttonList.add(serverSettings);

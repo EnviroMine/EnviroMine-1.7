@@ -1,28 +1,32 @@
 package enviromine.client.gui;
 
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import enviromine.client.gui.menu.update.UpdatePage;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+
 import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import enviromine.client.gui.menu.update.WordPressParser;
+import enviromine.client.gui.menu.update.WordPressPost;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 
 public class UpdateNotification
 {
 	boolean hasChecked = false;
 	public static String version;
+	public static String lastSeen;
 	
-	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
 	{
@@ -34,8 +38,54 @@ public class UpdateNotification
 		hasChecked = true;
 		
 		
-		UpdatePage.display();
+		loadConfigLog();
 		
+		loadWordPress();
+		
+		displayUpdateCheck(event);
+		
+	}
+	
+	private void loadConfigLog()
+	{
+		try {
+			WordPressPost.changeLog = getUrl("https://drone.io/github.com/Funwayguy/EnviroMine-1.7/files/build/libs/full_changelog.txt", true);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			EnviroMine.logger.log(Level.WARN, "Failed to get ChangeLog file!");
+		}
+
+	}
+	
+	private void loadWordPress()
+	{
+		try
+		{
+			String page = getUrl("https://enviromine.wordpress.com/news/feed/", true);
+		
+			try {
+				WordPressParser.main(page);
+			} catch (Exception e) {
+				EnviroMine.logger.log(Level.WARN, "Failed to parse WordPress News Page");
+			}
+			
+			
+		}catch(IOException e)
+		{
+			if(EM_Settings.updateCheck)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to get WordPress News Page!");
+			}
+		}
+		
+	}
+	
+	@SuppressWarnings("unused")
+	private void displayUpdateCheck(PlayerLoggedInEvent event)
+	{
+		
+		// File link: http://bit.ly/1r4JJt3;
 		// DO NOT CHANGE THIS!
 		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
 		{
@@ -43,11 +93,11 @@ public class UpdateNotification
 			return;
 		}
 		
-		// File link: http://bit.ly/1r4JJt3;
-		
 		try
 		{
-			String[] data = getNotification("http://bit.ly/1pwDr2o", true);
+			String page = getUrl("http://bit.ly/1pwDr2o", true);
+			String[] data = page.split("\\n");
+			
 			
 			if(!EM_Settings.updateCheck)
 			{
@@ -99,10 +149,10 @@ public class UpdateNotification
 				EnviroMine.logger.log(Level.WARN, "Failed to get versions file!");
 			}
 		}
-		
 	}
 	
-	private String[] getNotification(String link, boolean doRedirect) throws IOException
+	
+	private String getUrl(String link, boolean doRedirect) throws IOException
 	{
 		URL url = new URL(link);
 		HttpURLConnection.setFollowRedirects(false);
@@ -125,7 +175,7 @@ public class UpdateNotification
 			{
 				try
 				{
-					return getNotification(con.getHeaderField("location"), false);
+					return getUrl(con.getHeaderField("location"), false);
 				} catch(IOException e)
 				{
 					throw e;
@@ -145,11 +195,9 @@ public class UpdateNotification
 		}
 		final String page = buffer.toString();
 		
-		String[] pageSplit = page.split("\\n");
-		
-		return pageSplit;
+		return page;
 	}
-	
+
 	public static int compareVersions(String oldVer, String newVer)
 	{
 		int result = 0;
@@ -186,5 +234,45 @@ public class UpdateNotification
 			}
 		}
 		return result;
+	}
+	
+	public static void updateLastSeen()
+	{
+		lastSeen = WordPressPost.Posts.get(0).getPubDate();
+	}
+	
+	public static boolean isNewPost()
+	{
+		
+		if(lastSeen == null) return true; 
+
+		 if(!WordPressPost.Posts.isEmpty())
+		 {
+			 WordPressPost lastPost = WordPressPost.Posts.get(0);
+
+		
+			 if(lastPost.getPubDate().toLowerCase().trim().equals(lastSeen.toLowerCase().trim()))
+			 {
+				 return false;
+			 }		
+		 }
+		return true;
+	}
+	
+	public static void writeToNBT(NBTTagCompound nbt)
+	{
+		if(lastSeen != null)
+		{
+			nbt.setString("LastSeen", lastSeen);
+		}
+	}
+	
+	public static void readFromNBT(NBTTagCompound nbt)
+	{
+		if(nbt.hasKey("LastSeen"))
+		{
+			lastSeen = nbt.getString("LastSeen");	
+		}
+		 
 	}
 }

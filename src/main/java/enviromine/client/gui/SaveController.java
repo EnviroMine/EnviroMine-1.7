@@ -53,6 +53,7 @@ public class SaveController {
 
             UI_Settings.readFromNBT(nbt.getCompoundTag(UISettingsData));
             HUDRegistry.readFromNBT(nbt.getCompoundTag(UISettingsData));
+            UpdateNotification.readFromNBT(nbt.getCompoundTag("Notifications"));
             // New HUD Settings will be here
             
             for (HudItem item : HUDRegistry.getHudItemList()) {
@@ -91,6 +92,10 @@ public class SaveController {
             	HUDRegistry.writeToNBT(globalNBT);
             	UI_Settings.writeToNBT(globalNBT);
             	nbt.setTag(UISettingsData, globalNBT);
+            	
+            	NBTTagCompound notificationNBT = new NBTTagCompound();
+            	UpdateNotification.writeToNBT(notificationNBT);
+            	nbt.setTag("Notifications", notificationNBT);
                
             	for (HudItem item : HUDRegistry.getHudItemList()) {
                     NBTTagCompound itemNBT = new NBTTagCompound();

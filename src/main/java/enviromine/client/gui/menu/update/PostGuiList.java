@@ -1,20 +1,12 @@
 package enviromine.client.gui.menu.update;
 
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
@@ -23,7 +15,6 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.UpdateNotification;
-import enviromine.client.gui.menu.update.UpdatePage.WordPressPost;
 import enviromine.core.EM_Settings;
 import enviromine.utils.RenderAssist;
 
@@ -37,13 +28,14 @@ public class PostGuiList extends GuiListExtended{
 	{
 		super(mc, x, y, p_i45010_4_, p_i45010_5_,	Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
 	
-		if(NewsPage.tabSelection == 150) DisplayWordPressNews(mc);
-		else if (NewsPage.tabSelection == 151) EnviromineVersions(mc);
-		else if (NewsPage.tabSelection == 152) DisplayChangeLog(mc);
+		if(NewsPage.tabSelection == 150 && WordPressPost.Posts != null ) DisplayWordPressNews(mc);
+		else if (NewsPage.tabSelection == 151 ) EnviromineVersions(mc);
+		else if (NewsPage.tabSelection == 152 && WordPressPost.changeLog != null) DisplayChangeLog(mc);
 		
 	}
 	
 	
+	@SuppressWarnings("unused")
 	public void EnviromineVersions(Minecraft mc)
 	{
 		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
@@ -53,7 +45,6 @@ public class PostGuiList extends GuiListExtended{
 		}
 		
 		
-		@SuppressWarnings("unused")
 		int verStat = UpdateNotification.compareVersions(EM_Settings.Version, UpdateNotification.version);
 		
 		if(verStat == -1)
@@ -85,7 +76,7 @@ public class PostGuiList extends GuiListExtended{
 	
 	public void DisplayChangeLog(Minecraft mc)
 	{
-		List wordWrap = mc.fontRenderer.listFormattedStringToWidth(UpdatePage.changeLog,300);
+		List wordWrap = mc.fontRenderer.listFormattedStringToWidth(WordPressPost.changeLog,300);
 		
 		addWordWrap(wordWrap);
 	}
@@ -94,7 +85,7 @@ public class PostGuiList extends GuiListExtended{
 	{
 		String allPostLines = ""; 
 		
-		for(WordPressPost post : UpdatePage.Posts)
+		for(WordPressPost post : WordPressPost.Posts)
 		{ 
 			addLine(EnumChatFormatting.BOLD.UNDERLINE +  post.getTitle(), textType.TITLE);
 			addBlankLines(1);
@@ -152,34 +143,41 @@ public class PostGuiList extends GuiListExtended{
 	
 	private textType parseChangelog(String line)
 	{
+		line = line.toLowerCase();
 		Pattern versionNum = Pattern.compile("\\[.+\\]");
-		Pattern change = Pattern.compile("(Fixed)");
-		Pattern add = Pattern.compile("Added");
-		Pattern removed = Pattern.compile("Removed");
-		Pattern header = Pattern.compile("Full EnviroMine Changelog");
+		Pattern change = Pattern.compile(".*(fixed | \\* | fix | fixes | bug | changed).*");
+		Pattern add = Pattern.compile(".*(added | \\+ | new).*");
+		Pattern removed = Pattern.compile(".*(removed | deleted | revert).*");
+		Pattern header = Pattern.compile(".*full enviromine changelog.*");
 		
 		
-		System.out.println(line + change.matcher(line).matches());
+		
 		if(versionNum.matcher(line).matches())
 		{
+			System.out.println(line + versionNum.matcher(line).matches());
 			return textType.VERSION;
 		}
 		else if (change.matcher(line).matches())
 		{
+			System.out.println(line + change.matcher(line).matches());
 			return textType.CHANGED;
 		}
 		else if (header.matcher(line).matches())
 		{
+			System.out.println(line + header.matcher(line).matches());
 			return textType.HEADER;
-		}
-		else if (add.matcher(line).matches())
-		{
-			return textType.ADD;
 		}
 		else if (removed.matcher(line).matches())
 		{
+			System.out.println(line + removed.matcher(line).matches());
 			return textType.REMOVED;
 		}
+		else if (add.matcher(line).matches())
+		{
+			System.out.println(line + add.matcher(line).matches());
+			return textType.ADD;
+		}
+
 		else return textType.DEFAULT;
 	}
 	@Override

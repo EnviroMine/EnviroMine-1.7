@@ -1,19 +1,10 @@
 package enviromine.client.gui.menu.update;
 
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.util.List;
-
+import enviromine.client.gui.SaveController;
+import enviromine.client.gui.UpdateNotification;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
-import enviromine.client.gui.menu.update.UpdatePage.WordPressPost;
 
 public class NewsPage  extends GuiScreen{
 	private GuiScreen parentGuiScreen;
@@ -91,13 +82,18 @@ public class NewsPage  extends GuiScreen{
 		}
 	}
 	
- 
+	@Override
+	public void onGuiClosed()
+	{
+		UpdateNotification.updateLastSeen();
+		SaveController.saveConfig(SaveController.UISettingsData);
+	}
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj,  StatCollector.translateToLocal("options.enviromine.updatepage.title"), this.width / 2, 15, 16777215);
+		this.drawCenteredString(this.fontRendererObj,  StatCollector.translateToLocal("options.enviromine.newsPage"), this.width / 2, 15, 16777215);
 		
         this.newsPostList.drawScreen(par1, par2, par3);
 		//drawNewsPost();

@@ -8,8 +8,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import enviromine.client.gui.menu.update.UpdatePage.WordPressPost;
-
 
 public class WordPressParser extends DefaultHandler
 {
@@ -79,10 +77,10 @@ public class WordPressParser extends DefaultHandler
     	{
     		item = false;
     		
-    		UpdatePage outer = new UpdatePage();
-    		WordPressPost post = outer.new WordPressPost(title, description, link, pubDate, creator);
+
+    		WordPressPost post = new WordPressPost(title, description, link, pubDate, creator);
     		
-    		UpdatePage.Posts.add(count, post);
+    		WordPressPost.Posts.add(count, post);
     		
     		title = ""; link = ""; creator = ""; pubDate = ""; description = "";
     		

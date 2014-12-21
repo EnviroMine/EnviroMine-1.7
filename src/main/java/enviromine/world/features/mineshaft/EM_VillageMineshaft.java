@@ -50,11 +50,11 @@ public class EM_VillageMineshaft extends StructureVillagePieces.Village
 		}
 		// --- Calibrate Depth --- //
 		
-		if(this.averageGroundLevel < 0)
+		if(this.averageGroundLevel == -1)
 		{
 			this.averageGroundLevel = this.getAverageGroundLevel(par1World, par3StructureBoundingBox);
 			
-			if(this.averageGroundLevel < 16)
+			if(this.averageGroundLevel < 32)
 			{
 				return true;
 			}
@@ -68,6 +68,11 @@ public class EM_VillageMineshaft extends StructureVillagePieces.Village
 		}
 		
 		int shaftTop = averageGroundLevel - boundingBox.minY;
+		
+		if(shaftTop < 32)
+		{
+			return true;
+		}
 		
 		// --- Generate Shaft --- //
 		

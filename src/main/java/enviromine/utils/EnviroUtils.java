@@ -247,6 +247,11 @@ public class EnviroUtils
 			type = EM_Settings.stabilityTypes.get("loose");
 		}
 		
+		if(type == null)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Block " + block.getUnlocalizedName() + " has a null StabilityType. Crash imminent!");
+		}
+		
 		return type;
 	}
 }

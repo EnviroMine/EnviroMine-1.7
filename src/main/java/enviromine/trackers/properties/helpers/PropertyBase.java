@@ -39,11 +39,6 @@ public interface PropertyBase
 	public abstract File GetDefaultFile();
 	
 	/**
-	 * Check whether the given object has a default configuration. Used in determining whether a blank field should be generated.
-	 */
-	public abstract boolean hasDefault(Object obj);
-	
-	/**
 	 * Generates a blank configuration entry for the given object
 	 */
 	public abstract void generateEmpty(Configuration config, Object obj);

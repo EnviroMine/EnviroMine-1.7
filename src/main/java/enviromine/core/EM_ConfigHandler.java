@@ -32,9 +32,6 @@ public class EM_ConfigHandler
 	public static String configPath = "config/enviromine/";
 	public static String customPath = configPath + "CustomProperties/";
 	
-	// Categories for Custom Objects
-	static String rotCat = RotProperties.categoryName;
-	
 	static HashMap<String, PropertyBase> propTypes;
 	
 	/**
@@ -51,22 +48,22 @@ public class EM_ConfigHandler
 		propTypes.put(DimensionProperties.base.categoryName(), DimensionProperties.base);
 		propTypes.put(EntityProperties.base.categoryName(), EntityProperties.base);
 		propTypes.put(ItemProperties.base.categoryName(), ItemProperties.base);
+		propTypes.put(RotProperties.base.categoryName(), RotProperties.base);
 	}
 	
 	public static int initConfig()
 	{
-		// Load in property names into arrays
-		setPropertyConfigNames();
-		
 		// Check for Data Directory 
 		CheckDir(new File(customPath));
 		
 		EnviroMine.logger.log(Level.INFO, "Loading configs...");
 		
-		File stabConfigFile = new File(configPath + "StabilityTypes.cfg");
-		StabilityType.loadStabilityTypes(stabConfigFile);
-		
 		// load defaults
+		
+		//These must be run before the block configs generate/load
+		StabilityType.base.GenDefaults();
+		StabilityType.base.customLoad();
+		
 		if(EM_Settings.useDefaultConfig)
 		{
 			loadDefaultProperties();
@@ -101,33 +98,15 @@ public class EM_ConfigHandler
 		return Total;
 	}
 	
-	private static void setPropertyConfigNames()
-	{
-		RotProperties.setConfigNames();
-		StabilityType.setConfigNames();
-	}
-	
-	public static void loadDefaultCategories(Configuration config)
-	{
-		// Load Default Categories
-		config.addCustomCategoryComment(rotCat, "Custom spoiling properties");
-	}
-	
 	public static void loadGeneralConfig(File file)
 	{
 		Configuration config;
 		try
 		{
 			config = new Configuration(file, true);
-		} catch(NullPointerException e)
+		} catch(Exception e)
 		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
-			return;
-		} catch(StringIndexOutOfBoundsException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD MAIN CONFIG!\nBACKUP SETTINGS ARE NOW IN EFFECT!");
+			EnviroMine.logger.log(Level.WARN, "Failed to load main configuration file!", e);
 			return;
 		}
 		
@@ -233,7 +212,6 @@ public class EM_ConfigHandler
 		if(config.hasCategory("Sound Options")) config.removeCategory(config.getCategory("Sound Options"));
 		// Gui settings
 		if(config.hasCategory("GUI Settings")) config.removeCategory(config.getCategory("GUI Settings"));
-	
 		
 		config.save();
 
@@ -356,9 +334,6 @@ public class EM_ConfigHandler
 			}
 			
 			config.load();
-			
-			// Load Default Categories
-			loadDefaultCategories(config);
 
 			// 	Grab all Categories in File
 			List<String> catagory = new ArrayList<String>();
@@ -379,10 +354,7 @@ public class EM_ConfigHandler
 				{
 					String parent = CurCat.split("\\" + Configuration.CATEGORY_SPLITTER)[0];
 					
-					if(parent.equals(rotCat))
-					{
-						RotProperties.LoadProperty(config, catagory.get(x));
-					} else if(propTypes.containsKey(parent) && propTypes.get(parent).useCustomConfigs())
+					if(propTypes.containsKey(parent) && propTypes.get(parent).useCustomConfigs())
 					{
 						PropertyBase property = propTypes.get(parent);
 						property.LoadProperty(config, catagory.get(x));
@@ -420,32 +392,6 @@ public class EM_ConfigHandler
 	
 	public static void loadDefaultProperties()
 	{
-		File customFile = new File(customPath + "Defaults.cfg");
-		
-		Configuration config;
-		try
-		{
-			config = new Configuration(customFile, true);
-		} catch(NullPointerException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD DEFAULTS!");
-			return;
-		} catch(StringIndexOutOfBoundsException e)
-		{
-			e.printStackTrace();
-			EnviroMine.logger.log(Level.WARN, "FAILED TO LOAD DEFAULTS!");
-			return;
-		}
-		EnviroMine.logger.log(Level.INFO, "Loading Default Config: " + customFile.getAbsolutePath());
-		
-		config.load();
-		
-			// Load Default Categories
-			loadDefaultCategories(config);
-		
-		config.save();
-		
 		Iterator<PropertyBase> iterator = propTypes.values().iterator();
 		
 		while(iterator.hasNext())
@@ -492,9 +438,6 @@ public class EM_ConfigHandler
 		config.load();
 		
 		String returnValue = "";
-		// Load Default Categories
-		loadDefaultCategories(config);
-
 		
 		if(type.equalsIgnoreCase("BLOCK"))
 		{

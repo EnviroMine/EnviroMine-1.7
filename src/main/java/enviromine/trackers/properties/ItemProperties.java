@@ -328,17 +328,11 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 	}
 
 	@Override
-	public boolean hasDefault(Object obj)
-	{
-		return false;
-	}
-
-	@Override
 	public void generateEmpty(Configuration config, Object obj)
 	{
 		if(obj == null || !(obj instanceof Item))
 		{
-			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non block object!", new Exception());
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non item object!", new Exception());
 			return;
 		}
 		

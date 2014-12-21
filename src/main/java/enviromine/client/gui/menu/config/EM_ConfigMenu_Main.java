@@ -6,12 +6,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.Configuration;
 
-public class EM_ConfigMenuEdit extends GuiScreen
+public class EM_ConfigMenu_Main extends GuiScreen
 {
 	File conFile;
 	Configuration config;
+	int page = 0;
 	
-	public EM_ConfigMenuEdit(File file)
+	public EM_ConfigMenu_Main(File file)
 	{
 		conFile = file;
 		config = new Configuration(conFile, true);
@@ -20,14 +21,7 @@ public class EM_ConfigMenuEdit extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		/* TODO: List all the config category buttons:
-		 * Block
-		 * Item
-		 * Armor
-		 * Rot
-		 * Biome
-		 * Dimension
-		 */
+		
 	}
 	
 	@Override

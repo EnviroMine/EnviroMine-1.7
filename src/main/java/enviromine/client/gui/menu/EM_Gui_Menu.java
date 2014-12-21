@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
-
+import enviromine.client.gui.menu.config.EM_ConfigMenu;
 import enviromine.core.EnviroMine;
 
 public class EM_Gui_Menu extends GuiScreen
@@ -21,8 +21,8 @@ public class EM_Gui_Menu extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		GuiButton serverSettings = new GuiButton(100, this.width / 2 - 90, this.height / 6 + 98 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
-		GuiButton customEditor =  new GuiButton(100, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
+		GuiButton serverSettings = new GuiButton(103, this.width / 2 - 90, this.height / 6 + 98 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
+		GuiButton customEditor =  new GuiButton(104, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
 		
 		/* update later on.... causeing a crash now.
 		// The old if statement would never work, GUIs are never run server side and mc.thePlayer is not accessible to server side functions - Funwayguy
@@ -77,6 +77,14 @@ public class EM_Gui_Menu extends GuiScreen
 		else if (par1GuiButton.id == 102)
 		{
 			this.mc.displayGuiScreen(new EM_Gui_SoundSettings(this));	
+		}
+		else if (par1GuiButton.id == 103)
+		{
+			return; // Server settings. Coming soon...
+		}
+		else if (par1GuiButton.id == 104)
+		{
+			this.mc.displayGuiScreen(new EM_ConfigMenu(this, 0)); // In game editor
 		}
 		else if (par1GuiButton.id == 200)
 		{

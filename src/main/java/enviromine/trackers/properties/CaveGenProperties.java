@@ -234,12 +234,6 @@ public class CaveGenProperties implements PropertyBase
 	}
 	
 	@Override
-	public boolean hasDefault(Object obj)
-	{
-		return false;
-	}
-	
-	@Override
 	public void generateEmpty(Configuration config, Object obj)
 	{
 		if(obj == null || !(obj instanceof Block))

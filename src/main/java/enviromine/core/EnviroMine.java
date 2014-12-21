@@ -66,13 +66,14 @@ public class EnviroMine
 		
 		proxy.preInit(event);
 		
-		// Load Configuration files And Custom files
-		EM_ConfigHandler.initConfig();
-		
 		ObjectHandler.initItems();
 		ObjectHandler.registerItems();
 		ObjectHandler.initBlocks();
 		ObjectHandler.registerBlocks();
+		
+		// Load Configuration files And Custom files
+		EM_ConfigHandler.initConfig();
+		
 		ObjectHandler.registerGases();
 		ObjectHandler.registerEntities();
 		

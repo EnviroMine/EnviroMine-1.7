@@ -182,7 +182,9 @@ public class EM_ConfigHandler
 		
 		// Config Options
 		String ConSetCat = "Config";
-		EM_Settings.genConfigs = config.get(ConSetCat, "Generate Blank Configs", true, "Will attempt to find and generate blank configs for any custom items/blocks/etc loaded before EnviroMine").getBoolean(true);
+		Property genConfig = config.get(ConSetCat, "Generate Blank Configs", false, "Will attempt to find and generate blank configs for any custom items/blocks/etc loaded before EnviroMine. Pack developers are highly encouraged to enable this! (Resets back to false after use)");
+		EM_Settings.genConfigs = genConfig.getBoolean(false);
+		genConfig.set(false);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
 		
@@ -193,7 +195,7 @@ public class EM_ConfigHandler
 		EM_Settings.quakeRarity = config.get(EarSetCat, "Rarity", 100).getInt(100);
 		EM_Settings.quakeMode = config.get(EarSetCat, "Mode", 2, "Changes how quakes are created (-1 = random, 0 = wave normal, 1 = centre normal, 2 = centre tear, 3 = wave tear)").getInt(2);
 		EM_Settings.quakeDelay = config.get(EarSetCat, "Tick delay", 10).getInt(10);
-		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", 2).getInt(2);
+		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", 2, "How many layers of rock it can eat through at a time").getInt(2);
 		if(EM_Settings.quakeRarity < 0)
 		{
 			EM_Settings.quakeRarity = 0;

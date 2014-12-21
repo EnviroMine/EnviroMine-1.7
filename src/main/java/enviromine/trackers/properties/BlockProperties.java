@@ -145,7 +145,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		int metaData = config.get(category, BPName[1], 0).getInt(0);
 		String dropName = config.get(category, BPName[2], "").getString();
 		int dropMeta = config.get(category, BPName[3], 0).getInt(0);
-		int dropNum = config.get(category, BPName[4], 0).getInt(0);
+		int dropNum = config.get(category, BPName[4], -1).getInt(-1);
 		boolean enableTemp = config.get(category, BPName[5], false).getBoolean(false);
 		float temperature = (float)config.get(category, BPName[6], 0.00).getDouble(0.00);
 		float airQuality = (float)config.get(category, BPName[7], 0.00).getDouble(0.00);
@@ -201,7 +201,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		config.get(category, BPName[1], meta).getInt(0);
 		config.get(category, BPName[2], dropName).getString();
 		config.get(category, BPName[3], dropMeta).getInt(0);
-		config.get(category, BPName[4], dropNum).getInt(0);
+		config.get(category, BPName[4], dropNum).getInt(-1);
 		config.get(category, BPName[5], enableTemp).getBoolean(false);
 		config.get(category, BPName[6], temp).getDouble(0.00);
 		config.get(category, BPName[7], air).getDouble(0.00);
@@ -260,7 +260,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], true).getBoolean(true);
 				config.get(category, BPName[6], 200.0D).getDouble(200.0D);
 				config.get(category, BPName[7], -1D).getDouble(-1D);
@@ -274,7 +274,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], true).getBoolean(true);
 				config.get(category, BPName[6], 75.0D).getDouble(75.0D);
 				config.get(category, BPName[7], -0.25D).getDouble(-0.25D);
@@ -288,7 +288,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], true).getBoolean(true);
 				config.get(category, BPName[6], 75.0D).getDouble(75.0D);
 				config.get(category, BPName[7], -0.25D).getDouble(-0.25D);
@@ -302,7 +302,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], true).getBoolean(true);
 				config.get(category, BPName[6], 50.0D).getDouble(50.0D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -316,7 +316,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], block == Blocks.grass? Block.blockRegistry.getNameForObject(Blocks.dirt) : "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], false).getBoolean(false);
 				config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 				config.get(category, BPName[7], 1.0D).getDouble(1.0D);
@@ -330,7 +330,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], true).getBoolean(true);
 				config.get(category, BPName[6], -0.02D).getDouble(-0.02D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -344,7 +344,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], false).getBoolean(false);
 				config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -358,7 +358,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], false).getBoolean(false);
 				config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -372,7 +372,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], false).getBoolean(false);
 				config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -386,7 +386,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], false).getBoolean(false);
 				config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -400,7 +400,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				config.get(category, BPName[1], -1).getInt(0);
 				config.get(category, BPName[2], "").getString();
 				config.get(category, BPName[3], -1).getInt(0);
-				config.get(category, BPName[4], 1).getInt(0);
+				config.get(category, BPName[4], -1).getInt(0);
 				config.get(category, BPName[5], false).getBoolean(false);
 				config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 				config.get(category, BPName[7], 0.0D).getDouble(0.0D);
@@ -453,7 +453,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		config.get(category, BPName[1], -1).getInt(0);
 		config.get(category, BPName[2], block == Blocks.stone? Block.blockRegistry.getNameForObject(Blocks.cobblestone) : (block == Blocks.grass? Block.blockRegistry.getNameForObject(Blocks.dirt) : "")).getString();
 		config.get(category, BPName[3], -1).getInt(0);
-		config.get(category, BPName[4], 1).getInt(0);
+		config.get(category, BPName[4], -1).getInt(0);
 		config.get(category, BPName[5], false).getBoolean(false);
 		config.get(category, BPName[6], 0.0D).getDouble(0.0D);
 		config.get(category, BPName[7], 0.0D).getDouble(0.0D);

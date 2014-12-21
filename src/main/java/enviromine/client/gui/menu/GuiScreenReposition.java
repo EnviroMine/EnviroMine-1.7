@@ -71,19 +71,19 @@ public class GuiScreenReposition extends GuiScreen {
 	@Override
 	public void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.getEventKey() == 29) {
+		if (Keyboard.getEventKey() == Keyboard.KEY_LCONTROL || Keyboard.getEventKey() == Keyboard.KEY_RCONTROL) {
 			axisAlign = Keyboard.getEventKeyState();
 		}
 	}
 
 	@Override
 	protected void keyTyped(char keyChar, int keyCode) {
-		if (keyCode == 1) {
+		if (keyCode == Keyboard.KEY_ESCAPE) {
 			hudItem.posX = oldPosX;
 			hudItem.posY = oldPosY;
 			mc.displayGuiScreen(parentScreen);
 			SaveController.saveConfig(SaveController.UISettingsData);
-		} else if (keyCode == 19) {
+		} else if (keyCode == Keyboard.KEY_R) {
 			// hudItem.rotated = false;
 			hudItem.posX = hudItem.getDefaultPosX();
 			hudItem.posY = hudItem.getDefaultPosY();

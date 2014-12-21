@@ -16,7 +16,7 @@ import enviromine.utils.ModIdentification;
 
 public class DimensionProperties implements SerialisableProperty, PropertyBase
 {
-	public static DimensionProperties base = new DimensionProperties();
+	public static final DimensionProperties base = new DimensionProperties();
 	static String[] DMName;
 	
 	public int id;

@@ -22,9 +22,10 @@ public class GasMaskHud
 
     private static int alpha;
     
-    public static void renderGasMask(int screenWidth, int screenHeight, Minecraft mc)
+    public static void renderGasMask(Minecraft mc)
     {
-
+        ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        
     	ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(3);
 		
 		if(itemstack != null && itemstack.getItem() != null)
@@ -32,13 +33,13 @@ public class GasMaskHud
 			if(itemstack.getItem() == ObjectHandler.gasMask)
 			{
 				
-				Renderbreath(screenWidth, screenHeight, mc, itemstack);
+				Renderbreath(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), mc, itemstack);
 				
 				if(mc.gameSettings.thirdPersonView == 0)
 				{
 					mc.renderEngine.bindTexture(gasMaskResource);
 					//Draw gasMask Overlay
-					RenderAssist.drawScreenOverlay(screenWidth, screenHeight, RenderAssist.getColorFromRGBA(255, 255, 255, 255));
+					RenderAssist.drawScreenOverlay(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), RenderAssist.getColorFromRGBA(255, 255, 255, 255));
 				}
 			}
 		}
@@ -50,19 +51,18 @@ public class GasMaskHud
     {
 		mc.renderEngine.bindTexture(breathMaskResource);
 
-		if(maskBreathing.phase == 0)
-		{
-			if(UI_Settings.breathSound == true)
-			{
-				mc.thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
-			}
-		}
-		
-		
 		if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && mc.gameSettings.thirdPersonView == 0)
 		{
 			alpha = OverlayHandler.PulseWave(maskBreathing);
 			RenderAssist.drawScreenOverlay(screenWidth, screenHeight, maskBreathing.getRGBA(alpha));
+			
+			if(maskBreathing.phase == 0)
+			{
+				if(UI_Settings.breathSound == true)
+				{
+					mc.thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
+				}
+			}
 		}
 
     }

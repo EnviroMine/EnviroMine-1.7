@@ -11,6 +11,7 @@ import net.minecraft.util.StatCollector;
 
 public class EM_Gui_Bars extends GuiScreen
 {
+	/*
 	private GuiScreen parentGuiScreen;
 	private ArrayList posList = new ArrayList();
 
@@ -50,7 +51,7 @@ public class EM_Gui_Bars extends GuiScreen
 	
 	/**
 	 * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
-	 */
+	 
 	@Override
 	public void actionPerformed(GuiButton par1GuiButton)
 	{
@@ -112,4 +113,5 @@ public class EM_Gui_Bars extends GuiScreen
 		
 		super.drawScreen(par1, par2, par3);
 	}
+	*/
 }

@@ -31,6 +31,7 @@ import enviromine.world.ClientQuake;
 
 public class EM_GuiEnviroMeters_Not_Used extends Gui
 {
+	/*
 	public Minecraft mc;
 	public IResourceManager resourceManager;
 	
@@ -882,5 +883,5 @@ public class EM_GuiEnviroMeters_Not_Used extends Gui
 			}
 		}
 	}
-	
+	*/
 }

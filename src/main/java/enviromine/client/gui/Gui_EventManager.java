@@ -49,6 +49,7 @@ public class Gui_EventManager
 	// Button Functions
 	GuiButton enviromine;
 	
+	// Captures the initiation of vanilla menus to render new buttons
 	@SubscribeEvent
 	public void renderevent(InitGuiEvent.Post event)
 	{
@@ -76,6 +77,8 @@ public class Gui_EventManager
 		}
 	}
 	
+	
+	// Used to capture when an Enviromine button is hit in a vanilla menu
 	@SubscribeEvent
 	public void action(ActionPerformedEvent.Post event)
 	{
@@ -102,6 +105,11 @@ public class Gui_EventManager
 	public static EnviroDataTracker tracker = null;
     
     
+	
+	/**
+	 * All Enviromine Gui and Hud Items will render here
+	 * @param event
+	 */
     @SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent.Post event)

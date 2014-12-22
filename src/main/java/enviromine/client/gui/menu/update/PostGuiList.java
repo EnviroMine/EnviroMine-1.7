@@ -107,7 +107,10 @@ public class PostGuiList extends GuiListExtended{
 		
 	}
 
-	
+	/**
+	 * Pass String and will wordwrap it to screen and add to list to be drawn
+	 * @param wordWrap
+	 */
 	private void addWordWrap(List wordWrap)
 	{
 		textType type;
@@ -122,6 +125,10 @@ public class PostGuiList extends GuiListExtended{
 		}
 	}
 	
+	/**
+	 * Will add "num" Blank lines to be drawn
+	 * @param num
+	 */
 	private void addBlankLines(int num)
 	{
 		for(int i = 0; i < num; i++)
@@ -140,6 +147,14 @@ public class PostGuiList extends GuiListExtended{
 	{
 		LineList.add(new PostGuiList.Row(text, hr));
 	}
+	
+	
+	/**
+	 * Pass a line from Changelog and returns Crude code coloring.. does not
+	 * parse multi lines cause by word wrap.
+	 * @param line
+	 * @return
+	 */
 	
 	private textType parseChangelog(String line)
 	{
@@ -255,6 +270,12 @@ public class PostGuiList extends GuiListExtended{
 		 
 	   }
 	   
+	 
+	 /**
+	  * These Enums are used for Parsing colors or chaning text when drawing to screen
+	  * @author GenDeathrow
+	  *
+	  */
 	 enum textType
 	 {
 		 TITLE,

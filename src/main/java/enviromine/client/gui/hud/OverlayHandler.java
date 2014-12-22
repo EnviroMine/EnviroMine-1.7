@@ -17,7 +17,11 @@ public class OverlayHandler
 		public Boolean pulse;
 		public ResourceLocation resource;
 		
-		
+		/**
+		 *  OverlayHandler creates basic settings for PulseWave
+		 * @param id 
+		 * @param pulse (Currently Not used)
+		 */
 		public OverlayHandler (int id, Boolean pulse)
 		{
 			this.id = id;
@@ -38,6 +42,7 @@ public class OverlayHandler
 			this.B = 255;
 		}
 		
+		/** Sets Overlay Color**/
 		public void setRGB(int R, int G, int B)
 		{
 			this.R = R;
@@ -50,6 +55,21 @@ public class OverlayHandler
 			return RenderAssist.getColorFromRGBA(this.R, this.G, this.B , alpha);
 		}
 		
+		/**
+		 *  Amplitude: is peak of the wave 
+		 *  Interval: is a pause between each wave
+		 *  PeakWait: is a pause when hits top of wave
+		 *   PeakSpeed: is speed to reach top of wave (Amplitude)
+		 *  BaseSpeed: is speed to reach Buttom of wave
+		 * 
+		 * Default: setPulseVar(111, 0, 100, 1, 1)
+		 * @param amplitude
+		 * @param interval
+		 * @param peakWait
+		 * @param peakSpeed
+		 * @param baseSpeed
+		 * @return
+		 */
 		public OverlayHandler setPulseVar(int amplitude, int interval, int peakWait, int peakSpeed, int baseSpeed)
 		{
 			this.amplitude = amplitude > 111 ? 111 : amplitude ;
@@ -65,6 +85,13 @@ public class OverlayHandler
 			this.resource = resource;
 		}
 		
+		
+		/**
+		 * Pass an Overlay and returns alpha numbers
+		 * Currently optimized for Gas Mask will need to change later on to be more universal
+		 * @param overlay
+		 * @return
+		 */
 		public static int PulseWave(OverlayHandler overlay)
 	    {
 	        int alpha;

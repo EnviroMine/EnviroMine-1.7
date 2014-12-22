@@ -46,6 +46,9 @@ public class UpdateNotification
 		
 	}
 	
+	/**
+	 * This will get grab Enviromines Change Logs
+	 */
 	private void loadConfigLog()
 	{
 		try {
@@ -58,6 +61,9 @@ public class UpdateNotification
 
 	}
 	
+	/**
+	 * This will grab Word Press Post Page and sent to parser
+	 */
 	private void loadWordPress()
 	{
 		try
@@ -151,7 +157,13 @@ public class UpdateNotification
 		}
 	}
 	
-	
+	/**
+	 * Grabs http webpage and returns data
+	 * @param link
+	 * @param doRedirect
+	 * @return
+	 * @throws IOException
+	 */
 	private String getUrl(String link, boolean doRedirect) throws IOException
 	{
 		URL url = new URL(link);
@@ -198,6 +210,12 @@ public class UpdateNotification
 		return page;
 	}
 
+	/**
+	 * Will compare Versions numbers and give difference
+	 * @param oldVer
+	 * @param newVer
+	 * @return
+	 */
 	public static int compareVersions(String oldVer, String newVer)
 	{
 		int result = 0;
@@ -235,12 +253,18 @@ public class UpdateNotification
 		}
 		return result;
 	}
-	
+	/**
+	 *  This will update last seen post by player.
+	 */
 	public static void updateLastSeen()
 	{
 		lastSeen = WordPressPost.Posts.get(0).getPubDate();
 	}
 	
+	/**
+	 * This will compare last seen post with last post and return boolean
+	 * @return
+	 */
 	public static boolean isNewPost()
 	{
 		

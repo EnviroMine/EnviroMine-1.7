@@ -49,20 +49,25 @@ public class GasMaskHud
     public static void Renderbreath(int screenWidth, int screenHeight, Minecraft mc, ItemStack itemstack)
     {
 		mc.renderEngine.bindTexture(breathMaskResource);
-
-		if(maskBreathing.phase == 0)
-		{
-			if(UI_Settings.breathSound == true)
-			{
-				mc.thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
-			}
-		}
 		
-		
-		if(itemstack.hasTagCompound() && itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && mc.gameSettings.thirdPersonView == 0)
+		if(itemstack.hasTagCompound() && itemstack.getTagCompound().hasKey("gasMaskFill"))
 		{
 			alpha = OverlayHandler.PulseWave(maskBreathing);
-			RenderAssist.drawScreenOverlay(screenWidth, screenHeight, maskBreathing.getRGBA(alpha));
+			
+			if(itemstack.getTagCompound().getInteger("gasMaskFill") <= 20 && mc.gameSettings.thirdPersonView == 0)
+			{
+			
+				RenderAssist.drawScreenOverlay(screenWidth, screenHeight, maskBreathing.getRGBA(alpha));
+			}
+			
+			
+			if(maskBreathing.phase == 0)
+			{
+				if(UI_Settings.breathSound == true)
+				{
+					mc.thePlayer.playSound("enviromine:gasmask",  UI_Settings.breathVolume, 1.0F);
+				}
+			}
 		}
 
     }

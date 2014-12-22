@@ -1,10 +1,10 @@
 package enviromine.client.gui.menu.update;
 
-import enviromine.client.gui.SaveController;
-import enviromine.client.gui.UpdateNotification;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+import enviromine.client.gui.SaveController;
+import enviromine.client.gui.UpdateNotification;
 
 public class NewsPage  extends GuiScreen{
 	private GuiScreen parentGuiScreen;

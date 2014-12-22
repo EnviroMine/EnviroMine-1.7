@@ -1,28 +1,10 @@
 package enviromine.client.gui.menu.update;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.apache.logging.log4j.Level;
-import org.xml.sax.helpers.DefaultHandler;
-
-import com.sun.org.apache.xml.internal.resolver.readers.SAXParserHandler;
-
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
 
 public class WordPressPost {
 	

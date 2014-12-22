@@ -1,26 +1,29 @@
 package enviromine.trackers.properties;
 
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-
+import java.io.File;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldProvider;
-
-import java.io.File;
-import java.io.IOException;
-
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.helpers.PropertyBase;
+import enviromine.trackers.properties.helpers.SerialisableProperty;
+import enviromine.utils.EnviroUtils;
+import enviromine.utils.ModIdentification;
 
-public class DimensionProperties implements SerialisableProperty
+public class DimensionProperties implements SerialisableProperty, PropertyBase
 {
+	public static final DimensionProperties base = new DimensionProperties();
+	static String[] DMName;
+	
 	public int id;
 	public boolean override;
 	public boolean trackSanity;
 	public boolean darkAffectSanity;
-	public float sanityMultiplyer;
+	public float sanityMulti;
 	public boolean trackAirQuality;
 	public float airMulti;
 	public boolean trackHydration;
@@ -32,22 +35,28 @@ public class DimensionProperties implements SerialisableProperty
 	public boolean mineshaftGen;
 	public int sealevel;
 	
-	static String[] DMName;
-	
-	public static String categoryName = "dimensions";
-	
 	public DimensionProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
 	}
 	
-	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMultiplyer, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
+	public DimensionProperties()
+	{
+		// THIS CONSTRUCTOR IS FOR STATIC PURPOSES ONLY!
+		
+		if(base != null && base != this)
+		{
+			throw new IllegalStateException();
+		}
+	}
+	
+	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel)
 	{
 		this.id = id;
 		this.override = override;
 		this.trackSanity = trackSanity;
 		this.darkAffectSanity = darkAffectSanity;
-		this.sanityMultiplyer = sanityMultiplyer;
+		this.sanityMulti = sanityMulti;
 		this.trackAirQuality = trackAirQuality;
 		this.airMulti = airMulti;
 		this.trackHydration = trackHydration;
@@ -59,137 +68,63 @@ public class DimensionProperties implements SerialisableProperty
 		this.mineshaftGen = mineshaftGen;
 		this.sealevel = sealevel;
 	}
-	
-	public static void setConfigNames()
-	{
-		DMName = new String[15];
-		DMName[0] = "01.Dimension ID";
-		DMName[1] = "02.Allow Config Override";
-		DMName[2] = "03.Track Sanity";
-		DMName[3] = "04.Dark Affects Sanity";
-		DMName[4] = "05.Sanity Multiplier";
-		DMName[5] = "06.Track Air Quility";
-		DMName[6] = "07.Air Quility Multiplier";
-		DMName[7] = "08.Track Hydration";
-		DMName[8] = "09.Hydration Multiplier";
-		DMName[9] = "10.Track Temperature";
-		DMName[10] = "11.Temperature Multiplier";
-		DMName[11] = "12.Day/Night Affects Temp";
-		DMName[12] = "13.Weather Affects Temp";
-		DMName[13] = "14.Generate Mineshafts";
-		DMName[14] = "15.Where is Sea Level";
-	}
-	
-	/**
-	 * Search thur Dimension List and add to Enviromine Config Files 
-	 */
-	public static void SearchForDimensions()
-	{
-		Integer[] DimensionIds = DimensionManager.getStaticDimensionIDs();
-		
 
-		EnviroMine.logger.log(Level.INFO, "Found " + DimensionIds.length + " Mod Dimension");
-		
-		for(int p = 0; p <= DimensionIds.length - 1 && DimensionIds[p] != null; p++)
-		{
-			WorldProvider dimension = WorldProvider.getProviderForDimension(DimensionIds[p]);
-			
-			String canonicalName = dimension.getClass().getCanonicalName();
-			if (canonicalName == null)
-			{
-				SaveConfig(dimension, "Defaults");
-			} else {
-				String[] modname = canonicalName.trim().toLowerCase().split("\\.");
-				
-				//System.out.println(modname[0]);
-				if(modname[0].equalsIgnoreCase("net") && EM_Settings.useDefaultConfig)//If Vanilla
-				{
-					SaveConfig(dimension, "Defaults");
-				}
-				else
-				{
-					SaveConfig(dimension, modname[0]);
-				}
-			}
-		}
-	}
-	
-	
-	/**
-	 * Save data to the Config files
-	 * @param dimension
-	 * @param ModID
-	 */
-	public static void SaveConfig(WorldProvider dimension, String ModID)
+	@Override
+	public NBTTagCompound WriteToNBT()
 	{
-		
-	File dimensionFile = new File(EM_ConfigHandler.customPath + ModID + ".cfg");
-		
-		if(!dimensionFile.exists())
-		{
-			try
-			{
-				dimensionFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		Configuration config = new Configuration(dimensionFile, true);
-		config.load();
-		
-			String catName = categoryName + "."  + dimension.getDimensionName().toLowerCase().trim();
-			config.addCustomCategoryComment(catName, "");
-			
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setInteger("id", this.id);
+		tags.setBoolean("override", this.override);
+		tags.setBoolean("trackSanity", this.trackSanity);
+		tags.setBoolean("darkAffectSanity", this.darkAffectSanity);
+		tags.setFloat("sanityMulti", this.sanityMulti);
+		tags.setBoolean("trackAirQuality", this.trackAirQuality);
+		tags.setFloat("airMulti", this.airMulti);
+		tags.setBoolean("trackHydration", this.trackHydration);
+		tags.setFloat("hydrationMulti", this.hydrationMulti);
+		tags.setBoolean("trackTemp", this.trackTemp);
+		tags.setFloat("tempMulti", this.tempMulti);
+		tags.setBoolean("weatherAffectsTemp", this.weatherAffectsTemp);
+		tags.setBoolean("mineshaftGen", this.mineshaftGen);
+		tags.setInteger("sealevel", this.sealevel);
+		return tags;
+	}
 
-			if(dimension.getDimensionName().toLowerCase().trim() == "caves")
-			{
-				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-				config.get(catName, DMName[1], true).getBoolean(true);
-				config.get(catName, DMName[2], true).getBoolean(true);
-				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[5], true).getBoolean(true);
-				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[7], true).getBoolean(true);
-				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[9], true).getBoolean(true);
-				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[11], true).getBoolean(true);
-				config.get(catName, DMName[12], true).getBoolean(true);
-				config.get(catName, DMName[13], false).getBoolean(false);
-				config.get(catName, DMName[14], 65).getInt(65);
-			} else
-			{
-				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
-				config.get(catName, DMName[1], false).getBoolean(false);
-				config.get(catName, DMName[2], true).getBoolean(true);
-				config.get(catName, DMName[3], true).getBoolean(true);
-				config.get(catName, DMName[5], true).getBoolean(true);
-				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[7], true).getBoolean(true);
-				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[9], true).getBoolean(true);
-				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
-				config.get(catName, DMName[11], true).getBoolean(true);
-				config.get(catName, DMName[12], true).getBoolean(true);
-				config.get(catName, DMName[13], false).getBoolean(false);
-				config.get(catName, DMName[14], 65).getInt(65);
-			}
-		config.save();
-		
-	}
-	
-	/**
-	 * Load Dimension Property into List
-	 * @param config
-	 * @param category
-	 */
-	public static void LoadProperty(Configuration config, String category)
+	@Override
+	public void ReadFromNBT(NBTTagCompound tags)
 	{
-		config.addCustomCategoryComment(category, "");
-		
+		this.id = tags.getInteger("id");
+		this.override = tags.getBoolean("override");
+		this.trackSanity = tags.getBoolean("trackSanity");
+		this.darkAffectSanity = tags.getBoolean("darkAffectSanity");
+		this.sanityMulti = tags.getFloat("sanityMulti");
+		this.trackAirQuality = tags.getBoolean("trackAirQuality");
+		this.airMulti = tags.getFloat("airMulti");
+		this.trackHydration = tags.getBoolean("trackHydration");
+		this.hydrationMulti = tags.getFloat("hydrationMulti");
+		this.trackTemp = tags.getBoolean("trackTemp");
+		this.tempMulti = tags.getFloat("tempMulti");
+		this.weatherAffectsTemp = tags.getBoolean("weatherAffectsTemp");
+		this.mineshaftGen = tags.getBoolean("mineshaftGen");
+		this.sealevel = tags.getInteger("sealevel");
+	}
+
+	@Override
+	public String categoryName()
+	{
+		return "dimension";
+	}
+
+	@Override
+	public String categoryDescription()
+	{
+		return "Customise dimension environments";
+	}
+
+	@Override
+	public void LoadProperty(Configuration config, String category)
+	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
 		int id = config.get(category, DMName[0], 0).getInt(0);
 		boolean override = config.get(category, DMName[1], false).getBoolean(false);
 		boolean trackSanity = config.get(category, DMName[2], true).getBoolean(true);
@@ -211,42 +146,151 @@ public class DimensionProperties implements SerialisableProperty
 	}
 
 	@Override
-	public NBTTagCompound WriteToNBT()
+	public void SaveProperty(Configuration config, String category)
 	{
-		NBTTagCompound tags = new NBTTagCompound();
-		tags.setInteger("id", this.id);
-		tags.setBoolean("override", this.override);
-		tags.setBoolean("trackSanity", this.trackSanity);
-		tags.setBoolean("darkAffectSanity", this.darkAffectSanity);
-		tags.setFloat("sanityMultiplyer", this.sanityMultiplyer);
-		tags.setBoolean("trackAirQuality", this.trackAirQuality);
-		tags.setFloat("airMulti", this.airMulti);
-		tags.setBoolean("trackHydration", this.trackHydration);
-		tags.setFloat("hydrationMulti", this.hydrationMulti);
-		tags.setBoolean("trackTemp", this.trackTemp);
-		tags.setFloat("tempMulti", this.tempMulti);
-		tags.setBoolean("weatherAffectsTemp", this.weatherAffectsTemp);
-		tags.setBoolean("mineshaftGen", this.mineshaftGen);
-		tags.setInteger("sealevel", this.sealevel);
-		return tags;
+		config.get(category, DMName[0], id).getInt(id);
+		config.get(category, DMName[1], override).getBoolean(override);
+		config.get(category, DMName[2], trackSanity).getBoolean(trackSanity);
+		config.get(category, DMName[3], darkAffectSanity).getBoolean(darkAffectSanity);
+		config.get(category, DMName[4], sanityMulti).getDouble(sanityMulti);
+		config.get(category, DMName[5], trackAirQuality).getBoolean(trackAirQuality);
+		config.get(category, DMName[6], airMulti).getDouble(airMulti);
+		config.get(category, DMName[7], trackHydration).getBoolean(trackHydration);
+		config.get(category, DMName[8], hydrationMulti).getDouble(hydrationMulti);
+		config.get(category, DMName[9], trackTemp).getBoolean(trackTemp);
+		config.get(category, DMName[10], tempMulti).getDouble(tempMulti);
+		config.get(category, DMName[11], dayNightTemp).getBoolean(dayNightTemp);
+		config.get(category, DMName[12], weatherAffectsTemp).getBoolean(weatherAffectsTemp);
+		config.get(category, DMName[13], mineshaftGen).getBoolean(mineshaftGen);
+		config.get(category, DMName[14], sealevel).getInt(sealevel);
 	}
 
 	@Override
-	public void ReadFromNBT(NBTTagCompound tags)
+	public void GenDefaults()
 	{
-		this.id = tags.getInteger("id");
-		this.override = tags.getBoolean("override");
-		this.trackSanity = tags.getBoolean("trackSanity");
-		this.darkAffectSanity = tags.getBoolean("darkAffectSanity");
-		this.sanityMultiplyer = tags.getFloat("sanityMultiplyer");
-		this.trackAirQuality = tags.getBoolean("trackAirQuality");
-		this.airMulti = tags.getFloat("airMulti");
-		this.trackHydration = tags.getBoolean("trackHydration");
-		this.hydrationMulti = tags.getFloat("hydrationMulti");
-		this.trackTemp = tags.getBoolean("trackTemp");
-		this.tempMulti = tags.getFloat("tempMulti");
-		this.weatherAffectsTemp = tags.getBoolean("weatherAffectsTemp");
-		this.mineshaftGen = tags.getBoolean("mineshaftGen");
-		this.sealevel = tags.getInteger("sealevel");
+		Integer[] dimIDs = DimensionManager.getStaticDimensionIDs();
+		
+		for(int i = 0; i < dimIDs.length; i++)
+		{
+			WorldProvider dimension = WorldProvider.getProviderForDimension(dimIDs[i]);
+			
+			if(dimension == null)
+			{
+				continue;
+			}
+			
+			String modID = ModIdentification.idFromObject(dimension);
+			
+			File file = new File(EM_ConfigHandler.customPath + modID + ".cfg");
+			
+			if(!file.exists())
+			{
+				try
+				{
+					file.createNewFile();
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for dimension '" + dimension.getDimensionName() + "'", e);
+					continue;
+				}
+			}
+			
+			Configuration config = new Configuration(file, true);
+			
+			config.load();
+			
+			String catName = this.categoryName() + "." + EnviroUtils.replaceULN(dimension.getDimensionName());
+			
+			if(dimension.dimensionId == EM_Settings.caveDimID)
+			{
+				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
+				config.get(catName, DMName[1], true).getBoolean(true);
+				config.get(catName, DMName[2], true).getBoolean(true);
+				config.get(catName, DMName[3], true).getBoolean(true);
+				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[5], true).getBoolean(true);
+				config.get(catName, DMName[6], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[7], true).getBoolean(true);
+				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[9], true).getBoolean(true);
+				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[11], true).getBoolean(true);
+				config.get(catName, DMName[12], true).getBoolean(true);
+				config.get(catName, DMName[13], false).getBoolean(false);
+				config.get(catName, DMName[14], 255).getInt(255);
+			} else
+			{
+				this.generateEmpty(config, dimension);
+			}
+			
+			config.save();
+		}
+	}
+
+	@Override
+	public File GetDefaultFile()
+	{
+		return new File(EM_ConfigHandler.customPath + "Dimensions.cfg");
+	}
+
+	@Override
+	public void generateEmpty(Configuration config, Object obj)
+	{
+		if(obj == null || !(obj instanceof WorldProvider))
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non WorldProvider object!", new Exception());
+			return;
+		}
+		
+		WorldProvider dimension = (WorldProvider)obj;
+		
+		String catName = this.categoryName() + "." + EnviroUtils.replaceULN(dimension.getDimensionName());
+		
+		config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
+		config.get(catName, DMName[1], true).getBoolean(true);
+		config.get(catName, DMName[2], true).getBoolean(true);
+		config.get(catName, DMName[3], true).getBoolean(true);
+		config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
+		config.get(catName, DMName[5], true).getBoolean(true);
+		config.get(catName, DMName[6], 1.0D).getDouble(1.0D);
+		config.get(catName, DMName[7], true).getBoolean(true);
+		config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
+		config.get(catName, DMName[9], true).getBoolean(true);
+		config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
+		config.get(catName, DMName[11], !dimension.hasNoSky).getBoolean(!dimension.hasNoSky);
+		config.get(catName, DMName[12], !dimension.hasNoSky).getBoolean(!dimension.hasNoSky);
+		config.get(catName, DMName[13], !dimension.isHellWorld).getBoolean(!dimension.isHellWorld);
+		config.get(catName, DMName[14], dimension.isHellWorld? 255 : 65).getInt(dimension.isHellWorld? 255 : 65);
+	}
+
+	@Override
+	public boolean useCustomConfigs()
+	{
+		return false;
+	}
+
+	@Override
+	public void customLoad()
+	{
+	}
+	
+	static
+	{
+		DMName = new String[15];
+		DMName[0] = "01.Dimension ID";
+		DMName[1] = "02.Allow Config Override";
+		DMName[2] = "03.Track Sanity";
+		DMName[3] = "04.Dark Affects Sanity";
+		DMName[4] = "05.Sanity Multiplier";
+		DMName[5] = "06.Track Air Quility";
+		DMName[6] = "07.Air Quility Multiplier";
+		DMName[7] = "08.Track Hydration";
+		DMName[8] = "09.Hydration Multiplier";
+		DMName[9] = "10.Track Temperature";
+		DMName[10] = "11.Temperature Multiplier";
+		DMName[11] = "12.Day/Night Affects Temp";
+		DMName[12] = "13.Weather Affects Temp";
+		DMName[13] = "14.Generate Mineshafts";
+		DMName[14] = "15.Where is Sea Level";
 	}
 }

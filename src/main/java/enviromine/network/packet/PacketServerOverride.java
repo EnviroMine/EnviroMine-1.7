@@ -18,7 +18,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import enviromine.core.EM_Settings;
 import enviromine.core.EM_Settings.ShouldOverride;
 import enviromine.core.EnviroMine;
-import enviromine.trackers.properties.SerialisableProperty;
+import enviromine.trackers.properties.helpers.SerialisableProperty;
 
 public class PacketServerOverride implements IMessage
 {

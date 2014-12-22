@@ -3,17 +3,18 @@ package enviromine.core;
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.CaveGenProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.trackers.properties.RotProperties;
 import enviromine.trackers.properties.StabilityType;
-
 import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -107,6 +108,7 @@ public class EM_Settings
 	public static HashMap<Integer,DimensionProperties> dimensionProperties = new HashMap<Integer,DimensionProperties>();
 	
 	public static HashMap<String,StabilityType> stabilityTypes = new HashMap<String,StabilityType>();
+	public static ArrayList<CaveGenProperties> caveGenProperties = new ArrayList<CaveGenProperties>();
 	
 	@ShouldOverride({String.class, RotProperties.class})
 	public static HashMap<String,RotProperties> rotProperties = new HashMap<String,RotProperties>();
@@ -122,7 +124,7 @@ public class EM_Settings
 	
 	public static boolean updateCheck = true;
 	public static boolean useDefaultConfig = true;
-	public static boolean genArmorConfigs = false;
+	public static boolean genConfigs = false;
 	public static int physInterval;
 	public static int worldDelay;
 	public static int chunkDelay;
@@ -154,6 +156,7 @@ public class EM_Settings
 	public static boolean finiteWater = false;
 	public static boolean disableCaves = false;
 	public static boolean disableThing = false;
+	public static boolean limitElevatorY = true;
 	
 	public static float convertToFarenheit(float num)
 	{

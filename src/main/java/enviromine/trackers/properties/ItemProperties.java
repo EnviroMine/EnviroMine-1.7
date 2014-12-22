@@ -1,15 +1,31 @@
 package enviromine.trackers.properties;
 
+import java.io.File;
+import java.util.Iterator;
+import org.apache.logging.log4j.Level;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.helpers.PropertyBase;
+import enviromine.trackers.properties.helpers.SerialisableProperty;
+import enviromine.utils.EnviroUtils;
 
-public class ItemProperties implements SerialisableProperty
+public class ItemProperties implements SerialisableProperty, PropertyBase
 {
+	public static final ItemProperties base = new ItemProperties();
+	static String[] IPName;
+	
 	public String name;
 	public int meta;
 	
@@ -26,14 +42,19 @@ public class ItemProperties implements SerialisableProperty
 	
 	public float effTempCap;
 	
-	/** Item properties:<br>00 ({@link String}) Name <br>01 ({@link Int}) Damage <br>02 ({@link Boolean}) Enable Ambient Temperature <br>03 ({@link Double}) Ambient Temperature <br>04 ({@link Double}) Ambient Air Quality <br>05 ({@link Double}) Ambient Santity <br>06 ({@link Double}) Effect Temperature <br>07 ({@link Double}) Effect Air Quality <br>08 ({@link Double}) Effect Sanity <br>09 ({@link Double}) Effect Hydration <br>10 ({@link Double}) Effect Temperature Cap */
-	static String[] IPName;
-	
-	public static String categoryName = "items";
-	
 	public ItemProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
+	}
+	
+	public ItemProperties()
+	{
+		// THIS CONSTRUCTOR IS FOR STATIC PURPOSES ONLY!
+		
+		if(base != null && base != this)
+		{
+			throw new IllegalStateException();
+		}
 	}
 	
 	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap)
@@ -52,87 +73,6 @@ public class ItemProperties implements SerialisableProperty
 		this.effHydration = effHydration;
 		
 		this.effTempCap = effTempCap;
-	}
-	
-	/**Set up config names for Item properties:<br>00 ({@link String}) Name <br>01 ({@link Int}) Damage <br>02 ({@link Boolean}) Enable Ambient Temperature <br>03 ({@link Double}) Ambient Temperature <br>04 ({@link Double}) Ambient Air Quality <br>05 ({@link Double}) Ambient Santity <br>06 ({@link Double}) Effect Temperature <br>07 ({@link Double}) Effect Air Quality <br>08 ({@link Double}) Effect Sanity <br>09 ({@link Double}) Effect Hydration <br>10 ({@link Double}) Effect Temperature Cap */
-	public static void setConfigNames()
-	{
-		IPName = new String[11];
-		IPName[0] = "01.Name";
-		IPName[1] = "02.Damage";
-		IPName[2] = "03.Enable Ambient Temperature";
-		IPName[3] = "04.Ambient Temperature";
-		IPName[4] = "05.Ambient Air Quality";
-		IPName[5] = "06.Ambient Santity";
-		IPName[6] = "07.Effect Temperature";
-		IPName[7] = "08.Effect Air Quality";
-		IPName[8] = "09.Effect Sanity";
-		IPName[9] = "10.Effect Hydration";
-		IPName[10] = "11.Effect Temperature Cap";
-	}
-	
-	public static void LoadProperty(Configuration config, String category)
-	{
-		config.addCustomCategoryComment(category, "");
-		
-		String name = config.get(category, IPName[0], "").getString();
-		int meta = config.get(category, IPName[1], 0).getInt(0);
-		boolean enableTemp = config.get(category, IPName[2], false).getBoolean(false);
-		float ambTemp = (float)config.get(category, IPName[3], 0.00).getDouble(0.00);
-		float ambAir = (float)config.get(category, IPName[4], 0.00).getDouble(0.00);
-		float ambSanity = (float)config.get(category, IPName[5], 0.00).getDouble(0.00);
-		float effTemp = (float)config.get(category, IPName[6], 0.00).getDouble(0.00);
-		float effAir = (float)config.get(category, IPName[7], 0.00).getDouble(0.00);
-		float effSanity = (float)config.get(category, IPName[8], 0.00).getDouble(0.00);
-		float effHydration = (float)config.get(category, IPName[9], 0.00).getDouble(0.00);
-		float effTempCap = (float)config.get(category, IPName[10], 37.00).getDouble(37.00);
-		
-		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
-		
-		if(meta < 0)
-		{
-			EM_Settings.itemProperties.put("" + name, entry);
-		} else
-		{
-			EM_Settings.itemProperties.put("" + name + "," + meta, entry);
-		}
-	}
-	
-	public static void SaveProperty(Configuration config, String catName, String name, int meta, boolean enableAmbTemp, double ambTemp, double ambAir, double ambSanity, double effTemp, double effAir, double effSanity, double effHydration, double tempCap)
-	{
-		config.get(catName, IPName[0], name).getString();
-		config.get(catName, IPName[1], meta).getInt(meta);
-		config.get(catName, IPName[2], enableAmbTemp).getBoolean(enableAmbTemp);
-		config.get(catName, IPName[3], ambTemp).getDouble(ambTemp);
-		config.get(catName, IPName[4], ambAir).getDouble(ambAir);
-		config.get(catName, IPName[5], ambSanity).getDouble(ambSanity);
-		config.get(catName, IPName[6], effTemp).getDouble(effTemp);
-		config.get(catName, IPName[7], effTemp).getDouble(effTemp);
-		config.get(catName, IPName[8], effSanity).getDouble(effSanity);
-		config.get(catName, IPName[9], effHydration).getDouble(effHydration);
-		config.get(catName, IPName[10], tempCap).getDouble(tempCap);
-	}
-	
-	public static void SaveDefaults(Configuration configFile)
-	{
-		SaveProperty(configFile, categoryName + ".potions", 	Item.itemRegistry.getNameForObject(Items.potionitem), 	-1, false, 0.0, 0.0, 0.0, -0.05, 0.0, 0.0, 25.0, 37.05);
-		SaveProperty(configFile, categoryName + ".melon", 		Item.itemRegistry.getNameForObject(Items.melon), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, categoryName + ".carrot", 		Item.itemRegistry.getNameForObject(Items.carrot), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, categoryName + ".goldCarrot", 	Item.itemRegistry.getNameForObject(Items.golden_carrot), -1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		SaveProperty(configFile, categoryName + ".redApple", 	Item.itemRegistry.getNameForObject(Items.apple), 		-1, false, 0.0, 0.0, 0.0, -0.01, 0.0, 0.0, 5.0, 37.01);
-		
-		SaveProperty(configFile, categoryName + ".bucketLava", 	Item.itemRegistry.getNameForObject(Items.lava_bucket), 		-1, true, 100.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".redFlower", 	Block.blockRegistry.getNameForObject(Blocks.red_flower), 	-1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".yellowFlower",Block.blockRegistry.getNameForObject(Blocks.yellow_flower), -1, false, 0.0, 0.01, 0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".leaves", 		Block.blockRegistry.getNameForObject(Blocks.leaves), 		-1, false, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".snowBlock", 	Block.blockRegistry.getNameForObject(Blocks.snow), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".ice", 		Block.blockRegistry.getNameForObject(Blocks.ice), 			-1, true, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".snowLayer",	Block.blockRegistry.getNameForObject(Blocks.snow_layer), 	-1, true, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".netherrack", 	Block.blockRegistry.getNameForObject(Blocks.netherrack), 	-1, true, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".soulSand", 	Block.blockRegistry.getNameForObject(Blocks.soul_sand), 	-1, false, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".skull", 		Item.itemRegistry.getNameForObject(Items.skull), 			-1, false, 0.0, 0.0, -0.1, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".web", 		Block.blockRegistry.getNameForObject(Blocks.web), 			-1, false, 0.0, 0.0, -0.01, 0.0, 0.0, 0.0, 0.0, 37.0);
-		SaveProperty(configFile, categoryName + ".11", 			Item.itemRegistry.getNameForObject(Items.record_11), 		-1, false, 0.0, 0.0, -1, 0.0, 0.0, 0.0, 0.0, 37.0);
 	}
 
 	@Override
@@ -163,5 +103,280 @@ public class ItemProperties implements SerialisableProperty
 		this.effAir = tags.getFloat("effAir");
 		this.effHydration = tags.getFloat("effHydration");
 		this.effTempCap = tags.getFloat("effTempCap");
+	}
+
+	@Override
+	public String categoryName()
+	{
+		return "items";
+	}
+
+	@Override
+	public String categoryDescription()
+	{
+		return "Custom effects for items";
+	}
+
+	@Override
+	public void LoadProperty(Configuration config, String category)
+	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
+		String name = config.get(category, IPName[0], "").getString();
+		int meta = config.get(category, IPName[1], 0).getInt(0);
+		boolean enableTemp = config.get(category, IPName[2], false).getBoolean(false);
+		float ambTemp = (float)config.get(category, IPName[3], 0D).getDouble(0D);
+		float ambAir = (float)config.get(category, IPName[4], 0D).getDouble(0D);
+		float ambSanity = (float)config.get(category, IPName[5], 0D).getDouble(0D);
+		float effTemp = (float)config.get(category, IPName[6], 0D).getDouble(0D);
+		float effAir = (float)config.get(category, IPName[7], 0D).getDouble(0D);
+		float effSanity = (float)config.get(category, IPName[8], 0D).getDouble(0D);
+		float effHydration = (float)config.get(category, IPName[9], 0D).getDouble(0D);
+		float effTempCap = (float)config.get(category, IPName[10], 37D).getDouble(37D);
+		
+		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
+		
+		if(meta < 0)
+		{
+			EM_Settings.itemProperties.put("" + name, entry);
+		} else
+		{
+			EM_Settings.itemProperties.put("" + name + "," + meta, entry);
+		}
+	}
+
+	@Override
+	public void SaveProperty(Configuration config, String category)
+	{
+		config.get(category, IPName[0], name).getString();
+		config.get(category, IPName[1], meta).getInt(meta);
+		config.get(category, IPName[2], enableTemp).getBoolean(enableTemp);
+		config.get(category, IPName[3], ambTemp).getDouble(ambTemp);
+		config.get(category, IPName[4], ambAir).getDouble(ambAir);
+		config.get(category, IPName[5], ambSanity).getDouble(ambSanity);
+		config.get(category, IPName[6], effTemp).getDouble(effTemp);
+		config.get(category, IPName[7], effAir).getDouble(effAir);
+		config.get(category, IPName[8], effSanity).getDouble(effSanity);
+		config.get(category, IPName[9], effHydration).getDouble(effHydration);
+		config.get(category, IPName[10], effTempCap).getDouble(effTempCap);
+	}
+
+	@Override
+	public void GenDefaults()
+	{
+		Iterator<Item> iterator = Item.itemRegistry.iterator();
+		
+		while(iterator.hasNext())
+		{
+			Item item = iterator.next();
+			Block block = Blocks.air;
+			
+			if(item == null)
+			{
+				continue;
+			}
+			
+			if(item instanceof ItemBlock)
+			{
+				block = ((ItemBlock)item).field_150939_a;
+			}
+			
+			String[] regName = Item.itemRegistry.getNameForObject(item).split(":");
+			
+			if(regName.length <= 0)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + item.getUnlocalizedName());
+				continue;
+			}
+			
+			File itemFile = new File(EM_ConfigHandler.customPath + regName[0] + ".cfg");
+			
+			if(!itemFile.exists())
+			{
+				try
+				{
+					itemFile.createNewFile();
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + item.getUnlocalizedName(), e);
+					continue;
+				}
+			}
+			
+			Configuration config = new Configuration(itemFile, true);
+			
+			String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName());
+			
+			config.load();
+			
+			if(item == Items.potionitem)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], false).getBoolean(false);
+				config.get(category, IPName[3], 0D).getDouble(0D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], -0.1D).getDouble(-0.1D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 25D).getDouble(25D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(item == Items.melon || item == Items.carrot || item == Items.apple)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], false).getBoolean(false);
+				config.get(category, IPName[3], 0D).getDouble(0D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], -0.025D).getDouble(-0.025D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 5D).getDouble(5D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(block == Blocks.snow || block == Blocks.snow_layer)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], true).getBoolean(true);
+				config.get(category, IPName[3], -0.1D).getDouble(-0.1D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(block == Blocks.ice || block == Blocks.packed_ice)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], true).getBoolean(true);
+				config.get(category, IPName[3], -0.5D).getDouble(-0.5D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(block == Blocks.netherrack || block == Blocks.nether_brick || block == Blocks.nether_brick_fence || block == Blocks.nether_brick_stairs)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], true).getBoolean(true);
+				config.get(category, IPName[3], 50D).getDouble(50D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(block == Blocks.soul_sand || item == Items.skull || block == Blocks.skull)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], false).getBoolean(false);
+				config.get(category, IPName[3], 0D).getDouble(0D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], -1D).getDouble(-1D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if((block == Blocks.flower_pot || block == Blocks.grass || block instanceof BlockLeavesBase || block instanceof BlockFlower || block instanceof BlockBush || block.getMaterial() == Material.grass || block.getMaterial() == Material.leaves || block.getMaterial() == Material.plants || block.getMaterial() == Material.vine) && (regName[0].equals("minecraft") || EM_Settings.genConfigs))
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], false).getBoolean(false);
+				config.get(category, IPName[3], 0D).getDouble(0D);
+				config.get(category, IPName[4], 0.025D).getDouble(0.025D);
+				config.get(category, IPName[5], 0.1D).getDouble(0.1D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(item == Items.lava_bucket)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], true).getBoolean(true);
+				config.get(category, IPName[3], 100D).getDouble(100D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+			} else if(EM_Settings.genConfigs)
+			{
+				this.generateEmpty(config, item);
+			}
+			
+			config.save();
+		}
+	}
+
+	@Override
+	public File GetDefaultFile()
+	{
+		return new File(EM_ConfigHandler.customPath + "Items.cfg");
+	}
+
+	@Override
+	public void generateEmpty(Configuration config, Object obj)
+	{
+		if(obj == null || !(obj instanceof Item))
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non item object!", new Exception());
+			return;
+		}
+		
+		Item item = (Item)obj;
+		
+		String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName());
+		
+		config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+		config.get(category, IPName[1], -1).getInt(-1);
+		config.get(category, IPName[2], false).getBoolean(false);
+		config.get(category, IPName[3], 37D).getDouble(37D);
+		config.get(category, IPName[4], 0D).getDouble(0D);
+		config.get(category, IPName[5], 0D).getDouble(0D);
+		config.get(category, IPName[6], 0D).getDouble(0D);
+		config.get(category, IPName[7], 0D).getDouble(0D);
+		config.get(category, IPName[8], 0D).getDouble(0D);
+		config.get(category, IPName[9], 0D).getDouble(0D);
+		config.get(category, IPName[10], 37D).getDouble(37D);
+	}
+
+	@Override
+	public boolean useCustomConfigs()
+	{
+		return true;
+	}
+
+	@Override
+	public void customLoad()
+	{
+	}
+	
+	static
+	{
+		IPName = new String[11];
+		IPName[0] = "01.Name";
+		IPName[1] = "02.Damage";
+		IPName[2] = "03.Enable Ambient Temperature";
+		IPName[3] = "04.Ambient Temperature";
+		IPName[4] = "05.Ambient Air Quality";
+		IPName[5] = "06.Ambient Santity";
+		IPName[6] = "07.Effect Temperature";
+		IPName[7] = "08.Effect Air Quality";
+		IPName[8] = "09.Effect Sanity";
+		IPName[9] = "10.Effect Hydration";
+		IPName[10] = "11.Effect Temperature Cap";
 	}
 }

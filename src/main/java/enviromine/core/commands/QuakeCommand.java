@@ -1,6 +1,7 @@
 package enviromine.core.commands;
 
 import org.apache.logging.log4j.Level;
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.world.Earthquake;
 import net.minecraft.command.CommandBase;
@@ -55,7 +56,7 @@ public class QuakeCommand extends CommandBase
 		int z = sender.getPlayerCoordinates().posZ;
 		int l = 32 + world.rand.nextInt(128-32);
 		int w = 4 + world.rand.nextInt(32-4);
-		int m = world.rand.nextInt(4);
+		int m = EM_Settings.quakeMode;
 		float a = MathHelper.clamp_float(world.rand.nextFloat() * 4F - 2F, -2F, 2F);
 		
 		try

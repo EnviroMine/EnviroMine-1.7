@@ -3,23 +3,9 @@ package enviromine.handlers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockEndPortal;
-import net.minecraft.block.BlockEndPortalFrame;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockGlowstone;
-import net.minecraft.block.BlockGravel;
-import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.BlockMobSpawner;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.BlockPortal;
-import net.minecraft.block.BlockSign;
-import net.minecraft.block.BlockWeb;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -33,17 +19,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-
 import org.apache.logging.log4j.Level;
-
 import com.google.common.base.Stopwatch;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.BlockProperties;
 import enviromine.trackers.properties.StabilityType;
+import enviromine.utils.EnviroUtils;
 
 public class EM_PhysManager
 {
@@ -234,7 +218,7 @@ public class EM_PhysManager
 			
 			validSlideType = blockProps.slides || ((waterLogged || touchingWater) && blockProps.wetSlide);
 			isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
-		} else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer) && (waterLogged || touchingWater)))
+		}/* else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer) && (waterLogged || touchingWater)))
 		{
 			if(block instanceof BlockAnvil)
 			{
@@ -244,7 +228,7 @@ public class EM_PhysManager
 				validSlideType = true;
 				isMuddy = (block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer);
 			}
-		}
+		}*/
 		
 		if(validSlideType && EM_Settings.enableLandslide)
 		{
@@ -321,15 +305,9 @@ public class EM_PhysManager
 				
 				if(blockProps.dropName.equals(""))
 				{
-					dropType = 1;
+					dropType = -1;
 					defaultDrop = true;
 					dropNum = blockProps.dropNum;
-				} else if(blockProps.equals(""))
-				{
-					dropType = 0;
-					dropBlock = null;
-					dropMeta = 0;
-					dropNum = 0;
 				} else if(Block.getBlockFromName(blockProps.dropName) != null && blockProps.dropNum <= 0)
 				{
 					dropType = 1;
@@ -370,7 +348,7 @@ public class EM_PhysManager
 				dropType = 0;
 			} else if(block instanceof BlockLeavesBase)
 			{
-				dropType = 2;
+				dropType = -1;
 			} else if(dropBlock instanceof Block)
 			{
 				dropType = 1;
@@ -379,7 +357,7 @@ public class EM_PhysManager
 				dropType = 2;
 			} else
 			{
-				dropType = 0;
+				dropType = -1;
 			}
 			
 			int minThreshold = 10;
@@ -387,7 +365,7 @@ public class EM_PhysManager
 			int supportDist = 1;
 			int yMax = 1;
 			
-			int stabNum = getDefaultStabilityType(block);
+			StabilityType stabType = EnviroUtils.getDefaultStabilityType(block);
 			
 			if(isCustom)
 			{
@@ -401,46 +379,12 @@ public class EM_PhysManager
 				{
 					yMax = 1;
 				}
-			} else if(stabNum == 3)
+			} else if(stabType != null)
 			{
-				StabilityType strongType = EM_Settings.stabilityTypes.get("strong");
-				minThreshold = strongType.minFall;
-				maxThreshold = strongType.maxFall;
-				supportDist = strongType.supportDist;
-				if(strongType.canHang)
-				{
-					yMax = 2;
-				} else
-				{
-					yMax = 1;
-				}
-			} else if(stabNum == 2)
-			{
-				StabilityType avgType = EM_Settings.stabilityTypes.get("average");
-				minThreshold = avgType.minFall;
-				maxThreshold = avgType.maxFall;
-				supportDist = avgType.supportDist;
-				if(avgType.canHang)
-				{
-					yMax = 2;
-				} else
-				{
-					yMax = 1;
-				}
-			} else if(stabNum == 1)
-			{
-				StabilityType looseType;
-				if(Block.getIdFromBlock(block) > 175 && EM_Settings.stabilityTypes.containsKey(EM_Settings.defaultStability))
-				{
-					looseType = EM_Settings.stabilityTypes.get(EM_Settings.defaultStability);
-				} else
-				{
-					looseType = EM_Settings.stabilityTypes.get("loose");
-				}
-				minThreshold = looseType.minFall;
-				maxThreshold = looseType.maxFall;
-				supportDist = looseType.supportDist;
-				if(looseType.canHang)
+				minThreshold = stabType.minFall;
+				maxThreshold = stabType.maxFall;
+				supportDist = stabType.supportDist;
+				if(stabType.canHang)
 				{
 					yMax = 2;
 				} else
@@ -478,19 +422,37 @@ public class EM_PhysManager
 			{
 				if(!world.isRemote && ((missingBlocks > minThreshold && (world.rand.nextInt(dropChance) == 0 || type.equals("Collapse"))) || missingBlocks >= maxThreshold || ((touchingWaterDirect || isMuddy) && world.rand.nextBoolean())))
 				{
-					if(dropType == 2)
+					if(dropType == -1)
+					{
+						world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (world.getBlockMetadata(x, y, z) << 12));
+						block.dropBlockAsItem(world, x, y, z, meta, 0);
+						world.setBlock(x, y, z, Blocks.air);
+						return;
+					} else if(dropType == 2)
 					{
 						world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (world.getBlockMetadata(x, y, z) << 12));
 						if(isCustom && dropMeta > -1)
 						{
 							if(dropNum >= 1)
 							{
-								dropItemstack(world, x, y, z, new ItemStack((Item)dropBlock, dropNum, dropMeta));
+								if(dropBlock instanceof Item)
+								{
+									dropItemstack(world, x, y, z, new ItemStack((Item)dropBlock, dropNum, dropMeta));
+								} else if(dropBlock instanceof Block)
+								{
+									dropItemstack(world, x, y, z, new ItemStack((Block)dropBlock, dropNum, dropMeta));
+								}
 							}
 						} else if(isCustom && dropNum >= 1)
 						{
-							dropItemstack(world, x, y, z, new ItemStack((Item)dropBlock, dropNum, meta));
-						} else if(!isCustom || (isCustom && dropMeta <= -1 && dropNum > 0))
+							if(dropBlock instanceof Item)
+							{
+								dropItemstack(world, x, y, z, new ItemStack((Item)dropBlock, dropNum, meta));
+							} else if(dropBlock instanceof Block)
+							{
+								dropItemstack(world, x, y, z, new ItemStack((Block)dropBlock, dropNum, meta));
+							}
+						} else if(!isCustom)
 						{
 							block.dropBlockAsItem(world, x, y, z, meta, 0);
 						}
@@ -617,7 +579,7 @@ public class EM_PhysManager
 						continue;
 					}
 					
-					int stabNum = getDefaultStabilityType(block);
+					StabilityType stabType = EnviroUtils.getDefaultStabilityType(block);
 					
 					if(material != null && material.isLiquid())
 					{
@@ -656,39 +618,12 @@ public class EM_PhysManager
 						{
 							data[4] = 1;
 						}
-					} else if(stabNum == 3)
+					} else if(stabType != null)
 					{
-						StabilityType strongType = EM_Settings.stabilityTypes.get("strong");
-						if(strongType != null && strongType.holdOther)
+						if(stabType != null && stabType.holdOther)
 						{
 							data[4] = 1;
 						}
-					} else if(stabNum == 2)
-					{
-						StabilityType avgType = EM_Settings.stabilityTypes.get("average");
-						if(avgType != null && avgType.holdOther)
-						{
-							data[4] = 1;
-						}
-					} else if(stabNum == 1)
-					{
-						StabilityType looseType;
-						if(Block.blockRegistry.getIDForObject(block) > 175 && EM_Settings.stabilityTypes.containsKey(EM_Settings.defaultStability))
-						{
-							looseType = EM_Settings.stabilityTypes.get(EM_Settings.defaultStability);
-						} else
-						{
-							looseType = EM_Settings.stabilityTypes.get("loose");
-						}
-						if(looseType != null && looseType.holdOther)
-						{
-							data[4] = 1;
-						}
-					}
-					
-					if(blockProps == null && block == Blocks.glowstone)
-					{
-						data[4] = 1;
 					}
 					
 					if(world.getEntitiesWithinAABB(EntityPhysicsBlock.class, AxisAlignedBB.getBoundingBox(i, j, k, i + 1, j + 1, k + 1)).size() > 0)
@@ -941,47 +876,13 @@ public class EM_PhysManager
 			}
 		} else
 		{
-			if(!(block instanceof BlockMobSpawner) && !(block instanceof BlockLadder) && !(block instanceof BlockWeb) && !(block instanceof BlockGlowstone) && !(block instanceof BlockSign) && !(block instanceof BlockBed) && !(block instanceof BlockDoor) && !(block instanceof BlockAnvil) && !(block instanceof BlockGravel) && !(block instanceof BlockFalling) && !(block instanceof BlockPortal) && !(block instanceof BlockEndPortal) && !(block == Blocks.end_stone) && !(block instanceof BlockEndPortalFrame) && !(block.getMaterial() == Material.vine) && !blockNotSolid(world, x, y, z, false) && block.getBlockHardness(world, x, y, z) != -1F)
+			if(block.getBlockHardness(world, x, y, z) >= 0)
 			{
-				int stabNum = getDefaultStabilityType(block);
+				StabilityType stabType = EnviroUtils.getDefaultStabilityType(block);
 				
-				if(stabNum == 3)
+				if(stabType != null)
 				{
-					StabilityType strongType = EM_Settings.stabilityTypes.get("strong");
-					if(strongType != null && strongType.enablePhysics)
-					{
-						return true;
-					} else
-					{
-						return false;
-					}
-				} else if(stabNum == 2)
-				{
-					StabilityType avgType = EM_Settings.stabilityTypes.get("average");
-					if(avgType != null && avgType.enablePhysics)
-					{
-						return true;
-					} else
-					{
-						return false;
-					}
-				} else if(stabNum == 1)
-				{
-					StabilityType looseType;
-					if(Block.blockRegistry.getIDForObject(block) > 175 && EM_Settings.stabilityTypes.containsKey(EM_Settings.defaultStability))
-					{
-						looseType = EM_Settings.stabilityTypes.get(EM_Settings.defaultStability);
-					} else
-					{
-						looseType = EM_Settings.stabilityTypes.get("loose");
-					}
-					if(looseType != null && looseType.enablePhysics)
-					{
-						return true;
-					} else
-					{
-						return false;
-					}
+					return stabType.enablePhysics && !stabType.holdOther;
 				} else
 				{
 					return false;
@@ -1235,24 +1136,5 @@ public class EM_PhysManager
 		}
 		
 		return npos;
-	}
-	
-	public static int getDefaultStabilityType(Block block)
-	{
-		int type = 0;
-		Material material = block.getMaterial();
-		
-		if(material == Material.iron || material == Material.wood || block instanceof BlockObsidian || block == Blocks.stonebrick || block == Blocks.brick_block || block == Blocks.quartz_block)
-		{
-			type = 3;
-		} else if(material == Material.rock || material == Material.glass || material == Material.ice || block instanceof BlockLeavesBase)
-		{
-			type = 2;
-		} else
-		{
-			type = 1;
-		}
-		
-		return type;
 	}
 }

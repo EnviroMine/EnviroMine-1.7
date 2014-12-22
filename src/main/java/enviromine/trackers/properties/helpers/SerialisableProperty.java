@@ -1,4 +1,4 @@
-package enviromine.trackers.properties;
+package enviromine.trackers.properties.helpers;
 
 import net.minecraft.nbt.NBTTagCompound;
 

@@ -157,9 +157,10 @@ public class HUDRegistry {
             HudItem hudItem = hudItemList.get(i);
             //System.out.println(hudItem.getName());
             
-            if (!nbt.hasKey(hudItem.getName())) 
+            
+            if(!hudItem.isEnabledByDefault())
             {
-               // disableHudItem(hudItem);
+                disableHudItem(hudItem);
             }
         }
     }

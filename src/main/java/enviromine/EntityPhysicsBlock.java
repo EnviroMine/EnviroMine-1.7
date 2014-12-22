@@ -371,7 +371,7 @@ public class EntityPhysicsBlock extends EntityFallingBlock implements IEntityAdd
 				
 				if(isLandSlide)
 				{
-					if(this.block == Blocks.snow || this.block == Blocks.snow_layer)
+					if(this.block.getMaterial() == Material.snow)
 					{
 						damagesource = EnviroDamageSource.avalanche;
 					} else

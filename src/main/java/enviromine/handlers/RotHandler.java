@@ -1,18 +1,16 @@
 package enviromine.handlers;
 
-import org.apache.logging.log4j.Level;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.items.RottenFood;
-import enviromine.trackers.properties.RotProperties;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.RotProperties;
 
 public class RotHandler
 {
@@ -32,7 +30,7 @@ public class RotHandler
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || (!(item.getItem() instanceof ItemFood || item.getItem() == Items.fermented_spider_eye) && rotProps == null) || rotTime < 0 || ((item.getItem() instanceof RottenFood || item.getItem() == Items.rotten_flesh) && rotProps == null))
+		if(!EM_Settings.foodSpoiling || rotProps == null)
 		{
 			if(item.getTagCompound() != null)
 			{
@@ -61,30 +59,7 @@ public class RotHandler
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())
 			{
-				ItemStack rotStack;
-				if(rotProps != null && Item.itemRegistry.getObject(rotProps.rotID) != null)
-				{
-					rotStack = new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
-				} else if(item.getItem() == Items.beef || item.getItem() == Items.chicken || item.getItem() == Items.porkchop || item.getItem() == Items.fish || item.getItem() == Items.cooked_beef || item.getItem() == Items.cooked_chicken || item.getItem() == Items.cooked_porkchop || item.getItem() == Items.cooked_fished)
-				{
-					rotStack = new ItemStack(Items.rotten_flesh, item.stackSize);
-				} else if(item.getItem() == Items.spider_eye)
-				{
-					rotStack = new ItemStack(Items.fermented_spider_eye, item.stackSize);
-				} else if(item.getItem() == Items.milk_bucket)
-				{
-					rotStack = new ItemStack(ObjectHandler.spoiledMilk, item.stackSize);
-				} else
-				{
-					rotStack = new ItemStack(ObjectHandler.rottenFood, item.stackSize);
-				}
-				
-				if(rotStack.getItem() == ObjectHandler.rottenFood)
-				{
-					rotStack.setStackDisplayName("Rotten " + item.getDisplayName());
-				}
-				
-				return rotStack;
+				return Item.itemRegistry.getObject(rotProps.rotID) == null? null : new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
 			} else
 			{
 				item.getTagCompound().setLong("EM_ROT_TIME", rotTime);
@@ -112,7 +87,7 @@ public class RotHandler
 			{
 				ItemStack rotItem = doRot(world, slotItem);
 				
-				if(rotItem != slotItem)
+				if(rotItem == null || rotItem.getItem() != slotItem.getItem())
 				{
 					inventory.setInventorySlotContents(i, rotItem);
 					flag = true;

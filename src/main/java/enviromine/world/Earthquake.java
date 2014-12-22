@@ -199,6 +199,11 @@ public class Earthquake
 			{
 				if((world.getBlock(x, yy, z).getMaterial() == Material.lava && yy > 10) || world.getBlock(x, yy, z).getMaterial() == Material.water || world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.clay || world.getBlock(x, yy, z).getMaterial() == Material.sand || world.getBlock(x, yy, z).getMaterial() == Material.ground || world.getBlock(x, yy, z).getMaterial() == Material.grass || (yy <= 10 && world.getBlock(x, yy, z).getMaterial() == Material.air))
 				{
+					if(world.getBlock(x, yy, z).getBlockHardness(world, x, yy, z) < 0)
+					{
+						continue;
+					}
+					
 					if(yy <= 10)
 					{
 						world.setBlock(x, yy, z, Blocks.flowing_lava);
@@ -291,6 +296,11 @@ public class Earthquake
 				{
 					if((world.getBlock(x, yy, z).getMaterial() == Material.lava && yy > 10) || world.getBlock(x, yy, z).getMaterial() == Material.water || world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.clay || world.getBlock(x, yy, z).getMaterial() == Material.sand || world.getBlock(x, yy, z).getMaterial() == Material.ground || world.getBlock(x, yy, z).getMaterial() == Material.grass || (yy <= 10 && world.getBlock(x, yy, z).getMaterial() == Material.air))
 					{
+						if(world.getBlock(x, yy, z).getBlockHardness(world, x, yy, z) < 0)
+						{
+							continue;
+						}
+						
 						if(yy <= 10)
 						{
 							world.setBlock(x, yy, z, Blocks.flowing_lava);
@@ -372,6 +382,11 @@ public class Earthquake
 				
 				if((world.getBlock(x, y, z).getMaterial() == Material.lava && y > 10) || world.getBlock(x, y, z).getMaterial() == Material.water || world.getBlock(x, y, z).getMaterial() == Material.rock || world.getBlock(x, y, z).getMaterial() == Material.clay || world.getBlock(x, y, z).getMaterial() == Material.sand || world.getBlock(x, y, z).getMaterial() == Material.ground || world.getBlock(x, y, z).getMaterial() == Material.grass || (y <= 10 && world.getBlock(x, y, z).getMaterial() == Material.air))
 				{
+					if(world.getBlock(x, y, z).getBlockHardness(world, x, y, z) < 0)
+					{
+						continue;
+					}
+					
 					if(y <= 10)
 					{
 						world.setBlock(x, y, z, Blocks.flowing_lava);

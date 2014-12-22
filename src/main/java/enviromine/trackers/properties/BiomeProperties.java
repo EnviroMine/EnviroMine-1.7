@@ -1,18 +1,24 @@
 package enviromine.trackers.properties;
 
 import java.io.File;
-import java.io.IOException;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.helpers.PropertyBase;
+import enviromine.trackers.properties.helpers.SerialisableProperty;
 import enviromine.utils.EnviroUtils;
+import enviromine.utils.ModIdentification;
 
 
-public class BiomeProperties implements SerialisableProperty
+public class BiomeProperties implements SerialisableProperty, PropertyBase
 {
+	public static final BiomeProperties base = new BiomeProperties();
+	static String[] BOName;
+	
 	public int id;
 	public boolean biomeOveride;
 	public String waterQuality;
@@ -21,13 +27,19 @@ public class BiomeProperties implements SerialisableProperty
 	public float sanityRate;
 	public float dehydrateRate;
 	
-	static String[] BOName;
-
-	public static String categoryName = "biomes";
-	
 	public BiomeProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
+	}
+	
+	public BiomeProperties()
+	{
+		// THIS CONSTRUCTOR IS FOR STATIC PURPOSES ONLY!
+		
+		if(base != null && base != this)
+		{
+			throw new IllegalStateException();
+		}
 	}
 
 	public BiomeProperties(int id, boolean biomeOveride, String waterQuality, float ambientTemp, float tempRate, float sanityRate, float dehydrateRate)
@@ -43,8 +55,6 @@ public class BiomeProperties implements SerialisableProperty
 
 	public int getWaterQualityId()
 	{
-		//System.out.println(this.waterQuality);
-
 		if(this.waterQuality.trim().equalsIgnoreCase("dirty"))
 		{
 			return 1;
@@ -61,89 +71,6 @@ public class BiomeProperties implements SerialisableProperty
 		{
 			return -1;
 		}
-	}
-
-	public static void setConfigNames()
-	{
-		
-		BOName = new String[7];
-		BOName[0] = "01.Biome ID";
-		BOName[1] = "02.Allow Config Override";
-		BOName[2] = "03.Water Quality";
-		BOName[3] = "04.Ambient Temperature";
-		BOName[4] = "05.Temp Rate";
-		BOName[5] = "06.Sanity Rate";
-		BOName[6] = "07.Dehydrate Rate";
-	}
-	
-	public static void LoadProperty(Configuration config, String category)
-	{
-		
-		//System.out.println(category);
-		
-		//String catName = biomeCat + "." + category;
-		config.addCustomCategoryComment(category, "");
-		
-		int id = config.get(category, BOName[0], 0, "Make sure if you change this id you also change it here.").getInt(0);
-		boolean biomeOveride = config.get(category, BOName[1], false).getBoolean(false);
-		String waterQ = config.get(category, BOName[2], "clean", "Water Quality: dirty, salt, cold, clean").getString();
-		float ambTemp = (float)config.get(category, BOName[3], 37.00, "In Celsius").getDouble(37.00);
-		float tempRate = (float)config.get(category, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-		float sanRate = (float)config.get(category, BOName[5], 0.0).getDouble(0.0);
-		float dehyRate = (float)config.get(category, BOName[6], 0.0).getDouble(0.0);
-		
-		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate);
-		
-		EM_Settings.biomeProperties.put(id, entry);;
-		
-	}
-	
-	public static void SearchForBiomes()
-	{
-		BiomeGenBase[] BiomeArray = BiomeGenBase.getBiomeGenArray();
-		
-		for(int p = 0; p < BiomeArray.length; p++)
-		{
-			if(BiomeArray[p] == null)
-			{
-				continue;
-			}
-			
-			BiomeSaveConfig(BiomeArray[p], "Biomes");
-		}
-	}
-	
-	private static void BiomeSaveConfig(BiomeGenBase biomeArray, String ModID)
-	{
-		File biomesFile = new File(EM_ConfigHandler.customPath + ModID +".cfg");
-		
-		if(!biomesFile.exists())
-		{
-			try
-			{
-				biomesFile.createNewFile();
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-		}
-		
-		Configuration config = new Configuration(biomesFile, true);
-		config.load();
-		
-		String catName = categoryName + "." + biomeArray.biomeName;
-		config.addCustomCategoryComment(catName, "");
-		
-		config.get(catName, BOName[0], biomeArray.biomeID, "Make sure if you change this id you also change it here.").getInt(biomeArray.biomeID);
-		config.get(catName, BOName[1], false).getBoolean(false);
-		config.get(catName, BOName[2], EnviroUtils.getBiomeWater(biomeArray), "Water Quality: dirty, salt, cold, clean").getString();
-		config.get(catName, BOName[3], EnviroUtils.getBiomeTemp(biomeArray), "In Celsius").getDouble(37.00);
-		config.get(catName, BOName[4], 0.0, "Rates Happen each Game tick").getDouble(0.0);
-		config.get(catName, BOName[5], 0.0).getDouble(0.0);
-		config.get(catName, BOName[6], 0.0).getDouble(0.0);
-		
-		config.save();
 	}
 
 	@Override
@@ -170,5 +97,137 @@ public class BiomeProperties implements SerialisableProperty
 		this.tempRate = tags.getFloat("tempRate");
 		this.sanityRate = tags.getFloat("sanityRate");
 		this.dehydrateRate = tags.getFloat("dehydrateRate");
+	}
+
+	@Override
+	public String categoryName()
+	{
+		return "biomes";
+	}
+
+	@Override
+	public String categoryDescription()
+	{
+		return "Manually change the environmental properties of each biome";
+	}
+
+	@Override
+	public void LoadProperty(Configuration config, String category)
+	{
+		config.setCategoryComment(this.categoryName(), this.categoryDescription());
+		int id = config.get(category, BOName[0], 0).getInt(0);
+		boolean biomeOveride = config.get(category, BOName[1], false).getBoolean(false);
+		String waterQ = config.get(category, BOName[2], "clean", "Water Quality: dirty, salty, cold, clean").getString();
+		float ambTemp = (float)config.get(category, BOName[3], 25.00, "Biome temperature in celsius (Player body temp is offset by + 12C)").getDouble(25.00);
+		float tempRate = (float)config.get(category, BOName[4], 0.0).getDouble(0.0);
+		float sanRate = (float)config.get(category, BOName[5], 0.0).getDouble(0.0);
+		float dehyRate = (float)config.get(category, BOName[6], 0.0).getDouble(0.0);
+		
+		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate);
+		
+		EM_Settings.biomeProperties.put(id, entry);
+	}
+
+	@Override
+	public void SaveProperty(Configuration config, String category)
+	{
+		config.get(category, BOName[0], this.id).getInt(0);
+		config.get(category, BOName[1], this.biomeOveride).getBoolean(this.biomeOveride);
+		config.get(category, BOName[2], this.waterQuality, "Water Quality: dirty, salty, cold, clean").getString();
+		config.get(category, BOName[3], this.ambientTemp, "Biome temperature in celsius (Player body temp is offset by + 12C)").getDouble(this.ambientTemp);
+		config.get(category, BOName[4], this.tempRate).getDouble(this.tempRate);
+		config.get(category, BOName[5], this.sanityRate).getDouble(this.sanityRate);
+		config.get(category, BOName[6], this.dehydrateRate).getDouble(this.dehydrateRate);
+	}
+
+	@Override
+	public void GenDefaults()
+	{
+		BiomeGenBase[] biomeArray = BiomeGenBase.getBiomeGenArray();
+		
+		for(int p = 0; p < biomeArray.length; p++)
+		{
+			BiomeGenBase biome = biomeArray[p];
+			
+			if(biome == null)
+			{
+				continue;
+			}
+			
+			String modID = ModIdentification.idFromObject(biome);
+			
+			File file = new File(EM_ConfigHandler.customPath + modID + ".cfg");
+			
+			if(!file.exists())
+			{
+				try
+				{
+					file.createNewFile();
+				} catch(Exception e)
+				{
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for biome '" + biome.biomeName + "'", e);
+					continue;
+				}
+			}
+			
+			Configuration config = new Configuration(file, true);
+			
+			config.load();
+			
+			generateEmpty(config, biome);
+			
+			config.save();
+		}
+	}
+
+	@Override
+	public File GetDefaultFile()
+	{
+		return new File(EM_ConfigHandler.customPath + "Biomes.cfg");
+	}
+
+	@Override
+	public void generateEmpty(Configuration config, Object obj)
+	{
+		if(obj == null || !(obj instanceof BiomeGenBase))
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tried to register config with non biome object!", new Exception());
+			return;
+		}
+		
+		BiomeGenBase biome = (BiomeGenBase)obj;
+		
+		String catName = this.categoryName() + "." + biome.biomeName;
+		
+		config.get(catName, BOName[0], biome.biomeID).getInt(biome.biomeID);
+		config.get(catName, BOName[1], false).getBoolean(false);
+		config.get(catName, BOName[2], EnviroUtils.getBiomeWater(biome), "Water Quality: dirty, salty, cold, clean").getString();
+		config.get(catName, BOName[3], EnviroUtils.getBiomeTemp(biome), "Biome temperature in celsius (Player body temp is offset by + 12C)").getDouble(25.00);
+		config.get(catName, BOName[4], 0.0).getDouble(0.0);
+		config.get(catName, BOName[5], 0.0).getDouble(0.0);
+		config.get(catName, BOName[6], 0.0).getDouble(0.0);
+	}
+
+	@Override
+	public boolean useCustomConfigs()
+	{
+		return true;
+	}
+
+	@Override
+	public void customLoad()
+	{
+	}
+	
+	static
+	{
+		BOName = new String[7];
+		BOName[0] = "01.Biome ID";
+		BOName[1] = "02.Allow Config Override";
+		BOName[2] = "03.Water Quality";
+		BOName[3] = "04.Ambient Temperature";
+		BOName[4] = "05.Temp Rate";
+		BOName[5] = "06.Sanity Rate";
+		BOName[6] = "07.Dehydrate Rate";
 	}
 }

@@ -73,7 +73,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			return true;
 		}
 		
-		if((j > 10 - meta || EM_Settings.limitElevatorY) && player.dimension == 0)
+		if(j > EM_Settings.limitElevatorY - meta && player.dimension == 0)
 		{
 			player.addChatMessage(new ChatComponentText("Elevator must be built near bedrock."));
 			return true;
@@ -117,7 +117,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			player.setLocationAndAngles((double)i + 0.5D, j - 1 + meta, (double)k + 0.5D, player.rotationYaw, player.rotationPitch);
 			player.addStat(EnviroAchievements.boreToTheCore, 1);
 			player.getEntityData().setIntArray("EM_CAVE_DIST", new int[]{i, j, k, 0});
-			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, -3, new TeleportHandler(playerMP.mcServer.worldServerForDimension(-3)));
+			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, EM_Settings.caveDimID, new TeleportHandler(playerMP.mcServer.worldServerForDimension(EM_Settings.caveDimID)));
 			world.setBlockToAir(i, j, k);
 			if(meta == 0)
 			{

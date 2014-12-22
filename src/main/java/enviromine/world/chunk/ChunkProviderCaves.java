@@ -163,7 +163,7 @@ public class ChunkProviderCaves implements IChunkProvider
 								
 								if (k1 * 8 + l1 < b1)
 								{
-									block = Blocks.water;
+									block = EM_Settings.caveLava? Blocks.lava : Blocks.water;
 								}
 								
 								if (d15 > 0.0D)
@@ -257,7 +257,7 @@ public class ChunkProviderCaves implements IChunkProvider
 									
 									if (k1 < b0 && (block == null || block.getMaterial() == Material.air))
 									{
-										block = Blocks.water;
+										block = EM_Settings.caveLava? Blocks.lava : Blocks.water;
 									}
 									
 									j1 = i1;
@@ -493,7 +493,10 @@ public class ChunkProviderCaves implements IChunkProvider
 	 {
 		 BlockFalling.fallInstantly = true;
 		 
-		 MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false));
+		 if(EM_Settings.caveOreEvent)
+		 {
+			 MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false));
+		 }
 		 
 		 int k = p_73153_2_ * 16;
 		 int l = p_73153_3_ * 16;
@@ -501,10 +504,13 @@ public class ChunkProviderCaves implements IChunkProvider
 		 int k1;
 		 int l1;
 		 
-		 boolean doGen = TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, NETHER_LAVA);
+		 //boolean doGen = TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, NETHER_LAVA);
 		 int i2;
 		 
-		 MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(worldObj, hellRNG, k, l));
+		 if(EM_Settings.caveOreEvent)
+		 {
+			 MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(worldObj, hellRNG, k, l));
+		 }
 
         if (TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, LAVA) && this.hellRNG.nextInt(8) == 0)
         {
@@ -514,8 +520,8 @@ public class ChunkProviderCaves implements IChunkProvider
             (new WorldGenLakes(Blocks.lava)).generate(this.worldObj, this.hellRNG, k1, l1, i2);
         }
         
-        doGen = TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, DUNGEON);
-        for (k1 = 0; doGen && k1 < 8; ++k1)
+        boolean doGen = TerrainGen.populate(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false, DUNGEON);
+        for (k1 = 0; doGen && k1 < EM_Settings.caveDungeons; ++k1)
         {
             l1 = k + this.hellRNG.nextInt(16) + 8;
             i2 = this.hellRNG.nextInt(256);
@@ -556,71 +562,11 @@ public class ChunkProviderCaves implements IChunkProvider
 			 }
 		 }
 		 
-		 /*worldgenminable = new WorldGenMinable(ObjectHandler.flammableCoal, 16, Blocks.stone);
-		 for (k1 = 0; k1 < 32; ++k1)
+		 if(EM_Settings.caveOreEvent)
 		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
+			 MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldObj, hellRNG, k, l));
+			 MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false));
 		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.iron_ore, 16, Blocks.stone);
-		 for (k1 = 0; k1 < 24; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.lapis_ore, 12, Blocks.stone);
-		 for (k1 = 0; k1 < 12; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.redstone_ore, 12, Blocks.stone);
-		 for (k1 = 0; k1 < 12; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.gold_ore, 8, Blocks.stone);
-		 for (k1 = 0; k1 < 8; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.diamond_ore, 8, Blocks.stone);
-		 for (k1 = 0; k1 < 3; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }
-		 
-		 worldgenminable = new WorldGenMinable(Blocks.emerald_ore, 4, Blocks.stone);
-		 for (k1 = 0; k1 < 1; ++k1)
-		 {
-			 l1 = k + this.hellRNG.nextInt(16);
-			 i2 = this.hellRNG.nextInt(246) + 10;
-			 j2 = l + this.hellRNG.nextInt(16);
-			 worldgenminable.generate(this.worldObj, this.hellRNG, l1, i2, j2);
-		 }*/
-		 
-		 MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldObj, hellRNG, k, l));
-		 MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, hellRNG, p_73153_2_, p_73153_3_, false));
 		 
 		 BlockFalling.fallInstantly = false;
 	 }

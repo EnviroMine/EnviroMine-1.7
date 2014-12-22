@@ -191,7 +191,7 @@ public class EM_PhysManager
 		int[] blockData = getSurroundingBlockData(world, x, y, z);
 		
 		boolean waterLogged = false;
-		boolean isMuddy = false;
+		//boolean isMuddy = false;
 		boolean touchingWaterDirect = blockData[2] > 0;//isTouchingLiquid(world, x, y, z, true);
 		boolean touchingWater = blockData[3] > 0;//isTouchingLiquid(world, x, y, z, false);
 		
@@ -217,7 +217,7 @@ public class EM_PhysManager
 			}
 			
 			validSlideType = blockProps.slides || ((waterLogged || touchingWater) && blockProps.wetSlide);
-			isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
+			//isMuddy = ((waterLogged || touchingWater) && blockProps.wetSlide);
 		}/* else if(block instanceof BlockFalling || ((block == Blocks.dirt || block == Blocks.snow || block == Blocks.snow_layer) && (waterLogged || touchingWater)))
 		{
 			if(block instanceof BlockAnvil)
@@ -393,11 +393,6 @@ public class EM_PhysManager
 				}
 			}
 			
-			if(world.provider.isHellWorld && block.getMaterial() == Material.rock && !isCustom)
-			{
-				yMax = 2;
-			}
-			
 			int missingBlocks = 0;
 			
 			if(yMax >= 2)
@@ -415,12 +410,12 @@ public class EM_PhysManager
 				dropChance = 1;
 			}
 			
-			boolean supported = hasSupports(world, x, y, z, (touchingWaterDirect || isMuddy)? MathHelper.floor_double(supportDist/2D) : supportDist);
+			boolean supported = hasSupports(world, x, y, z, touchingWaterDirect? MathHelper.floor_double(supportDist/2D) : supportDist);
 			//missingBlocks total = 25 - 26
 			
 			if(missingBlocks > 0 && blockNotSolid(world, x, y - 1, z, false) && !supported)
 			{
-				if(!world.isRemote && ((missingBlocks > minThreshold && (world.rand.nextInt(dropChance) == 0 || type.equals("Collapse"))) || missingBlocks >= maxThreshold || ((touchingWaterDirect || isMuddy) && world.rand.nextBoolean())))
+				if(!world.isRemote && ((missingBlocks > minThreshold && (world.rand.nextInt(dropChance) == 0 || type.equals("Collapse"))) || missingBlocks >= maxThreshold || (touchingWaterDirect && world.rand.nextBoolean())))
 				{
 					if(dropType == -1)
 					{
@@ -583,18 +578,12 @@ public class EM_PhysManager
 					
 					if(material != null && material.isLiquid())
 					{
-						if(j > y && !(i == x && k == z))
+						if(j >= y && (i == x || k == z))
 						{
-							data[3] += 1;
-						} else if(j == y && i == x && k == z)
-						{
-							data[3] += 1;
-						} else if(j == y && !(i == x || k == z))
-						{
+							data[2] += 1;
 							data[3] += 1;
 						} else
 						{
-							data[2] += 1;
 							data[3] += 1;
 						}
 					}

@@ -218,7 +218,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 				config.get(catName, DMName[12], true).getBoolean(true);
 				config.get(catName, DMName[13], false).getBoolean(false);
 				config.get(catName, DMName[14], 255).getInt(255);
-			} else
+			} else if(EM_Settings.genConfigs || modID.equals("minecraft"))
 			{
 				this.generateEmpty(config, dimension);
 			}
@@ -266,7 +266,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public boolean useCustomConfigs()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

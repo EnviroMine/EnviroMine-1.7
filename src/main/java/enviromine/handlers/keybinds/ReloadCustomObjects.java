@@ -40,8 +40,11 @@ public class ReloadCustomObjects
 					EM_Settings.biomeProperties.clear();
 					EM_Settings.dimensionProperties.clear();
 					EM_Settings.rotProperties.clear();
+					EM_Settings.caveGenProperties.clear();
+					EM_Settings.caveSpawnProperties.clear();;
 					
 					int Total = EM_ConfigHandler.initConfig();
+					EnviroMine.caves.RefreshSpawnList();
 					mc.thePlayer.addChatMessage(new ChatComponentText("Loaded " + Total +" objects and " + EM_Settings.stabilityTypes.size() + " stability types"));
 					
 				} //try

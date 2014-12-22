@@ -3,8 +3,6 @@ package enviromine.trackers.properties;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_ConfigHandler;
@@ -217,29 +215,12 @@ public class StabilityType implements PropertyBase
 		
 		config.load();
 		
-		// 	Grab all Categories in File
-		List<String> catagory = new ArrayList<String>();
-		Set<String> nameList = config.getCategoryNames();
-		Iterator<String> nameListData = nameList.iterator();
+		ArrayList<String> catagory = EM_ConfigHandler.getSubCategories(config, this.categoryName());
+		Iterator<String> iterator = catagory.iterator();
 		
-		// add Categories to a List 
-		while(nameListData.hasNext())
+		while(iterator.hasNext())
 		{
-			String catName = nameListData.next();
-			
-			if(catName.startsWith(this.categoryName() + "."))
-			{
-				catagory.add(catName);
-			}
-		}
-		
-		// Now Read/Save Each Category And Add into Proper Hash Maps
-		
-		for(int x = 0; x <= (catagory.size() - 1); x++)
-		{
-			String currentCat = catagory.get(x);
-			
-			this.LoadProperty(config, currentCat);
+			this.LoadProperty(config, iterator.next());
 		}
 		
 		config.save();

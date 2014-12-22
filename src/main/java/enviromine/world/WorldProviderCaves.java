@@ -1,5 +1,9 @@
 package enviromine.world;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_Settings;
@@ -7,6 +11,8 @@ import enviromine.core.EnviroMine;
 import enviromine.world.chunk.ChunkProviderCaves;
 import enviromine.world.chunk.WorldChunkManagerCaves;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
@@ -75,7 +81,52 @@ public class WorldProviderCaves extends WorldProvider
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
-		return new ChunkProviderCaves(this.worldObj, this.worldObj.getSeed());
+		long seed = this.worldObj.getSeed();
+		File dimData = new File(EM_Settings.worldDir, "data/EnviroCaveData");
+		File dimFolder = new File(EM_Settings.worldDir, "DIM" + EM_Settings.caveDimID + "/region");
+		
+		try
+		{
+			NBTTagCompound dataTags = new NBTTagCompound();
+			
+			if(!dimData.exists() || !dimFolder.exists())
+			{
+				if(!dimData.exists())
+				{
+					dimData.createNewFile();
+				} else // This probably isn't necessary but I like to be sure it's reset completely
+				{
+					dimData.delete();
+					dimData.createNewFile();
+				}
+				
+				if(!dimFolder.exists()) // Checks if a cave map exists already. If not randomize the seed
+				{
+					seed = this.worldObj.rand.nextLong();
+				}
+				
+				dataTags.setLong("CAVE_SEED", seed);
+				
+				FileOutputStream fos = new FileOutputStream(dimData);
+				
+				CompressedStreamTools.writeCompressed(dataTags, fos); // Saved seed to file
+			} else
+			{
+				FileInputStream fis = new FileInputStream(dimData);
+				
+				dataTags = CompressedStreamTools.readCompressed(fis);
+				
+				if(dataTags != null && dataTags.hasKey("CAVE_SEED"))
+				{
+					seed = dataTags.getLong("CAVE_SEED");
+				}
+			}
+		} catch(Exception e)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to save CaveDimension data to file: " + dimData.getAbsolutePath(), e);
+		}
+		
+		return new ChunkProviderCaves(this.worldObj, seed);
 	}
 	
 	/**

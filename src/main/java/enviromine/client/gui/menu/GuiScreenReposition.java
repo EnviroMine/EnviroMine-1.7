@@ -30,6 +30,8 @@ public class GuiScreenReposition extends GuiScreen {
 		int mouseY = height - Mouse.getEventY() * height / mc.displayHeight - 1;
 		hudItem.posX = mouseX - hudItem.getWidth() / 2;
 		hudItem.posY = mouseY - hudItem.getHeight() / 2;
+		
+
 		if (axisAlign) {
 			if (hudItem.posX > oldPosX - 5 && hudItem.posX < oldPosX + 5) {
 				hudItem.posX = oldPosX;
@@ -48,7 +50,7 @@ public class GuiScreenReposition extends GuiScreen {
 		if (help) {
 			drawCenteredString(
 					mc.fontRenderer,
-					"CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align",
+					"CLICK to confirm, ESCAPE to cancel, R to reset",
 					width / 2, 16, 16777215);
 			drawCenteredString(
 					mc.fontRenderer,

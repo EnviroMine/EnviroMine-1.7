@@ -99,6 +99,8 @@ options.enviromine.barPos.airQuality=Air Quality Bar
 options.enviromine.guiSounds=Sound Settings
 options.enviromine.physSound=Physics Sounds
 options.enviromine.breathVol=Breath Volume
+options.enviromine.newsPage=News Feed
+
 
 options.enviromine.hud.temperature=Temperature
 options.enviromine.hud.sanity=Sanity

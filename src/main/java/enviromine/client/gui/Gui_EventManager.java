@@ -1,17 +1,15 @@
 package enviromine.client.gui;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -24,6 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
+import enviromine.client.gui.hud.OverlayHandler;
 import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.client.gui.hud.items.GasMaskHud;
 import enviromine.client.gui.menu.EM_Gui_Menu;
@@ -48,7 +47,9 @@ public class Gui_EventManager
 	
 	
 	// Button Functions
+	GuiButton enviromine;
 	
+	// Captures the initiation of vanilla menus to render new buttons
 	@SubscribeEvent
 	public void renderevent(InitGuiEvent.Post event)
 	{
@@ -57,25 +58,33 @@ public class Gui_EventManager
 
 		if(event.gui instanceof GuiIngameMenu)
 		{
+			String newPost = UpdateNotification.isNewPost() ? "(New Post)" : "";
+			
 			try
 			{
 		        byte b0 = -16;
+				enviromine = new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
+
 	   	        event.buttonList.set(1,new GuiButton(4, width / 2 - 100, height / 4 + 0 + b0, I18n.format("menu.returnToGame", new Object[0])));
-		        event.buttonList.add(new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title")));
-	
+		        event.buttonList.add(enviromine);
+		        
 			}catch(Exception e)
 			{
+				enviromine = new GuiButton(1348, width - 175, height  - 30, 160, 20, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
 				EnviroMine.logger.log(Level.ERROR, "Error shifting Minecrafts Menu to add in new button: "+ e);
-				event.buttonList.add(new GuiButton(1348, width - 175, height  - 30, 160, 20, StatCollector.translateToLocal("options.enviromine.menu.title")));
+				event.buttonList.add(enviromine);
 			}
 		}
 	}
+	
+	
+	// Used to capture when an Enviromine button is hit in a vanilla menu
 	@SubscribeEvent
 	public void action(ActionPerformedEvent.Post event)
 	{
 		if(event.gui instanceof GuiIngameMenu)
 		{
-			if(event.button.id == 1348)
+			if(event.button.id == enviromine.id)
 			{
 				Minecraft.getMinecraft().displayGuiScreen(new EM_Gui_Menu(event.gui));
 			}
@@ -96,6 +105,11 @@ public class Gui_EventManager
 	public static EnviroDataTracker tracker = null;
     
     
+	
+	/**
+	 * All Enviromine Gui and Hud Items will render here
+	 * @param event
+	 */
     @SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent.Post event)
@@ -236,9 +250,8 @@ public class Gui_EventManager
 				}
 				
 				
-			}// For hud Items	
-    	
-			
+			}
+
 			Debug_Info.ShowDebugText(event, mc);
 		}
 

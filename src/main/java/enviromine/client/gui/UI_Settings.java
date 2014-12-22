@@ -15,10 +15,6 @@ public class UI_Settings {
 	public static boolean sweatParticals = true;
 	public static boolean insaneParticals = true;
 	public static boolean useFarenheit = false;
-	//public static String heatBarPos = "Bottom_Left";
-	//public static String waterBarPos = "Bottom_Left";
-	//public static String sanityBarPos = "Bottom_Right";
-	//public static String oxygenBarPos = "Bottom_Right";
 	public static boolean ShowText = false;
 	public static boolean ShowDebug = false;
 	public static boolean breathSound = true;
@@ -37,10 +33,6 @@ public class UI_Settings {
     	nbt.setBoolean("sweatParticals", sweatParticals);
     	nbt.setBoolean("insaneParticals", insaneParticals);
     	nbt.setBoolean("useFarenheit", useFarenheit);
-    	//nbt.setString("heatBarPos", heatBarPos); 
-    	//nbt.setString("waterBarPos", waterBarPos); 
-    	//nbt.setString("sanityBarPos", sanityBarPos);  
-    	//nbt.setString("oxygenBarPos", oxygenBarPos); 
     	nbt.setBoolean("ShowText", ShowText);
     	nbt.setBoolean("ShowDebug", ShowDebug);
     	nbt.setBoolean("breathSound", breathSound);
@@ -62,10 +54,6 @@ public class UI_Settings {
 		sweatParticals = nbt.hasKey("sweatParticals") ? nbt.getBoolean("sweatParticals") : sweatParticals;
 		insaneParticals = nbt.hasKey("insaneParticals") ? nbt.getBoolean("insaneParticals") : insaneParticals;
 		useFarenheit = nbt.hasKey("useFarenheit") ? nbt.getBoolean("useFarenheit") : useFarenheit;
-		//heatBarPos = nbt.hasKey("heatBarPos") ? nbt.getString("heatBarPos") : heatBarPos;
-		//waterBarPos = nbt.hasKey("waterBarPos") ? nbt.getString("waterBarPos") : waterBarPos;
-		//sanityBarPos = nbt.hasKey("sanityBarPos") ? nbt.getString("sanityBarPos") : sanityBarPos;
-		//oxygenBarPos = nbt.hasKey("oxygenBarPos") ? nbt.getString("oxygenBarPos") : oxygenBarPos; 
 		ShowText = nbt.hasKey("ShowText") ? nbt.getBoolean("ShowText") : ShowText;
 		ShowDebug = nbt.hasKey("ShowDebug") ? nbt.getBoolean("ShowDebug") : ShowDebug;
 		breathSound = nbt.hasKey("breathSound") ? nbt.getBoolean("breathSound") : breathSound;

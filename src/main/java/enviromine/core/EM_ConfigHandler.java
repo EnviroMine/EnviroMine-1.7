@@ -15,15 +15,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.CaveGenProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.trackers.properties.RotProperties;
-import enviromine.trackers.properties.StabilityType;
+import enviromine.trackers.properties.*;
 import enviromine.trackers.properties.helpers.PropertyBase;
 
 public class EM_ConfigHandler
@@ -42,6 +34,8 @@ public class EM_ConfigHandler
 		propTypes = new HashMap<String, PropertyBase>();
 		
 		propTypes.put(CaveGenProperties.base.categoryName(), CaveGenProperties.base);
+		propTypes.put(CaveSpawnProperties.base.categoryName(), CaveSpawnProperties.base);
+		propTypes.put(CaveBaseProperties.base.categoryName(), CaveBaseProperties.base);
 		propTypes.put(BiomeProperties.base.categoryName(), BiomeProperties.base);
 		propTypes.put(ArmorProperties.base.categoryName(), ArmorProperties.base);
 		propTypes.put(BlockProperties.base.categoryName(), BlockProperties.base);
@@ -81,6 +75,7 @@ public class EM_ConfigHandler
 		
 		Iterator<PropertyBase> iterator = propTypes.values().iterator();
 		
+		// Load non standard property files
 		while(iterator.hasNext())
 		{
 			PropertyBase props = iterator.next();
@@ -93,7 +88,7 @@ public class EM_ConfigHandler
 		
 		loadGeneralConfig(configFile);
 		
-		int Total = EM_Settings.armorProperties.size() + EM_Settings.blockProperties.size() + EM_Settings.livingProperties.size() + EM_Settings.itemProperties.size() + EM_Settings.biomeProperties.size() + EM_Settings.dimensionProperties.size();
+		int Total = EM_Settings.armorProperties.size() + EM_Settings.blockProperties.size() + EM_Settings.livingProperties.size() + EM_Settings.itemProperties.size() + EM_Settings.biomeProperties.size() + EM_Settings.dimensionProperties.size() + EM_Settings.caveGenProperties.size() + EM_Settings.caveSpawnProperties.size();
 		
 		return Total;
 	}
@@ -116,8 +111,8 @@ public class EM_ConfigHandler
 		EM_Settings.shaftGen = config.get("World Generation", "Enable Village MineShafts", true, "Generates mineshafts in villages").getBoolean(true);
 		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", true, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(true);
 		EM_Settings.gasGen = config.get("World Generation", "Generate Gases", true).getBoolean(true);
-		EM_Settings.disableCaves = config.get("World Generation", "Disable Cave Dimension", false).getBoolean(false);
-		EM_Settings.limitElevatorY = config.get("World Generation", "Limit Elevator Height", true).getBoolean(true);
+		//EM_Settings.disableCaves = config.get("World Generation", "Disable Cave Dimension", false).getBoolean(false); // Moved to CaveBaseProperties
+		//EM_Settings.limitElevatorY = config.get("World Generation", "Limit Elevator Height", true).getBoolean(true); // Moved to CaveBaseProperties
 		
 		//General Settings
 		EM_Settings.enablePhysics = config.get(Configuration.CATEGORY_GENERAL, "Enable Physics", true, "Turn physics On/Off").getBoolean(true);
@@ -350,7 +345,7 @@ public class EM_ConfigHandler
 			
 			for(int x = 0; x < catagory.size(); x++)
 			{
-				String CurCat = catagory.get(x); // Why is this becoming lowercase?!
+				String CurCat = catagory.get(x);
 				
 				if(!CurCat.isEmpty() && CurCat.contains(Configuration.CATEGORY_SPLITTER))
 				{

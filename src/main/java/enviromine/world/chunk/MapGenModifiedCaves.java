@@ -6,9 +6,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.MapGenBase;
-
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
-
 import java.util.Random;
 
 public class MapGenModifiedCaves extends MapGenBase
@@ -202,7 +201,7 @@ public class MapGenModifiedCaves extends MapGenBase
 	{
 		int i1 = this.rand.nextInt(this.rand.nextInt(this.rand.nextInt(31) + 1) + 1);
 		
-		if (this.rand.nextInt(7) != 0)
+		if (this.rand.nextInt(EM_Settings.caveTunnelRarity > 0? EM_Settings.caveTunnelRarity : 1) != 0)
 		{
 			i1 = 0;
 		}

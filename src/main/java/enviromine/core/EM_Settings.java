@@ -1,14 +1,6 @@
 package enviromine.core;
 
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.CaveGenProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.trackers.properties.RotProperties;
-import enviromine.trackers.properties.StabilityType;
+import enviromine.trackers.properties.*;
 import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -108,7 +100,6 @@ public class EM_Settings
 	public static HashMap<Integer,DimensionProperties> dimensionProperties = new HashMap<Integer,DimensionProperties>();
 	
 	public static HashMap<String,StabilityType> stabilityTypes = new HashMap<String,StabilityType>();
-	public static ArrayList<CaveGenProperties> caveGenProperties = new ArrayList<CaveGenProperties>();
 	
 	@ShouldOverride({String.class, RotProperties.class})
 	public static HashMap<String,RotProperties> rotProperties = new HashMap<String,RotProperties>();
@@ -138,6 +129,15 @@ public class EM_Settings
 	
 	public static int caveDimID = -3;
 	public static int caveBiomeID = 23;
+	public static boolean disableCaves = false;
+	public static int limitElevatorY = 10;
+	public static boolean caveOreEvent = true;
+	public static boolean caveLava = false;
+	public static int caveRavineRarity = 30;
+	public static int caveTunnelRarity = 7;
+	public static int caveDungeons = 8;
+	public static ArrayList<CaveGenProperties> caveGenProperties = new ArrayList<CaveGenProperties>();
+	public static ArrayList<CaveSpawnProperties> caveSpawnProperties = new ArrayList<CaveSpawnProperties>();
 	
 	public static boolean foodSpoiling = true;
 	public static int foodRotTime = 7;
@@ -154,9 +154,7 @@ public class EM_Settings
 	public static int quakeSpeed = 2;
 	
 	public static boolean finiteWater = false;
-	public static boolean disableCaves = false;
 	public static boolean disableThing = false;
-	public static boolean limitElevatorY = true;
 	
 	public static float convertToFarenheit(float num)
 	{
@@ -178,6 +176,6 @@ public class EM_Settings
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface ShouldOverride
 	{
-		Class[] value() default {};
+		Class<?>[] value() default {};
 	}
 }

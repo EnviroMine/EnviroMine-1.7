@@ -97,140 +97,148 @@ public class CaveGenProperties implements PropertyBase
 	public void GenDefaults()
 	{
 		File file = GetDefaultFile();
-		
-		try
+
+		if(!file.exists())
 		{
-			if(file.createNewFile())
+			try
 			{
-				Configuration config = new Configuration(file, true);
-				
-				config.load();
-				
-				if(!config.hasCategory(this.categoryName() + ".Coal"))
-				{
-					String catName = this.categoryName() + ".Coal";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(ObjectHandler.flammableCoal));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 32);
-					config.get(catName, CGPNames[5], 16);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Iron"))
-				{
-					String catName = this.categoryName() + ".Iron";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.iron_ore));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 24);
-					config.get(catName, CGPNames[5], 16);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Lapis"))
-				{
-					String catName = this.categoryName() + ".Lapis";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.redstone_ore));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 12);
-					config.get(catName, CGPNames[5], 8);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Redstone"))
-				{
-					String catName = this.categoryName() + ".Redstone";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.redstone_ore));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 12);
-					config.get(catName, CGPNames[5], 12);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Gold"))
-				{
-					String catName = this.categoryName() + ".Gold";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.gold_ore));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 8);
-					config.get(catName, CGPNames[5], 8);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Diamonds"))
-				{
-					String catName = this.categoryName() + ".Diamonds";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.diamond_ore));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 4);
-					config.get(catName, CGPNames[5], 8);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Emeralds"))
-				{
-					String catName = this.categoryName() + ".Emeralds";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.emerald_ore));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 2);
-					config.get(catName, CGPNames[5], 4);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				if(!config.hasCategory(this.categoryName() + ".Silverfish")) // Must be last so as to not interfere with ores
-				{
-					String catName = this.categoryName() + ".Silverfish";
-					
-					config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.monster_egg));
-					config.get(catName, CGPNames[1], 0);
-					config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
-					config.get(catName, CGPNames[3], 0);
-					config.get(catName, CGPNames[4], 48);
-					config.get(catName, CGPNames[5], 24);
-					config.get(catName, CGPNames[6], 10);
-					config.get(catName, CGPNames[7], 246);
-				}
-				
-				config.save();
+				file.createNewFile();
+			} catch(Exception e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Failed to create file for Cave Ores", e);
+				return;
 			}
-		} catch(Exception e)
+		}
+		
+		Configuration config = new Configuration(file, true);
+		
+		config.load();
+		
+		if(config.hasCategory(this.categoryName()))
 		{
-			EnviroMine.logger.log(Level.ERROR, "An error occured while generating defaults for " + this.getClass().getSimpleName(), e);
+			config.save();
 			return;
 		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Coal"))
+		{
+			String catName = this.categoryName() + ".Coal";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(ObjectHandler.flammableCoal));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 32);
+			config.get(catName, CGPNames[5], 16);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Iron"))
+		{
+			String catName = this.categoryName() + ".Iron";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.iron_ore));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 24);
+			config.get(catName, CGPNames[5], 16);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Lapis"))
+		{
+			String catName = this.categoryName() + ".Lapis";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.redstone_ore));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 12);
+			config.get(catName, CGPNames[5], 8);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Redstone"))
+		{
+			String catName = this.categoryName() + ".Redstone";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.redstone_ore));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 12);
+			config.get(catName, CGPNames[5], 12);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Gold"))
+		{
+			String catName = this.categoryName() + ".Gold";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.gold_ore));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 8);
+			config.get(catName, CGPNames[5], 8);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Diamonds"))
+		{
+			String catName = this.categoryName() + ".Diamonds";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.diamond_ore));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 4);
+			config.get(catName, CGPNames[5], 8);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Emeralds"))
+		{
+			String catName = this.categoryName() + ".Emeralds";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.emerald_ore));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 2);
+			config.get(catName, CGPNames[5], 4);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		if(!config.hasCategory(this.categoryName() + ".Silverfish")) // Must be last so as to not interfere with ores
+		{
+			String catName = this.categoryName() + ".Silverfish";
+			
+			config.get(catName, CGPNames[0], Block.blockRegistry.getNameForObject(Blocks.monster_egg));
+			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[2], Block.blockRegistry.getNameForObject(Blocks.stone));
+			config.get(catName, CGPNames[3], 0);
+			config.get(catName, CGPNames[4], 48);
+			config.get(catName, CGPNames[5], 24);
+			config.get(catName, CGPNames[6], 10);
+			config.get(catName, CGPNames[7], 246);
+		}
+		
+		config.save();
 	}
 
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.configPath + "/CaveDimension.cfg");
+		return new File(EM_ConfigHandler.configPath + "CaveDimension.cfg");
 	}
 	
 	@Override

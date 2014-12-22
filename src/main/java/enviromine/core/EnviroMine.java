@@ -1,10 +1,8 @@
 package enviromine.core;
 
-import java.util.Iterator;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -35,9 +33,6 @@ import enviromine.handlers.ObjectHandler;
 import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.helpers.PropertyBase;
 import enviromine.utils.EnviroUtils;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
@@ -48,7 +43,7 @@ import enviromine.world.features.mineshaft.EM_VillageMineshaft;
 public class EnviroMine
 {
 	public static Logger logger;
-	public static BiomeGenBase caves;
+	public static BiomeGenCaves caves;
 	public static EnviroTab enviroTab = new EnviroTab("enviromine.enviroTab");
 	
 	@Instance(EM_Settings.ModID)
@@ -106,7 +101,7 @@ public class EnviroMine
 		
 		EnviroAchievements.InitAchievements();
 		
-		caves = (new BiomeGenCaves(23)).setColor(0).setBiomeName("Caves").setDisableRain().setTemperatureRainfall(1.0F, 0.0F);
+		caves = (BiomeGenCaves)(new BiomeGenCaves(EM_Settings.caveBiomeID).setColor(0).setBiomeName("Caves").setDisableRain().setTemperatureRainfall(1.0F, 0.0F));
 		//GameRegistry.addBiome(caves);
 		BiomeDictionary.registerBiomeType(caves, Type.WASTELAND);
 		
@@ -145,6 +140,8 @@ public class EnviroMine
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.rotProperties.size() + " rot properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.biomeProperties.size() + " biome properties");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.dimensionProperties.size() + " dimension properties");
+		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.caveGenProperties.size() + " cave ore properties");
+		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.caveSpawnProperties.size() + " cave entity properties");
 	}
 	
 	@EventHandler

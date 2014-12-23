@@ -31,6 +31,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.handlers.ObjectHandler;
 import enviromine.trackers.properties.StabilityType;
 
 public class EnviroUtils
@@ -227,7 +228,7 @@ public class EnviroUtils
 		
 		Material material = block.getMaterial();
 		
-		if(!(block instanceof BlockMobSpawner) && !(block instanceof BlockLadder) && !(block instanceof BlockWeb) && !(block instanceof BlockSign) && !(block instanceof BlockBed) && !(block instanceof BlockDoor) && !(block instanceof BlockAnvil) && !(block instanceof BlockGravel) && !(block instanceof BlockPortal) && !(block instanceof BlockEndPortal) && !(block == Blocks.end_stone) && !(block instanceof BlockEndPortalFrame) && !(block.getMaterial() == Material.vine) && !block.getMaterial().blocksMovement())
+		if(block instanceof BlockMobSpawner || block instanceof BlockLadder || block instanceof BlockWeb || block instanceof BlockSign || block instanceof BlockBed || block instanceof BlockDoor || block instanceof BlockAnvil || block instanceof BlockGravel || block instanceof BlockPortal || block instanceof BlockEndPortal || block instanceof BlockEndPortalFrame || block == ObjectHandler.elevator || block == Blocks.end_stone || block.getMaterial() == Material.vine || !block.getMaterial().blocksMovement())
 		{
 			type = EM_Settings.stabilityTypes.get("none");
 		} else if(block instanceof BlockGlowstone)

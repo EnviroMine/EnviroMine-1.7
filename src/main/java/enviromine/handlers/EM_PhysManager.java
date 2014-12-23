@@ -540,16 +540,15 @@ public class EM_PhysManager
 		}
 	}
 	
+	/**
+	 * 0 - missing solidBlocks<br/>
+	 * 1 - missing solidBlocks level or below<br/>
+	 * 2 - contactLiquids<br/>
+	 * 3 - allLiquids<br/>
+	 * 4 - heldUpByOther (0/1)
+	 */
 	public static int[] getSurroundingBlockData(World world, int x, int y, int z)
 	{
-		/*
-		 * 0 - missing solidBlocks
-		 * 1 - missing solidBlocks level or below
-		 * 2 - contactLiquids
-		 * 3 - allLiquids
-		 * 4 - heldUpByOther (0/1)
-		 */
-		
 		int[] data = new int[]{0,0,0,0,0};
 		
 		for(int i = x - 1; i <= x + 1; i++)
@@ -896,10 +895,10 @@ public class EM_PhysManager
 		if(block == Blocks.fire)
 		{
 			return true;
-		} else if(material == Material.water || material == Material.lava)
+		} else if(material.isLiquid())
 		{
 			return !isSliding;
-		} else if(block.getCollisionBoundingBoxFromPool(world, x, y, z) == null)
+		} else if(block.getCollisionBoundingBoxFromPool(world, x, y, z) == null || !material.blocksMovement())
 		{
 			return true;
 		} else

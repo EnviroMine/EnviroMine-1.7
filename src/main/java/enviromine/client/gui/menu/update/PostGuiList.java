@@ -61,7 +61,7 @@ public class PostGuiList extends GuiListExtended
 	{
 		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
 		{
-			addLine("Your current version is " + EM_Settings.Version);
+			addLine(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!");
 			return;
 		}
 		
@@ -69,23 +69,17 @@ public class PostGuiList extends GuiListExtended
 		
 		if(verStat == -1)
 		{
-			if(EM_Settings.Version.equals("FWG_" + "EM_VER"))
-			{
-				addLine(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!");
-			} else
-			{
-				addLine("Your current version is " + EM_Settings.Version);
-				addBlankLines(1);
-				addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.avalible", UpdateNotification.version));
-				addBlankLines(1);
-				addLine("Check changlog for whats new.");
-				addBlankLines(1);
-				addLine("Download new version on our wiki!");
-				addBlankLines(1);
-				addLine("https://github.com/Funwayguy/EnviroMine/wiki/Downloads");
-				addBlankLines(1);
-				addLine("https://enviromine.wordpress.com/");
-			}
+			addLine("Your current version is " + EM_Settings.Version);
+			addBlankLines(1);
+			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.avalible", UpdateNotification.version));
+			addBlankLines(1);
+			addLine("Check changlog for whats new.");
+			addBlankLines(1);
+			addLine("Download new version on our wiki!");
+			addBlankLines(1);
+			addLine("https://github.com/Funwayguy/EnviroMine/wiki/Downloads");
+			addBlankLines(1);
+			addLine("https://enviromine.wordpress.com/");
 		} else if(verStat == 0)
 		{
 			addLine("EnviroMine " + EM_Settings.Version + " is up to date");

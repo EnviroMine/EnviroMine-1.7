@@ -88,7 +88,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			player.timeUntilPortal = 100;
 		}
 		
-		if(player.dimension == -3)
+		if(player.dimension == EM_Settings.caveDimID)
 		{
 			player.setLocationAndAngles((double)i + 0.5D, j - 1 + meta, (double)k + 0.5D, player.rotationYaw, player.rotationPitch);
 			player.addStat(EnviroAchievements.intoTheDarkness, 1);

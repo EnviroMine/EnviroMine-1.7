@@ -21,9 +21,9 @@ public class NewsPage  extends GuiScreen{
 	@Override
 	public void initGui()
 	{
-		GuiButton newspage = new GuiButton(150, 30, 50, 80, 20, "News Page");
-		GuiButton versionpage = new GuiButton(151, 30, 70, 80, 20, "Version Page");
-		GuiButton changelog = new GuiButton(152, 30, 90, 80, 20, "ChangeLog");
+		GuiButton newspage = new GuiButton(150, this.width/2 - 140, 4, 80, 20, "News Page");
+		GuiButton versionpage = new GuiButton(151, this.width/2 - 40, 4, 80, 20, "Version Page");
+		GuiButton changelog = new GuiButton(152, this.width/2 + 60, 4, 80, 20, "ChangeLog");
 		
 		switch(this.tabSelection)
 		{
@@ -42,9 +42,9 @@ public class NewsPage  extends GuiScreen{
 		this.buttonList.add(versionpage);
 		this.buttonList.add(changelog);
 		
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height - 30, StatCollector.translateToLocal("gui.back")));
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height - 26, StatCollector.translateToLocal("gui.back")));
 
-		this.newsPostList = new PostGuiList(this.mc, this.width, this.height, 32, this.height - 32, 40, tabSelection);
+		this.newsPostList = new PostGuiList(this.mc, this.width, this.height, 32, this.height - 32, this.fontRendererObj.FONT_HEIGHT, tabSelection);
 	}
 	
 	@Override

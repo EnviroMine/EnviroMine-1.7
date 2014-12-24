@@ -102,8 +102,6 @@ public class PostGuiList extends GuiListExtended
 	
 	public void DisplayWordPressNews(Minecraft mc)
 	{
-		String allPostLines = "";
-		
 		for(WordPressPost post : WordPressPost.Posts)
 		{
 			addLine(EnumChatFormatting.BOLD.UNDERLINE + post.getTitle(), textType.TITLE);
@@ -276,15 +274,6 @@ public class PostGuiList extends GuiListExtended
 
                 if (j1 != 0)
                 {
-                    /*if (j1 > 0)
-                    {
-                        j1 = -1F;
-                    }
-                    else if (j1 < 0)
-                    {
-                        j1 = 1F;
-                    }*/
-                	
                 	j1 *= -1F;
 
                     this.scrollByMultiplied(j1 * (float)this.slotHeight / 2F);

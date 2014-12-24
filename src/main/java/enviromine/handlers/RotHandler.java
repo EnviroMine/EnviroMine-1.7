@@ -1,6 +1,5 @@
 package enviromine.handlers;
 
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +29,7 @@ public class RotHandler
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || rotProps == null)
+		if(!EM_Settings.foodSpoiling || rotProps == null || rotTime < 0)
 		{
 			if(item.getTagCompound() != null)
 			{

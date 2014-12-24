@@ -64,6 +64,12 @@ public class ModIdentification
 		{
 			// Remove class path and URL prefix...
 			Class clazz = (obj instanceof Class ? (Class)obj : obj.getClass());
+			
+			if(clazz == null)
+			{
+				EnviroMine.logger.log(Level.ERROR, "ModID lookup failed for: NULL");
+				return "unknown";
+			}
 			fullPath = clazz.getResource("").toString();
 			int tmpIndex = fullPath.indexOf("file:/");
 			fullPath = URLDecoder.decode(fullPath.substring(tmpIndex + "file:/".length()), "UTF-8");

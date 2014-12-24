@@ -257,7 +257,10 @@ public class UpdateNotification
 	 */
 	public static void updateLastSeen()
 	{
-		lastSeen = WordPressPost.Posts.get(0).getPubDate();
+		if(WordPressPost.Posts.size() > 0)
+		{
+			lastSeen = WordPressPost.Posts.get(0).getPubDate();
+		}
 	}
 	
 	/**

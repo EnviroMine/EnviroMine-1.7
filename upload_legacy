@@ -1,12 +1,12 @@
 mkdir -p ./legacy
 
-cd ./legacy
-
 #Clone Downloads
-git clone git@github.com:EnviroMine/Downloads.git ./
+git clone git@github.com:EnviroMine/Downloads.git ./legacy
 
-cp "../EnviroMine-${ver_num}.jar" "./EnviroMine-${ver_num}.jar"
-cp "../EnviroMine-deobf-${ver_num}.jar" "./EnviroMine-deobf-${ver_num}.jar"
+mkdir -p "legacy/${mc_ver}"
+
+cp "EnviroMine-${ver_num}.jar" "legacy/${mc_ver}/EnviroMine-${ver_num}.jar"
+cp "EnviroMine-deobf-${ver_num}.jar" "legacy/${mc_ver}/EnviroMine-deobf-${ver_num}.jar"
 
 #Commit the new file
 git add .

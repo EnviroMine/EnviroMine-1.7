@@ -72,7 +72,6 @@ public class SaveController {
     }
 
     public static void saveConfig(String name, String dirName) {
-        EnviroMine.logger.info("Saving...");
 
         if (dirName != null) {
             dir = new File(Minecraft.getMinecraft().mcDataDir + File.separator + dirName);
@@ -107,6 +106,7 @@ public class SaveController {
             
             CompressedStreamTools.writeCompressed(nbt, fileOutputStream);
             fileOutputStream.close();
+            EnviroMine.logger.info("Saved GUI properties");
         } catch (IOException e) {
             throw new ReportedException(new CrashReport("An error occured while saving", new Throwable()));
         }

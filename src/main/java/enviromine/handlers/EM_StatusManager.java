@@ -3,6 +3,7 @@ package enviromine.handlers;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.logging.log4j.Level;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
@@ -560,7 +561,7 @@ public class EM_StatusManager
 		
 		if(tracker == null)
 		{
-			System.out.println("Tracker updating as null! Crash imminent!");
+			EnviroMine.logger.log(Level.ERROR, "Tracker updating as null! Crash imminent!");
 		}
 		
 		while(iterator.hasNext())

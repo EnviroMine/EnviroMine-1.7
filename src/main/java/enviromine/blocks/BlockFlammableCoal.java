@@ -102,9 +102,9 @@ public class BlockFlammableCoal extends BlockOre
 			if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
 			{
 				return;
-			} else if(EM_PhysManager.chunkDelay.containsKey("" + (x >> 4) + "," + (z >> 4)))
+			} else if(EM_PhysManager.chunkDelay.containsKey(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)))
 			{
-				if(EM_PhysManager.chunkDelay.get("" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
+				if(EM_PhysManager.chunkDelay.get(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
 				{
 					return;
 				}

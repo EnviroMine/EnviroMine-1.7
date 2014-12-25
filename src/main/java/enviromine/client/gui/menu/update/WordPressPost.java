@@ -27,7 +27,7 @@ public class WordPressPost
 		this.creator = creator;
 		
 		date = date.replaceAll("\\+\\d+", "");
-		System.out.print(date);
+		//System.out.print(date);
 		DateFormat format = new SimpleDateFormat("E, d MMM y hh:mm:ss");
 		
 		try

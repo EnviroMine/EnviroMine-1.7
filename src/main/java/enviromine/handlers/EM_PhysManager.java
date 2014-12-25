@@ -49,9 +49,9 @@ public class EM_PhysManager
 		if(world.isRemote || world.getTotalWorldTime() < worldStartTime + EM_Settings.worldDelay)
 		{
 			return;
-		} else if(chunkDelay.containsKey("" + (x >> 4) + "," + (z >> 4)))
+		} else if(chunkDelay.containsKey(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)))
 		{
-			if(chunkDelay.get("" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
+			if(chunkDelay.get(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
 			{
 				return;
 			}
@@ -73,9 +73,9 @@ public class EM_PhysManager
 		if(world.isRemote || world.getTotalWorldTime() < worldStartTime + EM_Settings.worldDelay)
 		{
 			return;
-		} else if(chunkDelay.containsKey("" + (x >> 4) + "," + (z >> 4)))
+		} else if(chunkDelay.containsKey(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)))
 		{
-			if(chunkDelay.get("" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
+			if(chunkDelay.get(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
 			{
 				return;
 			}

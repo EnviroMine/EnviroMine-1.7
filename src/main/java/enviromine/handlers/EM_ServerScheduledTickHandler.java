@@ -54,10 +54,8 @@ public class EM_ServerScheduledTickHandler
             Minecraft mc = Minecraft.getMinecraft();
             if (firstload && mc != null) 
             {
-            	System.out.println("First Load...");
                 if (!SaveController.loadConfig(SaveController.UISettingsData))
                 {
-                	System.out.println("No Config Create one...");
                     HUDRegistry.checkForResize();
                     HUDRegistry.resetAllDefaults();
                     SaveController.saveConfig(SaveController.UISettingsData);

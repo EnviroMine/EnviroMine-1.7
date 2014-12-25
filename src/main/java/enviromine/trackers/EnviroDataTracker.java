@@ -148,6 +148,9 @@ public class EnviroDataTracker
 		if((trackedEntity.getHealth() <= 2F || bodyTemp >= 41F) && enviroData[7] > (float)(-1F * EM_Settings.sanityMult))
 		{
 			enviroData[7] = (float)(-1F * EM_Settings.sanityMult);
+		} else if(trackedEntity.getHealth() >= trackedEntity.getMaxHealth() && enviroData[7] < (0.1F * EM_Settings.sanityMult) && trackedEntity.worldObj.isDaytime() && !trackedEntity.worldObj.provider.hasNoSky && trackedEntity.worldObj.canBlockSeeTheSky(MathHelper.floor_double(trackedEntity.posX), MathHelper.floor_double(trackedEntity.posY), MathHelper.floor_double(trackedEntity.posZ)))
+		{
+			enviroData[7] = (float)(0.1F * EM_Settings.sanityMult);
 		}
 		
 		// Air checks

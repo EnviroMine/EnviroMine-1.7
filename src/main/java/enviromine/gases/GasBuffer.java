@@ -172,9 +172,9 @@ public class GasBuffer
 				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
 				{
 					continue;
-				} else if(EM_PhysManager.chunkDelay.containsKey("" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
+				} else if(EM_PhysManager.chunkDelay.containsKey(world.provider.dimensionId + "" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
 				{
-					if(EM_PhysManager.chunkDelay.get("" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
+					if(EM_PhysManager.chunkDelay.get(world.provider.dimensionId + "" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
 					{
 						continue;
 					}
@@ -214,9 +214,9 @@ public class GasBuffer
 				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
 				{
 					continue;
-				} else if(EM_PhysManager.chunkDelay.containsKey("" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
+				} else if(EM_PhysManager.chunkDelay.containsKey(world.provider.dimensionId + "" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
 				{
-					if(EM_PhysManager.chunkDelay.get("" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
+					if(EM_PhysManager.chunkDelay.get(world.provider.dimensionId + "" + (entry[1] >> 4) + "," + (entry[3] >> 4)) > world.getTotalWorldTime())
 					{
 						continue;
 					}

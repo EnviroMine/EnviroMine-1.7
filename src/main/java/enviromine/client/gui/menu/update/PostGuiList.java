@@ -184,23 +184,23 @@ public class PostGuiList extends GuiListExtended
 		
 		if(versionNum.matcher(line).matches())
 		{
-			System.out.println(line + versionNum.matcher(line).matches());
+			//System.out.println(line + versionNum.matcher(line).matches());
 			return textType.VERSION;
 		} else if(change.matcher(line).matches())
 		{
-			System.out.println(line + change.matcher(line).matches());
+			//System.out.println(line + change.matcher(line).matches());
 			return textType.CHANGED;
 		} else if(header.matcher(line).matches())
 		{
-			System.out.println(line + header.matcher(line).matches());
+			//System.out.println(line + header.matcher(line).matches());
 			return textType.HEADER;
 		} else if(removed.matcher(line).matches())
 		{
-			System.out.println(line + removed.matcher(line).matches());
+			//System.out.println(line + removed.matcher(line).matches());
 			return textType.REMOVED;
 		} else if(add.matcher(line).matches())
 		{
-			System.out.println(line + add.matcher(line).matches());
+			//System.out.println(line + add.matcher(line).matches());
 			return textType.ADD;
 		}
 		

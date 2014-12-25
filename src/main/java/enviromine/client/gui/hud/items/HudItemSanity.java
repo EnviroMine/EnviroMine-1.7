@@ -155,7 +155,7 @@ public class HudItemSanity extends HudItem	{
 				RenderAssist.drawTexturedModalRect( getTextPosX(), posY, 64, getHeight() * 4, 32, getHeight());
 
 				//Render Text
-				RenderAssist.drawTexturedModalRect(getTextPosX(), posY, 64, getHeight() * 4, 32, getHeight());
+				//RenderAssist.drawTexturedModalRect(getTextPosX(), posY, 64, getHeight() * 4, 32, getHeight());
 				Minecraft.getMinecraft().fontRenderer.drawString(Gui_EventManager.tracker.sanity + "%", getTextPosX(), posY, 16777215);
 		}
 		GL11.glPopMatrix();

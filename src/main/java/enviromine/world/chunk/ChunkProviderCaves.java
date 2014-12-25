@@ -5,7 +5,6 @@ import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE;
 import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON;
 import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAVA;
-import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.NETHER_LAVA;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.block.Block;
@@ -100,7 +99,7 @@ public class ChunkProviderCaves implements IChunkProvider
 	public void func_147419_a(int p_147419_1_, int p_147419_2_, Block[] p_147419_3_)
 	{
 		byte b0 = 4;
-		byte b1 = 32;
+		byte b1 = (byte)EM_Settings.caveLiquidY; // Liquid height
 		int k = b0 + 1;
 		byte b2 = 17;
 		int l = b0 + 1;

@@ -87,7 +87,6 @@ public class EM_Gui_Hud_Items extends GuiScreen implements GuiYesNoCallback
 	{
 		if(par1GuiButton.enabled)
 		{
-			System.out.println(par1GuiButton.id);
 			int val = 0;
 			int where;
 			switch(par1GuiButton.id)
@@ -106,8 +105,6 @@ public class EM_Gui_Hud_Items extends GuiScreen implements GuiYesNoCallback
 							this.mc.displayGuiScreen(new GuiScreenReposition(this, hudItem));
 							break;
 						}
-						
-						System.out.println(par1GuiButton.id - 200);
 						if(hudItem.getDefaultID() == par1GuiButton.id - 200 )
 						{
 							hudItem.rotated = !hudItem.rotated;

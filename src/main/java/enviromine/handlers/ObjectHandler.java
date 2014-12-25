@@ -2,7 +2,6 @@ package enviromine.handlers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -15,12 +14,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-
 import enviromine.EntityPhysicsBlock;
 import enviromine.blocks.*;
+import enviromine.blocks.materials.MaterialElevator;
 import enviromine.blocks.materials.MaterialGas;
 import enviromine.blocks.tiles.*;
 import enviromine.core.EM_Settings;
@@ -62,6 +60,7 @@ public class ObjectHandler
 	public static int renderSpecialID;
 	
 	public static Material gasMat;
+	public static Material elevatorMat;
 	
 	public static void initItems()
 	{
@@ -134,8 +133,9 @@ public class ObjectHandler
 		gasMat = new MaterialGas(MapColor.airColor);
 		gasBlock = new BlockGas(gasMat).setBlockName("enviromine.gas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block");
 		fireGasBlock = new BlockGas(gasMat).setBlockName("enviromine.firegas").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("enviromine:gas_block").setLightLevel(1.0F);
-		
-		elevator = new BlockElevator(Material.iron).setBlockName("enviromine.elevator").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("iron_block");
+
+		elevatorMat = new MaterialElevator(MapColor.ironColor);
+		elevator = new BlockElevator(elevatorMat).setBlockName("enviromine.elevator").setCreativeTab(EnviroMine.enviroTab).setBlockTextureName("iron_block");
 		
 		davyLampBlock = new BlockDavyLamp(Material.redstoneLight).setLightLevel(1.0F).setBlockName("enviromine.davy_lamp").setCreativeTab(EnviroMine.enviroTab);
 		davyLamp = new ItemDavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);

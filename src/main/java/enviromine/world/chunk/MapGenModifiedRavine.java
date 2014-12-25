@@ -258,9 +258,9 @@ public class MapGenModifiedRavine extends MapGenBase
 		
 		if (block == Blocks.stone || block == filler || block == top)
 		{
-			if (y < 10)
+			if (y < (EM_Settings.caveFlood? EM_Settings.caveLiquidY - 1 : 10))
 			{
-				data[index] = Blocks.flowing_lava;
+				data[index] = (EM_Settings.caveFlood && !EM_Settings.caveLava? Blocks.water : Blocks.lava);
 			}
 			else
 			{

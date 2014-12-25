@@ -27,7 +27,7 @@ public class WorldProviderCaves extends WorldProvider
 	public void registerWorldChunkManager()
 	{
 		this.worldChunkMgr = new WorldChunkManagerCaves(EnviroMine.caves, 1.0F, 0.0F);
-		this.isHellWorld = true;
+		this.isHellWorld = false;
 		this.hasNoSky = true;
 		this.dimensionId = EM_Settings.caveDimID;
 	}
@@ -162,7 +162,7 @@ public class WorldProviderCaves extends WorldProvider
 	@Override
 	public boolean canRespawnHere()
 	{
-		return false;
+		return EM_Settings.caveRespawn;
 	}
 	
 	/**

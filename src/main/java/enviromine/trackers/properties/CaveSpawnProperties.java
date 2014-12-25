@@ -108,7 +108,7 @@ public class CaveSpawnProperties implements PropertyBase
 			String catName = this.categoryName() + ".Bat";
 			
 			config.get(catName, CGPNames[0], 65);
-			config.get(catName, CGPNames[1], 0);
+			config.get(catName, CGPNames[1], 100);
 			config.get(catName, CGPNames[2], 4);
 			config.get(catName, CGPNames[3], 8);
 		}
@@ -118,7 +118,7 @@ public class CaveSpawnProperties implements PropertyBase
 			String catName = this.categoryName() + ".Creeper";
 			
 			config.get(catName, CGPNames[0], 50);
-			config.get(catName, CGPNames[1], 5);
+			config.get(catName, CGPNames[1], 1);
 			config.get(catName, CGPNames[2], 1);
 			config.get(catName, CGPNames[3], 1);
 		}
@@ -128,7 +128,7 @@ public class CaveSpawnProperties implements PropertyBase
 			String catName = this.categoryName() + ".Silverfish";
 			
 			config.get(catName, CGPNames[0], 50);
-			config.get(catName, CGPNames[1], 95);
+			config.get(catName, CGPNames[1], 100);
 			config.get(catName, CGPNames[2], 1);
 			config.get(catName, CGPNames[3], 4);
 		}

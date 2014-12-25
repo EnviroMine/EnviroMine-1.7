@@ -5,6 +5,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -38,17 +39,23 @@ public class TeleportHandler extends Teleporter
 	 * Place an entity in a nearby portal, creating one if necessary.
 	 */
 	@Override
-	public void placeInPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
+	public void placeInPortal(Entity entity, double par2, double par4, double par6, float par8)
 	{
-		if(!this.placeInExistingPortal(par1Entity, par2, par4, par6, par8))
+		if(!this.placeInExistingPortal(entity, par2, par4, par6, par8))
 		{
-			this.makePortal(par1Entity);
-			this.placeInExistingPortal(par1Entity, par2, par4, par6, par8);
+			this.makePortal(entity);
+			this.placeInExistingPortal(entity, par2, par4, par6, par8);
+			if(entity instanceof EntityPlayer && EM_Settings.caveRespawn)
+			{
+				EntityPlayer player = (EntityPlayer)entity;
+	            ChunkCoordinates chunkcoordinates = player.getPlayerCoordinates();
+	            player.setSpawnChunk(chunkcoordinates, true);
+			}
 		} else
 		{
-			if(par1Entity instanceof EntityPlayer)
+			if(entity instanceof EntityPlayer)
 			{
-				EntityPlayer player = (EntityPlayer)par1Entity;
+				EntityPlayer player = (EntityPlayer)entity;
 				ItemStack itemTop = new ItemStack(ObjectHandler.elevator, 1, 0);
 				ItemStack itemBot = new ItemStack(ObjectHandler.elevator, 1, 1);
 				if(!player.inventory.addItemStackToInventory(itemTop))
@@ -60,6 +67,11 @@ public class TeleportHandler extends Teleporter
 				{
 					EntityItem entityitem = new EntityItem(this.worldServerInstance, player.posX, player.posY, player.posZ, itemBot);
 					this.worldServerInstance.spawnEntityInWorld(entityitem);
+				}
+				if(EM_Settings.caveRespawn)
+				{
+		            ChunkCoordinates chunkcoordinates = player.getPlayerCoordinates();
+		            player.setSpawnChunk(chunkcoordinates, true);
 				}
 			}
 		}
@@ -188,7 +200,7 @@ public class TeleportHandler extends Teleporter
 				
 				if(checkH <= 32)
 				{
-					j = 32;
+					j = EM_Settings.caveLiquidY;
 					clearSpace = true;
 					break;
 				}

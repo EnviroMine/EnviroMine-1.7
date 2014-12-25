@@ -109,7 +109,6 @@ public class HandlingTheThing
 		
 		if(darkness >= 1000 && darkness%20 == 0 && player.worldObj.rand.nextInt(5) == 0)
 		{
-			System.out.println("playing...");
 			float rndX = (player.getRNG().nextInt(6) - 3) * player.getRNG().nextFloat();
 			float rndY = (player.getRNG().nextInt(6) - 3) * player.getRNG().nextFloat();
 			float rndZ = (player.getRNG().nextInt(6) - 3) * player.getRNG().nextFloat();

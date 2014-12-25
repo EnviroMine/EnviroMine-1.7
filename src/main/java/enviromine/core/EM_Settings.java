@@ -136,6 +136,9 @@ public class EM_Settings
 	public static int caveRavineRarity = 30;
 	public static int caveTunnelRarity = 7;
 	public static int caveDungeons = 8;
+	public static int caveLiquidY = 32;
+	public static boolean caveFlood = true;
+	public static boolean caveRespawn = false;
 	public static ArrayList<CaveGenProperties> caveGenProperties = new ArrayList<CaveGenProperties>();
 	public static ArrayList<CaveSpawnProperties> caveSpawnProperties = new ArrayList<CaveSpawnProperties>();
 	

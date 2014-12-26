@@ -1,15 +1,19 @@
 package enviromine.utils;
 
-import java.io.File;
-import java.net.URLDecoder;
-import java.util.HashMap;
+import enviromine.core.EnviroMine;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.apache.logging.log4j.Level;
+
+import java.io.File;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.HashMap;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
-import enviromine.core.EnviroMine;
+import org.apache.logging.log4j.Level;
 
 public class ModIdentification
 {
@@ -70,7 +74,15 @@ public class ModIdentification
 				EnviroMine.logger.log(Level.ERROR, "ModID lookup failed for: NULL");
 				return "unknown";
 			}
-			fullPath = clazz.getResource("").toString();
+			
+			URL url = clazz.getResource("");
+			if (url == null)
+			{
+				EnviroMine.logger.log(Level.ERROR, "ModID lookup failed for: "+clazz.getCanonicalName());
+				return "unknown";
+			}
+			
+			fullPath = url.toString();
 			int tmpIndex = fullPath.indexOf("file:/");
 			fullPath = URLDecoder.decode(fullPath.substring(tmpIndex + "file:/".length()), "UTF-8");
 			file = new File(fullPath);

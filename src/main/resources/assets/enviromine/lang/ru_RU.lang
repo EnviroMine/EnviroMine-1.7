@@ -8,6 +8,7 @@ item.enviromine.gasmask.name=Противогаз
 item.enviromine.hardhat.name=Каска
 item.enviromine.airfilter.name=Воздушный фильтр
 item.enviromine.rottenfood.name=Испорченная еда
+item.enviromine.spoiledmilk.name=Прокисшее молоко
 
 potion.enviromine.frostbite=Обморожение
 potion.enviromine.dehydration=Обезвоживание
@@ -17,6 +18,12 @@ potion.enviromine.hypothermia=Гипотермия
 
 tile.enviromine.elevator_top.name=Верх лифта
 tile.enviromine.elevator_bottom.name=Низ лифта
+tile.enviromine.esky.name=Портативный холодильник 
+tile.enviromine.freezer.name=Морозилка
+tile.enviromine.davy_lamp.name=Лампа Дэви
+tile.enviromine.gas.name=Газ
+tile.enviromine.firegas.name=Огнеопасный газ
+tile.enviromine.burningcoal.name=Горящий уголь
 
 itemGroup.enviromine.enviroTab=EnviroMine
 
@@ -37,6 +44,7 @@ achievement.enviromine.ItsPitchBlack=It's Pitch Black
 achievement.enviromine.TenSecondRule=Правило 10 секунд
 achievement.enviromine.MedicalMarvels=Медицинские чудеса
 achievement.enviromine.SuckItUpPrincess=Получи принцесса
+achievement.enviromine.BreatheEasy=Дыши свободнее
 
 achievement.enviromine.FunwaysFault.desc=Выживете в пещере
 achievement.enviromine.MindOverMatter.desc=Убейте 5 враждебных мобов, находясь под воздействием безумия III
@@ -55,7 +63,12 @@ achievement.enviromine.ItsPitchBlack.desc=???
 achievement.enviromine.TenSecondRule.desc=Съешьте испорченную еду
 achievement.enviromine.MedicalMarvels.desc=Вылечите любую инфекцию или заболевание
 achievement.enviromine.SuckItUpPrincess.desc=Убейте враждебного моба, когда у Вас сломана одна или более конечностей
+achievement.enviromine.BreatheEasy.desc=Сделайте противогаз
 
+options.enviromine.on=Вкл.
+options.enviromine.off=Выкл.
+options.enviromine.visible=Показывать
+options.enviromine.hidden=Спрятать
 options.enviromine.menu.title=Меню Enviromine
 options.enviromine.guiMainmenu.title=Главное меню EnviroMine
 options.enviromine.guiSetting.title=Графические настройки EnviroMine
@@ -69,17 +82,12 @@ options.enviromine.guiOptions=Графические настройки
 options.enviromine.configSettings=Серверные настройки
 options.enviromine.customEditor=Пользовательский редактор
 options.enviromine.status=Текст статуса интерфейса
-options.enviromine.status.visible=Показан
-options.enviromine.status.hidden=Спрятан
 options.enviromine.minBars=Минималистичный интерфейс
-options.enviromine.minBars.on=Вкл
-options.enviromine.minBars.off=Выкл
+options.enviromine.tinting=Тонирование экрана
+options.enviromine.sweatParticles=Частицы испарений
+options.enviromine.insaneParticles=Частицы безумия
 options.enviromine.debug=Текст отладки
-options.enviromine.debug.visible=Показан
-options.enviromine.debug.hidden=Спрятан
 options.enviromine.showIcons=Иконки интерфейса
-options.enviromine.showIcons.visible=Показаны
-options.enviromine.showIcons.hidden=Спрятаны
 options.enviromine.barPos=Позиции полосок
 options.enviromine.tempScale=Шкала температуры
 options.enviromine.tempScale.f=Фаренгейта
@@ -88,14 +96,27 @@ options.enviromine.barPos.hydration=Полоска увлажнения
 options.enviromine.barPos.temprature=Полоска температуры
 options.enviromine.barPos.sanity=Полоска здравомыслия
 options.enviromine.barPos.airQuality=Полоска качества воздуха
+options.enviromine.guiSounds=Настройки звуков
+options.enviromine.physSound=Звуки физики
+options.enviromine.breathVol=Громкость дыхания
+options.enviromine.newsPage=Лента новостей
+
+
+options.enviromine.hud.temperature=Температура
+options.enviromine.hud.sanity=Здравомыслие
+options.enviromine.hud.hydration=Увлажнение
+options.enviromine.hud.air=Качество воздуха
+options.enviromine.hud.resetDefault=Сбросить настройки
+options.enviromine.hud.resetDefault.desc=Сбрасывает все настройки интерфейса на по-умолчанию
 
 deathmessage.enviromine.suffocate=%s задохнулся
 deathmessage.enviromine.frostbite=%s замёрз до смерти
 deathmessage.enviromine.dehydrate=%s умер от жажды
 deathmessage.enviromine.landslide=%s был раздавлен в результате оползня
+deathmessage.enviromine.landslide=%s был погребён лавиной
 deathmessage.enviromine.organfailure=%s умер от полиорганной недостаточности
 deathmessage.enviromine.heatstroke=Мозг %s был приготовлен в результате теплового удара
-deathmessage.enviromine.bleedout=%s истёк кровью
+deathmessage.enviromine.bleedout=%s умер от кровопотери
 deathmessage.enviromine.gasfire=%s погиб в результате утечки газа
 
 updatemsg.enviromine.avalible=Обновление %s EnviroMine доступно

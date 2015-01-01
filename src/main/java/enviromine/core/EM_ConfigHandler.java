@@ -178,7 +178,10 @@ public class EM_ConfigHandler
 		// Config Options
 		String ConSetCat = "Config";
 		Property genConfig = config.get(ConSetCat, "Generate Blank Configs", false, "Will attempt to find and generate blank configs for any custom items/blocks/etc loaded before EnviroMine. Pack developers are highly encouraged to enable this! (Resets back to false after use)");
-		EM_Settings.genConfigs = genConfig.getBoolean(false);
+		if(!EM_Settings.genConfigs)
+		{
+			EM_Settings.genConfigs = genConfig.getBoolean(false);
+		}
 		genConfig.set(false);
 		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
 		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);

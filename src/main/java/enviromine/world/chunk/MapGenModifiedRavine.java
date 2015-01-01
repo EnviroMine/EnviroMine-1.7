@@ -13,6 +13,26 @@ import java.util.Random;
 public class MapGenModifiedRavine extends MapGenBase
 {
 	private float[] field_75046_d = new float[1024];
+
+	public void func_151539_a(ChunkProviderCaves chunkProviderCaves, World worldObj, long seed, int chunkX, int chunkY, Block[] ablock)
+	{
+        int k = this.range;
+        this.worldObj = worldObj;
+        this.rand.setSeed(seed);
+        long l = this.rand.nextLong();
+        long i1 = this.rand.nextLong();
+
+        for (int j1 = chunkX - k; j1 <= chunkX + k; ++j1)
+        {
+            for (int k1 = chunkY - k; k1 <= chunkY + k; ++k1)
+            {
+                long l1 = (long)j1 * l;
+                long i2 = (long)k1 * i1;
+                this.rand.setSeed(l1 ^ i2 ^ seed);
+                this.func_151538_a(worldObj, j1, k1, chunkX, chunkY, ablock);
+            }
+        }
+	}
 	
 	protected void func_151540_a(long p_151540_1_, int p_151540_3_, int p_151540_4_, Block[] p_151540_5_, double p_151540_6_, double p_151540_8_, double p_151540_10_, float p_151540_12_, float p_151540_13_, float p_151540_14_, int p_151540_15_, int p_151540_16_, double p_151540_17_)
 	{

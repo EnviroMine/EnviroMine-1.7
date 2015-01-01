@@ -1,19 +1,18 @@
 package enviromine.utils;
 
-import enviromine.core.EnviroMine;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
 import java.io.File;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
-
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
-import org.apache.logging.log4j.Level;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
+import enviromine.core.EnviroMine;
 
 public class ModIdentification
 {
@@ -58,31 +57,54 @@ public class ModIdentification
 		{
 			String tmpID = Block.blockRegistry.getNameForObject(obj);
 			return tmpID.isEmpty()? "unknown" : tmpID;
+		} else if(obj instanceof Entity || (obj instanceof Class && Entity.class.isAssignableFrom((Class)obj)))
+		{
+			Class clazz;
+			
+			if(obj instanceof Entity)
+			{
+				clazz = obj.getClass();
+			} else
+			{
+				clazz = (Class)obj;
+			}
+			
+			EntityRegistration er = EntityRegistry.instance().lookupModSpawn((Class<? extends Entity>)clazz, true);
+			
+			if(er == null)
+			{
+				return "minecraft";
+			}
+			
+			ModContainer mc =  er.getContainer();
+			
+			if(mc == null)
+			{
+				return "unknown";
+			} else
+			{
+				return mc.getModId();
+			}
 		}
+		
+		// DANGER AREA: This is where non-standard objects are identified through their mod file location. May fail in some environments
 		
 		File file;
 		String modName = "unknown";
 		String fullPath = "";
+		Class clazz = (obj instanceof Class ? (Class)obj : obj.getClass());
+		
 		// Slight changes here so you can throw raw classes at this and still get the correct result as well as converting the string to just a file object and additional error handling
 		try
 		{
 			// Remove class path and URL prefix...
-			Class clazz = (obj instanceof Class ? (Class)obj : obj.getClass());
 			
 			if(clazz == null)
 			{
 				EnviroMine.logger.log(Level.ERROR, "ModID lookup failed for: NULL");
 				return "unknown";
 			}
-			
-			URL url = clazz.getResource("");
-			if (url == null)
-			{
-				EnviroMine.logger.log(Level.ERROR, "ModID lookup failed for: "+clazz.getCanonicalName());
-				return "unknown";
-			}
-			
-			fullPath = url.toString();
+			fullPath = clazz.getResource("").toString();
 			int tmpIndex = fullPath.indexOf("file:/");
 			fullPath = URLDecoder.decode(fullPath.substring(tmpIndex + "file:/".length()), "UTF-8");
 			file = new File(fullPath);
@@ -103,11 +125,44 @@ public class ModIdentification
 		
 		if(modName.equals("unknown"))
 		{
+			modName = OldIdentificationMethod(clazz);
+		}
+		
+		if(modName.equals("unknown"))
+		{
 			EnviroMine.logger.log(Level.WARN, "Unable to find matching ModID for file: " + file.getAbsolutePath());
 		} else if (modName.equals("Forge") || modName.equals("FML") || modName.equals("mcp"))
 		{
 			modName = "minecraft";
 		}
+		return modName;
+	}
+	
+	/**
+	 * Use the backup method for identifying the mod in the event the main one fails.
+	 */
+	private static String OldIdentificationMethod(Class<?> obj)
+	{
+		String modName = "unknown";
+		String objPath = obj.getProtectionDomain().getCodeSource().getLocation().toString();
+		
+		try
+		{
+			objPath = URLDecoder.decode(objPath, "UTF-8");
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}		
+		
+		for (File f: modSource_ID.keySet())
+		{
+			if (objPath.contains(f.getName()))
+			{
+				modName = modSource_ID.get(f);
+				break;
+			}
+		}
+		
 		return modName;
 	}
 	

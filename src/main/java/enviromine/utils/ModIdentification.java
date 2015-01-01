@@ -73,21 +73,20 @@ public class ModIdentification
 			
 			if(er == null)
 			{
-				return "minecraft";
+				return "minecraft"; // Entity not registered through forge at all. Vanilla?
 			}
 			
 			ModContainer mc =  er.getContainer();
 			
-			if(mc == null)
-			{
-				return "unknown";
-			} else
+			if(mc != null)
 			{
 				return mc.getModId();
 			}
+			
+			// Let the entity pass into the brute force identifier
 		}
 		
-		// DANGER AREA: This is where non-standard objects are identified through their mod file location. May fail in some environments
+		// BRUTE FORCE IDENTIFIER: This is where non-standard objects are identified through their mod file location. May fail in some environments
 		
 		File file;
 		String modName = "unknown";
@@ -101,6 +100,7 @@ public class ModIdentification
 			
 			if(clazz == null)
 			{
+				// No point even passing this to the legacy method if it's null
 				EnviroMine.logger.log(Level.ERROR, "ModID lookup failed for: NULL");
 				return "unknown";
 			}
@@ -108,19 +108,21 @@ public class ModIdentification
 			int tmpIndex = fullPath.indexOf("file:/");
 			fullPath = URLDecoder.decode(fullPath.substring(tmpIndex + "file:/".length()), "UTF-8");
 			file = new File(fullPath);
+			
+			for(File s : modSource_ID.keySet())
+			{
+				if(file.equals(s) || file.getAbsolutePath().startsWith(s.getAbsolutePath()))
+				{
+					modName = (String)modSource_ID.get(s);
+					break;
+				}
+			}
 		} catch(Exception e)
 		{
-			EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}", e);
-			return modName;
-		}
-		
-		for(File s : modSource_ID.keySet())
-		{
-			if(file.equals(s) || file.getAbsolutePath().startsWith(s.getAbsolutePath()))
-			{
-				modName = (String)modSource_ID.get(s);
-				break;
-			}
+			//Removing the catch because we want to see if the Legacy identification method can find the ID
+			
+			//EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}", e);
+			//return modName;
 		}
 		
 		if(modName.equals("unknown"))
@@ -130,7 +132,7 @@ public class ModIdentification
 		
 		if(modName.equals("unknown"))
 		{
-			EnviroMine.logger.log(Level.WARN, "Unable to find matching ModID for file: " + file.getAbsolutePath());
+			EnviroMine.logger.log(Level.WARN, "Unable to find matching ModID for " + clazz.getSimpleName());
 		} else if (modName.equals("Forge") || modName.equals("FML") || modName.equals("mcp"))
 		{
 			modName = "minecraft";
@@ -139,19 +141,26 @@ public class ModIdentification
 	}
 	
 	/**
-	 * Use the backup method for identifying the mod in the event the main one fails.
+	 * Use the legacy method for identifying the mod in the event the main one fails.
 	 */
 	private static String OldIdentificationMethod(Class<?> obj)
 	{
 		String modName = "unknown";
-		String objPath = obj.getProtectionDomain().getCodeSource().getLocation().toString();
+		String objPath = "";
+		
+		try
+		{
+			objPath = obj.getProtectionDomain().getCodeSource().getLocation().toString();
+		} catch(Exception e)
+		{
+			return modName;
+		}
 		
 		try
 		{
 			objPath = URLDecoder.decode(objPath, "UTF-8");
 		} catch (Exception e)
 		{
-			e.printStackTrace();
 		}		
 		
 		for (File f: modSource_ID.keySet())

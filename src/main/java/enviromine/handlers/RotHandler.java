@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_Settings;
@@ -15,7 +16,7 @@ public class RotHandler
 {
 	public static ItemStack doRot(World world, ItemStack item)
 	{
-		
+		//System.out.println("Rotting: " + item.getDisplayName());
 		RotProperties rotProps = null;
 		long rotTime = (long)(EM_Settings.foodRotTime * 24000L);
 		
@@ -53,7 +54,9 @@ public class RotHandler
 			
 			if(UBD == 0)
 			{
-				item.getTagCompound().setLong("EM_ROT_DATE", (world.getTotalWorldTime()/24000L) * 24000L);
+				UBD = (world.getTotalWorldTime()/24000L) * 24000L;
+				UBD = UBD <= 0L? 1L : UBD;
+				item.getTagCompound().setLong("EM_ROT_DATE", UBD);
 				item.getTagCompound().setLong("EM_ROT_TIME", rotTime);
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())
@@ -78,26 +81,26 @@ public class RotHandler
 		
 		try
 		{
-		for(int i = 0; i < inventory.getSizeInventory(); i++)
-		{
-			ItemStack slotItem = inventory.getStackInSlot(i);
-			
-			if(slotItem != null)
+			for(int i = 0; i < inventory.getSizeInventory(); i++)
 			{
-				ItemStack rotItem = doRot(world, slotItem);
+				ItemStack slotItem = inventory.getStackInSlot(i);
 				
-				if(rotItem == null || rotItem.getItem() != slotItem.getItem())
+				if(slotItem != null)
 				{
-					inventory.setInventorySlotContents(i, rotItem);
-					flag = true;
+					ItemStack rotItem = doRot(world, slotItem);
+					
+					if(rotItem == null || rotItem.getItem() != slotItem.getItem())
+					{
+						inventory.setInventorySlotContents(i, rotItem);
+						flag = true;
+					}
 				}
 			}
-		}
-		
-		if(flag && inventory instanceof TileEntity)
-		{
-			((TileEntity)inventory).markDirty();
-		}
+			
+			if(flag && inventory instanceof TileEntity)
+			{
+				((TileEntity)inventory).markDirty();
+			}
 		} catch(Exception e)
 		{
 			EnviroMine.logger.log(Level.ERROR, "An error occured while attempting to rot inventory:", e);

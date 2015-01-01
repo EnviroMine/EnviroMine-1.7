@@ -12,6 +12,26 @@ import java.util.Random;
 
 public class MapGenModifiedCaves extends MapGenBase
 {
+	public void func_151539_a(ChunkProviderCaves chunkProviderCaves, World worldObj, long seed, int chunkX, int chunkY, Block[] ablock)
+	{
+        int k = this.range;
+        this.worldObj = worldObj;
+        this.rand.setSeed(seed);
+        long l = this.rand.nextLong();
+        long i1 = this.rand.nextLong();
+
+        for (int j1 = chunkX - k; j1 <= chunkX + k; ++j1)
+        {
+            for (int k1 = chunkY - k; k1 <= chunkY + k; ++k1)
+            {
+                long l1 = (long)j1 * l;
+                long i2 = (long)k1 * i1;
+                this.rand.setSeed(l1 ^ i2 ^ seed);
+                this.func_151538_a(worldObj, j1, k1, chunkX, chunkY, ablock);
+            }
+        }
+	}
+	
 	protected void func_151542_a(long p_151542_1_, int p_151542_3_, int p_151542_4_, Block[] p_151542_5_, double p_151542_6_, double p_151542_8_, double p_151542_10_)
 	{
 		this.func_151541_a(p_151542_1_, p_151542_3_, p_151542_4_, p_151542_5_, p_151542_6_, p_151542_8_, p_151542_10_, 1.0F + this.rand.nextFloat() * 6.0F, 0.0F, 0.0F, -1, -1, 0.5D);

@@ -60,8 +60,8 @@ public class ChunkProviderCaves implements IChunkProvider
 	 * Holds the noise used to determine whether something other than netherrack can be generated at a location
 	 */
 	private double[] netherrackExclusivityNoise = new double[256];
-	private MapGenBase netherCaveGenerator = new MapGenModifiedCaves();
-	private MapGenBase ravineGenerator = new MapGenModifiedRavine();
+	private MapGenModifiedCaves netherCaveGenerator = new MapGenModifiedCaves();
+	private MapGenModifiedRavine ravineGenerator = new MapGenModifiedRavine();
 	double[] noiseData1;
 	double[] noiseData2;
 	double[] noiseData3;
@@ -69,8 +69,8 @@ public class ChunkProviderCaves implements IChunkProvider
 	double[] noiseData5;
 	
 	{
-		netherCaveGenerator = TerrainGen.getModdedMapGen(netherCaveGenerator, CAVE);
-		ravineGenerator = TerrainGen.getModdedMapGen(ravineGenerator, RAVINE);
+		netherCaveGenerator = (MapGenModifiedCaves)TerrainGen.getModdedMapGen(netherCaveGenerator, CAVE);
+		ravineGenerator = (MapGenModifiedRavine)TerrainGen.getModdedMapGen(ravineGenerator, RAVINE);
 	}
 	
 	public ChunkProviderCaves(World p_i2005_1_, long p_i2005_2_)
@@ -312,19 +312,20 @@ public class ChunkProviderCaves implements IChunkProvider
 		 byte[] meta = new byte[ablock.length];
 		 BiomeGenBase[] abiomegenbase = this.worldObj.getWorldChunkManager().loadBlockGeneratorData((BiomeGenBase[])null, p_73154_1_ * 16, p_73154_2_ * 16, 16, 16); //Forge Move up to allow for passing to replaceBiomeBlocks
 		 this.func_147419_a(p_73154_1_, p_73154_2_, ablock);
-				 this.replaceBiomeBlocks(p_73154_1_, p_73154_2_, ablock, meta, abiomegenbase);
-				 this.netherCaveGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);
-				 this.ravineGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);
-				 Chunk chunk = new Chunk(this.worldObj, ablock, meta, p_73154_1_, p_73154_2_);
-				 byte[] abyte = chunk.getBiomeArray();
-				 
-				 for (int k = 0; k < abyte.length; ++k)
-				 {
-					 abyte[k] = (byte)abiomegenbase[k].biomeID;
-				 }
-				 
-				 chunk.resetRelightChecks();
-				 return chunk;
+		 
+		 this.replaceBiomeBlocks(p_73154_1_, p_73154_2_, ablock, meta, abiomegenbase);
+		 this.netherCaveGenerator.func_151539_a(this, this.worldObj, (long)p_73154_1_ * 341873128712L + (long)p_73154_2_ * 132897987541L, p_73154_1_, p_73154_2_, ablock);
+		 this.ravineGenerator.func_151539_a(this, this.worldObj, (long)p_73154_1_ * 341873128712L + (long)p_73154_2_ * 132897987541L, p_73154_1_, p_73154_2_, ablock);
+		 Chunk chunk = new Chunk(this.worldObj, ablock, meta, p_73154_1_, p_73154_2_);
+		 byte[] abyte = chunk.getBiomeArray();
+		 
+		 for (int k = 0; k < abyte.length; ++k)
+		 {
+			 abyte[k] = (byte)abiomegenbase[k].biomeID;
+		 }
+		 
+		 chunk.resetRelightChecks();
+		 return chunk;
 	}
 	
 	/**

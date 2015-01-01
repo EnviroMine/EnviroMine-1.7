@@ -10,10 +10,12 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.world.chunk.ChunkProviderCaves;
 import enviromine.world.chunk.WorldChunkManagerCaves;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -81,9 +83,32 @@ public class WorldProviderCaves extends WorldProvider
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
+		/**
+		 * This is here for when a user is starting before technical world load events are fired.
+		 * This usually happens when a user loads up Minecraft from within the dimension
+		 */
+		MinecraftServer server = MinecraftServer.getServer();
+		
+		if(EM_Settings.worldDir == null && server.isServerRunning())
+		{
+			if(EnviroMine.proxy.isClient())
+			{
+				EM_Settings.worldDir = MinecraftServer.getServer().getFile("saves/" + server.getFolderName());
+			} else
+			{
+				EM_Settings.worldDir = server.getFile(server.getFolderName());
+			}
+			
+			MineshaftBuilder.loadBuilders(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroMineshafts"));
+			Earthquake.loadQuakes(new File(EM_Settings.worldDir.getAbsolutePath(), "data/EnviroEarthquakes"));
+		}
+		
 		long seed = this.worldObj.getSeed();
+		File dimDataF = new File(EM_Settings.worldDir, "data/");
 		File dimData = new File(EM_Settings.worldDir, "data/EnviroCaveData");
 		File dimFolder = new File(EM_Settings.worldDir, "DIM" + EM_Settings.caveDimID + "/region");
+		
+		EnviroMine.logger.log(Level.INFO, "Loading cave seed from: " + EM_Settings.worldDir.getAbsolutePath());
 		
 		try
 		{
@@ -93,6 +118,7 @@ public class WorldProviderCaves extends WorldProvider
 			{
 				if(!dimData.exists())
 				{
+					dimDataF.mkdirs();
 					dimData.createNewFile();
 				} else // This probably isn't necessary but I like to be sure it's reset completely
 				{

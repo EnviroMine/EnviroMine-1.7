@@ -150,7 +150,7 @@ public class MineshaftBuilder
 								MineshaftBuilder tmpBuilder = new MineshaftBuilder(world, ii*16, kk*16, rotation);
 								tmpBuilder.decayAmount = random.nextInt(10);
 								tmpBuilder.setRandom(random);
-								if(world.provider.dimensionId == 0)
+								//if(world.provider.dimensionId == 0)
 								{
 									if(tmpBuilder.BuildAbandonedMine())
 									{
@@ -162,7 +162,7 @@ public class MineshaftBuilder
 											foundBuilders += 1;
 										}
 									}
-								} else if(world.provider.dimensionId == EM_Settings.caveDimID)
+								} /*else if(world.provider.dimensionId == EM_Settings.caveDimID)
 								{
 									if(tmpBuilder.startCaveDesign())
 									{
@@ -174,7 +174,7 @@ public class MineshaftBuilder
 											foundBuilders += 1;
 										}
 									}
-								}
+								}*/
 							}
 						}
 					}
@@ -234,19 +234,32 @@ public class MineshaftBuilder
 		{
 			ArrayList<MineSegment> chunkSegments = this.segmentMap.get(keys[i]);
 			
-			for(int j = chunkSegments.size() - 1; j >= 0; j--)
+			if(chunkSegments == null || chunkSegments.size() <= 0)
 			{
-				MineSegment segment = chunkSegments.get(j);
-				
-				if(segment.allChunksLoaded())
-				{
-					if(segment.canBuild())
-					{
-						segment.build();
-					}
-					chunkSegments.remove(j);
-				}
+				segmentMap.remove(i);
+				continue;
 			}
+				for(int j = chunkSegments.size() - 1; j >= 0; j--)
+				{
+					// Weird quirk happens here where 'chunkSegements' gets smaller mid loop between the get() and remove() calls.
+					// Try-catch statement is here in case that happens
+					try
+					{
+						MineSegment segment = chunkSegments.get(j);
+						
+						if(segment.allChunksLoaded())
+						{
+							if(segment.canBuild())
+							{
+								segment.build();
+							}
+							chunkSegments.remove(j);
+						}
+					} catch(Exception e)
+					{
+						EnviroMine.logger.log(Level.WARN, "An error occured while generating a section of mineshaft:", e);
+					}
+				}
 			
 			if(chunkSegments.size() <= 0)
 			{
@@ -273,41 +286,54 @@ public class MineshaftBuilder
 		
 		DimensionProperties dProps = EM_Settings.dimensionProperties.get(this.world.provider.dimensionId);
 		int seaLvl = dProps != null? dProps.sealevel : 64;
+		int mineDepth = dProps != null? dProps.mineDepth : 12 + (seaLvl > 32? (this.rand.nextInt(5)*4) : 4 * this.rand.nextInt((seaLvl-12)/4));
+		boolean shaft = true;
 		
-		if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < (float)seaLvl * 0.75F || seaLvl < 24)
+		if(mineDepth < 0)
 		{
-			return false;
+			shaft = false;
+			mineDepth *= -1;
+			origY = mineDepth;
 		}
 		
-		int mineDepth = 12 + (seaLvl > 32? (this.rand.nextInt(5)*4) : 4 * this.rand.nextInt((seaLvl-12)/4));
 		int chunkY = origY;
 		
-		if(chunkY%4 != 0)
+		if(shaft)
 		{
-			chunkY -= 3;
-			MineSegment segment = new MineSegmentShaft(this.world, this.xOffset(0, 0), chunkY, this.zOffset(0, 0), this.rot, this, false);
-			segment.setDecay(decayAmount);
-			segment.linkChunksToBuilder();
-			chunkY -= chunkY%4;
-		}
-		
-		while(chunkY >= mineDepth)
-		{
-			MineSegment segment = null;
+			if(this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.water || this.world.getBlock(origX, origY - 1, origX).getMaterial() == Material.lava || origY < (float)seaLvl * 0.75F || seaLvl < 24)
+			{
+				return false;
+			}
 			
-			if(chunkY == mineDepth)
+			//int mineDepth = 12 + (seaLvl > 32? (this.rand.nextInt(5)*4) : 4 * this.rand.nextInt((seaLvl-12)/4));
+			
+			if(chunkY%4 != 0)
 			{
-				segment = new MineSegmentShaft(this.world, this.xOffset(0, 0), chunkY, this.zOffset(0, 0), this.rot, this, true);
+				chunkY -= 3;
+				MineSegment segment = new MineSegmentShaft(this.world, this.xOffset(0, 0), chunkY, this.zOffset(0, 0), this.rot, this, false);
 				segment.setDecay(decayAmount);
 				segment.linkChunksToBuilder();
-				break;
+				chunkY -= chunkY%4;
+			}
+			
+			while(chunkY >= mineDepth)
+			{
+				MineSegment segment = null;
 				
-			} else
-			{
-				segment = new MineSegmentShaft(this.world, this.xOffset(0, 0), chunkY, this.zOffset(0, 0), this.rot, this, false);
-				segment.setDecay(decayAmount);
-				segment.linkChunksToBuilder();
-				chunkY -= 4;
+				if(chunkY == mineDepth)
+				{
+					segment = new MineSegmentShaft(this.world, this.xOffset(0, 0), chunkY, this.zOffset(0, 0), this.rot, this, true);
+					segment.setDecay(decayAmount);
+					segment.linkChunksToBuilder();
+					break;
+					
+				} else
+				{
+					segment = new MineSegmentShaft(this.world, this.xOffset(0, 0), chunkY, this.zOffset(0, 0), this.rot, this, false);
+					segment.setDecay(decayAmount);
+					segment.linkChunksToBuilder();
+					chunkY -= 4;
+				}
 			}
 		}
 		

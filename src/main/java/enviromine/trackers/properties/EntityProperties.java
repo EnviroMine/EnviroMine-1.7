@@ -126,6 +126,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void LoadProperty(Configuration config, String category)
 	{
+		config.addCustomCategoryComment(this.categoryName(), this.categoryDescription());
 		int id = config.get(category, EPName[0], 0).getInt(0);
 		boolean track = config.get(category, EPName[1], true).getBoolean(true);
 		boolean dehydration = config.get(category, EPName[2], true).getBoolean(true);

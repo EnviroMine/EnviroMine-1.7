@@ -296,14 +296,14 @@ public class EM_ConfigHandler
 		try
 		{
 			dirFlag = Dir.mkdirs();
-		} catch(SecurityException Se)
+		} catch(Exception e)
 		{
-			EnviroMine.logger.log(Level.WARN, "Error while creating config directory:\n" + Se);
+			EnviroMine.logger.log(Level.ERROR, "Error occured while creating config directory: " + Dir.getAbsolutePath(), e);
 		}
 		
 		if(!dirFlag)
 		{
-			EnviroMine.logger.log(Level.WARN, "Failed to create config directory!");
+			EnviroMine.logger.log(Level.ERROR, "Failed to create config directory: " + Dir.getAbsolutePath());
 		}
 	}
 	

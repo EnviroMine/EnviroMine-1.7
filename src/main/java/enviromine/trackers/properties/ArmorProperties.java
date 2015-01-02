@@ -179,7 +179,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 					armorFile.createNewFile();
 				} catch(Exception e)
 				{
-					e.printStackTrace();
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + armor.getUnlocalizedName(), e);
 					continue;
 				}
 			}

@@ -2,10 +2,10 @@ package enviromine.handlers;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_Settings;
@@ -30,7 +30,7 @@ public class RotHandler
 			rotTime = (long)(rotProps.days * 24000L);
 		}
 		
-		if(!EM_Settings.foodSpoiling || rotProps == null || rotTime < 0)
+		if(!EM_Settings.foodSpoiling || (rotProps == null && !(item.getItem() instanceof ItemFood)) || rotTime < 0)
 		{
 			if(item.getTagCompound() != null)
 			{
@@ -61,7 +61,13 @@ public class RotHandler
 				return item;
 			} else if(UBD + rotTime < world.getTotalWorldTime())
 			{
-				return Item.itemRegistry.getObject(rotProps.rotID) == null? null : new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
+				if(rotProps == null)
+				{
+					return new ItemStack(ObjectHandler.rottenFood, item.stackSize);
+				} else
+				{
+					return Item.itemRegistry.getObject(rotProps.rotID) == null? null : new ItemStack((Item)Item.itemRegistry.getObject(rotProps.rotID), item.stackSize, rotProps.rotMeta < 0? item.getItemDamage() : rotProps.rotMeta);
+				}
 			} else
 			{
 				item.getTagCompound().setLong("EM_ROT_TIME", rotTime);

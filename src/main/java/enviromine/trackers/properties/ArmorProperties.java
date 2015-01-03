@@ -170,7 +170,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 				continue;
 			}
 			
-			File armorFile = new File(EM_ConfigHandler.customPath + regName[0] + ".cfg");
+			File armorFile = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
 			
 			if(!armorFile.exists())
 			{

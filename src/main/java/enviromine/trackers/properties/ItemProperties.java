@@ -188,7 +188,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				continue;
 			}
 			
-			File itemFile = new File(EM_ConfigHandler.customPath + regName[0] + ".cfg");
+			File itemFile = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
 			
 			if(!itemFile.exists())
 			{

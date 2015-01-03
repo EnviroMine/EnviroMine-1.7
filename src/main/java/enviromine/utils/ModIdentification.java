@@ -184,19 +184,5 @@ public class ModIdentification
 			
 			EnviroMine.logger.log(Level.INFO, "Mapped mod: {" + mod.getSource().getAbsolutePath() + "," + mod.getName() + "," + mod.getModId() + "}");
 		}
-		
-		// File names can be changed so these would not work in non-standard installations
-		/*modSource_Name.put("1.6.2", "Minecraft");
-		modSource_Name.put("1.6.3", "Minecraft");
-		modSource_Name.put("1.6.4", "Minecraft");
-		modSource_Name.put("1.7.2", "Minecraft");
-		modSource_Name.put("1.7.10", "Minecraft");
-		modSource_Name.put("Forge", "Minecraft");
-		modSource_ID.put("1.6.2", "minecraft");
-		modSource_ID.put("1.6.3", "minecraft");
-		modSource_ID.put("1.6.4", "minecraft");
-		modSource_ID.put("1.7.2", "minecraft");
-		modSource_ID.put("1.7.10", "minecraft");
-		modSource_ID.put("Forge", "minecraft");*/
 	}
 }

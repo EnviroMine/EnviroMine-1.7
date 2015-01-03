@@ -12,6 +12,7 @@ import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.helpers.PropertyBase;
 import enviromine.trackers.properties.helpers.SerialisableProperty;
+import enviromine.utils.EnviroUtils;
 import enviromine.utils.ModIdentification;
 
 public class EntityProperties implements SerialisableProperty, PropertyBase
@@ -185,7 +186,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 			String modID = ModIdentification.idFromObject(clazz);
 			String eName = EntityList.getStringFromID(eID);
 			
-			File file = new File(EM_ConfigHandler.customPath + modID + ".cfg");
+			File file = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
 			
 			if(!file.exists())
 			{

@@ -217,6 +217,11 @@ public class UpdateNotification
 	 */
 	public static int compareVersions(String oldVer, String newVer)
 	{
+		if(oldVer == null || newVer == null || oldVer.isEmpty() || newVer.isEmpty())
+		{
+			return -2;
+		}
+		
 		int result = 0;
 		int[] oldNum;
 		int[] newNum;

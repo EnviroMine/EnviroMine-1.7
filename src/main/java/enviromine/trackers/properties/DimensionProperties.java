@@ -187,7 +187,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 			
 			String modID = ModIdentification.idFromObject(dimension);
 			
-			File file = new File(EM_ConfigHandler.customPath + modID + ".cfg");
+			File file = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
 			
 			if(!file.exists())
 			{

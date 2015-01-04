@@ -119,18 +119,9 @@ public class EnviroMine
 	{
 		proxy.postInit(event);
 		
-		/*if(EM_Settings.genArmorConfigs)
-		{
-			ArmorProperties.SearchForModdedArmors();
-		}*/
-		
 		ObjectHandler.LoadIgnitionSources();
-		
-		if(EM_Settings.genConfigs)
-		{
-			EM_ConfigHandler.initConfig();
-		}
-		//DimensionProperties.SearchForDimensions();
+
+		EM_ConfigHandler.initConfig(); // Second pass for object initialized after pre-init
 
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.stabilityTypes.size() + " stability types");
 		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.armorProperties.size() + " armor properties");

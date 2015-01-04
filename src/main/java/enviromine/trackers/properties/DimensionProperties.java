@@ -168,7 +168,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		config.get(category, DMName[12], weatherAffectsTemp).getBoolean(weatherAffectsTemp);
 		config.get(category, DMName[13], mineshaftGen).getBoolean(mineshaftGen);
 		config.get(category, DMName[14], sealevel).getInt(sealevel);
-		config.getInt(DMName[15], category, mineDepth, 0, 255, "Use a negitive value to skip shaft entrance checks");
+		config.getInt(DMName[15], category, mineDepth, -255, 255, "Use a negitive value to skip shaft entrance checks");
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 				config.get(catName, DMName[12], true).getBoolean(true);
 				config.get(catName, DMName[13], true).getBoolean(true);
 				config.get(catName, DMName[14], 255).getInt(255);
-				config.getInt(DMName[15], catName, -192, 0, 255, "Use a negitive value to skip shaft entrance checks");
+				config.getInt(DMName[15], catName, -192, -255, 255, "Use a negitive value to skip shaft entrance checks");
 			} else if(EM_Settings.genConfigs || modID.equals("minecraft"))
 			{
 				this.generateEmpty(config, dimension);
@@ -268,7 +268,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		config.get(catName, DMName[12], !dimension.hasNoSky).getBoolean(!dimension.hasNoSky);
 		config.get(catName, DMName[13], !dimension.isHellWorld).getBoolean(!dimension.isHellWorld);
 		config.get(catName, DMName[14], dimension.isHellWorld? 255 : 65).getInt(dimension.isHellWorld? 255 : 65);
-		config.getInt(DMName[15], catName, 12, 0, 255, "Use a negitive value to skip shaft entrance checks");
+		config.getInt(DMName[15], catName, 12, -255, 255, "Use a negitive value to skip shaft entrance checks");
 	}
 
 	@Override

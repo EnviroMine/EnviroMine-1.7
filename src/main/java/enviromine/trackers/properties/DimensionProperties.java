@@ -144,7 +144,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		boolean weatherAffectsTemp = config.get(category, DMName[12], true).getBoolean(true);
 		boolean mineshaftGen = config.get(category, DMName[13], true).getBoolean(true);
 		int sealevel = config.get(category, DMName[14], 65).getInt(65);
-		int mineDepth = config.getInt(DMName[15], category, 12, 0, 255, "Use a negitive value to skip shaft entrance checks");
+		int mineDepth = config.getInt(DMName[15], category, 12, -255, 255, "Use a negitive value to skip shaft entrance checks");
 		
 		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth);
 		EM_Settings.dimensionProperties.put(id, entry);

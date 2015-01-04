@@ -79,6 +79,7 @@ public class CaveBaseProperties implements PropertyBase
 		config.getInt(CBName[9], catName, 32, 0, 255, "Height at which water/lava generates");
 		config.get(catName, CBName[10], true).getBoolean(true);
 		config.get(catName, CBName[11], false).getBoolean(false);
+		config.get(catName, CBName[12], false).getBoolean(false);
 		
 		config.save();
 	}
@@ -134,13 +135,14 @@ public class CaveBaseProperties implements PropertyBase
 		EM_Settings.caveLiquidY = config.getInt(CBName[9], catName, 32, 0, 255, "Height at which water/lava generates");
 		EM_Settings.caveFlood = config.get(catName, CBName[10], true).getBoolean(true);
 		EM_Settings.caveRespawn = config.get(catName, CBName[11], false).getBoolean(false);
+		EM_Settings.enforceWeights = config.get(catName, CBName[12], false, "If set to true EnviroMine will try to strictly enforce the configured spawn weights regardless of spawn method. Has some side effects!").getBoolean(false);
 		
 		config.save();
 	}
 	
 	static
 	{
-		CBName = new String[12];
+		CBName = new String[13];
 		CBName[0] = "Dimension ID";
 		CBName[1] = "Fire OreGen event";
 		CBName[2] = "Lava instead of Water";
@@ -153,5 +155,6 @@ public class CaveBaseProperties implements PropertyBase
 		CBName[9] = "Water/Lava Height";
 		CBName[10] = "Flood Side Caves";
 		CBName[11] = "Can Respawn in Caves";
+		CBName[12] = "Enforce Spawn Weights";
 	}
 }

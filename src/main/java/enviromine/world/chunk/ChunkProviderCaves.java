@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
@@ -67,11 +66,6 @@ public class ChunkProviderCaves implements IChunkProvider
 	double[] noiseData3;
 	double[] noiseData4;
 	double[] noiseData5;
-	
-	{
-		netherCaveGenerator = (MapGenModifiedCaves)TerrainGen.getModdedMapGen(netherCaveGenerator, CAVE);
-		ravineGenerator = (MapGenModifiedRavine)TerrainGen.getModdedMapGen(ravineGenerator, RAVINE);
-	}
 	
 	public ChunkProviderCaves(World p_i2005_1_, long p_i2005_2_)
 	{

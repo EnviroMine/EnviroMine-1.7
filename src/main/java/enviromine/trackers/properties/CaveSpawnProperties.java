@@ -2,9 +2,9 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
 import enviromine.core.EM_ConfigHandler;
@@ -18,7 +18,7 @@ public class CaveSpawnProperties implements PropertyBase
 	public static final CaveSpawnProperties base = new CaveSpawnProperties();
 	static String[] CGPNames;
 	
-	Class<? extends EntityLiving> clazz;
+	//Class<? extends EntityLiving> clazz;
 	public int id;
 	public int weight;
 	public int minGroup;
@@ -64,7 +64,7 @@ public class CaveSpawnProperties implements PropertyBase
 		int nMax = config.get(category, CGPNames[0], 4).getInt();
 		
 		CaveSpawnProperties entry = new CaveSpawnProperties(nID, nWeight, nMin, nMax);
-		EM_Settings.caveSpawnProperties.add(entry);
+		EM_Settings.caveSpawnProperties.put(nID, entry);
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class CaveSpawnProperties implements PropertyBase
 	 */
 	static
 	{
-		EM_Settings.caveSpawnProperties = new ArrayList<CaveSpawnProperties>();
+		EM_Settings.caveSpawnProperties = new HashMap<Integer, CaveSpawnProperties>();
 		
 		CGPNames = new String[8];
 		CGPNames[0] = "01.Entity ID";

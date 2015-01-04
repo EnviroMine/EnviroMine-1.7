@@ -224,7 +224,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 				config.get(catName, DMName[12], true).getBoolean(true);
 				config.get(catName, DMName[13], true).getBoolean(true);
 				config.get(catName, DMName[14], 255).getInt(255);
-				config.getInt(DMName[15], catName, 12, 0, 255, "Use a negitive value to skip shaft entrance checks");
+				config.getInt(DMName[15], catName, -192, 0, 255, "Use a negitive value to skip shaft entrance checks");
 			} else if(EM_Settings.genConfigs || modID.equals("minecraft"))
 			{
 				this.generateEmpty(config, dimension);

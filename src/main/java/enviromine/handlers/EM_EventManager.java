@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -76,10 +75,8 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
-
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -97,6 +94,7 @@ import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.Hallucination;
 import enviromine.trackers.properties.BiomeProperties;
+import enviromine.trackers.properties.CaveSpawnProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
@@ -117,24 +115,6 @@ public class EM_EventManager
 			{
 				chunkPhys = (EM_PhysManager.chunkDelay.get(event.world.provider.dimensionId + "" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
-			
-			// [DISABLED] Reason: Player entities are also created when changing dimensions/worlds so this would call the mass sync whenever that happens!
-			/*if (event.entity instanceof EntityPlayerMP)
-			{
-				if (MinecraftServer.getServer().isSinglePlayer() && EM_Settings.isOverridden)
-				{
-					EM_Settings.armorProperties.clear();
-					EM_Settings.blockProperties.clear();
-					EM_Settings.itemProperties.clear();
-					EM_Settings.livingProperties.clear();
-					EM_Settings.stabilityTypes.clear();
-					EM_ConfigHandler.initConfig();
-				} else if(EM_Settings.enableConfigOverride && !EnviroMine.proxy.isClient())
-				{
-					EntityPlayerMP player = (EntityPlayerMP)event.entity;
-					EnviroMine.instance.network.sendTo(new PacketAutoOverride(), player);
-				}
-			}*/
 		}
 		
 		if(EM_Settings.foodSpoiling)
@@ -161,20 +141,23 @@ public class EM_EventManager
 		
 		if(event.entity instanceof EntityLivingBase)
 		{
-			if(event.entity.worldObj != null)
+			if(EnviroMine.caves.totalSpawnWeight > 0 && event.world.provider.dimensionId == EM_Settings.caveDimID && EM_Settings.caveSpawnProperties.containsKey(EntityList.getEntityID(event.entity)))
 			{
-				if(event.entity.worldObj.isRemote && EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning())
+				CaveSpawnProperties props = EM_Settings.caveSpawnProperties.get(EntityList.getEntityID(event.entity));
+				
+				if(event.world.rand.nextInt(EnviroMine.caves.totalSpawnWeight) > props.weight)
 				{
+					event.setCanceled(true);
 					return;
 				}
 			}
-			if(EnviroDataTracker.isLegalType((EntityLivingBase)event.entity))
+			
+			// Ensure that only one set of trackers are made per Minecraft instance.
+			boolean allowTracker = !(event.world.isRemote && EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning());
+			
+			if(EnviroDataTracker.isLegalType((EntityLivingBase)event.entity) && (event.entity instanceof EntityPlayer || EM_Settings.trackNonPlayer) && allowTracker)
 			{
-				// If Not tracking mob/animals and not a player than stop
-				if(!(event.entity instanceof EntityPlayer) && !EM_Settings.trackNonPlayer)
-				{
-					return;
-				}
+				boolean hasOld = false;
 				
 				if(event.entity instanceof EntityPlayer)
 				{
@@ -183,35 +166,37 @@ public class EM_EventManager
 					{
 						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
 						oldTrack.loadNBTTags();
-						return;
+						hasOld = true;
 					}
 				}
 				
-				EnviroDataTracker emTrack = new EnviroDataTracker((EntityLivingBase)event.entity);
-				EM_StatusManager.addToManager(emTrack);
-				emTrack.loadNBTTags();
-				if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
+				if(!hasOld)
 				{
-					EM_StatusManager.syncMultiplayerTracker(emTrack);
+					EnviroDataTracker emTrack = new EnviroDataTracker((EntityLivingBase)event.entity);
+					EM_StatusManager.addToManager(emTrack);
+					emTrack.loadNBTTags();
+					if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
+					{
+						EM_StatusManager.syncMultiplayerTracker(emTrack);
+					}
 				}
 			}
 		} else if(event.entity instanceof EntityFallingBlock && !(event.entity instanceof EntityPhysicsBlock) && !event.world.isRemote && event.world.getTotalWorldTime() > EM_PhysManager.worldStartTime + EM_Settings.worldDelay && chunkPhys)
 		{
 			EntityFallingBlock oldSand = (EntityFallingBlock)event.entity;
 			
-			if(oldSand.func_145805_f() == Blocks.air)
+			if(oldSand.func_145805_f() != Blocks.air)
 			{
+				NBTTagCompound oldTags = new NBTTagCompound();
+				oldSand.writeToNBT(oldTags);
+				
+				EntityPhysicsBlock newSand = new EntityPhysicsBlock(oldSand.worldObj, oldSand.prevPosX, oldSand.prevPosY, oldSand.prevPosZ, oldSand.func_145805_f(), oldSand.field_145814_a, true);
+				newSand.readFromNBT(oldTags);
+				event.world.spawnEntityInWorld(newSand);
+				event.setCanceled(true);
+				event.entity.setDead();
 				return;
 			}
-			
-			NBTTagCompound oldTags = new NBTTagCompound();
-			oldSand.writeToNBT(oldTags);
-			
-			EntityPhysicsBlock newSand = new EntityPhysicsBlock(oldSand.worldObj, oldSand.prevPosX, oldSand.prevPosY, oldSand.prevPosZ, oldSand.func_145805_f(), oldSand.field_145814_a, true);
-			newSand.readFromNBT(oldTags);
-			event.world.spawnEntityInWorld(newSand);
-			event.setCanceled(true);
-			event.entity.setDead();
 		}
 	}
 	

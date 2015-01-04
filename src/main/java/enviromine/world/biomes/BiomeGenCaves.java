@@ -1,5 +1,6 @@
 package enviromine.world.biomes;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -10,6 +11,11 @@ import enviromine.trackers.properties.CaveSpawnProperties;
 
 public class BiomeGenCaves extends BiomeGenBase
 {
+	/**
+	 * Used for enforcing spawn weights
+	 */
+	public int totalSpawnWeight = 0;
+	
 	public BiomeGenCaves(int par1)
 	{
 		super(par1);
@@ -24,7 +30,9 @@ public class BiomeGenCaves extends BiomeGenBase
         this.spawnableWaterCreatureList.clear();
         this.spawnableCaveCreatureList.clear();
         
-		Iterator<CaveSpawnProperties> iterator = EM_Settings.caveSpawnProperties.iterator();
+        this.totalSpawnWeight = 0;
+        
+		Iterator<CaveSpawnProperties> iterator = EM_Settings.caveSpawnProperties.values().iterator();
 		
 		while(iterator.hasNext())
 		{
@@ -48,6 +56,8 @@ public class BiomeGenCaves extends BiomeGenBase
 				this.spawnableCaveCreatureList.add(new SpawnListEntry(clazz, props.weight, props.minGroup, props.maxGroup));
 				this.spawnableCreatureList.add(new SpawnListEntry(clazz, props.weight, props.minGroup, props.maxGroup));
 			}
+			
+			this.totalSpawnWeight += props.weight;
 		}
 	}
 }

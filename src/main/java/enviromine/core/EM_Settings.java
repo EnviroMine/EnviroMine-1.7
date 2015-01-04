@@ -139,8 +139,9 @@ public class EM_Settings
 	public static int caveLiquidY = 32;
 	public static boolean caveFlood = true;
 	public static boolean caveRespawn = false;
+	public static boolean enforceWeights = false;
 	public static ArrayList<CaveGenProperties> caveGenProperties = new ArrayList<CaveGenProperties>();
-	public static ArrayList<CaveSpawnProperties> caveSpawnProperties = new ArrayList<CaveSpawnProperties>();
+	public static HashMap<Integer, CaveSpawnProperties> caveSpawnProperties = new HashMap<Integer, CaveSpawnProperties>();
 	
 	public static boolean foodSpoiling = true;
 	public static int foodRotTime = 7;

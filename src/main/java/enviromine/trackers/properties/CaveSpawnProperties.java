@@ -58,10 +58,10 @@ public class CaveSpawnProperties implements PropertyBase
 	public void LoadProperty(Configuration config, String category)
 	{
 		config.setCategoryComment(this.categoryName(), this.categoryDescription());
-		int nID = config.get(category, CGPNames[0], 0).getInt();
-		int nWeight = config.get(category, CGPNames[0], 100).getInt();
-		int nMin = config.get(category, CGPNames[0], 4).getInt();
-		int nMax = config.get(category, CGPNames[0], 4).getInt();
+		int nID = config.get(category, CGPNames[0], 0).getInt(0);
+		int nWeight = config.get(category, CGPNames[1], 100).getInt(100);
+		int nMin = config.get(category, CGPNames[2], 4).getInt(4);
+		int nMax = config.get(category, CGPNames[3], 4).getInt(4);
 		
 		CaveSpawnProperties entry = new CaveSpawnProperties(nID, nWeight, nMin, nMax);
 		EM_Settings.caveSpawnProperties.put(nID, entry);

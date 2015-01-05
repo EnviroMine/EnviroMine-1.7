@@ -192,7 +192,7 @@ public class EM_EventManager
 	}
 	
 	@SubscribeEvent
-	public void onLivingSpawn(LivingSpawnEvent event)
+	public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
 		if(EM_Settings.enforceWeights)
 		{
@@ -202,7 +202,7 @@ public class EM_EventManager
 				
 				if(event.world.rand.nextInt(EnviroMine.caves.totalSpawnWeight) > props.weight)
 				{
-					event.setCanceled(true);
+					event.setResult(Result.DENY);
 					return;
 				}
 			}

@@ -66,6 +66,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -141,16 +142,6 @@ public class EM_EventManager
 		
 		if(event.entity instanceof EntityLivingBase)
 		{
-			if(EnviroMine.caves.totalSpawnWeight > 0 && event.world.provider.dimensionId == EM_Settings.caveDimID && EM_Settings.caveSpawnProperties.containsKey(EntityList.getEntityID(event.entity)))
-			{
-				CaveSpawnProperties props = EM_Settings.caveSpawnProperties.get(EntityList.getEntityID(event.entity));
-				
-				if(event.world.rand.nextInt(EnviroMine.caves.totalSpawnWeight) > props.weight)
-				{
-					event.setCanceled(true);
-					return;
-				}
-			}
 			
 			// Ensure that only one set of trackers are made per Minecraft instance.
 			boolean allowTracker = !(event.world.isRemote && EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning());
@@ -196,6 +187,24 @@ public class EM_EventManager
 				event.setCanceled(true);
 				event.entity.setDead();
 				return;
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingSpawn(LivingSpawnEvent event)
+	{
+		if(EM_Settings.enforceWeights)
+		{
+			if(EnviroMine.caves.totalSpawnWeight > 0 && event.world.provider.dimensionId == EM_Settings.caveDimID && EM_Settings.caveSpawnProperties.containsKey(EntityList.getEntityID(event.entity)))
+			{
+				CaveSpawnProperties props = EM_Settings.caveSpawnProperties.get(EntityList.getEntityID(event.entity));
+				
+				if(event.world.rand.nextInt(EnviroMine.caves.totalSpawnWeight) > props.weight)
+				{
+					event.setCanceled(true);
+					return;
+				}
 			}
 		}
 	}

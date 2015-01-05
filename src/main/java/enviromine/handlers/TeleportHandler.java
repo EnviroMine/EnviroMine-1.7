@@ -192,7 +192,7 @@ public class TeleportHandler extends Teleporter
 		{
 			for(int checkH = 120; checkH >= 32; checkH--)
 			{
-				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.getBlock(i, checkH - 1, k).isNormalCube())
+				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.isAirBlock(i, checkH + 1, k) && this.worldServerInstance.getBlock(i, checkH - 1, k).isNormalCube())
 				{
 					j = checkH;
 					break;
@@ -209,7 +209,7 @@ public class TeleportHandler extends Teleporter
 		{
 			for(int checkH = 9; checkH >= 5; checkH--)
 			{
-				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.getBlock(i, checkH - 1, k).isNormalCube())
+				if(this.worldServerInstance.isAirBlock(i, checkH, k) && this.worldServerInstance.isAirBlock(i, checkH + 1, k) && this.worldServerInstance.getBlock(i, checkH - 1, k).isNormalCube())
 				{
 					j = checkH;
 					break;

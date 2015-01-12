@@ -16,6 +16,17 @@ import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EnviroMine;
 
 public class SaveController {
+	
+	/**
+	 * Configuration version number. If changed the version file will be reset to defaults to prevent glitches
+	 */
+	static final String CONFIG_VERSION = "1.0.0";
+	
+	/**
+	 * The version of the configs last loaded from file. This will be compared to the version number above when determining whether a reset is necessary
+	 */
+	static String LOADED_VERSION = "1.0.0";
+	
     protected static final String dirName = Minecraft.getMinecraft().mcDataDir + File.separator + "config" + File.separator + "enviromine";
     
     protected static File dir = new File(dirName);
@@ -53,6 +64,7 @@ public class SaveController {
 
             UI_Settings.readFromNBT(nbt.getCompoundTag(UISettingsData));
             HUDRegistry.readFromNBT(nbt.getCompoundTag(UISettingsData));
+            LOADED_VERSION = nbt.getCompoundTag(UISettingsData).getString("CONFIG_VERSION");
             UpdateNotification.readFromNBT(nbt.getCompoundTag("Notifications"));
             // New HUD Settings will be here
             
@@ -64,7 +76,8 @@ public class SaveController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
+        
+        return LOADED_VERSION.equals(CONFIG_VERSION);
     }
 
     public static void saveConfig(String name) {
@@ -90,6 +103,7 @@ public class SaveController {
             NBTTagCompound globalNBT = new NBTTagCompound();
             	HUDRegistry.writeToNBT(globalNBT);
             	UI_Settings.writeToNBT(globalNBT);
+            	globalNBT.setString("CONFIG_VERSION", CONFIG_VERSION); // VERY IMPORTANT
             	nbt.setTag(UISettingsData, globalNBT);
             	
             	NBTTagCompound notificationNBT = new NBTTagCompound();

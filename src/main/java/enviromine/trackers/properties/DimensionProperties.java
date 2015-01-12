@@ -35,6 +35,10 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 	public boolean mineshaftGen;
 	public int sealevel;
 	public int mineDepth;
+	public float tempRate;
+	public float hydrationRate;
+	public float sanityRate;
+	public float airRate;
 	
 	public DimensionProperties(NBTTagCompound tags)
 	{
@@ -51,7 +55,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel, int mineDepth)
+	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel, int mineDepth, float tempRate, float hydrationRate, float sanityRate, float airRate)
 	{
 		this.id = id;
 		this.override = override;
@@ -69,6 +73,10 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		this.mineshaftGen = mineshaftGen;
 		this.sealevel = sealevel;
 		this.mineDepth = mineDepth;
+		this.tempRate = tempRate;
+		this.hydrationRate = hydrationRate;
+		this.sanityRate = sanityRate;
+		this.airRate = airRate;
 	}
 
 	@Override
@@ -90,6 +98,10 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		tags.setBoolean("mineshaftGen", this.mineshaftGen);
 		tags.setInteger("sealevel", this.sealevel);
 		tags.setInteger("mineDepth", this.mineDepth);
+		tags.setFloat("tempRate", this.tempRate);
+		tags.setFloat("hydrationRate", this.hydrationRate);
+		tags.setFloat("sanityRate", this.sanityRate);
+		tags.setFloat("airRate", this.airRate);
 		return tags;
 	}
 
@@ -111,6 +123,10 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		this.mineshaftGen = tags.getBoolean("mineshaftGen");
 		this.sealevel = tags.getInteger("sealevel");
 		this.mineDepth = tags.getInteger("mineDepth");
+		this.tempRate = tags.getFloat("tempRate");
+		this.hydrationRate = tags.getFloat("hydrationRate");
+		this.sanityRate = tags.getFloat("sanityRate");
+		this.airRate = tags.getFloat("airRate");
 	}
 
 	@Override
@@ -145,8 +161,12 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		boolean mineshaftGen = config.get(category, DMName[13], true).getBoolean(true);
 		int sealevel = config.get(category, DMName[14], 65).getInt(65);
 		int mineDepth = config.getInt(DMName[15], category, 12, -255, 255, "Use a negitive value to skip shaft entrance checks");
+		float tempRate = (float)config.get(category, DMName[16], 0.0D).getDouble(0.0D);
+		float hydrationRate = (float)config.get(category, DMName[17], 0.0D).getDouble(0.0D);
+		float sanityRate = (float)config.get(category, DMName[18], 0.0D).getDouble(0.0D);
+		float airRate = (float)config.get(category, DMName[19], 0.0D).getDouble(0.0D);
 		
-		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth);
+		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth, tempRate, hydrationRate, sanityRate, airRate);
 		EM_Settings.dimensionProperties.put(id, entry);
 	}
 
@@ -169,6 +189,10 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		config.get(category, DMName[13], mineshaftGen).getBoolean(mineshaftGen);
 		config.get(category, DMName[14], sealevel).getInt(sealevel);
 		config.getInt(DMName[15], category, mineDepth, -255, 255, "Use a negitive value to skip shaft entrance checks");
+		config.get(category, DMName[16], 0.0D).getDouble(0.0D);
+		config.get(category, DMName[17], 0.0D).getDouble(0.0D);
+		config.get(category, DMName[18], 0.0D).getDouble(0.0D);
+		config.get(category, DMName[19], 0.0D).getDouble(0.0D);
 	}
 
 	@Override
@@ -223,8 +247,34 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 				config.get(catName, DMName[11], true).getBoolean(true);
 				config.get(catName, DMName[12], true).getBoolean(true);
 				config.get(catName, DMName[13], true).getBoolean(true);
-				config.get(catName, DMName[14], 255).getInt(255);
+				config.get(catName, DMName[14], 340).getInt(340);
 				config.getInt(DMName[15], catName, -192, -255, 255, "Use a negitive value to skip shaft entrance checks");
+				config.get(catName, DMName[16], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[17], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[18], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[19], 0.0D).getDouble(0.0D);
+			} else if(dimension.dimensionId == -1)
+			{
+				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
+				config.get(catName, DMName[1], true).getBoolean(true);
+				config.get(catName, DMName[2], true).getBoolean(true);
+				config.get(catName, DMName[3], true).getBoolean(true);
+				config.get(catName, DMName[4], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[5], true).getBoolean(true);
+				config.get(catName, DMName[6], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[7], true).getBoolean(true);
+				config.get(catName, DMName[8], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[9], true).getBoolean(true);
+				config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
+				config.get(catName, DMName[11], true).getBoolean(true);
+				config.get(catName, DMName[12], true).getBoolean(true);
+				config.get(catName, DMName[13], false).getBoolean(false);
+				config.get(catName, DMName[14], 340).getInt(340);
+				config.getInt(DMName[15], catName, -192, -255, 255, "Use a negitive value to skip shaft entrance checks");
+				config.get(catName, DMName[16], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[17], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[18], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[19], 0.0D).getDouble(0.0D);
 			} else if(EM_Settings.genConfigs || modID.equals("minecraft"))
 			{
 				this.generateEmpty(config, dimension);
@@ -266,9 +316,13 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		config.get(catName, DMName[10], 1.0D).getDouble(1.0D);
 		config.get(catName, DMName[11], !dimension.hasNoSky).getBoolean(!dimension.hasNoSky);
 		config.get(catName, DMName[12], !dimension.hasNoSky).getBoolean(!dimension.hasNoSky);
-		config.get(catName, DMName[13], !dimension.isHellWorld).getBoolean(!dimension.isHellWorld);
-		config.get(catName, DMName[14], dimension.isHellWorld? 255 : 65).getInt(dimension.isHellWorld? 255 : 65);
+		config.get(catName, DMName[13], !dimension.hasNoSky).getBoolean(!dimension.hasNoSky);
+		config.get(catName, DMName[14], dimension.hasNoSky? 340 : 64).getInt(dimension.hasNoSky? 340 : 64);
 		config.getInt(DMName[15], catName, 12, -255, 255, "Use a negitive value to skip shaft entrance checks");
+		config.get(catName, DMName[16], 0.0D).getDouble(0.0D);
+		config.get(catName, DMName[17], 0.0D).getDouble(0.0D);
+		config.get(catName, DMName[18], 0.0D).getDouble(0.0D);
+		config.get(catName, DMName[19], 0.0D).getDouble(0.0D);
 	}
 
 	@Override
@@ -284,7 +338,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 	
 	static
 	{
-		DMName = new String[16];
+		DMName = new String[20];
 		DMName[0] = "01.Dimension ID";
 		DMName[1] = "02.Allow Config Override";
 		DMName[2] = "03.Track Sanity";
@@ -301,5 +355,9 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		DMName[13] = "14.Generate Mineshafts";
 		DMName[14] = "15.Where is Sea Level";
 		DMName[15] = "16.Mine Y height";
+		DMName[16] = "17.Base Temperature Rate";
+		DMName[17] = "18.Base Hydration Rate";
+		DMName[18] = "19.Base Sanity Rate";
+		DMName[19] = "20.Base Air Quality Rate";
 	}
 }

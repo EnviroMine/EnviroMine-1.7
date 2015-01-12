@@ -212,48 +212,7 @@ public class EM_EventManager
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event)
 	{
-		if(event.entityLiving instanceof EntityPlayer)
-		{
-			if(event.entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_MINE_TIME");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_WINTER"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_WINTER");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_CAVE_DIST"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_CAVE_DIST");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_SAFETY"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_SAFETY");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_MIND_MAT"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_MIND_MAT");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_THAT"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_THAT");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_BOILED"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_BOILED");
-			}
-			
-			if(event.entityLiving.getEntityData().hasKey("EM_PITCH"))
-			{
-				event.entityLiving.getEntityData().removeTag("EM_PITCH");
-			}
-		}
+		doDeath(event.entityLiving);
 		
 		if(event.entityLiving instanceof EntityMob && event.source.getEntity() != null && event.source.getEntity() instanceof EntityPlayer)
 		{
@@ -270,13 +229,60 @@ public class EM_EventManager
 				}
 			}
 		}
+	}
+	
+	public static void doDeath(EntityLivingBase entityLiving)
+	{
+		if(entityLiving instanceof EntityPlayer)
+		{
+			if(entityLiving.getEntityData().hasKey("EM_MINE_TIME"))
+			{
+				entityLiving.getEntityData().removeTag("EM_MINE_TIME");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_WINTER"))
+			{
+				entityLiving.getEntityData().removeTag("EM_WINTER");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_CAVE_DIST"))
+			{
+				entityLiving.getEntityData().removeTag("EM_CAVE_DIST");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_SAFETY"))
+			{
+				entityLiving.getEntityData().removeTag("EM_SAFETY");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_MIND_MAT"))
+			{
+				entityLiving.getEntityData().removeTag("EM_MIND_MAT");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_THAT"))
+			{
+				entityLiving.getEntityData().removeTag("EM_THAT");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_BOILED"))
+			{
+				entityLiving.getEntityData().removeTag("EM_BOILED");
+			}
+			
+			if(entityLiving.getEntityData().hasKey("EM_PITCH"))
+			{
+				entityLiving.getEntityData().removeTag("EM_PITCH");
+			}
+		}
 		
-		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.entityLiving);
+		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entityLiving);
+		
 		if(tracker != null)
 		{
-			if(event.entityLiving instanceof EntityPlayer && event.source == null)
+			if(entityLiving instanceof EntityPlayer && entityLiving.getHealth() <= 0F)
 			{
-				EntityPlayer player = EM_StatusManager.findPlayer(event.entityLiving.getCommandSenderName());
+				EntityPlayer player = EM_StatusManager.findPlayer(entityLiving.getCommandSenderName());
 				
 				if(player != null)
 				{
@@ -839,6 +845,10 @@ public class EM_EventManager
 	{
 		if(event.entityLiving.isDead)
 		{
+			if(!event.entityLiving.isEntityAlive())
+			{
+				doDeath(event.entityLiving);
+			}
 			return;
 		}
 		

@@ -225,7 +225,6 @@ public class EM_StatusManager
 			return data;
 		}
 		
-		//TODO Added in Dimension overrides for Trackers
 		DimensionProperties dimensionProp = null;
 		if(EM_Settings.dimensionProperties.containsKey(entityLiving.worldObj.provider.dimensionId))
 		{ 
@@ -464,7 +463,7 @@ public class EM_StatusManager
 			}
 		}
 		
-		if(lightLev > 1 && !entityLiving.worldObj.provider.isHellWorld)
+		if(lightLev > 1 && !entityLiving.worldObj.provider.hasNoSky)
 		{
 			quality = 2F;
 		} else
@@ -475,7 +474,7 @@ public class EM_StatusManager
 			}
 		}
 		
-		if(dimensionProp != null && entityLiving.posY > dimensionProp.sealevel * 0.75 && !entityLiving.worldObj.provider.isHellWorld)
+		if(dimensionProp != null && entityLiving.posY > dimensionProp.sealevel * 0.75 && !entityLiving.worldObj.provider.hasNoSky)
 		{
 			quality = 2F;
 		}
@@ -485,7 +484,7 @@ public class EM_StatusManager
 		float highTemp = -30F; // Max temp at high altitude
 		float lowTemp = 30F; // Min temp at low altitude (Geothermal Heating)
 		
-		if(!entityLiving.worldObj.provider.isHellWorld)
+		if(!entityLiving.worldObj.provider.hasNoSky)
 		{
 			if(entityLiving.posY < 48)
 			{
@@ -540,7 +539,7 @@ public class EM_StatusManager
 			bTemp -= 2.5F;
 		}
 		
-		if (!entityLiving.worldObj.provider.isHellWorld && (dimensionProp == null || !dimensionProp.override || dimensionProp.dayNightTemp))
+		if ((!entityLiving.worldObj.provider.hasNoSky && dimensionProp == null) || (dimensionProp != null && dimensionProp.override && dimensionProp.dayNightTemp))
 		{ 
 			bTemp -= (1F-dayPercent) * 10F;
 			
@@ -997,27 +996,19 @@ public class EM_StatusManager
 			dehydrateBonus += 0.1F;
 		}
 		
-		if(biome.biomeName == BiomeGenBase.hell.biomeName || nearLava || biome.rainfall == 0.0F)
+		if(nearLava)
 		{
-			riseSpeed = 0.005F;
+			if(riseSpeed <= 0.005F)
+			{
+				riseSpeed = 0.005F;
+			}
 			dehydrateBonus += 0.05F;
 			if(animalHostility == 0)
 			{
 				animalHostility = 1;
 			}
-			
-			if(biome.biomeName == BiomeGenBase.hell.biomeName && quality <= -0.1F)
-			{
-				quality = -0.1F;
-			}
 		}
 		
-		//TODO Biomes Overrids
-		/*
-		 * Not sure where to put this really
-		 * So its here for now.
-		 * 
-		 */
 		BiomeProperties biomeProp = null;
 		if(EM_Settings.biomeProperties.containsKey(biome.biomeID))
 		{
@@ -1087,14 +1078,13 @@ public class EM_StatusManager
 			tempFin += 2F;
 		}
 		
-	//TODO Dimension override for Multipliers
 		if(dimensionProp != null && dimensionProp.override)
 		{   
-			quality = quality * (float) dimensionProp.airMulti;
-			riseSpeed = riseSpeed * (float) dimensionProp.tempMulti;
-			dropSpeed = dropSpeed * (float) dimensionProp.tempMulti;
-			sanityRate = sanityRate * (float) dimensionProp.sanityMulti;
-			dehydrateBonus = dehydrateBonus * (float) dimensionProp.hydrationMulti;
+			quality = quality * (float) dimensionProp.airMulti + dimensionProp.airRate;
+			riseSpeed = riseSpeed * (float) dimensionProp.tempMulti + dimensionProp.tempRate;
+			dropSpeed = dropSpeed * (float) dimensionProp.tempMulti + dimensionProp.tempRate;
+			sanityRate = sanityRate * (float) dimensionProp.sanityMulti + dimensionProp.sanityRate;
+			dehydrateBonus = dehydrateBonus * (float) dimensionProp.hydrationMulti + dimensionProp.hydrationRate;
 		}
 
 		

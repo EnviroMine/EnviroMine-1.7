@@ -356,7 +356,7 @@ public class EM_StatusManager
 						{
 							if(block instanceof BlockFlower)
 							{
-								if(isDay)
+								if(isDay || entityLiving.worldObj.provider.hasNoSky)
 								{
 									if(sBoost < blockProps.sanity)
 									{
@@ -436,7 +436,7 @@ public class EM_StatusManager
 						{
 							if(((ItemBlock)stack.getItem()).field_150939_a instanceof BlockFlower)
 							{
-								if(isDay)
+								if(isDay || entityLiving.worldObj.provider.hasNoSky)
 								{
 									sBoost = itemProps.ambSanity * stackMult;
 								}
@@ -452,7 +452,7 @@ public class EM_StatusManager
 				} else if(stack.getItem() instanceof ItemBlock)
 				{
 					ItemBlock itemBlock = (ItemBlock)stack.getItem();
-					if(itemBlock.field_150939_a instanceof BlockFlower && isDay & sBoost <= 0.1F)
+					if(itemBlock.field_150939_a instanceof BlockFlower && (isDay || entityLiving.worldObj.provider.hasNoSky) && sBoost <= 0.1F)
 					{
 						if(((BlockFlower)itemBlock.field_150939_a).getPlantType(entityLiving.worldObj, i, j, k) == EnumPlantType.Plains)
 						{
@@ -466,12 +466,9 @@ public class EM_StatusManager
 		if(lightLev > 1 && !entityLiving.worldObj.provider.hasNoSky)
 		{
 			quality = 2F;
-		} else
+		} else if(sanityRate <= sanityStartRate && sanityRate > -0.1F && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) == null)
 		{
-			if(sanityRate <= sanityStartRate && sanityRate > -0.1F && ((blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) == null) || entityLiving.worldObj.provider.isHellWorld))
-			{
-				sanityRate = -0.1F;
-			}
+			sanityRate = -0.1F;
 		}
 		
 		if(dimensionProp != null && entityLiving.posY > dimensionProp.sealevel * 0.75 && !entityLiving.worldObj.provider.hasNoSky)

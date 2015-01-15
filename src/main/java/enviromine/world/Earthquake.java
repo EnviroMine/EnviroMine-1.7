@@ -454,8 +454,8 @@ public class Earthquake
 		{
 			EntityPlayer player = (EntityPlayer)world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 			
-			int posX = MathHelper.floor_double(player.posX) + (world.rand.nextInt(2048) - 1024);
-			int posZ = MathHelper.floor_double(player.posZ) + (world.rand.nextInt(2048) - 1024);
+			int posX = MathHelper.floor_double(player.posX) + (world.rand.nextInt(1024) - 512);
+			int posZ = MathHelper.floor_double(player.posZ) + (world.rand.nextInt(1024) - 512);
 			
 			 // Chunk check can be disabled but may cause a large amount of chunks to be generated where the earthquake passes through
 			if(world.getChunkProvider().chunkExists(posX >> 4, posZ >> 4))

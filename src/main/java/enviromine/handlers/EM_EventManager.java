@@ -1493,7 +1493,7 @@ public class EM_EventManager
 			d3 = ((EntityPlayerMP)par2EntityPlayer).theItemInWorldManager.getBlockReachDistance();
 		}
 		Vec3 vec31 = vec3.addVector((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
-		return par1World.func_147447_a(vec3, vec31, par3, !par3, false); //TODO
+		return par1World.func_147447_a(vec3, vec31, par3, !par3, false);
 	}
 	
 	/* Client only events */
@@ -1525,6 +1525,7 @@ public class EM_EventManager
 	
 	HashMap<String, EntityLivingBase> playerMob = new HashMap<String, EntityLivingBase>();
 	
+	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onRender(RenderPlayerEvent.Pre event)

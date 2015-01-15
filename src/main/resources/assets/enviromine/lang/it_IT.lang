@@ -100,4 +100,6 @@ deathmessage.enviromine.bleedout=%s è morto dissanguato
 deathmessage.enviromine.gasfire=%s è morto in un incendio
 
 updatemsg.enviromine.avalible=E' avviabile l'aggiornamento % di EnviroMine
-updatemsg.enviromine.download=Download & Changelog:
+updatemsg.enviromine.download=[Download]
+updatemsg.enviromine.changelog=[Changelog]
+updatemsg.enviromine.otherlinks=[Other links]

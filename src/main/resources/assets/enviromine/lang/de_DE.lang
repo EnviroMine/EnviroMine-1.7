@@ -93,4 +93,6 @@ deathmessage.enviromine.bleedout=%s verblutete
 deathmessage.enviromine.gasfire=%s starb in einem Gasbrand
 
 updatemsg.enviromine.avalible=Update %s of EnviroMine is available
-updatemsg.enviromine.download=Download & Changelog:
+updatemsg.enviromine.download=[Download]
+updatemsg.enviromine.changelog=[Changelog]
+updatemsg.enviromine.otherlinks=[Other links]

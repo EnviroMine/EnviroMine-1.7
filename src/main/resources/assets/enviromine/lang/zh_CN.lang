@@ -93,4 +93,6 @@ deathmessage.enviromine.bleedout=%s流血而死
 deathmessage.enviromine.gasfire=%s死于气体火灾
 
 updatemsg.enviromine.avalible=EnviroMine可用更新版本 %s
-updatemsg.enviromine.download=下载&更新日志:
+updatemsg.enviromine.download=[下载]
+updatemsg.enviromine.changelog=[更新日志]
+updatemsg.enviromine.otherlinks=[Other links]

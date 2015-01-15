@@ -120,4 +120,6 @@ deathmessage.enviromine.bleedout=%s умер от кровопотери
 deathmessage.enviromine.gasfire=%s погиб в результате утечки газа
 
 updatemsg.enviromine.avalible=Обновление %s EnviroMine доступно
-updatemsg.enviromine.download=Ссылка & изменения:
+updatemsg.enviromine.download=[Ссылка]
+updatemsg.enviromine.changelog=[изменения]
+updatemsg.enviromine.otherlinks=[Other links]

@@ -24,6 +24,7 @@ tile.enviromine.davy_lamp.name=Davy Lamp
 tile.enviromine.gas.name=Gas
 tile.enviromine.firegas.name=Gas Fire
 tile.enviromine.burningcoal.name=Burning Coal
+tile.enviromine.nophysblock.name=No Physics Block
 
 itemGroup.enviromine.enviroTab=EnviroMine
 
@@ -121,3 +122,15 @@ deathmessage.enviromine.gasfire=%s died in a gas fire
 
 updatemsg.enviromine.avalible=Update %s of EnviroMine is available
 updatemsg.enviromine.download=Download & Changelog:
+
+news.enviromine.newpost=(New Post)
+news.enviromine.button.news=News Feed
+news.enviromine.button.changelog=Change Log
+news.enviromine.button.version=Version Info
+
+keybinds.enviromine.reload=Reload Configs
+keybinds.enviromine.addremove=Add/Remove Custom Config
+
+misc.enviromine.tooltip.filter=Filters: %s (%s/%s)
+misc.enviromine.tooltip.water=Water: %s (%s/%s)
+misc.enviromine.tooltip.rot=Rotten: %s (Day %s/%s)

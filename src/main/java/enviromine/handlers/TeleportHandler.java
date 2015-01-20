@@ -12,6 +12,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import enviromine.core.EM_Settings;
@@ -29,7 +30,24 @@ public class TeleportHandler extends Teleporter
 	 */
 	private final List<Long> destinationCoordinateKeys = new ArrayList<Long>();
 	
-	public TeleportHandler(WorldServer par1WorldServer)
+	static HashMap<WorldServer,TeleportHandler> instances = new HashMap<WorldServer,TeleportHandler>();
+	
+	public static TeleportHandler GetInstance(WorldServer world)
+	{
+		TeleportHandler tele = instances.get(world);
+		
+		if(tele != null)
+		{
+			return tele;
+		} else
+		{
+			tele = new TeleportHandler(world);
+			instances.put(world, tele);
+			return tele;
+		}
+	}
+	
+	private TeleportHandler(WorldServer par1WorldServer)
 	{
 		super(par1WorldServer);
 		this.worldServerInstance = par1WorldServer;
@@ -53,6 +71,10 @@ public class TeleportHandler extends Teleporter
 			}
 		} else
 		{
+            int i = MathHelper.floor_double(entity.posX);
+            int j = MathHelper.floor_double(entity.posY);
+            int k = MathHelper.floor_double(entity.posZ);
+            
 			if(entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer)entity;
@@ -74,6 +96,9 @@ public class TeleportHandler extends Teleporter
 		            player.setSpawnChunk(chunkcoordinates, true);
 				}
 			}
+			
+			entity.setLocationAndAngles((double)i, (double)j, (double)k, entity.rotationYaw, 0.0F);
+			entity.motionX = entity.motionY = entity.motionZ = 0.0D;
 		}
 	}
 	

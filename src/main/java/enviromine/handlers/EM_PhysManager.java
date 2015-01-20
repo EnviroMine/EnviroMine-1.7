@@ -26,6 +26,7 @@ import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.BlockProperties;
+import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.StabilityType;
 import enviromine.utils.EnviroUtils;
 
@@ -57,6 +58,13 @@ public class EM_PhysManager
 			}
 		}
 		
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+		
+		if(dProps != null && !dProps.physics)
+		{
+			return;
+		}
+		
 		Object[] entry = new Object[6];
 		entry[0] = world;
 		entry[1] = x;
@@ -79,6 +87,13 @@ public class EM_PhysManager
 			{
 				return;
 			}
+		}
+		
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+		
+		if(dProps != null && !dProps.physics)
+		{
+			return;
 		}
 		
 		if(world.isAirBlock(x, y, z))
@@ -166,6 +181,24 @@ public class EM_PhysManager
 		} else
 		{
 			excluded.put(position, type);
+		}
+		
+		if(world.isRemote || world.getTotalWorldTime() < worldStartTime + EM_Settings.worldDelay)
+		{
+			return;
+		} else if(chunkDelay.containsKey(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)))
+		{
+			if(chunkDelay.get(world.provider.dimensionId + "" + (x >> 4) + "," + (z >> 4)) > world.getTotalWorldTime())
+			{
+				return;
+			}
+		}
+		
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(world.provider.dimensionId);
+		
+		if(dProps != null && !dProps.physics)
+		{
+			return;
 		}
 		
 		boolean locLoaded = false;

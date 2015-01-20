@@ -274,7 +274,6 @@ public class UpdateNotification
 	 */
 	public static boolean isNewPost()
 	{
-		
 		if(lastSeen == null) return true; 
 
 		 if(!WordPressPost.Posts.isEmpty())

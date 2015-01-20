@@ -51,7 +51,7 @@ public class Gui_EventManager
 		
 		if(event.gui instanceof GuiIngameMenu)
 		{
-			String newPost = UpdateNotification.isNewPost() ? "(New Post)" : "";
+			String newPost = UpdateNotification.isNewPost() ? " " + StatCollector.translateToLocal("news.enviromine.newpost") : "";
 			
 			try
 			{

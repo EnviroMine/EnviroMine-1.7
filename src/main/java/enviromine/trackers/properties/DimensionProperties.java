@@ -39,6 +39,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 	public float hydrationRate;
 	public float sanityRate;
 	public float airRate;
+	public boolean physics;
 	
 	public DimensionProperties(NBTTagCompound tags)
 	{
@@ -55,7 +56,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel, int mineDepth, float tempRate, float hydrationRate, float sanityRate, float airRate)
+	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel, int mineDepth, float tempRate, float hydrationRate, float sanityRate, float airRate, boolean physics)
 	{
 		this.id = id;
 		this.override = override;
@@ -77,6 +78,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		this.hydrationRate = hydrationRate;
 		this.sanityRate = sanityRate;
 		this.airRate = airRate;
+		this.physics = physics;
 	}
 
 	@Override
@@ -102,6 +104,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		tags.setFloat("hydrationRate", this.hydrationRate);
 		tags.setFloat("sanityRate", this.sanityRate);
 		tags.setFloat("airRate", this.airRate);
+		tags.setBoolean("physics", this.physics);
 		return tags;
 	}
 
@@ -127,6 +130,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		this.hydrationRate = tags.getFloat("hydrationRate");
 		this.sanityRate = tags.getFloat("sanityRate");
 		this.airRate = tags.getFloat("airRate");
+		this.physics = tags.getBoolean("physics");
 	}
 
 	@Override
@@ -165,8 +169,9 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		float hydrationRate = (float)config.get(category, DMName[17], 0.0D).getDouble(0.0D);
 		float sanityRate = (float)config.get(category, DMName[18], 0.0D).getDouble(0.0D);
 		float airRate = (float)config.get(category, DMName[19], 0.0D).getDouble(0.0D);
+		boolean physics = config.get(category, DMName[20], true).getBoolean(true);
 		
-		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth, tempRate, hydrationRate, sanityRate, airRate);
+		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth, tempRate, hydrationRate, sanityRate, airRate, physics);
 		EM_Settings.dimensionProperties.put(id, entry);
 	}
 
@@ -193,6 +198,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		config.get(category, DMName[17], 0.0D).getDouble(0.0D);
 		config.get(category, DMName[18], 0.0D).getDouble(0.0D);
 		config.get(category, DMName[19], 0.0D).getDouble(0.0D);
+		config.get(category, DMName[20], physics).getBoolean(physics);
 	}
 
 	@Override
@@ -253,6 +259,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 				config.get(catName, DMName[17], 0.0D).getDouble(0.0D);
 				config.get(catName, DMName[18], 0.0D).getDouble(0.0D);
 				config.get(catName, DMName[19], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[20], true).getBoolean(true);
 			} else if(dimension.dimensionId == -1)
 			{
 				config.get(catName, DMName[0], dimension.dimensionId).getInt(dimension.dimensionId);
@@ -275,6 +282,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 				config.get(catName, DMName[17], 0.0D).getDouble(0.0D);
 				config.get(catName, DMName[18], 0.0D).getDouble(0.0D);
 				config.get(catName, DMName[19], 0.0D).getDouble(0.0D);
+				config.get(catName, DMName[20], true).getBoolean(true);
 			} else if(EM_Settings.genConfigs || modID.equals("minecraft"))
 			{
 				this.generateEmpty(config, dimension);
@@ -323,6 +331,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		config.get(catName, DMName[17], 0.0D).getDouble(0.0D);
 		config.get(catName, DMName[18], 0.0D).getDouble(0.0D);
 		config.get(catName, DMName[19], 0.0D).getDouble(0.0D);
+		config.get(catName, DMName[20], true).getBoolean(true);
 	}
 
 	@Override
@@ -338,7 +347,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 	
 	static
 	{
-		DMName = new String[20];
+		DMName = new String[21];
 		DMName[0] = "01.Dimension ID";
 		DMName[1] = "02.Allow Config Override";
 		DMName[2] = "03.Track Sanity";
@@ -359,5 +368,6 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		DMName[17] = "18.Base Hydration Rate";
 		DMName[18] = "19.Base Sanity Rate";
 		DMName[19] = "20.Base Air Quality Rate";
+		DMName[20] = "20.Enable Physics";
 	}
 }

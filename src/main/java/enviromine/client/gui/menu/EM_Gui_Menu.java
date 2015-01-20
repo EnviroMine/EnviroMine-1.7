@@ -46,7 +46,7 @@ public class EM_Gui_Menu extends GuiScreen
 		serverSettings.visible = true;
 		customEditor.visible = true;
 		
-		String newPost = UpdateNotification.isNewPost() ? "(New Post)" : "";
+		String newPost = UpdateNotification.isNewPost() ? " " + StatCollector.translateToLocal("news.enviromine.newpost") : "";
 		
 		this.buttonList.add(new GuiButton(105, this.width / 2 - 90, this.height / 6 + 4, 180, 20, StatCollector.translateToLocal("options.enviromine.newsPage")+"..."+ newPost));
 		this.buttonList.add(new GuiButton(101, this.width / 2 - 90, this.height / 6 + 44, 180, 20, StatCollector.translateToLocal("options.enviromine.guiOptions")+"..."));

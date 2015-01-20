@@ -3,6 +3,13 @@ package enviromine.world;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.chunk.IChunkProvider;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,14 +18,6 @@ import enviromine.core.EnviroMine;
 import enviromine.world.chunk.ChunkProviderCaves;
 import enviromine.world.chunk.WorldChunkManagerCaves;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.chunk.IChunkProvider;
 
 public class WorldProviderCaves extends WorldProvider
 {
@@ -41,13 +40,25 @@ public class WorldProviderCaves extends WorldProvider
 	@Override
 	public Vec3 getFogColor(float par1, float par2)
 	{
-		if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.nightVision))
-		{
-			return Vec3.createVectorHelper(1D, 1D, 1D);
-		} else
-		{
-			return Vec3.createVectorHelper(0D, 0D, 0D);
-		}
+        float f2 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+
+        if (f2 < 0.0F)
+        {
+            f2 = 0.0F;
+        }
+
+        if (f2 > 1.0F)
+        {
+            f2 = 1.0F;
+        }
+
+        float f3 = 0.7529412F;
+        float f4 = 0.84705883F;
+        float f5 = 1.0F;
+        f3 *= f2 * 0.94F + 0.06F;
+        f4 *= f2 * 0.94F + 0.06F;
+        f5 *= f2 * 0.91F + 0.09F;
+        return Vec3.createVectorHelper((double)f3, (double)f4, (double)f5);
 	}
 	
 	/**
@@ -74,7 +85,7 @@ public class WorldProviderCaves extends WorldProvider
 	 */
 	public double getVoidFogYFactor()
 	{
-		return 1D;
+		return 0D;
 	}
 	
 	/**

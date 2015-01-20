@@ -15,17 +15,18 @@ public class NewsPage  extends GuiScreen{
 	public NewsPage(GuiScreen par1GuiScreen, int tab)
 	{
 		this.parentGuiScreen = par1GuiScreen;
-		this.tabSelection = tab;
+		tabSelection = tab;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
-		GuiButton newspage = new GuiButton(150, this.width/2 - 140, 4, 80, 20, "News Page");
-		GuiButton versionpage = new GuiButton(151, this.width/2 - 40, 4, 80, 20, "Version Page");
-		GuiButton changelog = new GuiButton(152, this.width/2 + 60, 4, 80, 20, "ChangeLog");
+		GuiButton newspage = new GuiButton(150, this.width/2 - 140, 4, 80, 20, StatCollector.translateToLocal("news.enviromine.button.news"));
+		GuiButton versionpage = new GuiButton(151, this.width/2 - 40, 4, 80, 20, StatCollector.translateToLocal("news.enviromine.button.version"));
+		GuiButton changelog = new GuiButton(152, this.width/2 + 60, 4, 80, 20, StatCollector.translateToLocal("news.enviromine.button.changelog"));
 		
-		switch(this.tabSelection)
+		switch(tabSelection)
 		{
 			case 150:
 				newspage.enabled = false;

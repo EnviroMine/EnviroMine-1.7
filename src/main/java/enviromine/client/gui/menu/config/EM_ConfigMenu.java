@@ -1,80 +1,85 @@
 package enviromine.client.gui.menu.config;
 
-import enviromine.core.EM_ConfigHandler;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Configuration;
+import cpw.mods.fml.client.config.DummyConfigElement.DummyCategoryElement;
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.IConfigElement;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.trackers.properties.CaveBaseProperties;
+import enviromine.trackers.properties.StabilityType;
 
-public class EM_ConfigMenu extends GuiScreen
+public class EM_ConfigMenu extends GuiConfig
 {
-	private GuiScreen parentGuiScreen;
+	public static ArrayList<Configuration> tempConfigs = new ArrayList<Configuration>();
 	
-	public EM_ConfigMenu(GuiScreen parent, int page)
+	public EM_ConfigMenu(GuiScreen parentScreen)
 	{
-		parentGuiScreen = parent;
+		super(parentScreen, getMainElements(), EM_Settings.ModID, false, false, EM_Settings.Name);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void initGui()
+    /*@Override
+    protected void actionPerformed(GuiButton button)
+    {
+    	if(!Keyboard.isRepeatEvent())
+    	{
+    		super.actionPerformed(button);
+    	}
+    }*/
+	
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private static List<IConfigElement> getMainElements()
 	{
-		GuiButton mainBut = new GuiButton(101, this.width/2 - 100, this.height/8, 200, 20, StatCollector.translateToLocal("options.enviromine.mainconfig.button"));
-		this.buttonList.add(mainBut);
+		tempConfigs.clear();
+		List<IConfigElement> list = new ArrayList<IConfigElement>();
 		
-		GuiButton blockBut = new GuiButton(101, this.width/2 - 175, this.height/8 * 2, 150, 20, StatCollector.translateToLocal("options.enviromine.blocks.button"));
-		this.buttonList.add(blockBut);
-		GuiButton itemBut = new GuiButton(102, this.width/2 + 25, this.height/8 * 2, 150, 20, StatCollector.translateToLocal("options.enviromine.items.button"));
-		this.buttonList.add(itemBut);
-		GuiButton stabilityBut = new GuiButton(103, this.width/2 - 175, this.height/8 * 3, 150, 20, StatCollector.translateToLocal("options.enviromine.stability.button"));
-		this.buttonList.add(stabilityBut);
-		GuiButton armorBut = new GuiButton(104, this.width/2 + 25, this.height/8 * 3, 150, 20, StatCollector.translateToLocal("options.enviromine.armor.button"));
-		this.buttonList.add(armorBut);
-		GuiButton entityBut = new GuiButton(105, this.width/2 - 175, this.height/8 * 4, 150, 20, StatCollector.translateToLocal("options.enviromine.entity.button"));
-		this.buttonList.add(entityBut);
-		GuiButton rotBut = new GuiButton(106, this.width/2 + 25, this.height/8 * 4, 150, 20, StatCollector.translateToLocal("options.enviromine.rot.button"));
-		this.buttonList.add(rotBut);
-		GuiButton dimBut = new GuiButton(105, this.width/2 - 175, this.height/8 * 5, 150, 20, StatCollector.translateToLocal("options.enviromine.dimension.button"));
-		this.buttonList.add(dimBut);
-		GuiButton biomeBut = new GuiButton(106, this.width/2 + 25, this.height/8 * 5, 150, 20, StatCollector.translateToLocal("options.enviromine.rot.button"));
-		this.buttonList.add(biomeBut);
+		File mainFile = new File(EM_ConfigHandler.configPath + "EnviroMine.cfg");
+		list.add(new DummyCategoryElement("Main Config", "editor.enviromine.main", getConfigElements(mainFile)));
 		
-		this.buttonList.add(new GuiButton(200, this.width/2 - 100, this.height/8 * 7, I18n.format("gui.back", new Object[0])));
+		File caveFile = CaveBaseProperties.base.GetDefaultFile();
+		list.add(new DummyCategoryElement("Cave Dimension", "editor.enviromine.cave", getConfigElements(caveFile)));
+		
+		File stabFile = StabilityType.base.GetDefaultFile();
+		list.add(new DummyCategoryElement("Stability Types", "editor.enviromine.stability", getConfigElements(stabFile)));
+		
+		File[] customFiles = new File(EM_ConfigHandler.customPath).listFiles();
+		
+		list.add(new DummyCategoryElement("Custom Configs", "editor.enviromine.custom", getConfigElements(customFiles)));
+		
+		return list;
 	}
 	
-	@Override
-	public void drawScreen(int par1, int par2, float par3)
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private static List<IConfigElement> getConfigElements(File... files)
 	{
-		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal("options.enviromine.configeditor.title"), this.width / 2, 15, 16777215);
-		super.drawScreen(par1, par2, par3);
-	}
-	
-	@Override
-	public void actionPerformed(GuiButton par1GuiButton)
-	{
-		if(par1GuiButton.enabled)
+		List<IConfigElement> customFileList = new ArrayList<IConfigElement>();
+		
+		for(File entry : files)
 		{
-			switch(par1GuiButton.id)
+			Configuration config = new Configuration(entry, true);
+			tempConfigs.add(config);
+			Iterator<String> iterator = config.getCategoryNames().iterator();
+			List<IConfigElement> customConfigList = new ArrayList<IConfigElement>();
+			while(iterator.hasNext())
 			{
-				case 200:
+				ConfigCategory category = config.getCategory(iterator.next());
+				if(!category.isChild())
 				{
-					this.mc.displayGuiScreen(parentGuiScreen);
-					return;
+					customConfigList.add(new ConfigElement(category));
 				}
 			}
+			customFileList.add(new DummyCategoryElement(entry.getName(), "editor.enviromine.custom", customConfigList));
 		}
-	}
-	
-	@Override
-	public void onGuiClosed() 
-	{
-	    EM_ConfigHandler.initConfig();
-	}
-	
-	@Override
-	public boolean doesGuiPauseGame()
-	{
-		return true;
+		
+		return customFileList;
 	}
 }

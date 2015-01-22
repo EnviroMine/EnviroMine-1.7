@@ -1,20 +1,5 @@
 package enviromine.world.features.mineshaft;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.World;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.world.features.WorldFeatureGenerator;
-import enviromine.world.features.mineshaft.designers.MineDesigner;
-import enviromine.world.features.mineshaft.designers.MineDesignerComb;
-import enviromine.world.features.mineshaft.designers.MineDesignerFeather;
-import enviromine.world.features.mineshaft.designers.MineDesignerGrid;
-import enviromine.world.features.mineshaft.designers.MineDesignerRandomized;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,7 +13,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+import net.minecraft.block.material.Material;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.trackers.properties.DimensionProperties;
+import enviromine.world.features.WorldFeatureGenerator;
+import enviromine.world.features.mineshaft.designers.MineDesigner;
+import enviromine.world.features.mineshaft.designers.MineDesignerComb;
+import enviromine.world.features.mineshaft.designers.MineDesignerFeather;
+import enviromine.world.features.mineshaft.designers.MineDesignerGrid;
+import enviromine.world.features.mineshaft.designers.MineDesignerRandomized;
 
 public class MineshaftBuilder
 {
@@ -70,7 +66,7 @@ public class MineshaftBuilder
 	public int rot = 0;
 	
 	public int decayAmount = 0;
-	WeightedRandomChestContent[] loot;
+	//WeightedRandomChestContent[] loot;
 	
 	public MineshaftBuilder(World world, int originX, int originZ, int dir)
 	{
@@ -80,8 +76,6 @@ public class MineshaftBuilder
 		this.origZ = originZ;
 		this.origY = world.getTopSolidOrLiquidBlock(originX, originZ);
 		this.rot = dir%4;
-		
-		this.setupLoot();
 	}
 	
 	public MineshaftBuilder(World world, int originX, int originY, int originZ, int dir)
@@ -92,31 +86,6 @@ public class MineshaftBuilder
 		this.origZ = originZ;
 		this.origY = originY;
 		this.rot = dir%4;
-		
-		this.setupLoot();
-	}
-	
-	public void setupLoot()
-	{
-		ArrayList<WeightedRandomChestContent> initLoot = new ArrayList<WeightedRandomChestContent>();
-		
-		initLoot.add(new WeightedRandomChestContent(Items.iron_ingot, 0, 1, 5, 5));
-		initLoot.add(new WeightedRandomChestContent(Items.gold_ingot, 0, 1, 3, 5));
-		initLoot.add(new WeightedRandomChestContent(Items.redstone, 0, 4, 9, 5));
-		initLoot.add(new WeightedRandomChestContent(Items.diamond, 0, 2, 3, 3));
-		initLoot.add(new WeightedRandomChestContent(Items.coal, 0, 3, 8, 10));
-
-		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.iron_ore, 1), 1, 5, 5));
-		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.gold_ore, 1), 1, 3, 5));
-		
-		initLoot.add(new WeightedRandomChestContent(Items.iron_pickaxe, 0, 1, 1, 1));
-		initLoot.add(new WeightedRandomChestContent(Items.iron_shovel, 0, 1, 1, 1));
-		
-		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.log, 1), 2, 4, 3));
-		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.planks, 1), 2, 4, 3));
-		initLoot.add(new WeightedRandomChestContent(new ItemStack(Blocks.fence, 1), 2, 2, 3));
-		
-		this.loot = initLoot.toArray(new WeightedRandomChestContent[initLoot.size()]);
 	}
 	
 	public static void scanGrids(World world, int chunkX, int chunkZ, Random random)

@@ -1,16 +1,15 @@
 package enviromine.world.features.mineshaft;
 
+import static net.minecraftforge.common.ChestGenHooks.DUNGEON_CHEST;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
-
+import net.minecraftforge.common.ChestGenHooks;
 import enviromine.core.EnviroMine;
-
 import java.util.ArrayList;
-
 import org.apache.logging.log4j.Level;
 
 public abstract class MineSegment
@@ -255,7 +254,7 @@ public abstract class MineSegment
 		int j = this.yOffset(y);
 		int k = this.zOffset(x, z);
 		
-		if(world.getChunkFromBlockCoords(i, k) == null)
+		if(world.getChunkFromBlockCoords(i, k) == null || itemCount == 0)
 		{
 			return;
 		}
@@ -265,7 +264,7 @@ public abstract class MineSegment
 		
 		if(chestTile != null)
 		{
-			WeightedRandomChestContent.generateChestContents(builder.rand, builder.loot, chestTile, itemCount);
+            WeightedRandomChestContent.generateChestContents(builder.rand, ChestGenHooks.getItems(DUNGEON_CHEST, builder.rand), chestTile, ChestGenHooks.getCount(DUNGEON_CHEST, builder.rand));
 		}
 	}
 	

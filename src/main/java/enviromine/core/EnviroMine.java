@@ -39,7 +39,7 @@ import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
 import enviromine.world.features.mineshaft.EM_VillageMineshaft;
 
-@Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version)
+@Mod(modid = EM_Settings.ModID, name = EM_Settings.Name, version = EM_Settings.Version, guiFactory = "enviromine.client.gui.menu.config.EnviroMineGuiFactory")
 public class EnviroMine
 {
 	public static Logger logger;
@@ -58,6 +58,8 @@ public class EnviroMine
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
+		
+		FunwayModAuthentication.CheckAndUnlockMod();
 		
 		proxy.preInit(event);
 		

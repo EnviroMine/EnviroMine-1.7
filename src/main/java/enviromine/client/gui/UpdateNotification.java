@@ -163,7 +163,7 @@ public class UpdateNotification
 	 * @return
 	 * @throws IOException
 	 */
-	private String getUrl(String link, boolean doRedirect) throws IOException
+	public static String getUrl(String link, boolean doRedirect) throws IOException
 	{
 		URL url = new URL(link);
 		HttpURLConnection.setFollowRedirects(false);

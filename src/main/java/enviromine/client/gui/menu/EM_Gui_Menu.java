@@ -23,7 +23,7 @@ public class EM_Gui_Menu extends GuiScreen
 	public void initGui()
 	{
 		GuiButton serverSettings = new GuiButton(103, this.width / 2 - 90, this.height / 6 + 98 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
-		GuiButton customEditor =  new GuiButton(104, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.customEditor"));
+		GuiButton customEditor =  new GuiButton(104, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, StatCollector.translateToLocal("options.enviromine.customEditor"));
 		
 		/* update later on.... causeing a crash now.
 		// The old if statement would never work, GUIs are never run server side and mc.thePlayer is not accessible to server side functions - Funwayguy
@@ -41,10 +41,8 @@ public class EM_Gui_Menu extends GuiScreen
 		}
 		*/
 		serverSettings.enabled = false;
-		customEditor.enabled = false;	
 		
 		serverSettings.visible = true;
-		customEditor.visible = true;
 		
 		String newPost = UpdateNotification.isNewPost() ? " " + StatCollector.translateToLocal("news.enviromine.newpost") : "";
 		
@@ -88,7 +86,7 @@ public class EM_Gui_Menu extends GuiScreen
 		}
 		else if (par1GuiButton.id == 104)
 		{
-			this.mc.displayGuiScreen(new EM_ConfigMenu(this, 0)); // In game editor
+			this.mc.displayGuiScreen(new EM_ConfigMenu(this)); // In game editor
 		}
 		else if (par1GuiButton.id == 105)
 		{

@@ -34,7 +34,9 @@ public class EM_CommonProxy
 	
 	public void registerEventHandlers()
 	{
-		MinecraftForge.EVENT_BUS.register(new EM_EventManager());
+		EM_EventManager eventManager = new EM_EventManager();
+		MinecraftForge.EVENT_BUS.register(eventManager);
+		FMLCommonHandler.instance().bus().register(eventManager);
 		FMLCommonHandler.instance().bus().register(new UpdateNotification());
 		
 		CamelPackRefillHandler tmp = new CamelPackRefillHandler();

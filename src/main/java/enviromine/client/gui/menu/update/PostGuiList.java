@@ -1,9 +1,12 @@
 package enviromine.client.gui.menu.update;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
+
 import org.lwjgl.input.Mouse;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -11,7 +14,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+
 import com.google.common.collect.Lists;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.UpdateNotification;
@@ -95,9 +100,24 @@ public class PostGuiList extends GuiListExtended
 	
 	public void DisplayChangeLog(Minecraft mc)
 	{
-		List wordWrap = mc.fontRenderer.listFormattedStringToWidth(WordPressPost.changeLog, this.width - 64);
+		String[] changlog = WordPressPost.changeLog.split("\n");
 		
-		addWordWrap(wordWrap);
+		List lineBreaks = Lists.newArrayList();
+		List wordWrap = Lists.newArrayList();
+		
+		for(String line : changlog)
+		{
+			List lines = mc.fontRenderer.listFormattedStringToWidth(line, this.width - 64);
+			
+			wordWrap.addAll(lines);
+			
+			for(int i = 1; i <= lines.size(); i++)
+			{
+				lineBreaks.add(i + "," + lines.size());
+			}
+		}
+		
+		addWordWrap(wordWrap, lineBreaks);
 	}
 	
 	public void DisplayWordPressNews(Minecraft mc)
@@ -124,10 +144,7 @@ public class PostGuiList extends GuiListExtended
 		
 	}
 	
-	/**
-	 * Pass String and will wordwrap it to screen and add to list to be drawn
-	 * @param wordWrap
-	 */
+	
 	private void addWordWrap(List wordWrap)
 	{
 		textType type;
@@ -136,8 +153,46 @@ public class PostGuiList extends GuiListExtended
 		{
 			Object line = wrapped.next();
 			type = textType.DEFAULT;
+			LineList.add(new PostGuiList.Row(line.toString(), type));
+		}
+
+	}
+	/**
+	 * Pass String and will wordwrap it to screen and add to list to be drawn
+	 * @param wordWrap
+	 */
+	private void addWordWrap(List wordWrap, List LineBreaks)
+	{
+		textType type;
+		textType lasttype =  textType.DEFAULT;
+		
+		Iterator wrapped = wordWrap.iterator();
+		
+		Iterator breaks = LineBreaks.iterator();
+		while(wrapped.hasNext())
+		{
+			Object line = wrapped.next();
+			Object linenum = breaks.next();
+
+			type = textType.DEFAULT;
+			
 			if(NewsPage.tabSelection == 152)
-				type = parseChangelog(line.toString());
+			{
+				String[] count = linenum.toString().split(",");
+				
+				if(Integer.parseInt(count[0]) == 1)
+				{
+					type = parseChangelog(line.toString());
+					lasttype = type;
+				}
+				else if (Integer.parseInt(count[0]) <= Integer.parseInt(count[1]))
+				{
+					type = lasttype;
+					
+					if (Integer.parseInt(count[0]) == Integer.parseInt(count[1])) lasttype = textType.DEFAULT;
+				}
+				//type = parseChangelog(line.toString());
+			}
 			
 			LineList.add(new PostGuiList.Row(line.toString(), type));
 		}
@@ -177,9 +232,9 @@ public class PostGuiList extends GuiListExtended
 	{
 		line = line.toLowerCase();
 		Pattern versionNum = Pattern.compile("\\[.+\\]");
-		Pattern change = Pattern.compile(".*(fixed | \\* | fix | fixes | bug | changed).*");
-		Pattern add = Pattern.compile(".*(added | \\+ | new).*");
-		Pattern removed = Pattern.compile(".*(removed | deleted | revert).*");
+		Pattern change = Pattern.compile(".*(fixed|\\*|fix|fixes|bug|changed).*");
+		Pattern add = Pattern.compile(".*(added|\\+|new|adding).*");
+		Pattern removed = Pattern.compile(".*(removed|deleted|revert).*");
 		Pattern header = Pattern.compile(".*full enviromine changelog.*");
 		
 		if(versionNum.matcher(line).matches())
@@ -207,6 +262,12 @@ public class PostGuiList extends GuiListExtended
 		else
 			return textType.DEFAULT;
 	}
+	
+    /**
+     * Breaks a string into a list of pieces that will fit a specified width.
+     */
+
+	
 	
 	@Override
 	public IGuiListEntry getListEntry(int p_148180_1_)

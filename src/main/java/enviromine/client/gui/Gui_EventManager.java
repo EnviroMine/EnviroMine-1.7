@@ -191,15 +191,17 @@ public class Gui_EventManager
 						
 						RenderAssist.bindTexture(huditem.getResource(""));
 						
-						float transx = (float)(huditem.posX - (huditem.posX * UI_Settings.guiScale));
-						float transy = (float)(huditem.posY - (huditem.posY * UI_Settings.guiScale));
+						//float transx = (float)(huditem.posX - (huditem.posX * UI_Settings.guiScale));
+						//float transy = (float)(huditem.posY - (huditem.posY * UI_Settings.guiScale));
 						
-						GL11.glTranslated(transx, transy, 0);
+						//GL11.glTranslated(transx, transy, 0);
 						
-						GL11.glScalef((float)UI_Settings.guiScale, (float)UI_Settings.guiScale, (float)UI_Settings.guiScale);
+						//GL11.glScalef((float)UI_Settings.guiScale, (float)UI_Settings.guiScale, (float)UI_Settings.guiScale);
 						
 						huditem.fixBounds();
 						huditem.render();
+						
+						
 					}
 				} else
 				{
@@ -213,17 +215,18 @@ public class Gui_EventManager
 						
 						RenderAssist.bindTexture(huditem.getResource(""));
 						
-						float transx = (float)(huditem.posX - (huditem.posX * UI_Settings.guiScale));
-						float transy = (float)(huditem.posY - (huditem.posY * UI_Settings.guiScale));
+						//float transx = (float)(huditem.posX - (huditem.posX * UI_Settings.guiScale));
+						//float transy = (float)(huditem.posY - (huditem.posY * UI_Settings.guiScale));
 						
-						GL11.glTranslated(transx, transy, 0);
+						//GL11.glTranslated(transx, transy, 0);
 						
-						GL11.glScalef((float)UI_Settings.guiScale, (float)UI_Settings.guiScale, (float)UI_Settings.guiScale);
+						//GL11.glScalef((float)UI_Settings.guiScale, (float)UI_Settings.guiScale, (float)UI_Settings.guiScale);
 						
 						huditem.fixBounds();
 						huditem.render();
 						
-						GL11.glTranslated(0, 0, 0);
+						//GL11.glTranslated(0, 0, 0);
+						
 					}
 				}
 				

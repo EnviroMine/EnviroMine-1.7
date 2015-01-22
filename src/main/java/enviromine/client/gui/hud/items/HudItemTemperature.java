@@ -96,6 +96,13 @@ public class HudItemTemperature extends HudItem
 	{
 		GL11.glPushMatrix();
 		
+		float transx = (float)(this.posX - (this.posX * UI_Settings.guiScale));
+		float transy = (float)(this.posY - (this.posY * UI_Settings.guiScale));
+		
+		GL11.glTranslated(transx, transy, 0);
+		
+		GL11.glScalef((float)UI_Settings.guiScale, (float)UI_Settings.guiScale, (float)UI_Settings.guiScale);
+		
 		int heatBar = MathHelper.ceiling_float_int(((Gui_EventManager.tracker.bodyTemp + 50) / 150) * this.getWidth());
 		int preheatBar = MathHelper.ceiling_float_int(((Gui_EventManager.tracker.airTemp + 50) / 150) * this.getWidth());
 		int preheatIco = 16 - MathHelper.ceiling_float_int(((Gui_EventManager.tracker.airTemp + 50) / 150) * 16);
@@ -145,7 +152,7 @@ public class HudItemTemperature extends HudItem
 			
 			//Frame
 			RenderAssist.drawTexturedModalRect(posX, posY, 0, getHeight() * frameBorder, getWidth(), getHeight());
-			
+
 			GL11.glPopMatrix();
 		}
 		

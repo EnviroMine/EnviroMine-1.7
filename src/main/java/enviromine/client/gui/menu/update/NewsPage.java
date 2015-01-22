@@ -83,6 +83,14 @@ public class NewsPage  extends GuiScreen{
 	}
 	
 	@Override
+	protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_)
+	{
+		super.mouseClicked(p_73864_1_, p_73864_2_, p_73864_3_);
+		
+	}
+		
+		
+	@Override
 	public void onGuiClosed()
 	{
 		UpdateNotification.updateLastSeen();

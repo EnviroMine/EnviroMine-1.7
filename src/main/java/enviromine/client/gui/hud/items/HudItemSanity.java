@@ -93,7 +93,15 @@ public class HudItemSanity extends HudItem	{
 	@Override
 	public void render() 
 	{
-		GL11.glPushMatrix();	
+		GL11.glPushMatrix();
+		
+		float transx = (float)(this.posX - (this.posX * UI_Settings.guiScale));
+		float transy = (float)(this.posY - (this.posY * UI_Settings.guiScale));
+		
+		GL11.glTranslated(transx, transy, 0);
+		
+		GL11.glScalef((float)UI_Settings.guiScale, (float)UI_Settings.guiScale, (float)UI_Settings.guiScale);
+		
 		int sanityBar = MathHelper.ceiling_float_int((Gui_EventManager.tracker.sanity / 100) * this.getWidth());
 		
 		int frameBorder = 4;

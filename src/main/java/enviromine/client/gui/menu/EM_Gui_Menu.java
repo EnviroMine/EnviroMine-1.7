@@ -1,5 +1,6 @@
 package enviromine.client.gui.menu;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.server.MinecraftServer;
@@ -41,6 +42,7 @@ public class EM_Gui_Menu extends GuiScreen
 		}
 		*/
 		serverSettings.enabled = false;
+		customEditor.enabled = Minecraft.getMinecraft().isIntegratedServerRunning();
 		
 		serverSettings.visible = true;
 		

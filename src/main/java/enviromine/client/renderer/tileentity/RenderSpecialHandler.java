@@ -56,7 +56,6 @@ public class RenderSpecialHandler implements ISimpleBlockRenderingHandler
 		return ObjectHandler.renderSpecialID;
 	}
 	
-	static
 	{
 		blockToTile.put(ObjectHandler.esky, new TileEntityEsky());
 		blockToTile.put(ObjectHandler.freezer, new TileEntityFreezer());

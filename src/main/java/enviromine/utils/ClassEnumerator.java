@@ -100,7 +100,6 @@ public class ClassEnumerator
 			throw new RuntimeException("Unexpected problem: No resource for " + relPath);
 		}
 		
-		System.out.println(resource.getPath());
 		if(resource.toString().startsWith("jar:"))
 		{
 			processJarfile(resource, pkgname, classes);

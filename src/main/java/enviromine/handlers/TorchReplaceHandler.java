@@ -27,7 +27,7 @@ public class TorchReplaceHandler
 			tick = 0;
 		}
 		
-		if(!EM_Settings.torchesBurn)
+		if(!EM_Settings.torchesBurn && !EM_Settings.torchesGoOut)
 		{
 			posBuffer.clear();
 		} else

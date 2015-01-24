@@ -4,15 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-
+import net.minecraft.util.StatCollector;
 import org.apache.logging.log4j.Level;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -138,13 +136,13 @@ public class UpdateNotification
 				}
 			} else if(verStat == 0)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "EnviroMine " + EM_Settings.Version + " is up to date"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EM_Settings.Version)));
 			} else if(verStat == 1)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "EnviroMine " + EM_Settings.Version + " is a debug version"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EM_Settings.Version)));
 			} else if(verStat == -2)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error occured while parsing EnviroMine's version file!"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.error")));
 			}
 			
 		} catch(IOException e)

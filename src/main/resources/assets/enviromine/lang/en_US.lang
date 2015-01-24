@@ -122,11 +122,17 @@ deathmessage.enviromine.gasfire=%s died in a gas fire
 
 updatemsg.enviromine.avalible=Update %s of EnviroMine is available
 updatemsg.enviromine.download=Download & Changelog:
+updatemsg.enviromine.uptodate=EnviroMine %s is up to date
+updatemsg.enviromine.debug=EnviroMine %s is a debug version
+updatemsg.enviromine.error=An error occured while parsing EnviroMine's version file!
 
 news.enviromine.newpost=(New Post)
 news.enviromine.button.news=News Feed
 news.enviromine.button.changelog=Change Log
 news.enviromine.button.version=Version Info
+news.enviromine.version.current=You current version is %s
+news.enviromine.news.changelog=Check changlog for whats new
+news.enviromine.news.wiki=Download new version on our wiki!
 
 keybinds.enviromine.reload=Reload Configs
 keybinds.enviromine.addremove=Add/Remove Custom Config

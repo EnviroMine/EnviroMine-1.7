@@ -73,22 +73,22 @@ public class PostGuiList extends GuiListExtended
 			addBlankLines(1);
 			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.avalible", UpdateNotification.version));
 			addBlankLines(1);
-			addLine("Check changlog for whats new.");
+			addLine(StatCollector.translateToLocalFormatted("news.enviromine.news.changelog"));
 			addBlankLines(1);
-			addLine("Download new version on our wiki!");
+			addLine(StatCollector.translateToLocalFormatted("news.enviromine.news.wiki"));
 			addBlankLines(1);
 			addLine("https://github.com/Funwayguy/EnviroMine/wiki/Downloads");
 			addBlankLines(1);
 			addLine("https://enviromine.wordpress.com/");
 		} else if(verStat == 0)
 		{
-			addLine("EnviroMine " + EM_Settings.Version + " is up to date");
+			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EM_Settings.Version));
 		} else if(verStat == 1)
 		{
-			addLine("EnviroMine " + EM_Settings.Version + " is a debug version");
+			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EM_Settings.Version));
 		} else if(verStat == -2)
 		{
-			addLine("An error occured while parsing EnviroMine's version file!");
+			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.error"));
 		}
 		
 	}

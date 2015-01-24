@@ -189,7 +189,7 @@ public class EM_ConfigHandler
 		Property genDefault = config.get(ConSetCat, "Generate Defaults", true, "Generates EnviroMines initial default files");
 		if(!EM_Settings.genDefaults)
 		{
-			EM_Settings.genDefaults = genConfig.getBoolean(true);
+			EM_Settings.genDefaults = genDefault.getBoolean(true);
 		}
 		genDefault.set(false);
 		

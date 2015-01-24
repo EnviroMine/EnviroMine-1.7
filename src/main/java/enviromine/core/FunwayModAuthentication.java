@@ -15,6 +15,8 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 import scala.actors.threadpool.Arrays;
+import enviromine.EnviroPotion;
+import enviromine.client.gui.EM_GuiAuthWarn;
 import enviromine.utils.ClassEnumerator;
 import enviromine.utils.LockedClass;
 
@@ -57,6 +59,10 @@ public final class FunwayModAuthentication
 			AUTH_RESULT = true;
 			if(flag)
 			{
+				if(!"FWG_EM_VER".equals("FWG_" + "EM_VER"))
+				{
+					EM_GuiAuthWarn.shouldWarn = true;
+				}
 				SetOfflineAuth(auth);
 			}
 			UnlockClasses();
@@ -106,7 +112,7 @@ public final class FunwayModAuthentication
 			throw new IllegalStateException("ENVIROMINE WAS TAMPERED WITH DURING AUTHENTICATION");
 		}
 		
-		File file = new File(EM_ConfigHandler.configPath, EM_Settings.ModID + "_" + EM_Settings.Version + "_AUTH");
+		File file = new File(EM_ConfigHandler.configPath, EM_Settings.ModID.toUpperCase() + "_AUTH");
 		
 		if(file.exists())
 		{
@@ -138,10 +144,21 @@ public final class FunwayModAuthentication
 	 */
 	private static final byte[] GetAuthentication()
 	{
+		if(!new Exception().getStackTrace()[1].getClassName().equals(FunwayModAuthentication.class.getName()))
+		{
+			throw new IllegalStateException("ENVIROMINE WAS TAMPERED WITH DURING AUTHENTICATION");
+		}
+		
 		try
 		{
+			/*long key = Long.parseLong("EM_AUTH_KEY");
+			short unlock1 = (short)((key >> 48) & 0xFFFF);
+			short unlock2 = (short)((key >> 32) & 0xFFFF);
+			short unlock3 = (short)((key >> 16) & 0xFFFF);
+			short unlock4 = (short)((key) & 0xFFFF);
+			String keyString = unlock1 + "-" + unlock2 + "-" + unlock3 + "-" + unlock4;*/
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			return digest.digest("AUTH_KEY".getBytes("UTF-8"));
+			return digest.digest("EM_AUTH_KEY".getBytes("UTF-8"));
 		} catch(Exception e)
 		{
 			return null;
@@ -159,7 +176,8 @@ public final class FunwayModAuthentication
 		
 		if(AUTH_RESULT)
 		{
-			classes = ClassEnumerator.getClassesForPackage(Package.getPackage("enviromine"));
+			Package pack = EnviroPotion.class.getPackage();
+			classes = ClassEnumerator.getClassesForPackage(pack);
 		}
 		
 		try

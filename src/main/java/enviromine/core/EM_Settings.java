@@ -116,7 +116,7 @@ public class EM_Settings
 	public static boolean updateCheck = true;
 	//public static boolean useDefaultConfig = true;
 	public static boolean genConfigs = false;
-	public static boolean genDefaults = true;
+	public static boolean genDefaults = false;
 	public static int physInterval;
 	public static int worldDelay;
 	public static int chunkDelay;

@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -55,6 +56,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
@@ -91,6 +93,7 @@ import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.client.ModelCamelPack;
+import enviromine.client.gui.EM_GuiAuthWarn;
 import enviromine.client.gui.menu.config.EM_ConfigMenu;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
@@ -1734,6 +1737,15 @@ public class EM_EventManager extends LockedClass
 			EM_ConfigHandler.initConfig();
 			
 			EnviroMine.caves.RefreshSpawnList();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event)
+	{
+		if(event.gui instanceof GuiMainMenu && EM_GuiAuthWarn.shouldWarn)// && !EM_Settings.Version.equals("FWG_" + "EM_VER"))
+		{
+			event.gui = new EM_GuiAuthWarn(event.gui);
 		}
 	}
 }

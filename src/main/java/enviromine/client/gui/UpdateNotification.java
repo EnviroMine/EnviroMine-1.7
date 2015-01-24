@@ -123,11 +123,11 @@ public class UpdateNotification
 				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.avalible", version).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.download"));
 				event.player.addChatMessage(new ChatComponentText("https://github.com/Funwayguy/EnviroMine/wiki/Downloads").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BLUE).setUnderlined(true)));
-				for(int i = 2; i < data.length; i++)
+				for(int i = 5; i < data.length; i++)
 				{
-					if(i > 5)
+					if(i > 8)
 					{
-						event.player.addChatMessage(new ChatComponentText("" + (data.length - 6) + " more..."));
+						event.player.addChatMessage(new ChatComponentText("" + (data.length - 9) + " more..."));
 						break;
 					} else
 					{

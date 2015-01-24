@@ -74,7 +74,14 @@ public class EnviroPotion extends Potion
 				
 				if(entityLiving.getRNG().nextInt(10) == 0)
 				{
-					entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 200, 0));
+					if(EM_Settings.noNausea)
+					{
+						entityLiving.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
+						entityLiving.addPotionEffect(new PotionEffect(Potion.nightVision.id, 200, 0));
+					} else
+					{
+						entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 200, 0));
+					}
 				}
 			}
 		}
@@ -159,7 +166,13 @@ public class EnviroPotion extends Potion
 			{
 				if(effect.getAmplifier() >= 1)
 				{
-					entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
+					if(EM_Settings.noNausea)
+					{
+						entityLiving.addPotionEffect(new PotionEffect(Potion.blindness.id, 200));
+					} else
+					{
+						entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
+					}
 				}
 			}
 			

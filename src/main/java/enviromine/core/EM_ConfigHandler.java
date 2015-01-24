@@ -58,7 +58,7 @@ public class EM_ConfigHandler
 		StabilityType.base.GenDefaults();
 		StabilityType.base.customLoad();
 		
-		if(EM_Settings.useDefaultConfig)
+		if(EM_Settings.genDefaults)
 		{
 			loadDefaultProperties();
 		}
@@ -129,6 +129,7 @@ public class EM_ConfigHandler
 		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7).getInt(7);
 		EM_Settings.torchesBurn = config.get(Configuration.CATEGORY_GENERAL, "Torches burn", true).getBoolean(true);
 		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
+		EM_Settings.noNausea = config.get(Configuration.CATEGORY_GENERAL, "Blindness instead of Nausea", false).getBoolean(false);
 		
 		// Physics Settings
 		String PhySetCat = "Physics";
@@ -183,7 +184,14 @@ public class EM_ConfigHandler
 			EM_Settings.genConfigs = genConfig.getBoolean(false);
 		}
 		genConfig.set(false);
-		EM_Settings.useDefaultConfig = config.get(ConSetCat, "Generate Defaults", true).getBoolean(true);
+		
+		Property genDefault = config.get(ConSetCat, "Generate Defaults", true, "Generates EnviroMines initial default files");
+		if(!EM_Settings.genDefaults)
+		{
+			EM_Settings.genDefaults = genConfig.getBoolean(true);
+		}
+		genDefault.set(false);
+		
 		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
 		
 		// Earthquake

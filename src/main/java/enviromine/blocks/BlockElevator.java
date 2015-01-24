@@ -103,7 +103,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 				player.getEntityData().removeTag("EM_CAVE_DIST");
 			}
 			
-			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, new TeleportHandler(playerMP.mcServer.worldServerForDimension(0)));
+			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, TeleportHandler.GetInstance(playerMP.mcServer.worldServerForDimension(0)));
 			world.setBlockToAir(i, j, k);
 			if(meta == 0)
 			{
@@ -117,7 +117,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			player.setLocationAndAngles((double)i + 0.5D, j - 1 + meta, (double)k + 0.5D, player.rotationYaw, player.rotationPitch);
 			player.addStat(EnviroAchievements.boreToTheCore, 1);
 			player.getEntityData().setIntArray("EM_CAVE_DIST", new int[]{i, j, k, 0});
-			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, EM_Settings.caveDimID, new TeleportHandler(playerMP.mcServer.worldServerForDimension(EM_Settings.caveDimID)));
+			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, EM_Settings.caveDimID, TeleportHandler.GetInstance(playerMP.mcServer.worldServerForDimension(EM_Settings.caveDimID)));
 			world.setBlockToAir(i, j, k);
 			if(meta == 0)
 			{

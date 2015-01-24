@@ -7,10 +7,6 @@
 ##
 ##############################################################################
 
-# Offline Debug Variables
-#DRONE_BUILD_NUMBER=0
-#ver_num="1.2.$DRONE_BUILD_NUMBER"
-
 # Create document for update notice
 echo $ver_num > version.txt
 echo "https://github.com/Funwayguy/EnviroMine/wiki/Downloads" >> version.txt
@@ -18,11 +14,7 @@ git log -1 --pretty=format:"%B" >> version.txt
 
 # Start writing full changelog
 echo "----- Full EnviroMine Changelog (1.7.10) -----" > full_changelog.txt
-echo "NOTE: Changlog does not account for failed builds!" >> full_changelog.txt
-echo "Version numbers may be inaccurate where builds have failed." >> full_changelog.txt
 echo "" >> full_changelog.txt
-
-echo "[$ver_num]" >> full_changelog.txt
 git log -1 --pretty=format:"%B" >> full_changelog.txt
 
 iver=0
@@ -32,7 +24,8 @@ for i in $(eval echo "{1..$DRONE_BUILD_NUMBER}")
 do
   let iver=$DRONE_BUILD_NUMBER-$i
   echo "" >> full_changelog.txt
-  echo "[1.2.$iver]" >> full_changelog.txt
+  echo "----------------------------------------------" >> full_changelog.txt
+  echo "" >> full_changelog.txt
   git log master -1 --skip=$i --pretty=format:"%B" --first-parent >> full_changelog.txt
 done
 
@@ -40,5 +33,6 @@ done
 let iver=$DRONE_BUILD_NUMBER+1
 
 echo "" >> full_changelog.txt
-echo "[Older]" >> full_changelog.txt
+echo "----------------------------------------------" >> full_changelog.txt
+echo "" >> full_changelog.txt
 git log master --skip=$iver --pretty=format:"%B" --first-parent >> full_changelog.txt

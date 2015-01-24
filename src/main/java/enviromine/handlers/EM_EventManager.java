@@ -45,6 +45,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
@@ -110,12 +111,19 @@ public class EM_EventManager
 	{
 		boolean chunkPhys = true;
 		
+		DimensionProperties dProps = EM_Settings.dimensionProperties.get(event.world.provider.dimensionId);
+		
 		if(!event.world.isRemote)
 		{
 			if(EM_PhysManager.chunkDelay.containsKey(event.world.provider.dimensionId + "" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)))
 			{
 				chunkPhys = (EM_PhysManager.chunkDelay.get(event.world.provider.dimensionId + "" + (MathHelper.floor_double(event.entity.posX) >> 4) + "," + (MathHelper.floor_double(event.entity.posZ) >> 4)) < event.world.getTotalWorldTime());
 			}
+		}
+		
+		if(dProps != null && !dProps.physics)
+		{
+			chunkPhys = false;
 		}
 		
 		if(EM_Settings.foodSpoiling)
@@ -1682,7 +1690,7 @@ public class EM_EventManager
 					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				} else
 				{
-					event.toolTip.add("Rotten: " + MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "% (Day " + MathHelper.floor_double((curTime - rotDate)/24000L) + "/" + MathHelper.floor_double(rotTime/24000L) + ")");
+					event.toolTip.add(new ChatComponentTranslation("misc.enviromine.tooltip.rot", MathHelper.floor_double((curTime - rotDate)/rotTime * 100D) + "%", MathHelper.floor_double((curTime - rotDate)/24000L), MathHelper.floor_double(rotTime/24000L)).getUnformattedText());
 					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				}
 			}
@@ -1692,7 +1700,7 @@ public class EM_EventManager
 				int i = event.itemStack.getTagCompound().getInteger("gasMaskFill");
 				int max = event.itemStack.getTagCompound().getInteger("gasMaskMax");
 				int disp = (i <= 0 ? 0 : i > max ? 100 : (int)(i/(max/100F)));
-				event.toolTip.add("Filters: " + disp + "%");
+				event.toolTip.add(new ChatComponentTranslation("misc.enviromine.tooltip.filter", disp + "%", i, max).getUnformattedText());
 			}
 		}
 	}

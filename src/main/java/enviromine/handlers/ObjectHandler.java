@@ -56,6 +56,8 @@ public class ObjectHandler
 	public static Block esky;
 	public static Block freezer;
 	
+	public static Block noPhysBlock;
+	
 	public static int renderGasID;
 	public static int renderSpecialID;
 	
@@ -146,6 +148,8 @@ public class ObjectHandler
 		esky = new BlockEsky(Material.iron).setBlockName("enviromine.esky").setCreativeTab(EnviroMine.enviroTab);
 		freezer = new BlockFreezer(Material.iron).setBlockName("enviromine.freezer").setCreativeTab(EnviroMine.enviroTab);
 		
+		noPhysBlock = new BlockNoPhysics();
+		
 		Blocks.redstone_torch.setLightLevel(0.9375F);
 	}
 	
@@ -160,6 +164,7 @@ public class ObjectHandler
 		GameRegistry.registerBlock(flammableCoal, "flammablecoal");
 		GameRegistry.registerBlock(esky, "esky");
 		GameRegistry.registerBlock(freezer, "freezer");
+		GameRegistry.registerBlock(noPhysBlock, "no_phys_block");
 		
 		// Must be done after registration
 		Blocks.fire.setFireInfo(flammableCoal, 60, 100);

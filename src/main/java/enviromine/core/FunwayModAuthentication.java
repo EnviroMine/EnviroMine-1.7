@@ -40,7 +40,7 @@ public final class FunwayModAuthentication
 		byte[] auth = GetAuthentication();
 		byte[] data = GetOfflineAuth();
 		
-		if(data == null)
+		if(data == null || !Arrays.equals(auth, data))
 		{
 			flag = true;
 			try

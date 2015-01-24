@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -55,11 +56,13 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -79,6 +82,7 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -89,6 +93,9 @@ import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.client.ModelCamelPack;
+import enviromine.client.gui.EM_GuiAuthWarn;
+import enviromine.client.gui.menu.config.EM_ConfigMenu;
+import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.gases.GasBuffer;
@@ -101,10 +108,11 @@ import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.utils.EnviroUtils;
+import enviromine.utils.LockedClass;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
-public class EM_EventManager
+public class EM_EventManager extends LockedClass
 {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -1702,6 +1710,42 @@ public class EM_EventManager
 				int disp = (i <= 0 ? 0 : i > max ? 100 : (int)(i/(max/100F)));
 				event.toolTip.add(new ChatComponentTranslation("misc.enviromine.tooltip.filter", disp + "%", i, max).getUnformattedText());
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if(event.modID.equals(EM_Settings.ModID))
+		{
+			for(Configuration config : EM_ConfigMenu.tempConfigs)
+			{
+				config.save();
+			}
+			
+			EM_Settings.armorProperties.clear();
+			EM_Settings.blockProperties.clear();
+			EM_Settings.itemProperties.clear();
+			EM_Settings.livingProperties.clear();
+			EM_Settings.stabilityTypes.clear();
+			EM_Settings.biomeProperties.clear();
+			EM_Settings.dimensionProperties.clear();
+			EM_Settings.rotProperties.clear();
+			EM_Settings.caveGenProperties.clear();
+			EM_Settings.caveSpawnProperties.clear();;
+			
+			EM_ConfigHandler.initConfig();
+			
+			EnviroMine.caves.RefreshSpawnList();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event)
+	{
+		if(event.gui instanceof GuiMainMenu && EM_GuiAuthWarn.shouldWarn)// && !EM_Settings.Version.equals("FWG_" + "EM_VER"))
+		{
+			event.gui = new EM_GuiAuthWarn(event.gui);
 		}
 	}
 }

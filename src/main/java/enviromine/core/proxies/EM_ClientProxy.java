@@ -1,7 +1,6 @@
 package enviromine.core.proxies;
 
 import java.util.Iterator;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
@@ -11,9 +10,7 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-
 import org.apache.logging.log4j.Level;
-
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -28,7 +25,6 @@ import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
 import enviromine.blocks.tiles.TileEntityFreezer;
 import enviromine.client.gui.Gui_EventManager;
-import enviromine.client.gui.SaveController;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.items.HudItemAirQuality;
 import enviromine.client.gui.hud.items.HudItemHydration;

@@ -122,11 +122,23 @@ deathmessage.enviromine.gasfire=%s died in a gas fire
 
 updatemsg.enviromine.avalible=Update %s of EnviroMine is available
 updatemsg.enviromine.download=Download & Changelog:
+updatemsg.enviromine.uptodate=EnviroMine %s is up to date
+updatemsg.enviromine.debug=EnviroMine %s is a debug version
+updatemsg.enviromine.error=An error occured while parsing EnviroMine's version file!
 
 news.enviromine.newpost=(New Post)
 news.enviromine.button.news=News Feed
 news.enviromine.button.changelog=Change Log
 news.enviromine.button.version=Version Info
+news.enviromine.version.current=You current version is %s
+news.enviromine.news.changelog=Check changlog for whats new
+news.enviromine.news.wiki=Download new version on our wiki!
+
+auth.enviromine.1=EnviroMine %s has been successfully authenticated!
+auth.enviromine.2=Thank you for using the official version <3
+auth.enviromine.3=WARNING: If you ever need to re-install your copy at a later date or include
+auth.enviromine.4=it in a modpack you will need to keep the AUTH file from your config directory
+auth.enviromine.5=Proudly supporting the %s campaign
 
 keybinds.enviromine.reload=Reload Configs
 keybinds.enviromine.addremove=Add/Remove Custom Config

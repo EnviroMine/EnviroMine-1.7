@@ -128,6 +128,7 @@ public class EM_ConfigHandler
 		EM_Settings.foodSpoiling = config.get(Configuration.CATEGORY_GENERAL, "Enable food spoiling", true).getBoolean(true);
 		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7).getInt(7);
 		EM_Settings.torchesBurn = config.get(Configuration.CATEGORY_GENERAL, "Torches burn", true).getBoolean(true);
+		EM_Settings.torchesGoOut = config.get(Configuration.CATEGORY_GENERAL, "Torches go out", true).getBoolean(true);
 		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
 		EM_Settings.noNausea = config.get(Configuration.CATEGORY_GENERAL, "Blindness instead of Nausea", false).getBoolean(false);
 		
@@ -188,7 +189,7 @@ public class EM_ConfigHandler
 		Property genDefault = config.get(ConSetCat, "Generate Defaults", true, "Generates EnviroMines initial default files");
 		if(!EM_Settings.genDefaults)
 		{
-			EM_Settings.genDefaults = genConfig.getBoolean(true);
+			EM_Settings.genDefaults = genDefault.getBoolean(true);
 		}
 		genDefault.set(false);
 		

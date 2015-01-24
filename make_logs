@@ -8,8 +8,11 @@
 ##############################################################################
 
 # Create document for update notice
-echo $ver_num > version.txt
+echo $ver_num.$AUTH_HASH > version.txt
 echo "https://github.com/Funwayguy/EnviroMine/wiki/Downloads" >> version.txt
+echo "THIS VERSION OF ENVIROMINE IS OUTDATED OR UNAUTHENTICATED!" >> version.txt
+echo "PLEASE UPDATE TO THE LATEST VERSION TO FIX THIS!" >> version.txt
+echo. >> version.txt
 git log -1 --pretty=format:"%B" >> version.txt
 
 # Start writing full changelog

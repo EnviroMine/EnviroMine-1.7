@@ -1,23 +1,23 @@
 package enviromine.client.gui;
 
-import enviromine.client.gui.menu.update.WordPressParser;
-import enviromine.client.gui.menu.update.WordPressPost;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-
-import net.minecraft.event.ClickEvent;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import org.apache.logging.log4j.Level;
+import enviromine.client.gui.menu.update.WordPressParser;
+import enviromine.client.gui.menu.update.WordPressPost;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 
 public class UpdateNotification
 {
@@ -121,19 +121,13 @@ public class UpdateNotification
 			if(verStat == -1)
 			{
 				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.avalible", version).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				
-				IChatComponent msg = new ChatComponentTranslation("updatemsg.enviromine.download").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://drone.io/github.com/Funwayguy/EnviroMine-1.7/files/build/libs/EnviroMine-v" + version + ".jar")));
-				msg.appendSibling(new ChatComponentText(" ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RESET).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ""))));
-				msg.appendSibling(new ChatComponentTranslation("updatemsg.enviromine.changelog").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://drone.io/github.com/Funwayguy/EnviroMine-1.7/files/build/libs/full_changelog.txt"))));
-				event.player.addChatMessage(msg);
-				
-				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.otherlinks").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Funwayguy/EnviroMine/wiki/Downloads"))));
-				
-				for(int i = 2; i < data.length; i++)
+				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.download"));
+				event.player.addChatMessage(new ChatComponentText("https://github.com/Funwayguy/EnviroMine/wiki/Downloads").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BLUE).setUnderlined(true)));
+				for(int i = 5; i < data.length; i++)
 				{
-					if(i > 5)
+					if(i > 8)
 					{
-						event.player.addChatMessage(new ChatComponentText("" + (data.length - 6) + " more..."));
+						event.player.addChatMessage(new ChatComponentText("" + (data.length - 9) + " more..."));
 						break;
 					} else
 					{
@@ -142,13 +136,13 @@ public class UpdateNotification
 				}
 			} else if(verStat == 0)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "EnviroMine " + EM_Settings.Version + " is up to date"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EM_Settings.Version)));
 			} else if(verStat == 1)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "EnviroMine " + EM_Settings.Version + " is a debug version"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EM_Settings.Version)));
 			} else if(verStat == -2)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error occured while parsing EnviroMine's version file!"));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.error")));
 			}
 			
 		} catch(IOException e)
@@ -167,7 +161,7 @@ public class UpdateNotification
 	 * @return
 	 * @throws IOException
 	 */
-	private String getUrl(String link, boolean doRedirect) throws IOException
+	public static String getUrl(String link, boolean doRedirect) throws IOException
 	{
 		URL url = new URL(link);
 		HttpURLConnection.setFollowRedirects(false);

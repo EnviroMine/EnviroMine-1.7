@@ -116,7 +116,7 @@ public class EM_Settings
 	public static boolean updateCheck = true;
 	//public static boolean useDefaultConfig = true;
 	public static boolean genConfigs = false;
-	public static boolean genDefaults = true;
+	public static boolean genDefaults = false;
 	public static int physInterval;
 	public static int worldDelay;
 	public static int chunkDelay;
@@ -127,6 +127,7 @@ public class EM_Settings
 	public static boolean limitCauldron;
 	public static boolean allowTinting;
 	public static boolean torchesBurn;
+	public static boolean torchesGoOut;
 	
 	public static int caveDimID = -3;
 	public static int caveBiomeID = 23;

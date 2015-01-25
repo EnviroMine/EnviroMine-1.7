@@ -4,7 +4,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
-
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.StatCollector;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
 
@@ -13,6 +14,14 @@ import java.util.List;
 
 public class EnviroCommand extends CommandBase
 {
+	
+	private String add = StatCollector.translateToLocal("commands.enviromine.envirostat.add");
+	private String set = StatCollector.translateToLocal("commands.enviromine.envirostat.set");
+	private String temp = StatCollector.translateToLocal("commands.enviromine.envirostat.temp");
+	private String sanity = StatCollector.translateToLocal("commands.enviromine.envirostat.sanity");
+	private String water = StatCollector.translateToLocal("commands.enviromine.envirostat.water");
+	private String air = StatCollector.translateToLocal("commands.enviromine.envirostat.air");
+	
 	@Override
 	public String getCommandName()
 	{
@@ -22,7 +31,7 @@ public class EnviroCommand extends CommandBase
 	@Override
 	public String getCommandUsage(ICommandSender sender)
 	{
-		return "/envirostat <playername> <add, set> <temp, sanity, water, air> <float>";
+		return "/envirostat <playername> <"+add+", "+set+"> <"+temp+", "+sanity+", "+water+", "+air+"> <float>";
 	}
 	
 	@Override
@@ -55,18 +64,18 @@ public class EnviroCommand extends CommandBase
 		{
 			float value = Float.parseFloat(astring[3]);
 			
-			if(astring[1].equalsIgnoreCase("add"))
+			if(astring[1].equalsIgnoreCase(add))
 			{
-				if(astring[2].equalsIgnoreCase("temp"))
+				if(astring[2].equalsIgnoreCase(temp))
 				{
 					tracker.bodyTemp += value;
-				} else if(astring[2].equalsIgnoreCase("sanity"))
+				} else if(astring[2].equalsIgnoreCase(sanity))
 				{
 					tracker.sanity += value;
-				} else if(astring[2].equalsIgnoreCase("water"))
+				} else if(astring[2].equalsIgnoreCase(water))
 				{
 					tracker.hydration += value;
-				} else if(astring[2].equalsIgnoreCase("air"))
+				} else if(astring[2].equalsIgnoreCase(air))
 				{
 					tracker.airQuality += value;
 				} else
@@ -74,15 +83,15 @@ public class EnviroCommand extends CommandBase
 					this.ShowUsage(sender);
 					return;
 				}
-			} else if(astring[1].equalsIgnoreCase("set"))
+			} else if(astring[1].equalsIgnoreCase(set))
 			{
-				if(astring[2].equalsIgnoreCase("temp"))
+				if(astring[2].equalsIgnoreCase(temp))
 				{
 					tracker.bodyTemp = value;
-				} else if(astring[2].equalsIgnoreCase("sanity"))
+				} else if(astring[2].equalsIgnoreCase(sanity))
 				{
 					tracker.sanity = value;
-				} else if(astring[2].equalsIgnoreCase("water"))
+				} else if(astring[2].equalsIgnoreCase(water))
 				{
 					tracker.hydration = value;
 				} else if(astring[2].equalsIgnoreCase("air"))
@@ -115,7 +124,7 @@ public class EnviroCommand extends CommandBase
 	
 	public void ShowNoTracker(ICommandSender sender)
 	{
-		sender.addChatMessage(new ChatComponentText("Target not found or has no enviro tracker!"));
+		sender.addChatMessage(new ChatComponentTranslation("commands.enviromine.envirostat.noTracker"));
 	}
 
     /**
@@ -129,10 +138,10 @@ public class EnviroCommand extends CommandBase
         	return getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
         } else if(strings.length == 2)
         {
-        	return getListOfStringsMatchingLastWord(strings, new String[]{"add", "set"});
+        	return getListOfStringsMatchingLastWord(strings, new String[]{add, set});
         } else if(strings.length == 3)
         {
-        	return getListOfStringsMatchingLastWord(strings, new String[]{"temp", "sanity", "water", "air"});
+        	return getListOfStringsMatchingLastWord(strings, new String[]{temp, sanity, water, air});
         } else
         {
         	return new ArrayList();

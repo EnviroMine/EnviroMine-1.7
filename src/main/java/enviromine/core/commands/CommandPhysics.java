@@ -3,12 +3,18 @@ package enviromine.core.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
-
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.StatCollector;
 import enviromine.core.EM_Settings;
 
 public class CommandPhysics extends CommandBase
 {
-	
+
+	private String on = StatCollector.translateToLocal("options.enviromine.on");
+	private String off = StatCollector.translateToLocal("options.enviromine.off");
+	private String toggle = StatCollector.translateToLocal("commands.enviromine.envirophysic.toggle");
+	private String status = StatCollector.translateToLocal("commands.enviromine.envirophysic.status");
+
 	@Override
 	public String getCommandName() 
 	{
@@ -24,7 +30,7 @@ public class CommandPhysics extends CommandBase
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) 
 	{
-		return "/envirophysic <on, off, toggle, status>";
+		return "/envirophysic <"+on+", "+off+", "+toggle+", "+status+">";
 	}
 	
 	@Override
@@ -39,30 +45,30 @@ public class CommandPhysics extends CommandBase
 		try
 		{
 			
-			if(astring[0].equalsIgnoreCase("toggle"))
+			if(astring[0].equalsIgnoreCase(toggle))
 			{
 				this.togglePhy(sender);
 			}
-			else if(astring[0].equalsIgnoreCase("on"))
+			else if(astring[0].equalsIgnoreCase(on))
 			{
 				doPhy(true , sender);
 			}
-			else if(astring[0].equalsIgnoreCase("off"))
+			else if(astring[0].equalsIgnoreCase(off))
 			{
 				doPhy(false , sender);
 			}
-			else if(astring[0].equalsIgnoreCase("status"))
+			else if(astring[0].equalsIgnoreCase(status))
 			{
 				String Status = "";
 				if(EM_Settings.enablePhysics)
 				{
-					Status = "On";
+					Status = on;
 				}
 				else
 				{
-					Status = "Off";
+					Status = off;
 				}
-				sender.addChatMessage(new ChatComponentText("Enviromine Physics Status: " + Status));
+				sender.addChatMessage(new ChatComponentTranslation("commands.enviromine.envirophysic.statusText", "Enviromine", Status));
 			}
 			else
 			{
@@ -90,11 +96,11 @@ public class CommandPhysics extends CommandBase
 		
 		if(EM_Settings.enablePhysics)
 		{
-			sender.addChatMessage(new ChatComponentText("Enviromine Physics On"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.enviromine.envirophysic.physics", "Enviromine", "On"));
 		}
 		else
 		{
-			sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.enviromine.envirophysic.physics", "Enviromine", "Off"));
 		}
 	}
 	
@@ -104,11 +110,11 @@ public class CommandPhysics extends CommandBase
 		
 		if(what)
 		{
-			sender.addChatMessage(new ChatComponentText("Enviromine Physics On"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.enviromine.envirophysic.physics","Enviromine", "On"));
 		}
 		else
 		{
-			sender.addChatMessage(new ChatComponentText("Enviromine Physics Off"));
+			sender.addChatMessage(new ChatComponentTranslation("commands.enviromine.envirophysic.physics","Enviromine", "Off"));
 		}
 	}
 }

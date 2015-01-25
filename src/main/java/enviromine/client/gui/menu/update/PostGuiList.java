@@ -74,7 +74,7 @@ public class PostGuiList extends GuiListExtended
 		
 		if(verStat == -1)
 		{
-			addLine("Your current version is " + EM_Settings.Version);
+			addLine(StatCollector.translateToLocalFormatted("news.enviromine.version.current", EM_Settings.Version));
 			addBlankLines(1);
 			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.avalible", UpdateNotification.version));
 			addBlankLines(1);

@@ -33,7 +33,7 @@ achievement.enviromine.MindOverMatter=Mind Over Matter
 achievement.enviromine.ProMiner=Pro Miner
 achievement.enviromine.HardBoiled=Hard Boiled
 achievement.enviromine.IronArmy=Iron Army
-achievement.enviromine.TradingFavours=Trading Favours
+achievement.enviromine.TradingFavours=Trading Favors
 achievement.enviromine.INeededThat=I Needed That
 achievement.enviromine.WinterIsComing=Winter Is Coming
 achievement.enviromine.OhGodWhy=Oh God Why
@@ -94,7 +94,7 @@ options.enviromine.tempScale=Temp Scale
 options.enviromine.tempScale.f=Fahrenheit
 options.enviromine.tempScale.c=Celsius
 options.enviromine.barPos.hydration=Hydration Bar
-options.enviromine.barPos.temprature=Temprature Bar
+options.enviromine.barPos.temprature=Temperature Bar
 options.enviromine.barPos.sanity=Sanity Bar
 options.enviromine.barPos.airQuality=Air Quality Bar
 options.enviromine.guiSounds=Sound Settings
@@ -109,6 +109,12 @@ options.enviromine.hud.hydration=Hydration
 options.enviromine.hud.air=Air Quality
 options.enviromine.hud.resetDefault=Reset Defaults
 options.enviromine.hud.resetDefault.desc=Reset all Hud Items to their default locations
+options.enviromine.hud.reposition=CLICK to confirm, ESCAPE to cancel, R to reset
+options.enviromine.hud.alignment=Alignment:
+
+options.enviromine.supportUs=Support Us
+options.enviromine.website=Our Website
+options.enviromine.website.YesNo=This will open up a page in your Default web browser. Continue? 
 
 deathmessage.enviromine.suffocate=%s suffocated to death
 deathmessage.enviromine.frostbite=%s froze to death
@@ -124,7 +130,7 @@ updatemsg.enviromine.avalible=Update %s of EnviroMine is available
 updatemsg.enviromine.download=Download & Changelog:
 updatemsg.enviromine.uptodate=EnviroMine %s is up to date
 updatemsg.enviromine.debug=EnviroMine %s is a debug version
-updatemsg.enviromine.error=An error occured while parsing EnviroMine's version file!
+updatemsg.enviromine.error=An error occurred while parsing EnviroMine's version file!
 
 news.enviromine.newpost=(New Post)
 news.enviromine.button.news=News Feed
@@ -146,3 +152,24 @@ keybinds.enviromine.addremove=Add/Remove Custom Config
 misc.enviromine.tooltip.filter=Filters: %s (%s/%s)
 misc.enviromine.tooltip.water=Water: %s (%s/%s)
 misc.enviromine.tooltip.rot=Rotten: %s (Day %s/%s)
+
+commands.enviromine.envirostat.add=add
+commands.enviromine.envirostat.set=set
+commands.enviromine.envirostat.temp=temp
+commands.enviromine.envirostat.sanity=sanity
+commands.enviromine.envirostat.water=water
+commands.enviromine.envirostat.air=air
+commands.enviromine.envirostat.noTracker=Target not found or has no enviro tracker!
+commands.enviromine.envirophysic.toggle=toggle
+commands.enviromine.envirophysic.status=status
+commands.enviromine.envirophysic.statusText=%s Physics Status: %s
+commands.enviromine.envirophysic.physics= %s Physics %s
+commands.enviromine.enviroquake.length=length
+commands.enviromine.enviroquake.width=width
+commands.enviromine.enviroquake.rotation=rotation
+commands.enviromine.enviroquake.mode=mode
+commands.enviromine.enviroquake.error.tooMany=You are not permitted to spawn more than one earthquake at a time!
+commands.enviromine.enviroquake.error.tooBig=You may not spawn an earthquake over 4096 blocks!
+
+
+

@@ -1,16 +1,26 @@
 package enviromine.client.gui.menu;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
 import enviromine.client.gui.UpdateNotification;
+import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.menu.config.EM_ConfigMenu;
 import enviromine.client.gui.menu.update.NewsPage;
 import enviromine.core.EnviroMine;
 
-public class EM_Gui_Menu extends GuiScreen
+public class EM_Gui_Menu extends GuiScreen implements GuiYesNoCallback
 {
 	
 	private GuiScreen parentGuiScreen;
@@ -26,21 +36,6 @@ public class EM_Gui_Menu extends GuiScreen
 		GuiButton serverSettings = new GuiButton(103, this.width / 2 - 90, this.height / 6 + 98 - 6, 180, 20, "(Coming Soon)"+ StatCollector.translateToLocal("options.enviromine.configSettings"));
 		GuiButton customEditor =  new GuiButton(104, this.width / 2 - 90, this.height / 6 + 122 - 6, 180, 20, StatCollector.translateToLocal("options.enviromine.customEditor"));
 		
-		/* update later on.... causeing a crash now.
-		// The old if statement would never work, GUIs are never run server side and mc.thePlayer is not accessible to server side functions - Funwayguy
-		EntityPlayerMP playerMP = mc.getIntegratedServer().isServerRunning()? MinecraftServer.getServer().getConfigurationManager().func_152612_a(mc.thePlayer.getCommandSenderName()) : null;
-		
-		if(playerMP != null && playerMP.getGameProfile() != null && MinecraftServer.getServer().getConfigurationManager().func_152596_g(playerMP.getGameProfile()))
-		{
-			serverSettings.enabled = true;
-			customEditor.enabled = true;
-		}
-		else
-		{
-			serverSettings.enabled = false;
-			customEditor.enabled = false;			
-		}
-		*/
 		serverSettings.enabled = false;
 		customEditor.enabled = Minecraft.getMinecraft().isIntegratedServerRunning();
 		
@@ -55,6 +50,9 @@ public class EM_Gui_Menu extends GuiScreen
 		this.buttonList.add(customEditor);
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.done")));
 		
+		this.buttonList.add(new GuiButton(300, 30 , this.height -55 , 75, 20, StatCollector.translateToLocal("options.enviromine.supportUs")));
+		this.buttonList.add(new GuiButton(301, 30, this.height -30 , 75,20, StatCollector.translateToLocal("options.enviromine.website")));
+		
 		
 	}
 	
@@ -62,6 +60,50 @@ public class EM_Gui_Menu extends GuiScreen
 	public boolean doesGuiPauseGame()
 	{
 		return true;
+	}
+	
+	private String ourwebsite = "https://enviromine.wordpress.com/";
+	private String supportPage = "https://enviromine.wordpress.com/support-us/";
+	
+	
+	/* Send player to URL from this menu
+	 * (non-Javadoc)
+	 * @see net.minecraft.client.gui.GuiScreen#confirmClicked(boolean, int)
+	 */
+	@Override
+	public void confirmClicked(boolean p_73878_1_, int p_73878_2_) 
+	{
+		String url = "";
+		boolean go = false;
+		
+		if(p_73878_1_) // if true
+		{
+			if(p_73878_2_ == 1)
+			{
+				url = ourwebsite;
+				go = true;
+			}
+			
+			if(p_73878_2_ == 2)
+			{
+				url = supportPage;
+				go = true;
+			}		
+			
+			if(Desktop.isDesktopSupported() && go)
+			{
+				try 
+				{
+					Desktop.getDesktop().browse(new URI(url));
+				}catch (Exception e) {
+					EnviroMine.logger.log(Level.WARN, "(EM_Gui_Menu) Failed to open Default Browser to: " + url);
+				}
+			}
+
+		}
+		
+		
+		this.mc.displayGuiScreen(this);
 	}
 	
 	/**
@@ -93,6 +135,14 @@ public class EM_Gui_Menu extends GuiScreen
 		else if (par1GuiButton.id == 105)
 		{
 			this.mc.displayGuiScreen(new NewsPage(this, 150));
+		}
+		else if(par1GuiButton.id == 301)
+		{
+			this.mc.displayGuiScreen(new GuiYesNo(this, StatCollector.translateToLocal("options.enviromine.website"), StatCollector.translateToLocal("options.enviromine.website.YesNo"), 1));
+		}
+		else if(par1GuiButton.id == 300)
+		{
+			this.mc.displayGuiScreen(new GuiYesNo(this, StatCollector.translateToLocal("options.enviromine.supportUs"), StatCollector.translateToLocal("options.enviromine.website.YesNo"), 2));
 		}
 		else if (par1GuiButton.id == 200)
 		{

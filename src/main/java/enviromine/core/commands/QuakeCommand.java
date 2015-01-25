@@ -1,18 +1,30 @@
 package enviromine.core.commands;
 
-import org.apache.logging.log4j.Level;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.world.Earthquake;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
+
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.world.Earthquake;
 
 public class QuakeCommand extends CommandBase
 {
+	
+	private String lengthName = StatCollector.translateToLocal("commands.enviromine.enviroquake.length");
+	private String widthName = StatCollector.translateToLocal("commands.enviromine.enviroquake.width");
+	private String rotationName = StatCollector.translateToLocal("commands.enviromine.enviroquake.rotation");
+	private String modeName = StatCollector.translateToLocal("commands.enviromine.enviroquake.mode");
+	private String errorMany = StatCollector.translateToLocal("commands.enviromine.enviroquake.error.tooMany");
+	private String errorBig = StatCollector.translateToLocal("commands.enviromine.enviroquake.error.tooBig");
+
 	@Override
 	public String getCommandName()
 	{
@@ -22,7 +34,7 @@ public class QuakeCommand extends CommandBase
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_)
 	{
-		return "/enviroquake [<x> <z>] [<length> <width> <rotation> <mode(0 ~ 4)>]";
+		return "/enviroquake [<x> <z>] [<"+lengthName+"> <"+widthName+"> <"+rotationName+"> <"+modeName+"(0 ~ 4)>]";
 	}
 	
 	public void ShowUsage(ICommandSender sender)
@@ -47,7 +59,7 @@ public class QuakeCommand extends CommandBase
 		
 		if(Earthquake.pendingQuakes.size() > 0)
 		{
-			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You are not permitted to spawn more than one earthquake at a time!"));
+			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + errorMany));
 			return;
 		}
 		
@@ -82,7 +94,7 @@ public class QuakeCommand extends CommandBase
 		
 		if(l * w > 4096)
 		{
-			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You may not spawn an earthquake over 4096 blocks!"));
+			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + errorBig));
 			return;
 		}
 		

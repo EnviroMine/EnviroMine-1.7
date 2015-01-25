@@ -1683,7 +1683,8 @@ public class EM_EventManager extends LockedClass
 				}
 				
 				int disp = (fill <= 0 ? 0 : fill > max ? 100 : (int)(((float)fill/(float)max)*100));
-				event.toolTip.add("Water: " + disp + "% ("+fill+"/"+max+")");
+				event.toolTip.add(new ChatComponentTranslation("misc.enviromine.tooltip.water", disp + "%",  fill, max).getUnformattedText());
+				//event.toolTip.add("Water: " + disp + "% ("+fill+"/"+max+")");
 			}
 			
 			if(event.itemStack.getTagCompound().getLong("EM_ROT_DATE") > 0 && EM_Settings.foodSpoiling)
@@ -1694,7 +1695,8 @@ public class EM_EventManager extends LockedClass
 				
 				if(curTime - rotDate <= 0)
 				{
-					event.toolTip.add("Rotten: 0% (Day " + MathHelper.floor_double((curTime - rotDate)/24000L) + "/" + MathHelper.floor_double(rotTime/24000L) + ")");
+					event.toolTip.add(new ChatComponentTranslation("misc.enviromine.tooltip.rot", "0%" , MathHelper.floor_double((curTime - rotDate)/24000L) , MathHelper.floor_double(rotTime/24000L)).getUnformattedText());
+					//event.toolTip.add("Rotten: 0% (Day " + MathHelper.floor_double((curTime - rotDate)/24000L) + "/" + MathHelper.floor_double(rotTime/24000L) + ")");
 					//event.toolTip.add("Use-By: Day " + MathHelper.floor_double((rotDate + rotTime)/24000L));
 				} else
 				{

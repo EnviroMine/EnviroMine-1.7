@@ -48,11 +48,11 @@ public class ClassEnumerator
 		}
 	}
 	
-	public static void processJarfile(URL resource, String pkgname, ArrayList<Class<?>> classes)
+	public static void processJarfile(String resource, String pkgname, ArrayList<Class<?>> classes)
 	{
 		String relPath = pkgname.replace('.', '/');
-		String resPath = resource.getPath();
-		String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+		//String resPath = resource.getPath();
+		String jarPath = resource.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
 		JarFile jarFile;
 		try
 		{
@@ -102,7 +102,7 @@ public class ClassEnumerator
 		
 		if(resource.toString().startsWith("jar:"))
 		{
-			processJarfile(resource, pkgname, classes);
+			processJarfile(resource.getPath(), pkgname, classes);
 		} else
 		{
 			try

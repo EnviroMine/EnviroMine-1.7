@@ -187,7 +187,7 @@ public final class FunwayModAuthentication
 				try
 				{
 					ModContainer mod = Loader.instance().getReversedModObjectList().get(EnviroMine.instance);
-					ClassEnumerator.processJarfile(mod.getSource().toURI().toURL(), "enviromine", classes);
+					ClassEnumerator.processJarfile(mod.getSource().getAbsolutePath(), "enviromine", classes);
 				} catch(Exception e1)
 				{
 					e1.printStackTrace();

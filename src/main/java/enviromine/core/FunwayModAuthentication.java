@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.apache.logging.log4j.Level;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import enviromine.EnviroPotion;
 import enviromine.client.gui.EM_GuiAuthWarn;
 import enviromine.utils.ClassEnumerator;
@@ -177,7 +179,21 @@ public final class FunwayModAuthentication
 		if(AUTH_RESULT)
 		{
 			Package pack = EnviroPotion.class.getPackage();
-			classes = ClassEnumerator.getClassesForPackage(pack);
+			try
+			{
+				classes = ClassEnumerator.getClassesForPackage(pack);
+			} catch(Exception e)
+			{
+				try
+				{
+					ModContainer mod = Loader.instance().getReversedModObjectList().get(EnviroMine.instance);
+					ClassEnumerator.processJarfile(mod.getSource().toURI().toURL(), "enviromine", classes);
+				} catch(Exception e1)
+				{
+					e1.printStackTrace();
+					return;
+				}
+			}
 		}
 		
 		try

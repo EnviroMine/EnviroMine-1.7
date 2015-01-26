@@ -101,6 +101,8 @@ public class UpdateNotification
 			String page = getUrl("http://bit.ly/1pwDr2o", true);
 			String[] data = page.split("\\n");
 			
+			String[] rawVer = data[0].trim().split("\\.");
+			version = rawVer[0] + "." + rawVer[1] + "." + rawVer[2];
 			
 			if(!EM_Settings.updateCheck)
 			{
@@ -113,7 +115,6 @@ public class UpdateNotification
 				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
 			}*/
 			
-			version = data[0].trim();
 			String http = data[1].trim();
 			
 			int verStat = compareVersions(EM_Settings.Version, version);
@@ -149,7 +150,7 @@ public class UpdateNotification
 		{
 			if(EM_Settings.updateCheck)
 			{
-				EnviroMine.logger.log(Level.WARN, "Failed to get versions file!");
+				EnviroMine.logger.log(Level.WARN, "Failed to get/read versions file!");
 			}
 		}
 	}

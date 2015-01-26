@@ -546,9 +546,10 @@ public class EM_StatusManager
 			}
 		}
 		
-		List mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));
+		@SuppressWarnings("unchecked")
+		List<Entity> mobList = entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(entityLiving, AxisAlignedBB.getBoundingBox(entityLiving.posX - 2, entityLiving.posY - 2, entityLiving.posZ - 2, entityLiving.posX + 3, entityLiving.posY + 3, entityLiving.posZ + 3));
 		
-		Iterator iterator = mobList.iterator();
+		Iterator<Entity> iterator = mobList.iterator();
 		
 		float avgEntityTemp = 0.0F;
 		int validEntities = 0;

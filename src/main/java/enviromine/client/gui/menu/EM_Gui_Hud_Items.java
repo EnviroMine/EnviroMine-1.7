@@ -1,7 +1,5 @@
 package enviromine.client.gui.menu;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
@@ -25,6 +23,7 @@ public class EM_Gui_Hud_Items extends GuiScreen implements GuiYesNoCallback
 	}
 	//id, x, y, width, height, text
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
@@ -87,8 +86,8 @@ public class EM_Gui_Hud_Items extends GuiScreen implements GuiYesNoCallback
 	{
 		if(par1GuiButton.enabled)
 		{
-			int val = 0;
-			int where;
+			//int val = 0;
+			//int where;
 			switch(par1GuiButton.id)
 			{
 				case 800:

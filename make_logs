@@ -17,6 +17,9 @@ git log -1 --pretty=format:"%B" >> version.txt
 
 # Start writing full changelog
 echo "----- Full EnviroMine Changelog (1.7.10) -----" > full_changelog.txt
+echo "NOTE: Version numbers may be inaccurate where builds have failed" >> full_changelog.txt
+echo "" >> full_changelog.txt
+echo "[#$DRONE_BUILD_NUMBER]------------------------------------------" >> full_changelog.txt
 echo "" >> full_changelog.txt
 git log -1 --pretty=format:"%B" >> full_changelog.txt
 
@@ -27,7 +30,7 @@ for i in $(eval echo "{1..$DRONE_BUILD_NUMBER}")
 do
   let iver=$DRONE_BUILD_NUMBER-$i
   echo "" >> full_changelog.txt
-  echo "----------------------------------------------" >> full_changelog.txt
+  echo "[#$iver]------------------------------------------" >> full_changelog.txt
   echo "" >> full_changelog.txt
   git log master -1 --skip=$i --pretty=format:"%B" --first-parent >> full_changelog.txt
 done
@@ -36,6 +39,6 @@ done
 let iver=$DRONE_BUILD_NUMBER+1
 
 echo "" >> full_changelog.txt
-echo "----------------------------------------------" >> full_changelog.txt
+echo "[Older]---------------------------------------" >> full_changelog.txt
 echo "" >> full_changelog.txt
 git log master --skip=$iver --pretty=format:"%B" --first-parent >> full_changelog.txt

@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -42,6 +41,7 @@ public class PacketServerOverride implements IMessage
 	
 	public static class Handler implements IMessageHandler<PacketServerOverride, IMessage>
 	{
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		@Override
 		public IMessage onMessage(PacketServerOverride message, MessageContext ctx)
 		{
@@ -60,7 +60,7 @@ public class PacketServerOverride implements IMessage
 				try
 				{
 					ShouldOverride anno = f.getAnnotation(ShouldOverride.class);
-					Class[] clazzes;
+					Class<?>[] clazzes;
 					
 					if(anno != null)
 					{
@@ -115,7 +115,7 @@ public class PacketServerOverride implements IMessage
 							continue;
 						}
 						
-						Class clazz = clazzes[0];
+						Class<?> clazz = clazzes[0];
 						NBTTagList nbtList = tags.getTagList(f.getName(), 10);
 						ArrayList list = new ArrayList();
 						
@@ -165,7 +165,7 @@ public class PacketServerOverride implements IMessage
 		 * @param clazz
 		 * @return
 		 */
-		public Object getNBTValue(NBTTagCompound tag, String key, Class clazz)
+		public Object getNBTValue(NBTTagCompound tag, String key, Class<?> clazz)
 		{
 			if(key == null || key.length() <= 0 || !tag.hasKey(key))
 			{
@@ -206,7 +206,7 @@ public class PacketServerOverride implements IMessage
 			{
 				try
 				{
-					Constructor ctor = clazz.getConstructor(NBTTagCompound.class);
+					Constructor<?> ctor = clazz.getConstructor(NBTTagCompound.class);
 					return ctor.newInstance(tag.getCompoundTag(key));
 				} catch(Exception e)
 				{

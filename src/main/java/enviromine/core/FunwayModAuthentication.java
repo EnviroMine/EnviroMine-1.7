@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 import scala.actors.threadpool.Arrays;
@@ -157,8 +156,9 @@ public final class FunwayModAuthentication
 			short unlock3 = (short)((key >> 16) & 0xFFFF);
 			short unlock4 = (short)((key) & 0xFFFF);
 			String keyString = unlock1 + "-" + unlock2 + "-" + unlock3 + "-" + unlock4;*/
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			return digest.digest("EM_AUTH_KEY".getBytes("UTF-8"));
+			//MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			//return digest.digest("EM_AUTH_KEY".getBytes("UTF-8"));
+			return "EM_AUTH_KEY".getBytes("UTF-8");
 		} catch(Exception e)
 		{
 			return null;

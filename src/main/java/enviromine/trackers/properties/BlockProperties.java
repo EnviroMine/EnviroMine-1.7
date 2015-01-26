@@ -214,6 +214,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void GenDefaults()
 	{
+		@SuppressWarnings("unchecked")
 		Iterator<Block> iterator = Block.blockRegistry.iterator();
 		
 		while(iterator.hasNext())

@@ -38,11 +38,11 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 			try
 			{
 				ShouldOverride anno = f.getAnnotation(ShouldOverride.class);
-				Class[] clazzes;
+				//Class<?>[] clazzes;
 				
 				if(anno != null)
 				{
-					clazzes = anno.value();
+					//clazzes = anno.value();
 				} else
 				{
 					continue;
@@ -60,9 +60,9 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 				
 				if(f.getType() == HashMap.class)
 				{
-					HashMap map = (HashMap)f.get(null);
-					Set keys = map.keySet();
-					Iterator iterator = keys.iterator();
+					HashMap<?,?> map = (HashMap<?,?>)f.get(null);
+					Set<?> keys = map.keySet();
+					Iterator<?> iterator = keys.iterator();
 					NBTTagList nbtList = new NBTTagList();
 					
 					while(iterator.hasNext())
@@ -78,8 +78,8 @@ public class PacketAutoOverride extends PacketServerOverride implements IMessage
 					nTags.setTag(f.getName(), nbtList);
 				} else if(f.getType() == ArrayList.class)
 				{
-					ArrayList list = (ArrayList)f.get(null);
-					Iterator iterator = list.iterator();
+					ArrayList<?> list = (ArrayList<?>)f.get(null);
+					Iterator<?> iterator = list.iterator();
 					NBTTagList nbtList = new NBTTagList();
 					
 					while(iterator.hasNext())

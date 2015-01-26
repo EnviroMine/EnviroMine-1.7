@@ -171,12 +171,13 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void GenDefaults()
 	{
-		Iterator iterator = EntityList.IDtoClassMapping.keySet().iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Integer> iterator = EntityList.IDtoClassMapping.keySet().iterator();
 		
 		while(iterator.hasNext())
 		{
 			int eID = (Integer)iterator.next();
-			Class clazz = (Class)EntityList.IDtoClassMapping.get(eID);
+			Class<?> clazz = (Class<?>)EntityList.IDtoClassMapping.get(eID);
 			
 			if(clazz == null || !EntityLivingBase.class.isAssignableFrom(clazz))
 			{

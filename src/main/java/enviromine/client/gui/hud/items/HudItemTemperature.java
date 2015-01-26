@@ -13,7 +13,6 @@ import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EM_Settings;
 import enviromine.utils.Alignment;
-import enviromine.utils.EnviroUtils;
 import enviromine.utils.RenderAssist;
 
 public class HudItemTemperature extends HudItem
@@ -137,8 +136,8 @@ public class HudItemTemperature extends HudItem
 			if(this.rotated)
 			{
 				int angle = -90;
-				int translateX = 0;
-				int translateY = 0;
+				//int translateX = 0;
+				//int translateY = 0;
 				GL11.glTranslatef(posX, posY, 0);
 				GL11.glRotatef(angle, 0, 0, 1);
 				GL11.glTranslatef(-posX + 6, -posY - 8 + (getWidth() / 2), 0);

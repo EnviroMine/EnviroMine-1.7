@@ -3,7 +3,6 @@ package enviromine.world.chunk;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
@@ -107,7 +106,8 @@ public class WorldChunkManagerCaves extends WorldChunkManager
      * Finds a valid position within a range, that is in one of the listed biomes. Searches {par1,par2} +-par3 blocks.
      * Strongly favors positive y positions.
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public ChunkPosition findBiomePosition(int par1, int par2, int par3, List par4List, Random par5Random)
     {
         return par4List.contains(this.biomeToUse) ? new ChunkPosition(par1 - par3 + par5Random.nextInt(par3 * 2 + 1), 0, par2 - par3 + par5Random.nextInt(par3 * 2 + 1)) : null;
@@ -116,7 +116,8 @@ public class WorldChunkManagerCaves extends WorldChunkManager
     /**
      * checks given Chunk's Biomes against List of allowed ones
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean areBiomesViable(int par1, int par2, int par3, List par4List)
     {
         return par4List.contains(this.biomeToUse);

@@ -69,6 +69,7 @@ public class ModIdentification
 				clazz = (Class)obj;
 			}
 			
+			@SuppressWarnings("unchecked")
 			EntityRegistration er = EntityRegistry.instance().lookupModSpawn((Class<? extends Entity>)clazz, true);
 			
 			if(er == null)

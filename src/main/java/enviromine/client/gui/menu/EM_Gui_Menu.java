@@ -1,12 +1,7 @@
 package enviromine.client.gui.menu;
 
 import java.awt.Desktop;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.logging.log4j.Level;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,8 +9,8 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
+import org.apache.logging.log4j.Level;
 import enviromine.client.gui.UpdateNotification;
-import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.menu.config.EM_ConfigMenu;
 import enviromine.client.gui.menu.update.NewsPage;
 import enviromine.core.EnviroMine;
@@ -30,6 +25,7 @@ public class EM_Gui_Menu extends GuiScreen implements GuiYesNoCallback
 		this.parentGuiScreen = par1GuiScreen;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{

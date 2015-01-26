@@ -117,11 +117,12 @@ public class EM_ClientProxy extends EM_CommonProxy
 	@SideOnly(Side.CLIENT)
 	public static void armoredCamelRenderers()
 	{
-		Iterator tmp = Item.itemRegistry.iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Item> tmp = Item.itemRegistry.iterator();
 		
 		while (tmp.hasNext())
 		{
-			Object itemArmor = tmp.next();
+			Item itemArmor = tmp.next();
 			if (itemArmor instanceof ItemArmor && ((ItemArmor)itemArmor).armorType == 1)
 			{
 				String name = Item.itemRegistry.getNameForObject(itemArmor);

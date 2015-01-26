@@ -1,6 +1,5 @@
 package enviromine.world.biomes;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;

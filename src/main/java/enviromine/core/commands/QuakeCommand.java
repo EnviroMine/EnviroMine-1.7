@@ -3,14 +3,11 @@ package enviromine.core.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-
 import org.apache.logging.log4j.Level;
-
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.world.Earthquake;

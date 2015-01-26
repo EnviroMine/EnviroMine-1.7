@@ -163,6 +163,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void GenDefaults()
 	{
+		@SuppressWarnings("unchecked")
 		Iterator<Item> iterator = Item.itemRegistry.iterator();
 		
 		while(iterator.hasNext())

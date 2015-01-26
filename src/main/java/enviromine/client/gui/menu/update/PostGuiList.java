@@ -1,12 +1,8 @@
 package enviromine.client.gui.menu.update;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import org.lwjgl.input.Mouse;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -14,9 +10,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-
+import org.lwjgl.input.Mouse;
 import com.google.common.collect.Lists;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.UpdateNotification;
@@ -26,9 +21,9 @@ import enviromine.utils.RenderAssist;
 public class PostGuiList extends GuiListExtended
 {
 	
-	private final List LineList = Lists.newArrayList();
-	private WordPressPost lastPost;
-	private WordPressPost curPost;
+	private final List<Row> LineList = Lists.newArrayList();
+	//private WordPressPost lastPost;
+	//private WordPressPost curPost;
 	/** The buttonID of the button used to scroll up */
 	private int scrollUpButtonID;
 	/** The buttonID of the button used to scroll down */
@@ -102,12 +97,13 @@ public class PostGuiList extends GuiListExtended
 	{
 		String[] changlog = WordPressPost.changeLog.split("\n");
 		
-		List lineBreaks = Lists.newArrayList();
-		List wordWrap = Lists.newArrayList();
+		List<String> lineBreaks = Lists.newArrayList();
+		List<String> wordWrap = Lists.newArrayList();
 		
 		for(String line : changlog)
 		{
-			List lines = mc.fontRenderer.listFormattedStringToWidth(line, this.width - 64);
+			@SuppressWarnings("unchecked")
+			List<String> lines = mc.fontRenderer.listFormattedStringToWidth(line, this.width - 64);
 			
 			wordWrap.addAll(lines);
 			
@@ -124,13 +120,14 @@ public class PostGuiList extends GuiListExtended
 	{
 		for(WordPressPost post : WordPressPost.Posts)
 		{
-			addLine(EnumChatFormatting.BOLD.UNDERLINE + post.getTitle(), textType.TITLE);
+			addLine(EnumChatFormatting.BOLD + "" + EnumChatFormatting.UNDERLINE + post.getTitle(), textType.TITLE);
 			addBlankLines(1);
 			
 			addLine("Posted: " + EnumChatFormatting.ITALIC + post.getPubDate(), textType.DATE);
 			addBlankLines(1);
 			
-			List wordWrap = mc.fontRenderer.listFormattedStringToWidth(post.getDescription(), this.width - 64);
+			@SuppressWarnings("unchecked")
+			List<String> wordWrap = mc.fontRenderer.listFormattedStringToWidth(post.getDescription(), this.width - 64);
 			
 			addWordWrap(wordWrap);
 			
@@ -145,10 +142,10 @@ public class PostGuiList extends GuiListExtended
 	}
 	
 	
-	private void addWordWrap(List wordWrap)
+	private void addWordWrap(List<String> wordWrap)
 	{
 		textType type;
-		Iterator wrapped = wordWrap.iterator();
+		Iterator<String> wrapped = wordWrap.iterator();
 		while(wrapped.hasNext())
 		{
 			Object line = wrapped.next();
@@ -161,14 +158,14 @@ public class PostGuiList extends GuiListExtended
 	 * Pass String and will wordwrap it to screen and add to list to be drawn
 	 * @param wordWrap
 	 */
-	private void addWordWrap(List wordWrap, List LineBreaks)
+	private void addWordWrap(List<String> wordWrap, List<String> LineBreaks)
 	{
 		textType type;
 		textType lasttype =  textType.DEFAULT;
 		
-		Iterator wrapped = wordWrap.iterator();
+		Iterator<String> wrapped = wordWrap.iterator();
 		
-		Iterator breaks = LineBreaks.iterator();
+		Iterator<String> breaks = LineBreaks.iterator();
 		while(wrapped.hasNext())
 		{
 			Object line = wrapped.next();
@@ -348,8 +345,8 @@ public class PostGuiList extends GuiListExtended
 	@SideOnly(Side.CLIENT)
 	public static class Row implements GuiListExtended.IGuiListEntry
 	{
-		private WordPressPost post;
-		private WordPressPost lastPost;
+		//private WordPressPost post;
+		//private WordPressPost lastPost;
 		Minecraft mc = Minecraft.getMinecraft();
 		public static int LastYpos = 0;
 		private String line;

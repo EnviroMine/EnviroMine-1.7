@@ -31,6 +31,7 @@ public class EM_VillageMineshaft extends StructureVillagePieces.Village
 		this.boundingBox = par4StructureBoundingBox;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static EM_VillageMineshaft buildComponent(StructureVillagePieces.Start par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
 	{
 		StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par3, par4, par5, 0, 0, 0, 4, 4, 4, par6);

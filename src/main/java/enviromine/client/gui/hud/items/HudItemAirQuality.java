@@ -129,8 +129,8 @@ public class HudItemAirQuality extends HudItem
 			if(this.rotated)
 			{
 				int angle = -90;
-				int translateX = 0;
-				int translateY = 0;
+				//int translateX = 0;
+				//int translateY = 0;
 				GL11.glTranslatef(posX, posY, 0);
 				GL11.glRotatef(angle, 0, 0, 1);
 				GL11.glTranslatef(-posX + 6, -posY - 8 + (getWidth() / 2), 0);

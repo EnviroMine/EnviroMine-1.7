@@ -150,6 +150,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public void GenDefaults()
 	{
+		@SuppressWarnings("unchecked")
 		Iterator<Item> itemList = Item.itemRegistry.iterator();
 		
 		while(itemList.hasNext())

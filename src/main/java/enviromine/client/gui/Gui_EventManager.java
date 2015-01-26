@@ -43,6 +43,7 @@ public class Gui_EventManager
 	GuiButton enviromine;
 	
 	// Captures the initiation of vanilla menus to render new buttons
+	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public void renderevent(InitGuiEvent.Post event)
 	{

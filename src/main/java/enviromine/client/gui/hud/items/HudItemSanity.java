@@ -4,16 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
 import org.lwjgl.opengl.GL11;
-
 import enviromine.client.gui.Gui_EventManager;
 import enviromine.client.gui.UI_Settings;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EM_Settings;
 import enviromine.utils.Alignment;
-import enviromine.utils.EnviroUtils;
 import enviromine.utils.RenderAssist;
 
 public class HudItemSanity extends HudItem	{
@@ -124,8 +121,8 @@ public class HudItemSanity extends HudItem	{
 			if(this.rotated)
 			{
 				int angle = -90;
-				int translateX = 0;
-				int translateY = 0;
+				//int translateX = 0;
+				//int translateY = 0;
 				GL11.glTranslatef(posX,posY, 0);
 				GL11.glRotatef( angle, 0, 0, 1 );
 				GL11.glTranslatef(-posX + 6,-posY - 8 + (getWidth() /2), 0);

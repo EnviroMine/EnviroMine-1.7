@@ -8,7 +8,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.StatCollector;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,8 +129,9 @@ public class EnviroCommand extends CommandBase
     /**
      * Adds the strings available in this command to the given list of tab completion options.
      */
+	@SuppressWarnings("unchecked")
 	@Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] strings)
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] strings)
     {
         if(strings.length == 1)
         {
@@ -144,7 +144,7 @@ public class EnviroCommand extends CommandBase
         	return getListOfStringsMatchingLastWord(strings, new String[]{temp, sanity, water, air});
         } else
         {
-        	return new ArrayList();
+        	return new ArrayList<String>();
         }
     }
 }

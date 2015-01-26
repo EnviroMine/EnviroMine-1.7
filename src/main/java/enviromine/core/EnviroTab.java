@@ -31,7 +31,8 @@ public class EnviroTab extends CreativeTabs
     /**
      * only shows items which have tabToDisplayOn == this
      */
-    @SideOnly(Side.CLIENT)
+    @SuppressWarnings({"unchecked", "rawtypes"})
+	@SideOnly(Side.CLIENT)
     public void displayAllReleventItems(List list)
     {
         super.displayAllReleventItems(list);

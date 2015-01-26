@@ -16,6 +16,7 @@ public class EM_GuiAuthWarn extends GuiScreen
 		parentScreen = parent;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void initGui()
 	{
         this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, I18n.format("gui.done", new Object[0])));

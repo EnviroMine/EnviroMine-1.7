@@ -416,17 +416,17 @@ public class EM_ConfigHandler
 		// Check to make sure this is a Data File Before Editing
 		File configFile = new File(customPath + "MyCustom.cfg");
 		
-		String canonicalName = data.getClass().getCanonicalName();
-		String classname;
+		//String canonicalName = data.getClass().getCanonicalName();
+		//String classname;
 		
-		if (canonicalName == null) {
+		/*if (canonicalName == null) {
 			classname = "Vanilla";
 		} else
 		{
 			String[] classpath = canonicalName.toLowerCase().split("\\.");
 			if (classpath[0].equalsIgnoreCase("net")) classname = "Vanilla";
 			else classname = classpath[0];
-		}
+		}*/
 		
 		Configuration config;
 		try
@@ -458,7 +458,7 @@ public class EM_ConfigHandler
 				returnValue = "Removed";
 			} else*/
 			{
-				int metadata = (Integer)data[1];
+				//int metadata = (Integer)data[1];
 				//BlockProperties.SaveProperty(config, nameULCat, (String)data[2], metadata, (String)data[2], metadata, 0, false, 0.00, 0.00, 0.00, "loose", false, false);
 				BlockProperties.base.generateEmpty(config, Block.blockRegistry.getObject((String)data[2]));
 				returnValue = "Saved";

@@ -12,7 +12,6 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -114,7 +113,8 @@ public class Hallucination
 	private List<EntityPlayer> getPlayerList(EntityLivingBase entity)
 	{
 		List<EntityPlayer> players = new ArrayList<EntityPlayer>();
-		Iterator ite = entity.worldObj.loadedEntityList.iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Entity> ite = entity.worldObj.loadedEntityList.iterator();
 		
 		while (ite.hasNext())
 		{

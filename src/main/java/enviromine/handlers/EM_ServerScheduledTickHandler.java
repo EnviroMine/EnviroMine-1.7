@@ -42,7 +42,7 @@ public class EM_ServerScheduledTickHandler
 	}
 	
 	// Used for to load up SaveContoler for clients side GUI settings
-    private boolean ticked = false;
+    //private boolean ticked = false;
     private boolean firstload = true;
 
     @SubscribeEvent

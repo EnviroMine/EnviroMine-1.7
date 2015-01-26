@@ -137,9 +137,10 @@ public class HandlingTheThing
 	
 	public static boolean hasWitnesses(EntityPlayer victim)
 	{
-		List players = victim.worldObj.getEntitiesWithinAABB(EntityPlayer.class, victim.boundingBox.expand(128, 128, 128));
+		@SuppressWarnings("unchecked")
+		List<EntityPlayer> players = victim.worldObj.getEntitiesWithinAABB(EntityPlayer.class, victim.boundingBox.expand(128, 128, 128));
 		
-		Iterator iterator = players.iterator();
+		Iterator<EntityPlayer> iterator = players.iterator();
 		
 		while(iterator.hasNext())
 		{

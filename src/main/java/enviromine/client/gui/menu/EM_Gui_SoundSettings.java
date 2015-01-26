@@ -1,13 +1,12 @@
 package enviromine.client.gui.menu;
 
-import java.math.BigDecimal;
-import cpw.mods.fml.client.config.GuiSlider;
-import enviromine.client.gui.SaveController;
-import enviromine.client.gui.UI_Settings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
+import cpw.mods.fml.client.config.GuiSlider;
+import enviromine.client.gui.SaveController;
+import enviromine.client.gui.UI_Settings;
 
 public class EM_Gui_SoundSettings extends GuiScreen
 {
@@ -19,6 +18,7 @@ public class EM_Gui_SoundSettings extends GuiScreen
 		this.parentGuiScreen = par1GuiScreen;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{

@@ -5,12 +5,9 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import enviromine.client.gui.UI_Settings;
-import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.OverlayHandler;
 import enviromine.handlers.ObjectHandler;
-import enviromine.utils.EnviroUtils;
 import enviromine.utils.RenderAssist;
-
 
 public class GasMaskHud 
 {

@@ -17,17 +17,13 @@ public class EM_Gui_General extends GuiScreen
 		this.parentGuiScreen = par1GuiScreen;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
-		
 		this.buttonList.add(new GuiButton(150, this.width / 2 - 160, this.height / 6 + 96 - 6, 160, 20, StatCollector.translateToLocal("options.enviromine.physics") + ":" +EM_Settings.enablePhysics));
 		
-		
-
-		
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, StatCollector.translateToLocal("gui.back")));
-		
 	}
 	
 	@Override

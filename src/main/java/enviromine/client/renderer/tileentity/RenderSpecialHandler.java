@@ -9,9 +9,12 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.tiles.*;
 import enviromine.handlers.ObjectHandler;
 
+@SideOnly(Side.CLIENT)
 public class RenderSpecialHandler implements ISimpleBlockRenderingHandler
 {
 	static HashMap<Block, TileEntity> blockToTile = new HashMap<Block, TileEntity>();

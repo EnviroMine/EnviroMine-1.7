@@ -6,12 +6,15 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.blocks.BlockGas;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.ObjectHandler;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+@SideOnly(Side.CLIENT)
 public class RenderGasHandler implements ISimpleBlockRenderingHandler
 {
 	private IIcon icon;

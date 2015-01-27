@@ -1743,6 +1743,7 @@ public class EM_EventManager extends LockedClass
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onGuiOpen(GuiOpenEvent event)
 	{
 		if(event.gui instanceof GuiMainMenu && EM_GuiAuthWarn.shouldWarn)// && !EM_Settings.Version.equals("FWG_" + "EM_VER"))

@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -15,6 +16,7 @@ import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.core.EnviroMine;
 
+@SideOnly(Side.CLIENT)
 public class SaveController {
 	
 	/**

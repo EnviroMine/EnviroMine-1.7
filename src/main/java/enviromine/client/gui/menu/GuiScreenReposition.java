@@ -2,14 +2,15 @@ package enviromine.client.gui.menu;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.SaveController;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.utils.Alignment;
 
+@SideOnly(Side.CLIENT)
 public class GuiScreenReposition extends GuiScreen {
 	protected GuiScreen parentScreen;
 	protected HudItem hudItem;

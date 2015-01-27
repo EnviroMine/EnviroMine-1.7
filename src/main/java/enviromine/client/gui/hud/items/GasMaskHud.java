@@ -1,5 +1,7 @@
 package enviromine.client.gui.hud.items;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
@@ -9,6 +11,7 @@ import enviromine.client.gui.hud.OverlayHandler;
 import enviromine.handlers.ObjectHandler;
 import enviromine.utils.RenderAssist;
 
+@SideOnly(Side.CLIENT)
 public class GasMaskHud 
 {
 	public static OverlayHandler maskBreathing = new OverlayHandler(1, true).setPulseVar(111, 200, 0, 2, 4);

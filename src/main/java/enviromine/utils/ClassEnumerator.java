@@ -13,13 +13,7 @@ public class ClassEnumerator
 {
 	public static Class<?> loadClass(String className) throws Exception
 	{
-		try
-		{
-			return Class.forName(className);
-		} catch(Exception e)
-		{
-			throw new RuntimeException("Unexpected " + e.getClass().getSimpleName() + " loading class '" + className + "'");
-		}
+		return Class.forName(className);
 	}
 	
 	public static void processDirectory(File directory, String pkgname, ArrayList<Class<?>> classes)
@@ -38,6 +32,7 @@ public class ClassEnumerator
 			}
 			if(className != null)
 			{
+				System.out.println("Loading class: " + className);
 				try
 				{
 					classes.add(loadClass(className));
@@ -79,6 +74,7 @@ public class ClassEnumerator
 			}
 			if(className != null)
 			{
+				System.out.println("Loading class: " + className);
 				try
 				{
 					classes.add(loadClass(className));

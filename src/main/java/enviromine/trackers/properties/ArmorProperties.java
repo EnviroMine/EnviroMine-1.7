@@ -2,13 +2,17 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.Iterator;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -63,6 +67,27 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		this.allowCamelPack = allowCamelPack;
 	}
 
+	/**
+	 * <b>hasProperty(ItemStack stack)</b><bR><br>
+	 * Checks if ArmorProperty contains custom properties from ItemStack.
+	 * @param stack
+	 * @return true if has custom properties
+	 */
+	public boolean hasProperty(ItemStack stack)
+	{
+		return EM_Settings.armorProperties.containsKey(Item.itemRegistry.getNameForObject(stack.getItem()));
+	}
+	/** 
+	 * 	<b>getProperty(ItemStack stack)</b><bR><br>
+	 * Gets ItemProperty from ItemStack.
+	 * @param stack
+	 * @return ItemProperties
+	 */
+	public ArmorProperties getProperty(ItemStack stack)
+	{
+		return EM_Settings.armorProperties.get(Item.itemRegistry.getNameForObject(stack.getItem()));
+	}
+	
 	@Override
 	public NBTTagCompound WriteToNBT()
 	{

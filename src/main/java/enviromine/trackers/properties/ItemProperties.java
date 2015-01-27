@@ -2,7 +2,9 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.Iterator;
+
 import org.apache.logging.log4j.Level;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFlower;
@@ -12,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 import enviromine.core.EM_ConfigHandler;
@@ -74,7 +77,36 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		
 		this.effTempCap = effTempCap;
 	}
-
+	/**
+	 * <b>hasProperty(ItemStack stack)</b><bR><br>
+	 * Checks if ItemProperty contains custom properties from ItemStack.
+	 * @param stack
+	 * @return true if has custom properties
+	 */
+	public boolean hasProperty(ItemStack stack)
+	{
+		return EM_Settings.itemProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage()) || EM_Settings.itemProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem()));
+	}
+	/** 
+	 * 	<b>getProperty(ItemStack stack)</b><bR><br>
+	 * Gets ItemProperty from ItemStack.
+	 * @param stack
+	 * @return ItemProperties
+	 */
+	public ItemProperties getProperty(ItemStack stack)
+	{
+		ItemProperties itemProps;
+		
+		if(EM_Settings.itemProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage()))
+		{
+			itemProps = EM_Settings.itemProperties.get("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage());
+		} else
+		{
+			itemProps = EM_Settings.itemProperties.get("" + Item.itemRegistry.getNameForObject(stack.getItem()));
+		}
+		return itemProps;
+	}
+	
 	@Override
 	public NBTTagCompound WriteToNBT()
 	{

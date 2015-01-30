@@ -34,7 +34,7 @@ public class BlockFireTorch extends BlockTorch
 	@Override
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
-		return Item.getItemFromBlock(Blocks.torch);
+		return this.isLit? Item.getItemFromBlock(Blocks.torch) : Items.stick;
     }
 
     /**

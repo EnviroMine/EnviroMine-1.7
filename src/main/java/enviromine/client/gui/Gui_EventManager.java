@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
@@ -130,23 +129,6 @@ public class Gui_EventManager
 		}
 		
 		HUDRegistry.checkForResize();
-		
-		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
-		{
-			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getCommandSenderName());
-			
-			if(player != null)
-			{
-				tracker.trackedEntity = player;
-				tracker.isDisabled = false;
-				tracker.loadNBTTags();
-			} else
-			{
-				tracker.resetData();
-				EM_StatusManager.saveAndRemoveTracker(tracker);
-				tracker = null;
-			}
-		}
 		
 		if(tracker == null)
 		{

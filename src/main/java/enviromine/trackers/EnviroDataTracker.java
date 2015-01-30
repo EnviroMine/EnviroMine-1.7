@@ -52,7 +52,6 @@ public class EnviroDataTracker
 	public int attackDelay = 1;
 	public int curAttackTime = 0;
 	public boolean isDisabled = false;
-	public int itemUse = 0;
 	
 	public int frostbiteLevel = 0;
 	public boolean frostIrreversible = false;
@@ -100,24 +99,7 @@ public class EnviroDataTracker
 		
 		if(trackedEntity.isDead)
 		{
-			if(trackedEntity instanceof EntityPlayer)
-			{
-				EntityPlayer player = EM_StatusManager.findPlayer(trackedEntity.getCommandSenderName());
-				
-				if(player == null)
-				{
-					EM_StatusManager.saveAndRemoveTracker(this);
-					return;
-				} else
-				{
-					trackedEntity = player;
-					this.loadNBTTags();
-				}
-			} else
-			{
-				EM_StatusManager.removeTracker(this);
-				return;
-			}
+			return;
 		}
 		
 		if(!(trackedEntity instanceof EntityPlayer) && !EM_Settings.trackNonPlayer || (EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
@@ -508,8 +490,6 @@ public class EnviroDataTracker
 			sanity = prevSanity;
 		}
 		
-		
-		//TODO Added in Dimension overrides for Trackers
 		DimensionProperties dimensionProp = null;
 		
 		if(EM_Settings.dimensionProperties.containsKey(trackedEntity.worldObj.provider.dimensionId))
@@ -680,17 +660,6 @@ public class EnviroDataTracker
 		{
 			sanity = tags.getFloat("ENVIRO_SAN");
 		}
-	}
-	
-	public int getAndIncrementItemUse()
-	{
-		itemUse += 1;
-		return itemUse;
-	}
-	
-	public void resetItemUse()
-	{
-		itemUse = 0;
 	}
 	
 	public void resetData()

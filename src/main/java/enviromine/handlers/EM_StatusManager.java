@@ -152,18 +152,6 @@ public class EM_StatusManager
 	
 	public static EnviroDataTracker lookupTrackerFromUsername(String username)
 	{
-		/*EntityLivingBase entity = null;
-		
-		if (FMLCommonHandler.instance().getSide().isClient()) {
-			entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
-		} else {
-			World[] worlds = MinecraftServer.getServer().worldServers;
-			for (int i = 0; i < worlds.length; i++) {
-				entity = worlds[i].getPlayerEntityByName(username);
-				if (entity != null) { break; }
-			}
-		}
-		return lookupTracker(entity);*/
 		if(trackerList.containsKey(username))
 		{
 			return trackerList.get(username);

@@ -20,7 +20,7 @@ public class EM_ServerScheduledTickHandler
 	@SubscribeEvent
 	public void tickEnd(TickEvent.WorldTickEvent tick)
 	{
-		if(tick.side.isServer())
+		if(tick.side.isServer() && tick.phase == TickEvent.Phase.END)
 		{
 			GasBuffer.update();
 			
@@ -33,7 +33,7 @@ public class EM_ServerScheduledTickHandler
 			
 			Earthquake.updateEarthquakes();
 			
-			if(EM_Settings.enableQuakes && MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L) != Earthquake.lastTickDay)
+			if(EM_Settings.enableQuakes && MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L) != Earthquake.lastTickDay && tick.world.playerEntities.size() > 0)
 			{
 				Earthquake.lastTickDay = MathHelper.floor_double(tick.world.getTotalWorldTime()/24000L);
 				Earthquake.TickDay(tick.world);

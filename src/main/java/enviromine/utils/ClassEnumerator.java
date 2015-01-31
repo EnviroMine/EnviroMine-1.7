@@ -32,7 +32,6 @@ public class ClassEnumerator
 			}
 			if(className != null)
 			{
-				System.out.println("Loading class: " + className);
 				try
 				{
 					classes.add(loadClass(className));
@@ -74,7 +73,6 @@ public class ClassEnumerator
 			}
 			if(className != null)
 			{
-				System.out.println("Loading class: " + className);
 				try
 				{
 					classes.add(loadClass(className));

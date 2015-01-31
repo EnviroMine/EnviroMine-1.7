@@ -102,6 +102,9 @@ public class CamelPackRefillHandler implements IRecipe
 			}
 		}
 		
+		// Temporarily disabling buckets
+		buckets.clear();
+		
 		//Double checking everything is good.
 		if ((packFillCur == packFillMax && !emptyPack) || !hasPack || pack == null)
 		{

@@ -166,7 +166,8 @@ public class EM_EventManager extends LockedClass
 			
 			if(EnviroDataTracker.isLegalType((EntityLivingBase)event.entity) && (event.entity instanceof EntityPlayer || EM_Settings.trackNonPlayer) && allowTracker)
 			{
-				boolean hasOld = EM_StatusManager.lookupTracker((EntityLivingBase)event.entity) != null;
+				EnviroDataTracker tracker = EM_StatusManager.lookupTracker((EntityLivingBase)event.entity);
+				boolean hasOld = tracker != null && !tracker.isDisabled;
 				
 				if(!hasOld)
 				{

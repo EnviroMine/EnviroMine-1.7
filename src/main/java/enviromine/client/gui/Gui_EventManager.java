@@ -101,10 +101,8 @@ public class Gui_EventManager
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent.Post event)
 	{
-		
 		if(event.type != ElementType.HELMET || event.isCancelable())
 		{
-			
 			return;
 		}
 		
@@ -134,7 +132,7 @@ public class Gui_EventManager
 		{
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
-				//				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
+				//Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
 			}
 		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))

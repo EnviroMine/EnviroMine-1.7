@@ -229,6 +229,10 @@ public class EM_EventManager extends LockedClass
 			{
 				tracker.resetData();
 				EM_StatusManager.saveTracker(tracker);
+			} else if(event.wasDeath)
+			{
+				tracker.ClampSafeRange();
+				EM_StatusManager.saveTracker(tracker);
 			}
 			
 			tracker.loadNBTTags();

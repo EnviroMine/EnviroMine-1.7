@@ -669,4 +669,12 @@ public class EnviroDataTracker
 		hydration = 100F;
 		sanity = 100F;
 	}
+	
+	public void ClampSafeRange()
+	{
+		airQuality = MathHelper.clamp_float(airQuality, 25F, 100F);
+		bodyTemp = MathHelper.clamp_float(bodyTemp, 35F, 39F);
+		hydration = MathHelper.clamp_float(hydration, 25F, 100F);
+		sanity = MathHelper.clamp_float(sanity, 50F, 100F);
+	}
 }

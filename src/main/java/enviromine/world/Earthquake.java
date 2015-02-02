@@ -450,7 +450,7 @@ public class Earthquake
 	{
 		if(world.rand.nextInt(2) == 0 && world.playerEntities.size() > 0)
 		{
-			Entity player = (Entity)world.getLoadedEntityList().get(world.rand.nextInt(world.playerEntities.size()));
+			Entity player = (Entity)world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 			
 			int posX = MathHelper.floor_double(player.posX) + (world.rand.nextInt(1024) - 512);
 			int posZ = MathHelper.floor_double(player.posZ) + (world.rand.nextInt(1024) - 512);
@@ -469,7 +469,7 @@ public class Earthquake
 				}
 				
 				new Earthquake(world, posX, posZ, 32 + world.rand.nextInt(128-32), 4 + world.rand.nextInt(32-4), mode);
-				EnviroMine.logger.log(Level.INFO, "Earthquake at (" + posX + "," + posZ + ")");
+				EnviroMine.logger.log(Level.INFO, "Earthquake at (" + posX + "," + posZ + ") with type " + mode);
 			}
 		}
 	}

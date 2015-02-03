@@ -131,7 +131,7 @@ public class EM_EventManager extends LockedClass
 			}
 		}
 		
-		if(dProps != null && !dProps.physics)
+		if((dProps != null && !dProps.physics) || !EM_Settings.enablePhysics)
 		{
 			chunkPhys = false;
 		}
@@ -160,7 +160,6 @@ public class EM_EventManager extends LockedClass
 		
 		if(event.entity instanceof EntityLivingBase)
 		{
-			
 			// Ensure that only one set of trackers are made per Minecraft instance.
 			boolean allowTracker = !(event.world.isRemote && EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning());
 			
@@ -222,7 +221,7 @@ public class EM_EventManager extends LockedClass
 	{
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.original);
 		
-		if(tracker != null)
+		if(tracker != null && !tracker.isDisabled)
 		{
 			tracker.trackedEntity = event.entityPlayer;
 			
@@ -1127,13 +1126,13 @@ public class EM_EventManager extends LockedClass
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.entityLiving);
 		
-		if(tracker == null)
+		if(tracker == null || tracker.isDisabled)
 		{
 			if((!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN()) && (EM_Settings.enableAirQ || EM_Settings.enableBodyTemp || EM_Settings.enableHydrate || EM_Settings.enableSanity))
 			{
 				if(event.entityLiving instanceof EntityPlayer || (EM_Settings.trackNonPlayer && EnviroDataTracker.isLegalType(event.entityLiving)))
 				{
-					EnviroMine.logger.log(Level.ERROR, "Server lost track of player! Attempting to re-sync...");
+					EnviroMine.logger.log(Level.WARN, "Server lost track of player! Attempting to re-sync...");
 					EnviroDataTracker emTrack = new EnviroDataTracker((EntityLivingBase)event.entity);
 					EM_StatusManager.addToManager(emTrack);
 					emTrack.loadNBTTags();

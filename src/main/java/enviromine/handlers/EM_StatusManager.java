@@ -103,17 +103,6 @@ public class EM_StatusManager
 			return;
 		}
 		
-		// String packets Depreciated!
-		/*String dataString = "";
-		
-		if(tracker.trackedEntity instanceof EntityPlayer)
-		{
-			dataString = ("ID:0," + tracker.trackedEntity.getCommandSenderName() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
-		} else
-		{
-			return;
-			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
-		}*/
 		tracker.fixFloatinfPointErrors(); // Shortens data as much as possible before sending
 		NBTTagCompound pData = new NBTTagCompound();
 		pData.setInteger("id", 0);

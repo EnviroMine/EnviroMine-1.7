@@ -73,8 +73,10 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
@@ -129,7 +131,7 @@ public class EM_EventManager extends LockedClass
 			}
 		}
 		
-		if(dProps != null && !dProps.physics)
+		if((dProps != null && !dProps.physics) || !EM_Settings.enablePhysics)
 		{
 			chunkPhys = false;
 		}
@@ -158,24 +160,13 @@ public class EM_EventManager extends LockedClass
 		
 		if(event.entity instanceof EntityLivingBase)
 		{
-			
 			// Ensure that only one set of trackers are made per Minecraft instance.
 			boolean allowTracker = !(event.world.isRemote && EnviroMine.proxy.isClient() && Minecraft.getMinecraft().isIntegratedServerRunning());
 			
 			if(EnviroDataTracker.isLegalType((EntityLivingBase)event.entity) && (event.entity instanceof EntityPlayer || EM_Settings.trackNonPlayer) && allowTracker)
 			{
-				boolean hasOld = false;
-				
-				if(event.entity instanceof EntityPlayer)
-				{
-					EnviroDataTracker oldTrack = EM_StatusManager.lookupTrackerFromUsername(event.entity.getCommandSenderName());
-					if(oldTrack != null)
-					{
-						oldTrack.trackedEntity = (EntityLivingBase)event.entity;
-						oldTrack.loadNBTTags();
-						hasOld = true;
-					}
-				}
+				EnviroDataTracker tracker = EM_StatusManager.lookupTracker((EntityLivingBase)event.entity);
+				boolean hasOld = tracker != null && !tracker.isDisabled;
 				
 				if(!hasOld)
 				{
@@ -222,6 +213,35 @@ public class EM_EventManager extends LockedClass
 					return;
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerClone(PlayerEvent.Clone event)
+	{
+		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.original);
+		
+		if(tracker != null && !tracker.isDisabled)
+		{
+			tracker.trackedEntity = event.entityPlayer;
+			
+			if(event.wasDeath && !EM_Settings.keepStatus)
+			{
+				tracker.resetData();
+				EM_StatusManager.saveTracker(tracker);
+			} else if(event.wasDeath)
+			{
+				tracker.ClampSafeRange();
+				EM_StatusManager.saveTracker(tracker);
+			}
+			
+			tracker.loadNBTTags();
+		}
+		
+		if(event.wasDeath)
+		{
+			doDeath(event.entityPlayer);
+			doDeath(event.original);
 		}
 	}
 	
@@ -289,32 +309,6 @@ public class EM_EventManager extends LockedClass
 			if(entityLiving.getEntityData().hasKey("EM_PITCH"))
 			{
 				entityLiving.getEntityData().removeTag("EM_PITCH");
-			}
-		}
-		
-		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entityLiving);
-		
-		if(tracker != null)
-		{
-			if(entityLiving instanceof EntityPlayer && entityLiving.getHealth() <= 0F)
-			{
-				EntityPlayer player = EM_StatusManager.findPlayer(entityLiving.getCommandSenderName());
-				
-				if(player != null)
-				{
-					tracker.trackedEntity = player;
-					tracker.loadNBTTags();
-					//EM_StatusManager.saveAndRemoveTracker(tracker);
-				} else
-				{
-					tracker.resetData();
-					EM_StatusManager.saveAndRemoveTracker(tracker);
-				}
-				return;
-			} else
-			{
-				tracker.resetData();
-				EM_StatusManager.saveAndRemoveTracker(tracker);
 			}
 		}
 	}
@@ -857,6 +851,109 @@ public class EM_EventManager extends LockedClass
 	}
 	
 	@SubscribeEvent
+	public void onPlayerUseItem(PlayerUseItemEvent.Finish event)
+	{
+		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.entityPlayer);
+		
+		if(tracker == null || event.item == null)
+		{
+			return;
+		}
+		
+		ItemStack item = event.item;
+		
+		if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem())) || EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
+		{
+			ItemProperties itemProps;
+			if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
+			{
+				itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
+			} else
+			{
+				itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()));
+			}
+			
+			if(itemProps.effTemp > 0F)
+			{
+				if(tracker.bodyTemp + itemProps.effTemp > itemProps.effTempCap)
+				{
+					if(tracker.bodyTemp <= itemProps.effTempCap)
+					{
+						tracker.bodyTemp = itemProps.effTempCap;
+					}
+				} else
+				{
+					tracker.bodyTemp += itemProps.effTemp;
+				}
+			} else
+			{
+				if(tracker.bodyTemp + itemProps.effTemp < itemProps.effTempCap)
+				{
+					if(tracker.bodyTemp >= itemProps.effTempCap)
+					{
+						tracker.bodyTemp = itemProps.effTempCap;
+					}
+				} else
+				{
+					tracker.bodyTemp += itemProps.effTemp;
+				}
+			}
+			
+			if(tracker.sanity + itemProps.effSanity >= 100F)
+			{
+				tracker.sanity = 100F;
+			} else if(tracker.sanity + itemProps.effSanity <= 0F)
+			{
+				tracker.sanity = 0F;
+			} else
+			{
+				tracker.sanity += itemProps.effSanity;
+			}
+			
+			if(itemProps.effHydration > 0F)
+			{
+				tracker.hydrate(itemProps.effHydration);
+			} else if(itemProps.effHydration < 0F)
+			{
+				tracker.dehydrate(Math.abs(itemProps.effHydration));
+			}
+			
+			if(tracker.airQuality + itemProps.effAir >= 100F)
+			{
+				tracker.airQuality = 100F;
+			} else if(tracker.airQuality + itemProps.effAir <= 0F)
+			{
+				tracker.airQuality = 0F;
+			} else
+			{
+				tracker.airQuality += itemProps.effAir;
+			}
+		}
+		
+		if(item.getItem() == Items.golden_apple)
+		{
+			if(item.isItemDamaged())
+			{
+				tracker.hydration = 100F;
+				tracker.sanity = 100F;
+				tracker.airQuality = 100F;
+				tracker.bodyTemp = 37F;
+				if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
+				{
+					EM_StatusManager.syncMultiplayerTracker(tracker);
+				}
+			} else
+			{
+				tracker.sanity = 100F;
+				tracker.hydrate(10F);
+			}
+			
+			tracker.trackedEntity.removePotionEffect(EnviroPotion.frostbite.id);
+			tracker.frostbiteLevel = 0;
+		}
+	}
+	
+	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
 		if(event.entityLiving.isDead)
@@ -902,14 +999,6 @@ public class EM_EventManager extends LockedClass
 			{
 				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 2, Item.getItemFromBlock(ObjectHandler.davyLampBlock), 1);
 			}
-			
-			/*if(EM_Settings.torchesBurn)
-			{
-				ReplaceInvoItems(invo, Item.getItemFromBlock(Blocks.torch), 0, Item.getItemFromBlock(ObjectHandler.fireTorch), 0);
-			} else
-			{
-				ReplaceInvoItems(invo, Item.getItemFromBlock(ObjectHandler.fireTorch), 0, Item.getItemFromBlock(Blocks.torch), 0);
-			}*/
 			
 			if(EM_Settings.foodSpoiling)
 			{
@@ -1037,13 +1126,13 @@ public class EM_EventManager extends LockedClass
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTracker(event.entityLiving);
 		
-		if(tracker == null)
+		if(tracker == null || tracker.isDisabled)
 		{
 			if((!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN()) && (EM_Settings.enableAirQ || EM_Settings.enableBodyTemp || EM_Settings.enableHydrate || EM_Settings.enableSanity))
 			{
 				if(event.entityLiving instanceof EntityPlayer || (EM_Settings.trackNonPlayer && EnviroDataTracker.isLegalType(event.entityLiving)))
 				{
-					EnviroMine.logger.log(Level.ERROR, "Server lost track of player! Attempting to re-sync...");
+					EnviroMine.logger.log(Level.WARN, "Server lost track of player! Attempting to re-sync...");
 					EnviroDataTracker emTrack = new EnviroDataTracker((EntityLivingBase)event.entity);
 					EM_StatusManager.addToManager(emTrack);
 					emTrack.loadNBTTags();
@@ -1170,9 +1259,6 @@ public class EM_EventManager extends LockedClass
 				return;
 			}
 			
-			ItemStack item = null;
-			int itemUse = 0;
-			
 			if(((EntityPlayer)event.entityLiving).isPlayerSleeping() && tracker != null && !event.entityLiving.worldObj.isDaytime())
 			{
 				tracker.sleepState = "Asleep";
@@ -1203,167 +1289,6 @@ public class EM_EventManager extends LockedClass
 					}
 				}
 				tracker.sleepState = "Awake";
-			}
-			
-			if(((EntityPlayer)event.entityLiving).isUsingItem())
-			{
-				item = ((EntityPlayer)event.entityLiving).getHeldItem();
-				
-				if(tracker != null)
-				{
-					itemUse = tracker.getAndIncrementItemUse();
-				} else
-				{
-					itemUse = 0;
-				}
-			} else
-			{
-				item = null;
-				
-				if(tracker != null)
-				{
-					tracker.resetItemUse();
-				} else
-				{
-					itemUse = 0;
-				}
-			}
-			
-			if(item != null && tracker != null)
-			{
-				if(itemUse >= item.getMaxItemUseDuration() - 1)
-				{
-					itemUse = 0;
-					if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem())) || EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
-					{
-						ItemProperties itemProps;
-						if(EM_Settings.itemProperties.containsKey(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage()))
-						{
-							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()) + "," + item.getItemDamage());
-						} else
-						{
-							itemProps = EM_Settings.itemProperties.get(Item.itemRegistry.getNameForObject(item.getItem()));
-						}
-						
-						if(itemProps.effTemp > 0F)
-						{
-							if(tracker.bodyTemp + itemProps.effTemp > itemProps.effTempCap)
-							{
-								if(tracker.bodyTemp <= itemProps.effTempCap)
-								{
-									tracker.bodyTemp = itemProps.effTempCap;
-								}
-							} else
-							{
-								tracker.bodyTemp += itemProps.effTemp;
-							}
-						} else
-						{
-							if(tracker.bodyTemp + itemProps.effTemp < itemProps.effTempCap)
-							{
-								if(tracker.bodyTemp >= itemProps.effTempCap)
-								{
-									tracker.bodyTemp = itemProps.effTempCap;
-								}
-							} else
-							{
-								tracker.bodyTemp += itemProps.effTemp;
-							}
-						}
-						
-						if(tracker.sanity + itemProps.effSanity >= 100F)
-						{
-							tracker.sanity = 100F;
-						} else if(tracker.sanity + itemProps.effSanity <= 0F)
-						{
-							tracker.sanity = 0F;
-						} else
-						{
-							tracker.sanity += itemProps.effSanity;
-						}
-						
-						if(itemProps.effHydration > 0F)
-						{
-							tracker.hydrate(itemProps.effHydration);
-						} else if(itemProps.effHydration < 0F)
-						{
-							tracker.dehydrate(Math.abs(itemProps.effHydration));
-						}
-						
-						if(tracker.airQuality + itemProps.effAir >= 100F)
-						{
-							tracker.airQuality = 100F;
-						} else if(tracker.airQuality + itemProps.effAir <= 0F)
-						{
-							tracker.airQuality = 0F;
-						} else
-						{
-							tracker.airQuality += itemProps.effAir;
-						}
-					} else if(item.getItem() == Items.golden_apple)
-					{
-						if(item.isItemDamaged())
-						{
-							tracker.hydration = 100F;
-							tracker.sanity = 100F;
-							tracker.airQuality = 100F;
-							tracker.bodyTemp = 37F;
-							if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
-							{
-								EM_StatusManager.syncMultiplayerTracker(tracker);
-							}
-						} else
-						{
-							tracker.sanity = 100F;
-							tracker.hydrate(10F);
-						}
-						
-						tracker.trackedEntity.removePotionEffect(EnviroPotion.frostbite.id);
-						tracker.frostbiteLevel = 0;
-					} else if(item.getItem() == Items.mushroom_stew || item.getItem() == Items.pumpkin_pie)
-					{
-						if(tracker.bodyTemp <= 40F)
-						{
-							tracker.bodyTemp += 0.05F;
-						}
-						tracker.hydrate(5F);
-					} else if(item.getItem() == Items.milk_bucket)
-					{
-						tracker.hydrate(10F);
-					} else if(item.getItem() == Items.cooked_porkchop || item.getItem() == Items.cooked_beef || item.getItem() == Items.cooked_chicken || item.getItem() == Items.baked_potato)
-					{
-						if(tracker.bodyTemp <= 40F)
-						{
-							tracker.bodyTemp += 0.05F;
-						}
-						if(!EnviroMine.proxy.isClient() || EnviroMine.proxy.isOpenToLAN())
-						{
-							EM_StatusManager.syncMultiplayerTracker(tracker);
-						}
-					} else if(item.getItem() == Items.apple)
-					{
-						tracker.hydrate(5F);
-					} else if(item.getItem() == Items.rotten_flesh || item.getItem() == Items.spider_eye || item.getItem() == Items.poisonous_potato)
-					{
-						tracker.dehydrate(5F);
-						if(tracker.sanity <= 1F)
-						{
-							tracker.sanity = 0F;
-						} else
-						{
-							tracker.sanity -= 1F;
-						}
-					} else if(item.getItem() == Items.potionitem)
-					{
-						tracker.hydration += 25;
-						if(tracker.hydration >= 100)
-						{
-							tracker.hydration = 100;
-						}
-							
-						
-					}
-				}
 			}
 		}
 	}
@@ -1743,6 +1668,7 @@ public class EM_EventManager extends LockedClass
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onGuiOpen(GuiOpenEvent event)
 	{
 		if(event.gui instanceof GuiMainMenu && EM_GuiAuthWarn.shouldWarn)// && !EM_Settings.Version.equals("FWG_" + "EM_VER"))

@@ -11,15 +11,9 @@ import java.util.jar.JarFile;
 
 public class ClassEnumerator
 {
-	public static Class<?> loadClass(String className)
+	public static Class<?> loadClass(String className) throws Exception
 	{
-		try
-		{
-			return Class.forName(className);
-		} catch(ClassNotFoundException e)
-		{
-			throw new RuntimeException("Unexpected ClassNotFoundException loading class '" + className + "'");
-		}
+		return Class.forName(className);
 	}
 	
 	public static void processDirectory(File directory, String pkgname, ArrayList<Class<?>> classes)
@@ -38,7 +32,13 @@ public class ClassEnumerator
 			}
 			if(className != null)
 			{
-				classes.add(loadClass(className));
+				try
+				{
+					classes.add(loadClass(className));
+				} catch(Exception e)
+				{
+					continue;
+				}
 			}
 			File subdir = new File(directory, fileName);
 			if(subdir.isDirectory())
@@ -73,7 +73,13 @@ public class ClassEnumerator
 			}
 			if(className != null)
 			{
-				classes.add(loadClass(className));
+				try
+				{
+					classes.add(loadClass(className));
+				} catch(Exception e)
+				{
+					continue;
+				}
 			}
 		}
 		

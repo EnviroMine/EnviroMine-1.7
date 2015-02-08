@@ -34,7 +34,7 @@ public class BlockFireTorch extends BlockTorch
 	@Override
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
-		return Item.getItemFromBlock(Blocks.torch);
+		return this.isLit? Item.getItemFromBlock(Blocks.torch) : Items.stick;
     }
 
     /**
@@ -70,7 +70,7 @@ public class BlockFireTorch extends BlockTorch
 			return;
 		}
 		
-		if((world.rand.nextInt(1000) == 0 || (world.isRaining() && world.canBlockSeeTheSky(x, y, z))) && EM_Settings.torchesGoOut)
+		if((world.rand.nextInt(10000) == 0 || (world.isRaining() && world.canBlockSeeTheSky(x, y, z))) && EM_Settings.torchesGoOut)
 		{
 			world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 			world.setBlock(x, y, z, ObjectHandler.offTorch, world.getBlockMetadata(x, y, z), 3);

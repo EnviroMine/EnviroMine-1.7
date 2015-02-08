@@ -103,17 +103,6 @@ public class EM_StatusManager
 			return;
 		}
 		
-		// String packets Depreciated!
-		/*String dataString = "";
-		
-		if(tracker.trackedEntity instanceof EntityPlayer)
-		{
-			dataString = ("ID:0," + tracker.trackedEntity.getCommandSenderName() + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity + "," + tracker.airTemp);
-		} else
-		{
-			return;
-			//dataString = ("ID:0," + tracker.trackedEntity.entityId + "," + tracker.airQuality + "," + tracker.bodyTemp + "," + tracker.hydration + "," + tracker.sanity);
-		}*/
 		tracker.fixFloatinfPointErrors(); // Shortens data as much as possible before sending
 		NBTTagCompound pData = new NBTTagCompound();
 		pData.setInteger("id", 0);
@@ -152,18 +141,6 @@ public class EM_StatusManager
 	
 	public static EnviroDataTracker lookupTrackerFromUsername(String username)
 	{
-		/*EntityLivingBase entity = null;
-		
-		if (FMLCommonHandler.instance().getSide().isClient()) {
-			entity = Minecraft.getMinecraft().theWorld.getPlayerEntityByName(username);
-		} else {
-			World[] worlds = MinecraftServer.getServer().worldServers;
-			for (int i = 0; i < worlds.length; i++) {
-				entity = worlds[i].getPlayerEntityByName(username);
-				if (entity != null) { break; }
-			}
-		}
-		return lookupTracker(entity);*/
 		if(trackerList.containsKey(username))
 		{
 			return trackerList.get(username);

@@ -17,13 +17,32 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enviromine.EntityPhysicsBlock;
-import enviromine.blocks.*;
+import enviromine.blocks.BlockBurningCoal;
+import enviromine.blocks.BlockDavyLamp;
+import enviromine.blocks.BlockElevator;
+import enviromine.blocks.BlockEsky;
+import enviromine.blocks.BlockFireTorch;
+import enviromine.blocks.BlockFlammableCoal;
+import enviromine.blocks.BlockFreezer;
+import enviromine.blocks.BlockGas;
+import enviromine.blocks.BlockNoPhysics;
 import enviromine.blocks.materials.MaterialElevator;
 import enviromine.blocks.materials.MaterialGas;
-import enviromine.blocks.tiles.*;
-import enviromine.core.EM_Settings;
+import enviromine.blocks.tiles.TileEntityBurningCoal;
+import enviromine.blocks.tiles.TileEntityDavyLamp;
+import enviromine.blocks.tiles.TileEntityElevator;
+import enviromine.blocks.tiles.TileEntityEsky;
+import enviromine.blocks.tiles.TileEntityFreezer;
+import enviromine.blocks.tiles.TileEntityGas;
 import enviromine.core.EnviroMine;
-import enviromine.items.*;
+import enviromine.items.EnviroArmor;
+import enviromine.items.EnviroItemBadWaterBottle;
+import enviromine.items.EnviroItemColdWaterBottle;
+import enviromine.items.EnviroItemSaltWaterBottle;
+import enviromine.items.ItemDavyLamp;
+import enviromine.items.ItemElevator;
+import enviromine.items.ItemSpoiledMilk;
+import enviromine.items.RottenFood;
 
 public class ObjectHandler
 {
@@ -182,8 +201,9 @@ public class ObjectHandler
 	
 	public static void registerEntities()
 	{
-		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", EM_Settings.physBlockID);
-		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", EM_Settings.physBlockID, EnviroMine.instance, 64, 1, true);
+		int physID = EntityRegistry.findGlobalUniqueEntityId();
+		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", physID);
+		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", physID, EnviroMine.instance, 64, 1, true);
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
 		GameRegistry.registerTileEntity(TileEntityBurningCoal.class, "enviromine.tile.burningcoal");
 		GameRegistry.registerTileEntity(TileEntityEsky.class, "enviromine.tile.esky");

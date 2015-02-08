@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
@@ -102,10 +101,8 @@ public class Gui_EventManager
 	@SideOnly(Side.CLIENT)
 	public void onGuiRender(RenderGameOverlayEvent.Post event)
 	{
-		
 		if(event.type != ElementType.HELMET || event.isCancelable())
 		{
-			
 			return;
 		}
 		
@@ -131,28 +128,11 @@ public class Gui_EventManager
 		
 		HUDRegistry.checkForResize();
 		
-		if(tracker != null && (tracker.trackedEntity == null || tracker.trackedEntity.isDead || tracker.trackedEntity.getHealth() <= 0F) && !tracker.isDisabled)
-		{
-			EntityPlayer player = EM_StatusManager.findPlayer(this.mc.thePlayer.getCommandSenderName());
-			
-			if(player != null)
-			{
-				tracker.trackedEntity = player;
-				tracker.isDisabled = false;
-				tracker.loadNBTTags();
-			} else
-			{
-				tracker.resetData();
-				EM_StatusManager.saveAndRemoveTracker(tracker);
-				tracker = null;
-			}
-		}
-		
 		if(tracker == null)
 		{
 			if(!(EM_Settings.enableAirQ == false && EM_Settings.enableBodyTemp == false && EM_Settings.enableHydrate == false && EM_Settings.enableSanity == false))
 			{
-				//				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
+				//Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
 			}
 		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))

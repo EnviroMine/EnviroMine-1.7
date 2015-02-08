@@ -1,7 +1,15 @@
 package enviromine.world;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -9,22 +17,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.apache.logging.log4j.Level;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
 import enviromine.network.packet.PacketEnviroMine;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import org.apache.logging.log4j.Level;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class Earthquake
 {
@@ -33,16 +31,16 @@ public class Earthquake
 	public static int lastTickDay = 0;
 	public static int tickCount = 0;
 	
-	World world;
-	int posX;
-	int posZ;
+	public World world;
+	public int posX;
+	public int posZ;
 	
-	int length;
-	int width;
-	float angle;
+	public int length;
+	public int width;
+	public float angle;
 	
-	int passY = 1;
-	int mode;
+	public int passY = 1;
+	public int mode;
 	
 	ArrayList<int[]> ravineMask = new ArrayList<int[]>(); // 2D array containing x,z coordinates of blocks within the ravine
 	
@@ -450,9 +448,9 @@ public class Earthquake
 	
 	public static void TickDay(World world)
 	{
-		if(world.rand.nextInt(EM_Settings.quakeRarity + 1) == 0 && world.playerEntities.size() > 0)
+		if(world.rand.nextInt(2) == 0 && world.playerEntities.size() > 0)
 		{
-			EntityPlayer player = (EntityPlayer)world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
+			Entity player = (Entity)world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 			
 			int posX = MathHelper.floor_double(player.posX) + (world.rand.nextInt(1024) - 512);
 			int posZ = MathHelper.floor_double(player.posZ) + (world.rand.nextInt(1024) - 512);
@@ -471,7 +469,7 @@ public class Earthquake
 				}
 				
 				new Earthquake(world, posX, posZ, 32 + world.rand.nextInt(128-32), 4 + world.rand.nextInt(32-4), mode);
-				EnviroMine.logger.log(Level.INFO, "Earthquake at (" + posX + "," + posZ + ")");
+				EnviroMine.logger.log(Level.INFO, "Earthquake at (" + posX + "," + posZ + ") with type " + mode);
 			}
 		}
 	}
@@ -512,13 +510,9 @@ public class Earthquake
 			oos.close();
 			bos.close();
 			fos.close();
-		} catch(FileNotFoundException e)
+		} catch(Exception e)
 		{
-			EnviroMine.logger.log(Level.WARN, "Failed to save Earthquakes: FileNotFoundException");
-			e.printStackTrace();
-		} catch(IOException e)
-		{
-			EnviroMine.logger.log(Level.WARN, "Failed to save Earthquakes: IOException!");
+			EnviroMine.logger.log(Level.ERROR, "Failed to save Earthquakes", e);
 			e.printStackTrace();
 		}
 	}
@@ -558,21 +552,9 @@ public class Earthquake
 				ois.close();
 				bis.close();
 				fis.close();
-			} catch(FileNotFoundException e)
+			} catch(Exception e)
 			{
-				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: FileNotFoundException");
-				e.printStackTrace();
-			} catch(IOException e)
-			{
-				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: IOException!");
-				e.printStackTrace();
-			} catch(ClassCastException e)
-			{
-				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: ClassCastException! (file format error)");
-				e.printStackTrace();
-			} catch(ClassNotFoundException e)
-			{
-				EnviroMine.logger.log(Level.WARN, "Failed to load Earthquakes: ClassNotFoundException! (file format error)");
+				EnviroMine.logger.log(Level.ERROR, "Failed to load Earthquakes", e);
 				e.printStackTrace();
 			}
 		}

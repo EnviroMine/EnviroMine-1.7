@@ -120,7 +120,6 @@ public class EM_Settings
 	public static int physInterval;
 	public static int worldDelay;
 	public static int chunkDelay;
-	public static int physBlockID;
 	public static int entityFailsafe;
 	public static boolean villageAssist;
 	public static boolean minimalHud;
@@ -162,6 +161,7 @@ public class EM_Settings
 	public static boolean finiteWater = false;
 	public static boolean disableThing = false;
 	public static boolean noNausea = false;
+	public static boolean keepStatus = false;
 	
 	public static float convertToFarenheit(float num)
 	{

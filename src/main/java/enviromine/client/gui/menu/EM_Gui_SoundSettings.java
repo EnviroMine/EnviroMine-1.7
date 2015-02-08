@@ -5,9 +5,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
 import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.SaveController;
 import enviromine.client.gui.UI_Settings;
 
+@SideOnly(Side.CLIENT)
 public class EM_Gui_SoundSettings extends GuiScreen
 {
 	

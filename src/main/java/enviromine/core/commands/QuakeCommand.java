@@ -1,15 +1,19 @@
 package enviromine.core.commands;
 
+import java.util.Iterator;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
+import enviromine.network.packet.PacketEnviroMine;
 import enviromine.world.Earthquake;
 
 public class QuakeCommand extends CommandBase
@@ -19,6 +23,8 @@ public class QuakeCommand extends CommandBase
 	private String widthName = StatCollector.translateToLocal("commands.enviromine.enviroquake.width");
 	private String rotationName = StatCollector.translateToLocal("commands.enviromine.enviroquake.rotation");
 	private String modeName = StatCollector.translateToLocal("commands.enviromine.enviroquake.mode");
+	private String stopName = StatCollector.translateToLocal("commands.enviromine.enviroquake.stop");
+	private String stoppedAll = StatCollector.translateToLocal("commands.enviromine.enviroquake.stoppedAll");
 	private String errorMany = StatCollector.translateToLocal("commands.enviromine.enviroquake.error.tooMany");
 	private String errorBig = StatCollector.translateToLocal("commands.enviromine.enviroquake.error.tooBig");
 
@@ -31,7 +37,7 @@ public class QuakeCommand extends CommandBase
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_)
 	{
-		return "/enviroquake [<x> <z>] [<"+lengthName+"> <"+widthName+"> <"+rotationName+"> <"+modeName+"(0 ~ 4)>]";
+		return "/enviroquake ["+stopName+" | <x> <z> [<"+lengthName+"> <"+widthName+"> <"+rotationName+"> <"+modeName+"(0 ~ 4)>]]";
 	}
 	
 	public void ShowUsage(ICommandSender sender)
@@ -48,10 +54,43 @@ public class QuakeCommand extends CommandBase
 	@Override
 	public void processCommand(ICommandSender sender, String[] astring)
 	{
-		if(astring.length != 0 && astring.length != 2 && astring.length != 6)
+		if(astring.length != 0 && astring.length != 1 && astring.length != 2 && astring.length != 6)
 		{
 			this.ShowUsage(sender);
 			return;
+		}
+		
+		if(astring.length == 1)
+		{
+			if(astring[0].equalsIgnoreCase(stopName))
+			{
+				Iterator<Earthquake> iterator = Earthquake.pendingQuakes.iterator();
+				
+				while(iterator.hasNext())
+				{
+					Earthquake quake = iterator.next();
+					int size = quake.length > quake.width? quake.length/2 : quake.width/2;
+					NBTTagCompound pData = new NBTTagCompound();
+					pData.setInteger("id", 3);
+					pData.setInteger("dimension", quake.world.provider.dimensionId);
+					pData.setInteger("posX", quake.posX);
+					pData.setInteger("posZ", quake.posZ);
+					pData.setInteger("length", quake.length);
+					pData.setInteger("width", quake.width);
+					pData.setFloat("angle", quake.angle);
+					pData.setFloat("action", 2);
+					pData.setFloat("height", quake.passY);
+					EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(quake.world.provider.dimensionId, quake.posX, quake.passY, quake.posZ, 128 + size));
+					iterator.remove();
+				}
+				Earthquake.pendingQuakes.clear();
+				sender.addChatMessage(new ChatComponentText(stoppedAll));
+				return;
+			} else
+			{
+				this.ShowUsage(sender);
+				return;
+			}
 		}
 		
 		if(Earthquake.pendingQuakes.size() > 0)

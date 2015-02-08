@@ -120,13 +120,13 @@ deathmessage.enviromine.suffocate=%s suffocated to death
 deathmessage.enviromine.frostbite=%s froze to death
 deathmessage.enviromine.dehydrate=%s died of thirst
 deathmessage.enviromine.landslide=%s was crushed in a landslide
-deathmessage.enviromine.landslide=%s was buried in an avalanche
+deathmessage.enviromine.avalanche=%s was buried in an avalanche
 deathmessage.enviromine.organfailure=%s died of organ failure
 deathmessage.enviromine.heatstroke=%s's brain was cooked by heatstroke
 deathmessage.enviromine.bleedout=%s bled out
 deathmessage.enviromine.gasfire=%s died in a gas fire
 
-updatemsg.enviromine.avalible=Update %s of EnviroMine is available
+updatemsg.enviromine.available=Update %s of EnviroMine is available
 updatemsg.enviromine.download=Download & Changelog:
 updatemsg.enviromine.uptodate=EnviroMine %s is up to date
 updatemsg.enviromine.debug=EnviroMine %s is a debug version
@@ -168,6 +168,8 @@ commands.enviromine.enviroquake.length=length
 commands.enviromine.enviroquake.width=width
 commands.enviromine.enviroquake.rotation=rotation
 commands.enviromine.enviroquake.mode=mode
+commands.enviromine.enviroquake.stop=stop
+commands.enviromine.enviroquake.stoppedAll=Stopped all earthquakes
 commands.enviromine.enviroquake.error.tooMany=You are not permitted to spawn more than one earthquake at a time!
 commands.enviromine.enviroquake.error.tooBig=You may not spawn an earthquake over 4096 blocks!
 

@@ -60,7 +60,7 @@ public final class FunwayModAuthentication
 			AUTH_RESULT = true;
 			if(flag)
 			{
-				if(!"FWG_EM_VER".equals("FWG_" + "EM_VER"))
+				if(!"FWG_EM_VER".equals("FWG_" + "EM_VER") && EnviroMine.proxy.isClient())
 				{
 					EM_GuiAuthWarn.shouldWarn = true;
 				}

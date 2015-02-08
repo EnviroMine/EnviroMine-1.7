@@ -45,6 +45,10 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 	
 	public float effTempCap;
 	
+	public int camelFill;
+	public String fillReturnItem;
+	public int fillReturnMeta;
+	
 	public ItemProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
@@ -60,7 +64,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap)
+	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap, int camelFill, String fillReturnItem, int fillReturnMeta)
 	{
 		this.name = name;
 		this.meta = meta;
@@ -76,6 +80,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		this.effHydration = effHydration;
 		
 		this.effTempCap = effTempCap;
+		this.camelFill = camelFill;
+		this.fillReturnItem = fillReturnItem;
+		this.fillReturnMeta = fillReturnMeta;
 	}
 	/**
 	 * <b>hasProperty(ItemStack stack)</b><bR><br>
@@ -164,8 +171,11 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		float effSanity = (float)config.get(category, IPName[8], 0D).getDouble(0D);
 		float effHydration = (float)config.get(category, IPName[9], 0D).getDouble(0D);
 		float effTempCap = (float)config.get(category, IPName[10], 37D).getDouble(37D);
+		int camelFill = config.get(category, IPName[11], 0).getInt(0);
+		String camelReturnItem = config.get(category, IPName[12], "").getString();
+		int camelReturnMeta = config.get(category, IPName[13], 0).getInt(0);
 		
-		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap);
+		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap, camelFill, camelReturnItem, camelReturnMeta);
 		
 		if(meta < 0)
 		{
@@ -190,6 +200,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		config.get(category, IPName[8], effSanity).getDouble(effSanity);
 		config.get(category, IPName[9], effHydration).getDouble(effHydration);
 		config.get(category, IPName[10], effTempCap).getDouble(effTempCap);
+		config.get(category, IPName[11], camelFill).getInt(camelFill);
+		config.get(category, IPName[12], fillReturnItem).getString();
+		config.get(category, IPName[13], camelFill).getInt(camelFill);
 	}
 
 	@Override
@@ -241,7 +254,23 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 			
 			config.load();
 			
-			if(item == Items.potionitem)
+			if(item == Items.glass_bottle)
+			{
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], -1).getInt(-1);
+				config.get(category, IPName[2], false).getBoolean(false);
+				config.get(category, IPName[3], 37D).getDouble(37D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], 0D).getDouble(0D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 0D).getDouble(0D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], -25).getInt(-25);
+				config.get(category, IPName[12], "minecraft:potion").getString();
+				config.get(category, IPName[13], 0).getInt(0);
+			} else if(item == Items.potionitem)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
 				config.get(category, IPName[1], -1).getInt(-1);
@@ -254,6 +283,26 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 25D).getDouble(25D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 0).getInt(0);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
+				
+				category = category + "_(water)";
+				
+				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
+				config.get(category, IPName[1], 0).getInt(0);
+				config.get(category, IPName[2], false).getBoolean(false);
+				config.get(category, IPName[3], 0D).getDouble(0D);
+				config.get(category, IPName[4], 0D).getDouble(0D);
+				config.get(category, IPName[5], 0D).getDouble(0D);
+				config.get(category, IPName[6], -0.1D).getDouble(-0.1D);
+				config.get(category, IPName[7], 0D).getDouble(0D);
+				config.get(category, IPName[8], 0D).getDouble(0D);
+				config.get(category, IPName[9], 25D).getDouble(25D);
+				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 25).getInt(25);
+				config.get(category, IPName[12], "minecraft:glass_bottle").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(item == Items.melon || item == Items.carrot || item == Items.apple)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -267,6 +316,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 5D).getDouble(5D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 0).getInt(0);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(block == Blocks.snow || block == Blocks.snow_layer)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -280,6 +332,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 0D).getDouble(0D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 0).getInt(0);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(block == Blocks.ice || block == Blocks.packed_ice)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -293,6 +348,8 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 0D).getDouble(0D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(block == Blocks.netherrack || block == Blocks.nether_brick || block == Blocks.nether_brick_fence || block == Blocks.nether_brick_stairs)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -306,6 +363,8 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 0D).getDouble(0D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(block == Blocks.soul_sand || item == Items.skull || block == Blocks.skull)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -319,6 +378,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 0D).getDouble(0D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 0).getInt(0);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if((block == Blocks.flower_pot || block == Blocks.grass || block instanceof BlockLeavesBase || block instanceof BlockFlower || block instanceof BlockBush || block.getMaterial() == Material.grass || block.getMaterial() == Material.leaves || block.getMaterial() == Material.plants || block.getMaterial() == Material.vine) && (regName[0].equals("minecraft") || EM_Settings.genConfigs))
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -332,6 +394,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 0D).getDouble(0D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 0).getInt(0);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(item == Items.lava_bucket)
 			{
 				config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
@@ -345,6 +410,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 				config.get(category, IPName[8], 0D).getDouble(0D);
 				config.get(category, IPName[9], 0D).getDouble(0D);
 				config.get(category, IPName[10], 37D).getDouble(37D);
+				config.get(category, IPName[11], 0).getInt(0);
+				config.get(category, IPName[12], "").getString();
+				config.get(category, IPName[13], 0).getInt(0);
 			} else if(EM_Settings.genConfigs)
 			{
 				this.generateEmpty(config, item);
@@ -384,6 +452,9 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		config.get(category, IPName[8], 0D).getDouble(0D);
 		config.get(category, IPName[9], 0D).getDouble(0D);
 		config.get(category, IPName[10], 37D).getDouble(37D);
+		config.get(category, IPName[11], 0).getInt(0);
+		config.get(category, IPName[12], "").getString();
+		config.get(category, IPName[13], 0).getInt(0);
 	}
 
 	@Override
@@ -399,7 +470,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 	
 	static
 	{
-		IPName = new String[11];
+		IPName = new String[14];
 		IPName[0] = "01.Name";
 		IPName[1] = "02.Damage";
 		IPName[2] = "03.Enable Ambient Temperature";
@@ -411,5 +482,8 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		IPName[8] = "09.Effect Sanity";
 		IPName[9] = "10.Effect Hydration";
 		IPName[10] = "11.Effect Temperature Cap";
+		IPName[11] = "12.CamelPack Fill Amount";
+		IPName[12] = "13.CamelPack Return Item";
+		IPName[13] = "14.CamelPack Return Meta";
 	}
 }

@@ -162,6 +162,7 @@ public class EM_Settings
 	public static boolean disableThing = false;
 	public static boolean noNausea = false;
 	public static boolean keepStatus = false;
+	public static boolean renderGear = true;
 	
 	public static float convertToFarenheit(float num)
 	{

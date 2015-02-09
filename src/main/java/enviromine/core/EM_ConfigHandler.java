@@ -140,6 +140,7 @@ public class EM_ConfigHandler
 		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
 		EM_Settings.noNausea = config.get(Configuration.CATEGORY_GENERAL, "Blindness instead of Nausea", false).getBoolean(false);
 		EM_Settings.keepStatus = config.get(Configuration.CATEGORY_GENERAL, "Keep statuses on death", false).getBoolean(false);
+		EM_Settings.renderGear = config.get(Configuration.CATEGORY_GENERAL, "Render Gear", true ,"Render 3d gear worn on player. Must reload game to take effect").getBoolean(true);
 		
 		// Physics Settings
 		String PhySetCat = "Physics";

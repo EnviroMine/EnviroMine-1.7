@@ -50,7 +50,8 @@ public class TileEntityEsky extends TileEntity implements IInventory
         {
             double d0 = (double)this.xCoord + 0.5D;
             d1 = (double)this.zCoord + 0.5D;
-            this.worldObj.playSoundEffect(d0, (double)this.yCoord + 0.5D, d1, "random.chestopen", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+            //this.worldObj.playSoundEffect(d0, (double)this.yCoord + 0.5D, d1, "random.chestopen", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+            this.worldObj.playSoundEffect(d0, (double)this.yCoord + 0.5D, d1, "enviromine:eskyopen", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if (this.numPlayersUsing == 0 && this.field_145972_a > 0.0F || this.numPlayersUsing > 0 && this.field_145972_a < 1.0F)
@@ -77,7 +78,8 @@ public class TileEntityEsky extends TileEntity implements IInventory
             {
                 d1 = (double)this.xCoord + 0.5D;
                 double d2 = (double)this.zCoord + 0.5D;
-                this.worldObj.playSoundEffect(d1, (double)this.yCoord + 0.5D, d2, "random.chestclosed", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+                //this.worldObj.playSoundEffect(d1, (double)this.yCoord + 0.5D, d2, "random.chestclosed", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+                this.worldObj.playSoundEffect(d1, (double)this.yCoord + 0.5D, d2, "enviromine:eskyclose", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
             }
 
             if (this.field_145972_a < 0.0F)
@@ -208,7 +210,7 @@ public class TileEntityEsky extends TileEntity implements IInventory
 	@Override
 	public String getInventoryName()
 	{
-        return "container.esky";
+        return "container.enviromine.esky";
 	}
 
 	@Override

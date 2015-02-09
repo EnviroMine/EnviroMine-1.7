@@ -64,6 +64,33 @@
     ]
   },
   
+  	"eskyopen": {
+    "category": "block",
+    "sounds": [
+      "esky_open"
+    ]
+  },
+  
+  	"eskyclose": {
+    "category": "block",
+    "sounds": [
+      "esky_close"
+    ]
+  },
+  
+  	"freezeropen": {
+    "category": "block",
+    "sounds": [
+      "freezer_open"
+    ]
+  },
+  
+  	"freezerclose": {
+    "category": "block",
+    "sounds": [
+      "freezer_close"
+    ]
+  },
   "gas_ignite": {
     "category": "block",
     "sounds": [

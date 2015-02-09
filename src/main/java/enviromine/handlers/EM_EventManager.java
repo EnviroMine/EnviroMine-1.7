@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -82,8 +83,10 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -94,9 +97,9 @@ import enviromine.EntityPhysicsBlock;
 import enviromine.EnviroDamageSource;
 import enviromine.EnviroPotion;
 import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.ModelCamelPack;
 import enviromine.client.gui.EM_GuiAuthWarn;
 import enviromine.client.gui.menu.config.EM_ConfigMenu;
+import enviromine.client.models.ModelCamelPack;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -1547,6 +1550,9 @@ public class EM_EventManager extends LockedClass
 	@SideOnly(Side.CLIENT)
 	public void onRender(RenderLivingEvent.Specials.Pre event)
 	{ 
+		
+		
+		/*
 		ItemStack plate = event.entity.getEquipmentInSlot(3);
 		EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
 		
@@ -1582,6 +1588,8 @@ public class EM_EventManager extends LockedClass
 			}
 		}
 		GL11.glPopMatrix();
+		
+		*/
 	}
 	
 	float partialTicks = 1F;

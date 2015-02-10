@@ -1,11 +1,15 @@
 package enviromine.trackers.properties;
 
 import java.io.File;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -81,6 +85,27 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		this.physics = physics;
 	}
 
+	/**
+	 * <b>hasProperty(BiomeGenBase biome)</b><bR><br>
+	 * Checks if Property contains custom properties.
+	 * @param biome
+	 * @return true if has custom properties
+	 */
+	public boolean hasProperty(int dimensionId)
+	{
+		return EM_Settings.dimensionProperties.containsKey(dimensionId);
+	}
+	/** 
+	 * 	<b>getProperty(BiomeGenBase biome)</b><bR><br>
+	 * Gets Property.
+	 * @param biome
+	 * @return BiomeProperties
+	 */
+	public DimensionProperties getProperty(int dimensionId)
+	{
+		return EM_Settings.dimensionProperties.get(dimensionId);
+	}
+	
 	@Override
 	public NBTTagCompound WriteToNBT()
 	{

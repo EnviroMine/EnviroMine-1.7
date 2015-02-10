@@ -2,6 +2,7 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.Iterator;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFalling;
@@ -11,7 +12,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -87,6 +90,40 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		this.stability = stability;
 	}
 
+	/**
+	 * <b>hasProperty(Block block, int meta)</b><bR><br>
+	 * Checks if contains custom properties for Block and metaData.
+	 * @param block
+	 * @param meta - Block MetaData<br>
+	 * @return true if has custom properties
+	 */
+	
+	
+	public boolean hasProperty(Block block, int meta)
+	{
+		return EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta) || EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block));
+	}
+	/** 
+	 * 	<b>getProperty(Block block, int meta)</b><bR><br>
+	 * Gets Property form Block and metaData.
+	 * @param block
+	 * @param meta - Block MetaData<br>
+	 * @return BlockProperties for block
+	 */
+	public BlockProperties getProperty(Block block, int meta)
+	{
+		BlockProperties blockProps = null;
+		
+		if(EM_Settings.blockProperties.containsKey("" + Block.blockRegistry.getNameForObject(block) + "," + meta))
+		{
+			blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block) + "," + meta);
+		} else
+		{
+			blockProps = EM_Settings.blockProperties.get("" + Block.blockRegistry.getNameForObject(block));
+		}
+		return blockProps;
+	}
+	
 	@Override
 	public NBTTagCompound WriteToNBT()
 	{
@@ -491,4 +528,5 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		BPName[10] = "11.Slides";
 		BPName[11] = "12.Slides When Wet";
 	}
+
 }

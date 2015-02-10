@@ -1,8 +1,10 @@
 package enviromine.core.proxies;
 
 import java.util.Iterator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -10,7 +12,9 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -30,6 +34,7 @@ import enviromine.client.gui.hud.items.HudItemAirQuality;
 import enviromine.client.gui.hud.items.HudItemHydration;
 import enviromine.client.gui.hud.items.HudItemSanity;
 import enviromine.client.gui.hud.items.HudItemTemperature;
+import enviromine.client.renderer.RenderPlayerEM;
 import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.client.renderer.tileentity.RenderGasHandler;
 import enviromine.client.renderer.tileentity.RenderSpecialHandler;
@@ -112,6 +117,10 @@ public class EM_ClientProxy extends EM_CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDavyLamp.class, new TileEntityDavyLampRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEsky.class, new TileEntityEskyRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFreezer.class, new TileEntityFreezerRenderer());
+		
+		
+		if(EM_Settings.renderGear) RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new RenderPlayerEM());
+
 	}
 	
 	@SideOnly(Side.CLIENT)

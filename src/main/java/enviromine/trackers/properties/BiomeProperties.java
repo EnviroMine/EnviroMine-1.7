@@ -2,12 +2,17 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -57,7 +62,27 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 		this.dehydrateRate = dehydrateRate;
 		this.airRate = airRate;
 	}
-
+	/**
+	 * <b>hasProperty(BiomeGenBase biome)</b><bR><br>
+	 * Checks if Property contains custom properties.
+	 * @param biome
+	 * @return true if has custom properties
+	 */
+	public boolean hasProperty(BiomeGenBase biome)
+	{
+		return EM_Settings.biomeProperties.containsKey(biome.biomeID);
+	}
+	/** 
+	 * 	<b>getProperty(BiomeGenBase biome)</b><bR><br>
+	 * Gets Property.
+	 * @param biome
+	 * @return BiomeProperties
+	 */
+	public BiomeProperties getProperty(BiomeGenBase biome)
+	{
+		return EM_Settings.biomeProperties.get(biome.biomeID);
+	}
+	
 	public int getWaterQualityId()
 	{
 		if(this.waterQuality.trim().equalsIgnoreCase("dirty"))

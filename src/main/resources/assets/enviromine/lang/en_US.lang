@@ -26,6 +26,9 @@ tile.enviromine.firegas.name=Gas Fire
 tile.enviromine.burningcoal.name=Burning Coal
 tile.enviromine.nophysblock.name=No Physics Block
 
+container.enviromine.esky=Esky
+container.enviromine.freezer=Freezer
+
 itemGroup.enviromine.enviroTab=EnviroMine
 
 achievement.enviromine.FunwaysFault=Funway's Fault

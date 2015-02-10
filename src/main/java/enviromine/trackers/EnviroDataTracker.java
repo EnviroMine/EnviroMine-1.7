@@ -93,6 +93,7 @@ public class EnviroDataTracker
 		
 		if(trackedEntity == null || isDisabled)
 		{
+			System.out.println("Removing tracker...");
 			EM_StatusManager.removeTracker(this);
 			return;
 		}
@@ -582,17 +583,11 @@ public class EnviroDataTracker
 			return false;
 		} else
 		{
-			if(entity instanceof EntityPlayer)
+			EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entity);
+			
+			if(tracker != null && !tracker.isDisabled && tracker.trackedEntity == entity)
 			{
-				EnviroDataTracker tracker = EM_StatusManager.lookupTracker(entity);
-				
-				if(tracker != null)
-				{
-					return false;
-				} else
-				{
-					return true;
-				}
+				return false;
 			} else
 			{
 				return true;

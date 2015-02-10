@@ -177,6 +177,9 @@ public class EM_EventManager extends LockedClass
 					{
 						EM_StatusManager.syncMultiplayerTracker(emTrack);
 					}
+				} else
+				{
+					tracker.trackedEntity = (EntityLivingBase)event.entity;
 				}
 			}
 		} else if(event.entity instanceof EntityFallingBlock && !(event.entity instanceof EntityPhysicsBlock) && !event.world.isRemote && event.world.getTotalWorldTime() > EM_PhysManager.worldStartTime + EM_Settings.worldDelay && chunkPhys)

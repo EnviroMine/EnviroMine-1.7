@@ -1,15 +1,7 @@
 package enviromine.client.renderer;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-
-import org.lwjgl.opengl.GL11;
-
 import enviromine.client.models.ModelPlayerEM;
 
 public class RenderPlayerEM extends RenderPlayer {

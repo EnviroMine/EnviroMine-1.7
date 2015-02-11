@@ -1,6 +1,10 @@
 package enviromine.world;
 
+import java.util.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class ClientQuake extends Earthquake
@@ -23,6 +27,8 @@ public class ClientQuake extends Earthquake
 			
 			if(quake.posX == x && quake.posZ == z)
 			{
+				Minecraft mc = Minecraft.getMinecraft();
+				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("enviromine:earthquake"), new Random().nextFloat() * 0.25F + 0.75F));
 				quake.passY = height;
 				quake.duration = 6000L;
 				return;

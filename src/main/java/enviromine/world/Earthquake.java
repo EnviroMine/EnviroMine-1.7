@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -204,6 +205,11 @@ public class Earthquake
 					
 					if(yy <= 10)
 					{
+						Block block = world.getBlock(x, yy, z);
+						if(block.getMaterial() == Material.rock || block.getMaterial() == Material.ground)
+						{
+							world.playSoundEffect(x, yy, z, block.stepSound.func_150496_b(), 1.0F, world.rand.nextFloat() * 0.1F);
+						}
 						world.setBlock(x, yy, z, Blocks.flowing_lava);
 						//System.out.println("Placed lava at (" + x + "," + yy + "," + z + ")");
 						
@@ -219,6 +225,11 @@ public class Earthquake
 						}
 					} else
 					{
+						Block block = world.getBlock(x, yy, z);
+						if(block.getMaterial() == Material.rock || block.getMaterial() == Material.ground)
+						{
+							world.playSoundEffect(x, yy, z, block.stepSound.func_150496_b(), 1.0F, world.rand.nextFloat() * 0.5F);
+						}
 						world.setBlockToAir(x, yy, z);
 						//System.out.println("Placed air at (" + x + "," + yy + "," + z + ")");
 						
@@ -301,6 +312,10 @@ public class Earthquake
 						
 						if(yy <= 10)
 						{
+							if(world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.ground)
+							{
+								world.playSoundEffect(x, yy, z, "enviromine:cave_in", 1.0F, world.rand.nextFloat() * 0.5F + 0.75F);
+							}
 							world.setBlock(x, yy, z, Blocks.flowing_lava);
 							//System.out.println("Placed lava at (" + x + "," + yy + "," + z + ")");
 							
@@ -316,6 +331,10 @@ public class Earthquake
 							}
 						} else
 						{
+							if(world.getBlock(x, yy, z).getMaterial() == Material.rock || world.getBlock(x, yy, z).getMaterial() == Material.ground)
+							{
+								world.playSoundEffect(x, yy, z, "enviromine:cave_in", 1.0F, world.rand.nextFloat() * 0.5F + 0.75F);
+							}
 							world.setBlockToAir(x, yy, z);
 							//System.out.println("Placed air at (" + x + "," + yy + "," + z + ")");
 							

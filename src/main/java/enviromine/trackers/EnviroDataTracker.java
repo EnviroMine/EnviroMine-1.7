@@ -93,7 +93,6 @@ public class EnviroDataTracker
 		
 		if(trackedEntity == null || isDisabled)
 		{
-			System.out.println("Removing tracker...");
 			EM_StatusManager.removeTracker(this);
 			return;
 		}

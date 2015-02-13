@@ -1,12 +1,16 @@
 package enviromine.world;
 
 import java.util.Random;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+@SideOnly(Side.CLIENT)
 public class ClientQuake extends Earthquake
 {
 	int dimensionID;

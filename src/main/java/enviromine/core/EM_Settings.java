@@ -159,7 +159,7 @@ public class EM_Settings
 	public static int quakeSpeed = 2;
 	
 	public static boolean finiteWater = false;
-	public static boolean disableThing = false;
+	public static float thingChance = 0.000001F;
 	public static boolean noNausea = false;
 	public static boolean keepStatus = false;
 	public static boolean renderGear = true;

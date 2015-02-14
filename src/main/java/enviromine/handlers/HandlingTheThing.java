@@ -7,6 +7,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.EnumSkyBlock;
 import enviromine.EnviroDamageSource;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -23,7 +24,7 @@ public class HandlingTheThing
 	
 	public static void stalkPlayer(EntityPlayer player)
 	{
-		boolean flag = false;
+		boolean flag = player.getEntityData().getBoolean("EM_THING_TARGET") || (player.worldObj.getWorldTime()%6000 == 0 && EM_Settings.thingChance > player.getRNG().nextFloat());
 		
 		// Check if Halloween or Friday 13th. Guarantees attack if true!
 		if((date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 31) || (date.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && date.get(Calendar.DAY_OF_MONTH) == 13))
@@ -31,7 +32,7 @@ public class HandlingTheThing
 			flag = true;
 		}
 		
-		if((EM_Settings.disableThing && !flag) && player.dimension != EM_Settings.caveDimID || player.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
+		if(player == null || !player.isEntityAlive() || !flag || player.dimension != EM_Settings.caveDimID || player.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
 		{
 			if(player != null && player.getEntityData() != null)
 			{
@@ -41,19 +42,8 @@ public class HandlingTheThing
 			return;
 		}
 		
-		if(!player.getEntityData().getBoolean("EM_THING_TARGET") && !flag)
-		{
-			if(player.worldObj.getWorldTime()%6000 == 0 && (player.worldObj.rand.nextInt(player.worldObj.difficultySetting == EnumDifficulty.HARD? 1000 : 100000) == 0)) // If you are REALLY unlucky you will be attacked at any time!
-			{
-				player.getEntityData().setBoolean("EM_THING_TARGET", true);
-				player.addStat(EnviroAchievements.itsPitchBlack, 1);
-			}
-			return;
-		} else
-		{
-			// If you get this Achievement you're going to have a bad time :P
-			player.addStat(EnviroAchievements.itsPitchBlack, 1);
-		}
+		player.getEntityData().setBoolean("EM_THING_TARGET", true);
+		player.addStat(EnviroAchievements.itsPitchBlack, 1);
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(player.getCommandSenderName());
 		int i = MathHelper.floor_double(player.posX);
@@ -73,7 +63,7 @@ public class HandlingTheThing
 			}
 		}
 		
-		if(player.worldObj.getBlockLightValue(i, j, k) < 10 && !player.capabilities.isCreativeMode && !player.isPotionActive(Potion.nightVision))
+		if(player.worldObj.getBlockLightValue(i, j, k) < 10 && player.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) < 10 && !player.capabilities.isCreativeMode && !player.isPotionActive(Potion.nightVision))
 		{
 			if(!hasWitnesses(player))
 			{

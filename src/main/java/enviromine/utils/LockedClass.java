@@ -1,7 +1,7 @@
 package enviromine.utils;
 
 import java.util.ArrayList;
-import enviromine.core.EM_Settings;
+import enviromine.client.gui.EM_GuiAuthWarn;
 import enviromine.core.FunwayModAuthentication;
 
 public abstract class LockedClass
@@ -19,14 +19,20 @@ public abstract class LockedClass
 		return LOCKED;
 	}
 	
+	public static boolean IsLocked()
+	{
+		return LOCKED.size() <= 0;
+	}
+	
 	{
 		// Note that is isn't static. This is because if something like forge needs to scan the class we don't want this to trigger
 		if(!LOCKED.contains(this.getClass()))
 		{
 			// MOD IS NOT AUTHENTICATED!
-			SecurityException exception = new SecurityException("UNAUTHORIZED USE OF MOD: " + EM_Settings.ModID.toUpperCase());
+			//SecurityException exception = new SecurityException("UNAUTHORIZED USE OF MOD: " + EM_Settings.ModID.toUpperCase());
 			//exception.setStackTrace(new StackTraceElement[]{}); // Empties the stack trace to hinder debugging hacks
-			throw exception;
+			//throw exception;
+			EM_GuiAuthWarn.shouldWarn = true;
 		}
 	}
 }

@@ -224,7 +224,7 @@ public class EM_ConfigHandler
 		
 		// Easter Eggs!
 		String eggCat = "Easter Eggs";
-		EM_Settings.disableThing = !config.getBoolean("Cave Dimension Grue", eggCat, true, "Disable the (extremely rare) grue in the cave dimension (ignored on Halloween or Friday 13th)");
+		EM_Settings.thingChance = config.getFloat("Cave Dimension Grue", eggCat, 0.000001F, 0F, 1F, "Chance the (extremely rare) grue in the cave dimension will attack in the dark (ignored on Halloween or Friday 13th)");
 		
 		// REMOVE OLD Settings if they exist
 		// Sound

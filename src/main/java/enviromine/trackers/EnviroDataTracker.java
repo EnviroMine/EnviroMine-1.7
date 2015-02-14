@@ -26,10 +26,11 @@ import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
+import enviromine.utils.LockedClass;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class EnviroDataTracker
+public class EnviroDataTracker extends LockedClass
 {
 	public EntityLivingBase trackedEntity;
 	

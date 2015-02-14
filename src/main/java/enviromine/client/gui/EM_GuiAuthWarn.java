@@ -1,11 +1,11 @@
 package enviromine.client.gui;
 
-import enviromine.core.EM_Settings;
-import enviromine.utils.LockedClass;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
+import enviromine.core.EM_Settings;
+import enviromine.utils.LockedClass;
 
 public class EM_GuiAuthWarn extends GuiScreen
 {
@@ -29,14 +29,8 @@ public class EM_GuiAuthWarn extends GuiScreen
         {
             if (p_146284_1_.id == 200)
             {
-            	if(LockedClass.IsLocked())
-            	{
-            		this.mc.shutdown();
-            	} else
-            	{
-	            	shouldWarn = false;
-	                this.mc.displayGuiScreen(this.parentScreen);
-            	}
+            	shouldWarn = false;
+                this.mc.displayGuiScreen(this.parentScreen);
             }
         }
     }

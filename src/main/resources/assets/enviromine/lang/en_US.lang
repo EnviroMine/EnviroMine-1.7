@@ -148,7 +148,7 @@ auth.enviromine.2=Thank you for using the official version <3
 auth.enviromine.3=WARNING: If you ever need to re-install your copy at a later date or include
 auth.enviromine.4=it in a modpack you will need to keep the AUTH file from your config directory
 auth.enviromine.5=Proudly supporting the %s campaign
-auth.enviromine.6=This version of EnviroMine has not been authenticated and will now close!
+auth.enviromine.6=This version of EnviroMine has not been authenticated and is now disabled!
 auth.enviromine.7=If you are using a modpack please inform the dev to that they need to
 auth.enviromine.8=include the up-to-date AUTH file for this version. More info at:
 

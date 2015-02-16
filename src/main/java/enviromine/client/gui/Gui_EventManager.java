@@ -1,8 +1,12 @@
 package enviromine.client.gui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -11,8 +15,11 @@ import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
+import scala.collection.Iterator;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,18 +56,16 @@ public class Gui_EventManager
 		width = event.gui.width;
 		height = event.gui.height;
 		
-		if(event.gui instanceof GuiIngameMenu)
+		if(event.gui instanceof GuiIngameMenu && !EM_Settings.voxelMenuExists)
 		{
 			String newPost = UpdateNotification.isNewPost() ? " " + StatCollector.translateToLocal("news.enviromine.newpost") : "";
-			
+
 			try
 			{
 				byte b0 = -16;
 				enviromine = new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
-				
 				event.buttonList.set(1, new GuiButton(4, width / 2 - 100, height / 4 + 0 + b0, I18n.format("menu.returnToGame", new Object[0])));
 				event.buttonList.add(enviromine);
-				
 			} catch(Exception e)
 			{
 				enviromine = new GuiButton(1348, width - 175, height - 30, 160, 20, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);

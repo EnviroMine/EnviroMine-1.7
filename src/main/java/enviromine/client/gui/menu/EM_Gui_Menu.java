@@ -18,8 +18,13 @@ import enviromine.core.EnviroMine;
 public class EM_Gui_Menu extends GuiScreen implements GuiYesNoCallback
 {
 	
-	private GuiScreen parentGuiScreen;
-
+	private GuiScreen parentGuiScreen = null;
+	
+	public EM_Gui_Menu()
+	{
+		
+	}
+	
 	public EM_Gui_Menu(GuiScreen par1GuiScreen)
 	{
 		this.parentGuiScreen = par1GuiScreen;

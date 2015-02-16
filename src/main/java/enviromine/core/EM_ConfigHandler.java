@@ -1,6 +1,7 @@
 package enviromine.core;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,12 +9,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.BlockProperties;
@@ -283,8 +287,12 @@ public class EM_ConfigHandler
 		return list;
 	}
 	
-	private static boolean isCFGFile(String fileName)
+	private static boolean isCFGFile(File file)
 	{
+		String fileName = file.getName();
+		
+		if(file.isHidden()) return false;
+		
 		//Matcher
 		String patternString = "(.*\\.cfg$)";
 		
@@ -293,6 +301,10 @@ public class EM_ConfigHandler
 		// Make Sure its a .cfg File
 		pattern = Pattern.compile(patternString);
 		matcher = pattern.matcher(fileName);
+		
+		String MacCheck = ".DS_Store.cfg";
+		
+		if (matcher.matches() && matcher.group(0).toString().toLowerCase() == MacCheck.toLowerCase()) { return false;}
 		
 		return matcher.matches();
 	}
@@ -333,7 +345,7 @@ public class EM_ConfigHandler
 	 */
 	public static void LoadCustomObjects(File customFiles)
 	{
-		boolean datFile = isCFGFile(customFiles.getName());
+		boolean datFile = isCFGFile(customFiles);
 		
 		// Check to make sure this is a Data File Before Editing
 		if(datFile == true)
@@ -344,15 +356,9 @@ public class EM_ConfigHandler
 				config = new Configuration(customFiles, true);
 				
 				//EnviroMine.logger.log(Level.INFO, "Loading Config File: " + customFiles.getAbsolutePath());
-				
-			} catch(Exception e)
-			{
-				e.printStackTrace();
-				EnviroMine.logger.log(Level.ERROR, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!", e);
-				return;
-			}
-			
-			config.load();
+	
+				config.load();
+
 
 			// 	Grab all Categories in File
 			List<String> catagory = new ArrayList<String>();
@@ -386,7 +392,15 @@ public class EM_ConfigHandler
 			}
 			
 			config.save();
+			} catch(Exception e)
+			{
+				e.printStackTrace();
+				EnviroMine.logger.log(Level.ERROR, "FAILED TO LOAD CUSTOM CONFIG: " + customFiles.getName() + "\nNEW SETTINGS WILL BE IGNORED!", e);
+				return;
+			}
 		}
+			
+			
 	}
 	
 	public static ArrayList<String> getSubCategories(Configuration config, String mainCat)

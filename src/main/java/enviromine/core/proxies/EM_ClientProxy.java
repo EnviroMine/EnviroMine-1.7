@@ -1,13 +1,20 @@
 package enviromine.core.proxies;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -29,11 +36,13 @@ import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
 import enviromine.blocks.tiles.TileEntityFreezer;
 import enviromine.client.gui.Gui_EventManager;
+import enviromine.client.gui.UpdateNotification;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.items.HudItemAirQuality;
 import enviromine.client.gui.hud.items.HudItemHydration;
 import enviromine.client.gui.hud.items.HudItemSanity;
 import enviromine.client.gui.hud.items.HudItemTemperature;
+import enviromine.client.gui.menu.EM_Gui_Menu;
 import enviromine.client.renderer.RenderPlayerEM;
 import enviromine.client.renderer.itemInventory.ArmoredCamelPackRenderer;
 import enviromine.client.renderer.tileentity.RenderGasHandler;
@@ -49,6 +58,8 @@ import enviromine.handlers.keybinds.EnviroKeybinds;
 
 public class EM_ClientProxy extends EM_CommonProxy
 {
+	
+	
 	@Override
 	public boolean isClient()
 	{
@@ -97,7 +108,7 @@ public class EM_ClientProxy extends EM_CommonProxy
         
 		initRenderers();
 		registerHudItems();	
-
+		
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -167,5 +178,27 @@ public class EM_ClientProxy extends EM_CommonProxy
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		super.postInit(event);
+
+		VoxelMenu();
+	}
+	
+	
+	public void VoxelMenu()
+	{
+		try
+		{
+
+			Class<? extends GuiMainMenu> ingameGuiClass = (Class<? extends GuiMainMenu>) Class.forName("com.thevoxelbox.voxelmenu.ingame.GuiIngameMenu");
+			Method mRegisterCustomScreen = ingameGuiClass.getDeclaredMethod("registerCustomScreen", String.class, Class.class, String.class);
+			
+			mRegisterCustomScreen.invoke(null, "", EM_Gui_Menu.class, StatCollector.translateToLocal("options.enviromine.menu.title"));
+		
+			EM_Settings.voxelMenuExists = true;
+		} catch (ClassNotFoundException ex) { // This means VoxelMenu does not
+			// 	exist
+			EM_Settings.voxelMenuExists = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

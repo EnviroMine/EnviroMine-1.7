@@ -164,6 +164,9 @@ public class EM_Settings
 	public static boolean keepStatus = false;
 	public static boolean renderGear = true;
 	
+	
+	public static boolean voxelMenuExists = false;
+	
 	public static float convertToFarenheit(float num)
 	{
 		return((num * (9 / 5)) + 32F);

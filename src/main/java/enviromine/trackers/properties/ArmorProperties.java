@@ -36,6 +36,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 	public float sanity;
 	public float air;
 	public boolean allowCamelPack;
+	public String loadedFrom;
 	
 	public ArmorProperties(NBTTagCompound tags)
 	{
@@ -52,7 +53,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public ArmorProperties(Item item, String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air, boolean allowCamelPack)
+	public ArmorProperties(Item item, String name, float nightTemp, float shadeTemp, float sunTemp, float nightMult, float shadeMult, float sunMult, float sanity, float air, boolean allowCamelPack, String filename)
 	{
 		this.item = item;
 		this.name = name;
@@ -65,6 +66,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		this.sanity = sanity;
 		this.air = air;
 		this.allowCamelPack = allowCamelPack;
+		this.loadedFrom = filename;
 	}
 
 	/**
@@ -146,6 +148,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		float sunMult = (float)config.get(category, APName[6], 1.00).getDouble(1.00);
 		float sanity = (float)config.get(category, APName[7], 0.00).getDouble(0.00);
 		float air = (float)config.get(category, APName[8], 0.00).getDouble(0.00);
+		String filename = config.getConfigFile().getName();
 		
 		Object item = Item.itemRegistry.getObject(name);
 		boolean allowCamelPack = true;
@@ -154,7 +157,11 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 			allowCamelPack = config.get(category, APName[9], true).getBoolean(true);
 		}
 		
-		ArmorProperties entry = new ArmorProperties((Item)item, name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack);
+		ArmorProperties entry = new ArmorProperties((Item)item, name, nightTemp, shadeTemp, sunTemp, nightMult, shadeMult, sunMult, sanity, air, allowCamelPack, filename);
+
+		// If item already exist and current file hasn't completely been loaded do this
+		if(EM_Settings.armorProperties.containsKey(name) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Armor - "+ name.toUpperCase() +" was already added from "+ EM_Settings.armorProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+		
 		EM_Settings.armorProperties.put(name, entry);
 	}
 

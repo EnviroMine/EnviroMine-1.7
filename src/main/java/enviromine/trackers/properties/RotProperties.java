@@ -2,12 +2,15 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.Iterator;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -26,6 +29,7 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 	public String rotID;
 	public int rotMeta;
 	public int days;
+	public String loadedFrom;
 	
 	public RotProperties(NBTTagCompound tags)
 	{
@@ -42,13 +46,14 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public RotProperties(String name, int meta, String rotID, int rotMeta, int days)
+	public RotProperties(String name, int meta, String rotID, int rotMeta, int days, String fileName)
 	{
 		this.name = name;
 		this.meta = meta;
 		this.rotID = rotID;
 		this.rotMeta = rotMeta;
 		this.days = days;
+		this.loadedFrom = fileName;
 	}
 
 	@Override
@@ -94,14 +99,21 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 		String rotID = config.get(category, RPName[2], "", "Set blank to rot into nothing").getString();
 		int rotMeta = config.get(category, RPName[3], 0).getInt(0);
 		int DTR = config.get(category, RPName[4], 0, "Set this to -1 to disable rotting on this item").getInt(0);
+		String filename = config.getConfigFile().getName();
 		
-		RotProperties entry = new RotProperties(name, meta, rotID, rotMeta, DTR);
+		RotProperties entry = new RotProperties(name, meta, rotID, rotMeta, DTR, filename);
 		
 		if(meta < 0)
 		{
+			// If item already exist and current file hasn't completely been loaded do this
+			if(EM_Settings.rotProperties.containsKey("" + name) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Spoiling/Rot -"+ name.toUpperCase() +" was already added from "+ EM_Settings.rotProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+			
 			EM_Settings.rotProperties.put("" + name, entry);
 		} else
 		{
+			// If item already exist and current file hasn't completely been loaded do this
+			if(EM_Settings.rotProperties.containsKey("" + name + "," + meta) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Spoiling/Rot -"+ name.toUpperCase() +" - Meta:"+ meta +" was already added from "+ EM_Settings.rotProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+			
 			EM_Settings.rotProperties.put("" + name + "," + meta, entry);
 		}
 	}

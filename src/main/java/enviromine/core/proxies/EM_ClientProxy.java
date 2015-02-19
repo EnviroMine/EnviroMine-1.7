@@ -1,15 +1,12 @@
 package enviromine.core.proxies;
 
-import java.lang.reflect.Field;
+
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -25,6 +22,7 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -36,7 +34,6 @@ import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
 import enviromine.blocks.tiles.TileEntityFreezer;
 import enviromine.client.gui.Gui_EventManager;
-import enviromine.client.gui.UpdateNotification;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.items.HudItemAirQuality;
 import enviromine.client.gui.hud.items.HudItemHydration;
@@ -130,7 +127,27 @@ public class EM_ClientProxy extends EM_CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFreezer.class, new TileEntityFreezerRenderer());
 		
 		
-		if(EM_Settings.renderGear) RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new RenderPlayerEM());
+		try 
+		{
+			boolean isLoadedRenderApi = false;
+			if (Loader.isModLoaded("RenderPlayerAPI"))
+			{
+				//	ModelPlayerAPI.register(EM_Settings.ModID, ModelPlayerEM.class);
+				//	RenderPlayerAPI.register(EM_Settings.ModID, RenderPlayerEM.class);
+			 
+				EnviroMine.logger.log(Level.WARN, "Enviromine Doesn't support Player-API/Render-API yet! Config setting \"Render 3D Gear\" set to false");
+			 
+				EM_Settings.renderGear = false;
+				isLoadedRenderApi = true;
+			}
+		
+		 
+		 if(EM_Settings.renderGear && !isLoadedRenderApi) RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new RenderPlayerEM());
+		}catch(ClassCastException e)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Tried to Render Enviromine Gear, but Failed! Known issues with  Render Player API.:- "+ e);
+		}
+		
 
 	}
 	

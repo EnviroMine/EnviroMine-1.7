@@ -53,6 +53,8 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 	public boolean canHang;
 	public boolean wetSlide;
 	
+	public String loadedFrom;
+	
 	public BlockProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
@@ -68,7 +70,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public BlockProperties(String name, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, String dropName, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide, String stability)
+	public BlockProperties(String name, int meta, boolean hasPhys, int minFall, int maxFall, int supportDist, String dropName, int dropMeta, int dropNum, boolean enableTemp, float temp, float air, float sanity, boolean holdOther, boolean slides, boolean canHang, boolean wetSlide, String stability, String fileName)
 	{
 		this.name = name;
 		this.meta = meta;
@@ -88,6 +90,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		this.canHang = canHang;
 		this.wetSlide = wetSlide;
 		this.stability = stability;
+		this.loadedFrom = fileName;
 	}
 
 	/**
@@ -190,6 +193,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		String stability = config.get(category, BPName[9], "loose").getString();
 		boolean slides = config.get(category, BPName[10], false).getBoolean(false);
 		boolean wetSlides = config.get(category, BPName[11], false).getBoolean(false);
+		String filename = config.getConfigFile().getName();
 		
 		// 	Get Stability Options
 		int minFall = 99;
@@ -220,13 +224,19 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 			canHang = true;
 		}
 		
-		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropName, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides, stability);
+		BlockProperties entry = new BlockProperties(name, metaData, hasPhys, minFall, maxFall, supportDist, dropName, dropMeta, dropNum, enableTemp, temperature, airQuality, sanity, holdOther, slides, canHang, wetSlides, stability, filename);
 		
 		if(metaData < 0)
 		{
+			// If item already exist and current file hasn't completely been loaded do this
+			if(EM_Settings.blockProperties.containsKey("" + name) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Block - "+name.toUpperCase() +" was already added from "+ EM_Settings.blockProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+
 			EM_Settings.blockProperties.put("" + name, entry);
 		} else
 		{
+			// If item already exist and current file hasn't completely been loaded do this
+			if(EM_Settings.blockProperties.containsKey("" + name + "," + metaData) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Block - "+name.toUpperCase() +" - Meta:"+ meta +"  was already added from "+ EM_Settings.blockProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+
 			EM_Settings.blockProperties.put("" + name + "," + metaData, entry);
 		}
 	}

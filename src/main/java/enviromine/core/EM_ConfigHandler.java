@@ -39,6 +39,8 @@ public class EM_ConfigHandler
 	
 	static HashMap<String, PropertyBase> propTypes;
 	
+	public static List loadedConfigs = new ArrayList(); 
+	
 	/**
 	 * Register all property types and their category names here. The rest is handled automatically.
 	 */
@@ -392,6 +394,10 @@ public class EM_ConfigHandler
 			}
 			
 			config.save();
+			
+			// Add to list of loaded Config files
+			loadedConfigs.add(config.getConfigFile().getName());
+			
 			} catch(Exception e)
 			{
 				e.printStackTrace();

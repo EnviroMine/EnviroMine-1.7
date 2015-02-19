@@ -49,6 +49,8 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 	public String fillReturnItem;
 	public int fillReturnMeta;
 	
+	public String loadedFrom;
+	
 	public ItemProperties(NBTTagCompound tags)
 	{
 		this.ReadFromNBT(tags);
@@ -64,7 +66,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap, int camelFill, String fillReturnItem, int fillReturnMeta)
+	public ItemProperties(String name, int meta, boolean enableTemp, float ambTemp, float ambAir, float ambSanity, float effTemp, float effAir, float effSanity, float effHydration, float effTempCap, int camelFill, String fillReturnItem, int fillReturnMeta, String fileName)
 	{
 		this.name = name;
 		this.meta = meta;
@@ -83,6 +85,8 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		this.camelFill = camelFill;
 		this.fillReturnItem = fillReturnItem;
 		this.fillReturnMeta = fillReturnMeta;
+		
+		this.loadedFrom = fileName;
 	}
 	/**
 	 * <b>hasProperty(ItemStack stack)</b><bR><br>
@@ -174,14 +178,21 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		int camelFill = config.get(category, IPName[11], 0).getInt(0);
 		String camelReturnItem = config.get(category, IPName[12], "").getString();
 		int camelReturnMeta = config.get(category, IPName[13], 0).getInt(0);
+		String filename = config.getConfigFile().getName();
 		
-		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap, camelFill, camelReturnItem, camelReturnMeta);
+		ItemProperties entry = new ItemProperties(name, meta, enableTemp, ambTemp, ambAir, ambSanity, effTemp, effAir, effSanity, effHydration, effTempCap, camelFill, camelReturnItem, camelReturnMeta, filename);
 		
 		if(meta < 0)
 		{
+			// If item already exist and current file hasn't completely been loaded do this
+			if(EM_Settings.itemProperties.containsKey("" + name) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Items - "+ name.toUpperCase() +" was already added from "+ EM_Settings.itemProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+			
 			EM_Settings.itemProperties.put("" + name, entry);
 		} else
 		{
+			// If item already exist and current file hasn't completely been loaded do this
+			if(EM_Settings.itemProperties.containsKey("" + name + "," + meta) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Items - "+ name.toUpperCase() +" - Meta:"+ meta +" was already added from "+ EM_Settings.itemProperties.get(name).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+			
 			EM_Settings.itemProperties.put("" + name + "," + meta, entry);
 		}
 	}

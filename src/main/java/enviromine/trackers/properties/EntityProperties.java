@@ -2,11 +2,14 @@ package enviromine.trackers.properties;
 
 import java.io.File;
 import java.util.Iterator;
+
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.Level;
+
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -35,6 +38,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 	public float hitAir;
 	public float ambHydration;
 	public float hitHydration;
+	public String loadedFrom;
 	
 	public EntityProperties(NBTTagCompound tags)
 	{
@@ -51,7 +55,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public EntityProperties(int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, float aSanity, float hSanity, float aTemp, float hTemp, float aAir, float hAir, float aHyd, float hHyd)
+	public EntityProperties(int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, float aSanity, float hSanity, float aTemp, float hTemp, float aAir, float hAir, float aHyd, float hHyd, String fileName)
 	{
 		this.id = id;
 		this.shouldTrack = track;
@@ -68,6 +72,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 		this.hitAir = hAir;
 		this.ambHydration = aHyd;
 		this.hitHydration = hHyd;
+		this.loadedFrom = fileName;
 	}
 
 	@Override
@@ -143,8 +148,14 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 		float hAir = (float)config.get(category, EPName[12], 0.0D).getDouble(0.0D);
 		float aHyd = (float)config.get(category, EPName[13], 0.0D).getDouble(0.0D);
 		float hHyd = (float)config.get(category, EPName[14], 0.0D).getDouble(0.0D);
+		String filename = config.getConfigFile().getName();
 		
-		EntityProperties entry = new EntityProperties(id, track, dehydration, bodyTemp, airQ, immuneToFrost, immuneToHeat, aSanity, hSanity, aTemp, hTemp, aAir, hAir, aHyd, hHyd);
+		EntityProperties entry = new EntityProperties(id, track, dehydration, bodyTemp, airQ, immuneToFrost, immuneToHeat, aSanity, hSanity, aTemp, hTemp, aAir, hAir, aHyd, hHyd, filename);
+		
+		// If item already exist and current file hasn't completely been loaded do this
+		if(EM_Settings.livingProperties.containsKey(id) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Entity ID "+ id +" was already added from "+ EM_Settings.livingProperties.get(id).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+
+		
 		EM_Settings.livingProperties.put(id, entry);
 	}
 

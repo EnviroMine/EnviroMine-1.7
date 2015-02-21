@@ -5,9 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EnviroMine;
 
+@SideOnly(Side.CLIENT)
 public class WordPressPost
 {
 	public static ArrayList<WordPressPost> Posts = new ArrayList<WordPressPost>();

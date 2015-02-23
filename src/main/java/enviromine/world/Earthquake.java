@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
@@ -28,6 +30,7 @@ import enviromine.network.packet.PacketEnviroMine;
 public class Earthquake
 {
 	public static ArrayList<Earthquake> pendingQuakes = new ArrayList<Earthquake>();
+	@SideOnly(Side.CLIENT)
 	public static ArrayList<ClientQuake> clientQuakes = new ArrayList<ClientQuake>();
 	public static int lastTickDay = 0;
 	public static int tickCount = 0;
@@ -60,20 +63,23 @@ public class Earthquake
 			this.markRavine(angle);
 			pendingQuakes.add(this);
 			
-			if(!(this instanceof ClientQuake))
+			if(EnviroMine.proxy.isClient())
 			{
-				int size = length > width? length/2 : width/2;
-				NBTTagCompound pData = new NBTTagCompound();
-				pData.setInteger("id", 3);
-				pData.setInteger("dimension", world.provider.dimensionId);
-				pData.setInteger("posX", posX);
-				pData.setInteger("posZ", posZ);
-				pData.setInteger("length", length);
-				pData.setInteger("width", width);
-				pData.setFloat("angle", angle);
-				pData.setFloat("action", 0);
-				pData.setFloat("height", 1);
-				EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+				if(!(this instanceof ClientQuake))
+				{
+					int size = length > width? length/2 : width/2;
+					NBTTagCompound pData = new NBTTagCompound();
+					pData.setInteger("id", 3);
+					pData.setInteger("dimension", world.provider.dimensionId);
+					pData.setInteger("posX", posX);
+					pData.setInteger("posZ", posZ);
+					pData.setInteger("length", length);
+					pData.setInteger("width", width);
+					pData.setFloat("angle", angle);
+					pData.setFloat("action", 0);
+					pData.setFloat("height", 1);
+					EnviroMine.instance.network.sendToAllAround(new PacketEnviroMine(pData), new TargetPoint(world.provider.dimensionId, posX, passY, posZ, 128 + size));
+				}
 			}
 		}
 	}
@@ -582,7 +588,10 @@ public class Earthquake
 	public static void Reset()
 	{
 		pendingQuakes.clear();
-		clientQuakes.clear();
+		if(EnviroMine.proxy.isClient())
+		{
+			clientQuakes.clear();
+		}
 		lastTickDay = 0;
 	}
 }

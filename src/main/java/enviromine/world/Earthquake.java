@@ -20,8 +20,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_PhysManager;
@@ -30,7 +28,6 @@ import enviromine.network.packet.PacketEnviroMine;
 public class Earthquake
 {
 	public static ArrayList<Earthquake> pendingQuakes = new ArrayList<Earthquake>();
-	@SideOnly(Side.CLIENT)
 	public static ArrayList<ClientQuake> clientQuakes = new ArrayList<ClientQuake>();
 	public static int lastTickDay = 0;
 	public static int tickCount = 0;

@@ -75,7 +75,10 @@ public class EnviroMine
 		
 		if(LockedClass.IsLocked())
 		{
-			EM_GuiAuthWarn.shouldWarn = true;
+			if(proxy.isClient())
+			{
+				EM_GuiAuthWarn.shouldWarn = true;
+			}
 			return;
 		}
 		enviroTab = new EnviroTab("enviromine.enviroTab");

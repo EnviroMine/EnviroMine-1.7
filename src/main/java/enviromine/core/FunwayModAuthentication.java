@@ -13,6 +13,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import net.minecraft.util.StatCollector;
 import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
@@ -26,7 +28,6 @@ import enviromine.utils.LockedClass;
  */
 public final class FunwayModAuthentication
 {
-	private static final String AUTH_LOC = "https://drone.io/github.com/Funwayguy/EnviroMine-1.7/files/build/libs/version.txt";
 	public static boolean AUTH_RESULT = false; // Used as a basic reference. DO NOT use for security purposes!
 	
 	public static final void CheckAndUnlockMod()
@@ -39,23 +40,42 @@ public final class FunwayModAuthentication
 		boolean flag = false; // Write to AUTH bytes to file on success?
 		
 		byte[] auth = GetAuthentication();
-		byte[] data = GetOfflineAuth();
+		ArrayList<byte[]> data = GetOfflineAuth();
+		boolean flag2 = false;
 		
-		if(data == null || !Arrays.equals(auth, data))
+		if(data != null)
 		{
-			flag = true;
+			Iterator<byte[]> iterator = data.iterator();
+			while(iterator.hasNext())
+			{
+				if(Arrays.equals(auth, iterator.next()))
+				{
+					flag2 = true;
+				}
+			}
+		}
+		
+		if(!flag2 && auth != null) // We failed to authenticate offline so we'll try online
+		{
+			flag = true; // We are pulling the online key so we need to store it for offline if it matches
 			try
 			{
-				// Don't use bitly here because it will skew the statistics
-				data = getUrl(AUTH_LOC, false).split("\\n")[0].trim().split("\\.")[3].getBytes("UTF-8");
+				// Don't use bit.ly here because it will skew the statistics
+				byte[] tmpBytes = getUrl("https://drone.io/github.com/Funwayguy/EnviroMine-1.7/files/build/libs/version.txt", false).split("\\n")[0].trim().split("\\.")[3].getBytes("UTF-8");
+				flag2 = Arrays.equals(tmpBytes, auth);
+				
+				if(flag2)
+				{
+					data.add(tmpBytes);
+				}
 			} catch(Exception e)
 			{
 				data = null;
 			}
 		}
 		
-		 //We don't want to use the unsecure version var here. We use the raw keyword that will be converted at runtime
-		if((auth != null && data != null && Arrays.equals(auth, data)) || "FWG_EM_VER".equals("FWG_" + "EM_VER"))
+		 //We don't want to use the unsecured version variable here. We use the raw keyword that will be converted at runtime
+		if(flag2 || "FWG_EM_VER".equals("FWG_" + "EM_VER"))
 		{
 			AUTH_RESULT = true;
 			if(flag)
@@ -64,19 +84,26 @@ public final class FunwayModAuthentication
 				{
 					EM_GuiAuthWarn.shouldWarn = true;
 				}
-				SetOfflineAuth(auth);
+				SetOfflineAuth(data);
 			}
 			UnlockClasses();
 		} else
 		{
+			EnviroMine.logger.log(Level.WARN, "[!]================================[!]");
+			EnviroMine.logger.log(Level.WARN, "UNAUTHORIZED USE OF MOD " + EM_Settings.ModID.toUpperCase());
+			EnviroMine.logger.log(Level.WARN, StatCollector.translateToLocal("auth.enviromine.6"));
+			EnviroMine.logger.log(Level.WARN, StatCollector.translateToLocal("auth.enviromine.7"));
+			EnviroMine.logger.log(Level.WARN, StatCollector.translateToLocal("auth.enviromine.8"));
+			EnviroMine.logger.log(Level.WARN, StatCollector.translateToLocal("https://github.com/Funwayguy/EnviroMine/wiki/Authentication"));
+			EnviroMine.logger.log(Level.WARN, "[!]================================[!]");
 			// MOD IS NOT AUTHENTICATED!
-			SecurityException exception = new SecurityException("UNAUTHORIZED USE OF MOD " + EM_Settings.ModID.toUpperCase());
-			exception.setStackTrace(new StackTraceElement[]{}); // Empties the stack trace to hinder debugging hacks
-			throw exception;
+			//SecurityException exception = new SecurityException("UNAUTHORIZED USE OF MOD " + EM_Settings.ModID.toUpperCase());
+			//exception.setStackTrace(new StackTraceElement[]{}); // Empties the stack trace to hinder debugging hacks
+			//throw exception;
 		}
 	}
 	
-	private static final void SetOfflineAuth(byte[] auth)
+	private static final void SetOfflineAuth(ArrayList<byte[]> auth)
 	{
 		if(!new Exception().getStackTrace()[1].getClassName().equals(FunwayModAuthentication.class.getName()))
 		{
@@ -106,7 +133,7 @@ public final class FunwayModAuthentication
 		}
 	}
 	
-	private static final byte[] GetOfflineAuth()
+	private static final ArrayList<byte[]> GetOfflineAuth()
 	{
 		if(!new Exception().getStackTrace()[1].getClassName().equals(FunwayModAuthentication.class.getName()))
 		{
@@ -125,11 +152,20 @@ public final class FunwayModAuthentication
 				fis = new FileInputStream(file);
 				ois = new ObjectInputStream(fis);
 				
-				byte[] obj = (byte[])ois.readObject();
+				Object obj = ois.readObject();
+				ArrayList<byte[]> list = new ArrayList<byte[]>();
+				
+				if(obj instanceof ArrayList)
+				{
+					list = (ArrayList<byte[]>)obj;
+				} else if(obj instanceof byte[])
+				{
+					list.add((byte[])obj);
+				}
 				
 				ois.close();
 				ois.close();
-				return obj;
+				return list;
 			} catch(Exception e)
 			{
 				e.printStackTrace();

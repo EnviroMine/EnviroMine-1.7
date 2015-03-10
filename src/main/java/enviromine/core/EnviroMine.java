@@ -81,6 +81,7 @@ public class EnviroMine
 			}
 			return;
 		}
+		
 		enviroTab = new EnviroTab("enviromine.enviroTab");
 		proxy.preInit(event);
 		

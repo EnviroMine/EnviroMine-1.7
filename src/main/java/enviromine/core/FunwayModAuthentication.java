@@ -53,6 +53,9 @@ public final class FunwayModAuthentication
 					flag2 = true;
 				}
 			}
+		} else
+		{
+			data = new ArrayList<byte[]>();
 		}
 		
 		if(!flag2 && auth != null) // We failed to authenticate offline so we'll try online
@@ -155,12 +158,15 @@ public final class FunwayModAuthentication
 				Object obj = ois.readObject();
 				ArrayList<byte[]> list = new ArrayList<byte[]>();
 				
-				if(obj instanceof ArrayList)
+				if(obj != null)
 				{
-					list = (ArrayList<byte[]>)obj;
-				} else if(obj instanceof byte[])
-				{
-					list.add((byte[])obj);
+					try
+					{
+						list = (ArrayList<byte[]>)obj;
+					} catch (ClassCastException e)
+					{
+						list.add((byte[])obj);
+					}
 				}
 				
 				ois.close();
@@ -171,6 +177,9 @@ public final class FunwayModAuthentication
 				e.printStackTrace();
 				return null;
 			}
+		} else
+		{
+			System.out.println("NO AUTH FILE FOUND!");
 		}
 		
 		return null;
@@ -196,6 +205,7 @@ public final class FunwayModAuthentication
 			String keyString = unlock1 + "-" + unlock2 + "-" + unlock3 + "-" + unlock4;*/
 			//MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			//return digest.digest("EM_AUTH_KEY".getBytes("UTF-8"));
+			//return "EM_AUTH_KEY".getBytes("UTF-8");
 			return "EM_AUTH_KEY".getBytes("UTF-8");
 		} catch(Exception e)
 		{

@@ -68,6 +68,8 @@ public class MineshaftBuilder
 	public int decayAmount = 0;
 	//WeightedRandomChestContent[] loot;
 	
+	public boolean alreadyGenerating = false;
+	
 	public MineshaftBuilder(World world, int originX, int originZ, int dir)
 	{
 		this.world = world;
@@ -164,31 +166,41 @@ public class MineshaftBuilder
 	
 	public boolean checkAndBuildSegments(int chunkX, int chunkZ)
 	{
-		ArrayList<MineSegment> chunkSegments = segmentMap.get("" + chunkX + "," + chunkZ);
-		
-		if(chunkSegments != null)
+		if(!alreadyGenerating)
 		{
-			for(int i = chunkSegments.size() - 1; i >= 0; i--)
+			alreadyGenerating = true;
+			
+			ArrayList<MineSegment> chunkSegments = segmentMap.get("" + chunkX + "," + chunkZ);
+			
+			if(chunkSegments != null)
 			{
-				MineSegment segment = chunkSegments.get(i);
-				
-				if(segment.allChunksLoaded())
+				for(int i = chunkSegments.size() - 1; i >= 0; i--)
 				{
-					if(segment.canBuild())
+					MineSegment segment = chunkSegments.get(i);
+					
+					if(segment.allChunksLoaded())
 					{
-						segment.build();
+						if(segment.canBuild())
+						{
+							segment.build();
+						}
+						chunkSegments.remove(i);
 					}
-					chunkSegments.remove(i);
+				}
+				
+				if(chunkSegments.size() > 0)
+				{
+					segmentMap.put("" + chunkX + "," + chunkZ, chunkSegments);
+				} else
+				{
+					segmentMap.remove(segmentMap.get("" + chunkX + "," + chunkZ));
 				}
 			}
 			
-			if(chunkSegments.size() > 0)
-			{
-				segmentMap.put("" + chunkX + "," + chunkZ, chunkSegments);
-			} else
-			{
-				segmentMap.remove(segmentMap.get("" + chunkX + "," + chunkZ));
-			}
+			alreadyGenerating = false;
+		} else
+		{
+			EnviroMine.logger.log(Level.ERROR, "EnviroMine tried to recursively generate Mineshafts! Too many villages shafts?");
 		}
 		
 		return this.segmentMap.size() <= 0;

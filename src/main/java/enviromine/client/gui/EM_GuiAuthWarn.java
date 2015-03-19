@@ -38,13 +38,13 @@ public class EM_GuiAuthWarn extends GuiScreen
     @Override
     public void onGuiClosed()
     {
-    	if(LockedClass.IsLocked())
+    	/*if(LockedClass.IsLocked())
         {
 			// MOD IS NOT AUTHENTICATED!
 			//SecurityException exception = new SecurityException("UNAUTHORIZED USE OF MOD: " + EM_Settings.ModID.toUpperCase());
 			//exception.setStackTrace(new StackTraceElement[]{}); // Empties the stack trace to hinder debugging hacks
 			//throw exception;
-        }
+        }*/
     }
 
     /**
@@ -53,7 +53,7 @@ public class EM_GuiAuthWarn extends GuiScreen
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)
     {
         this.drawBackground(0);
-        if(LockedClass.IsLocked())
+        /*if(LockedClass.IsLocked())
         {
         	this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + I18n.format("auth.enviromine.6"), this.width / 2, this.height / 2 - 30, 16777215);
 	        this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + I18n.format("auth.enviromine.7"), this.width / 2, this.height / 2 - 20, 16777215);
@@ -69,7 +69,7 @@ public class EM_GuiAuthWarn extends GuiScreen
 	        
 	        this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.GREEN + I18n.format("auth.enviromine.5", "#StopModReposts"), this.width / 2, this.height / 2 + 20, 16777215);
 	        this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.GREEN + "http://stopmodreposts.org", this.width / 2, this.height / 2 + 30, 16777215);
-        }
+        }*/
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
     }
 }

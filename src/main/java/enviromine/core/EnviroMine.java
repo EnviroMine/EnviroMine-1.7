@@ -66,7 +66,7 @@ public class EnviroMine
 	{
 		logger = event.getModLog();
 		
-		FunwayModAuthentication.CheckAndUnlockMod();
+		/*FunwayModAuthentication.CheckAndUnlockMod();
 		
 		if(proxy.isClient())
 		{
@@ -80,7 +80,7 @@ public class EnviroMine
 				EM_GuiAuthWarn.shouldWarn = true;
 			}
 			return;
-		}
+		}*/
 		
 		enviroTab = new EnviroTab("enviromine.enviroTab");
 		proxy.preInit(event);
@@ -115,10 +115,10 @@ public class EnviroMine
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		if(LockedClass.IsLocked())
+		/*if(LockedClass.IsLocked())
 		{
 			return;
-		}
+		}*/
 		
 		proxy.init(event);
 		
@@ -146,10 +146,10 @@ public class EnviroMine
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		if(LockedClass.IsLocked())
+		/*if(LockedClass.IsLocked())
 		{
 			return;
-		}
+		}*/
 		
 		proxy.postInit(event);
 		
@@ -172,10 +172,10 @@ public class EnviroMine
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event)
 	{
-		if(LockedClass.IsLocked())
+		/*if(LockedClass.IsLocked())
 		{
 			return;
-		}
+		}*/
 		
 		MinecraftServer server = MinecraftServer.getServer();
 		ICommandManager command = server.getCommandManager();
@@ -186,7 +186,7 @@ public class EnviroMine
 		manager.registerCommand(new QuakeCommand());
 	}
 	
-	@SubscribeEvent
+	/*@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onGuiOpen(GuiOpenEvent event)
 	{
@@ -194,5 +194,5 @@ public class EnviroMine
 		{
 			event.gui = new EM_GuiAuthWarn(event.gui);
 		}
-	}
+	}*/
 }

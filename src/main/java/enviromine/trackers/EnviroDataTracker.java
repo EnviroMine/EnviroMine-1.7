@@ -30,7 +30,7 @@ import enviromine.utils.LockedClass;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class EnviroDataTracker extends LockedClass
+public class EnviroDataTracker// extends LockedClass
 {
 	public EntityLivingBase trackedEntity;
 	

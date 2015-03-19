@@ -19,10 +19,10 @@ public abstract class LockedClass
 		return LOCKED;
 	}
 	
-	public static boolean IsLocked()
+	/*public static boolean IsLocked()
 	{
 		return LOCKED.size() <= 0;
-	}
+	}*/
 	
 	{
 		// Note that is isn't static. This is because if something like forge needs to scan the class we don't want this to trigger

@@ -107,7 +107,7 @@ import enviromine.utils.LockedClass;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
-public class EM_EventManager extends LockedClass
+public class EM_EventManager// extends LockedClass
 {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)

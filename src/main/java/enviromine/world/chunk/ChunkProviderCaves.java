@@ -71,10 +71,10 @@ public class ChunkProviderCaves implements IChunkProvider
 		this.hellRNG = new Random(p_i2005_2_);
 		this.netherNoiseGen1 = new NoiseGeneratorOctaves(this.hellRNG, 16);
 		this.netherNoiseGen2 = new NoiseGeneratorOctaves(this.hellRNG, 16);
-		this.netherNoiseGen3 = new NoiseGeneratorOctaves(this.hellRNG, 8);
+		this.netherNoiseGen3 = new NoiseGeneratorOctaves(this.hellRNG, 16); // Normally 8
 		this.slowsandGravelNoiseGen = new NoiseGeneratorOctaves(this.hellRNG, 4);
 		this.netherrackExculsivityNoiseGen = new NoiseGeneratorOctaves(this.hellRNG, 4);
-		this.netherNoiseGen6 = new NoiseGeneratorOctaves(this.hellRNG, 10);
+		this.netherNoiseGen6 = new NoiseGeneratorOctaves(this.hellRNG, 16); // Normally 10
 		this.netherNoiseGen7 = new NoiseGeneratorOctaves(this.hellRNG, 16);
 		
 		NoiseGenerator[] noiseGens = {netherNoiseGen1, netherNoiseGen2, netherNoiseGen3, slowsandGravelNoiseGen, netherrackExculsivityNoiseGen, netherNoiseGen6, netherNoiseGen7};
@@ -93,7 +93,7 @@ public class ChunkProviderCaves implements IChunkProvider
 		byte b0 = 4;
 		byte b1 = (byte)EM_Settings.caveLiquidY; // Liquid height
 		int k = b0 + 1;
-		byte b2 = 17;
+		byte b2 = 33;//17;
 		int l = b0 + 1;
 		this.noiseField = this.initializeNoiseField(this.noiseField, p_147419_1_ * b0, 0, p_147419_2_ * b0, k, b2, l);
 		
@@ -103,24 +103,6 @@ public class ChunkProviderCaves implements IChunkProvider
 			{
 				for(int k1 = 0; k1 < 32; ++k1)
 				{
-					if(k1 >= 16)
-					{
-						for(int l1 = 0; l1 < 8; ++l1)
-						{
-							for(int i2 = 0; i2 < 4; ++i2)
-							{
-								int j2 = i2 + i1 * 4 << 12 | 0 + j1 * 4 << 8 | k1 * 8 + l1;
-								short short1 = 256;
-								j2 -= short1;
-								
-								for(int k2 = 0; k2 < 4; ++k2)
-								{
-									p_147419_3_[j2 += short1] = Blocks.stone;
-								}
-							}
-						}
-						continue;
-					}
 					double d0 = 0.125D;
 					double d1 = this.noiseField[((i1 + 0) * l + j1 + 0) * b2 + k1 + 0];
 					double d2 = this.noiseField[((i1 + 0) * l + j1 + 1) * b2 + k1 + 0];

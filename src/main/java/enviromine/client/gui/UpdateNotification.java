@@ -115,7 +115,7 @@ public class UpdateNotification
 				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RESET + "" + data[i].trim()));
 			}*/
 			
-			String http = data[1].trim();
+			String http = data[0].trim();
 			
 			int verStat = compareVersions(EM_Settings.Version, version);
 			
@@ -124,11 +124,11 @@ public class UpdateNotification
 				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.available", version).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 				event.player.addChatMessage(new ChatComponentTranslation("updatemsg.enviromine.download"));
 				event.player.addChatMessage(new ChatComponentText("https://github.com/Funwayguy/EnviroMine/wiki/Downloads").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BLUE).setUnderlined(true)));
-				for(int i = 5; i < data.length; i++)
+				for(int i = 3; i < data.length; i++)
 				{
-					if(i > 8)
+					if(i > 6)
 					{
-						event.player.addChatMessage(new ChatComponentText("" + (data.length - 9) + " more..."));
+						event.player.addChatMessage(new ChatComponentText("" + (data.length - 7) + " more..."));
 						break;
 					} else
 					{

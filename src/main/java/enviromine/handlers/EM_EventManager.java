@@ -103,11 +103,10 @@ import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.utils.EnviroUtils;
-import enviromine.utils.LockedClass;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
-public class EM_EventManager// extends LockedClass
+public class EM_EventManager
 {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)

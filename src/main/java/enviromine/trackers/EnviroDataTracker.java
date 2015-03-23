@@ -1,5 +1,7 @@
 package enviromine.trackers;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,11 +28,8 @@ import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
-import enviromine.utils.LockedClass;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
-public class EnviroDataTracker// extends LockedClass
+public class EnviroDataTracker
 {
 	public EntityLivingBase trackedEntity;
 	

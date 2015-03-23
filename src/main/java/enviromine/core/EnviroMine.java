@@ -1,15 +1,12 @@
 package enviromine.core;
 
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import cpw.mods.fml.common.Mod;
@@ -20,15 +17,12 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EnviroPotion;
-import enviromine.client.gui.EM_GuiAuthWarn;
 import enviromine.core.commands.CommandPhysics;
 import enviromine.core.commands.EnviroCommand;
 import enviromine.core.commands.QuakeCommand;
@@ -40,7 +34,6 @@ import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
 import enviromine.utils.EnviroUtils;
-import enviromine.utils.LockedClass;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
@@ -65,22 +58,6 @@ public class EnviroMine
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
-		
-		/*FunwayModAuthentication.CheckAndUnlockMod();
-		
-		if(proxy.isClient())
-		{
-			MinecraftForge.EVENT_BUS.register(this);
-		}
-		
-		if(LockedClass.IsLocked())
-		{
-			if(proxy.isClient())
-			{
-				EM_GuiAuthWarn.shouldWarn = true;
-			}
-			return;
-		}*/
 		
 		enviroTab = new EnviroTab("enviromine.enviroTab");
 		proxy.preInit(event);
@@ -115,11 +92,6 @@ public class EnviroMine
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		/*if(LockedClass.IsLocked())
-		{
-			return;
-		}*/
-		
 		proxy.init(event);
 		
 		ObjectHandler.registerRecipes();
@@ -146,11 +118,6 @@ public class EnviroMine
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		/*if(LockedClass.IsLocked())
-		{
-			return;
-		}*/
-		
 		proxy.postInit(event);
 		
 		ObjectHandler.LoadIgnitionSources();
@@ -172,11 +139,6 @@ public class EnviroMine
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event)
 	{
-		/*if(LockedClass.IsLocked())
-		{
-			return;
-		}*/
-		
 		MinecraftServer server = MinecraftServer.getServer();
 		ICommandManager command = server.getCommandManager();
 		ServerCommandManager manager = (ServerCommandManager) command;
@@ -185,14 +147,4 @@ public class EnviroMine
 		manager.registerCommand(new EnviroCommand());
 		manager.registerCommand(new QuakeCommand());
 	}
-	
-	/*@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onGuiOpen(GuiOpenEvent event)
-	{
-		if(event.gui instanceof GuiMainMenu && EM_GuiAuthWarn.shouldWarn)// && !EM_Settings.Version.equals("FWG_" + "EM_VER"))
-		{
-			event.gui = new EM_GuiAuthWarn(event.gui);
-		}
-	}*/
 }

@@ -1,8 +1,15 @@
 package enviromine.handlers;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import enviromine.EnviroPotion;
+import enviromine.client.gui.UI_Settings;
+import enviromine.client.gui.hud.items.Debug_Info;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.properties.*;
+import enviromine.utils.EnviroUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
@@ -32,25 +39,16 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.EnumPlantType;
-import org.apache.logging.log4j.Level;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import com.google.common.base.Stopwatch;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import enviromine.EnviroPotion;
-import enviromine.client.gui.UI_Settings;
-import enviromine.client.gui.hud.items.Debug_Info;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.properties.ArmorProperties;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.BlockProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.utils.EnviroUtils;
+import net.minecraftforge.common.EnumPlantType;
+import org.apache.logging.log4j.Level;
 
 public class EM_StatusManager
 {
@@ -272,7 +270,7 @@ public class EM_StatusManager
 							}
 							else
 							{
-								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
+								surBiomeTemps += EnviroUtils.getBiomeTemp(x, y, z, checkBiome);
 							}
 							
 							biomeTempChecks += 1;

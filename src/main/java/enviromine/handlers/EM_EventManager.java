@@ -1,22 +1,30 @@
 package enviromine.handlers;
 
-import java.awt.Color;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import enviromine.EntityPhysicsBlock;
+import enviromine.EnviroDamageSource;
+import enviromine.EnviroPotion;
+import enviromine.blocks.tiles.TileEntityGas;
+import enviromine.client.gui.menu.config.EM_ConfigMenu;
+import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.gases.GasBuffer;
+import enviromine.network.packet.PacketEnviroMine;
+import enviromine.trackers.EnviroDataTracker;
+import enviromine.trackers.Hallucination;
+import enviromine.trackers.properties.*;
+import enviromine.utils.EnviroUtils;
+import enviromine.utils.LockedClass;
+import enviromine.world.Earthquake;
+import enviromine.world.features.mineshaft.MineshaftBuilder;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -40,18 +48,23 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
@@ -66,12 +79,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
@@ -79,33 +88,6 @@ import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.EntityPhysicsBlock;
-import enviromine.EnviroDamageSource;
-import enviromine.EnviroPotion;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.client.gui.menu.config.EM_ConfigMenu;
-import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.gases.GasBuffer;
-import enviromine.network.packet.PacketEnviroMine;
-import enviromine.trackers.EnviroDataTracker;
-import enviromine.trackers.Hallucination;
-import enviromine.trackers.properties.BiomeProperties;
-import enviromine.trackers.properties.CaveSpawnProperties;
-import enviromine.trackers.properties.DimensionProperties;
-import enviromine.trackers.properties.EntityProperties;
-import enviromine.trackers.properties.ItemProperties;
-import enviromine.utils.EnviroUtils;
-import enviromine.utils.LockedClass;
-import enviromine.world.Earthquake;
-import enviromine.world.features.mineshaft.MineshaftBuilder;
 
 public class EM_EventManager extends LockedClass
 {
@@ -814,7 +796,7 @@ public class EM_EventManager extends LockedClass
 		} else if(typeList.contains(Type.OCEAN) || typeList.contains(Type.BEACH))
 		{
 			return 2;
-		} else if(typeList.contains(Type.SNOWY) || typeList.contains(Type.CONIFEROUS) || biome.temperature < 0F || y > seaLvl * 2)
+		} else if(typeList.contains(Type.SNOWY) || typeList.contains(Type.CONIFEROUS) || biome.getFloatTemperature(x, y, z) < 0F || y > seaLvl * 2)
 		{
 			return 3;
 		} else

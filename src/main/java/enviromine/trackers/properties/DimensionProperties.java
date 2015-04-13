@@ -44,6 +44,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 	public float sanityRate;
 	public float airRate;
 	public boolean physics;
+	public String loadedFrom;
 	
 	public DimensionProperties(NBTTagCompound tags)
 	{
@@ -60,7 +61,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 	
-	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel, int mineDepth, float tempRate, float hydrationRate, float sanityRate, float airRate, boolean physics)
+	public DimensionProperties(int id, boolean override, boolean trackSanity, boolean darkAffectSanity, float sanityMulti, boolean trackAirQuality, float airMulti, boolean trackHydration, float hydrationMulti, boolean trackTemp, float tempMulti, boolean dayNightTemp, boolean weatherAffectsTemp, boolean mineshaftGen, int sealevel, int mineDepth, float tempRate, float hydrationRate, float sanityRate, float airRate, boolean physics, String fileName)
 	{
 		this.id = id;
 		this.override = override;
@@ -83,6 +84,7 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		this.sanityRate = sanityRate;
 		this.airRate = airRate;
 		this.physics = physics;
+		this.loadedFrom = fileName;
 	}
 
 	/**
@@ -195,8 +197,13 @@ public class DimensionProperties implements SerialisableProperty, PropertyBase
 		float sanityRate = (float)config.get(category, DMName[18], 0.0D).getDouble(0.0D);
 		float airRate = (float)config.get(category, DMName[19], 0.0D).getDouble(0.0D);
 		boolean physics = config.get(category, DMName[20], true).getBoolean(true);
+		String filename = config.getConfigFile().getName();
 		
-		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth, tempRate, hydrationRate, sanityRate, airRate, physics);
+		DimensionProperties entry = new DimensionProperties(id, override, trackSanity, darkAffectSanity, sanityMulti, trackAirQuality, airMulti, trackHydration, hydrationMulti, trackTemp, tempMulti, dayNightTemp, weatherAffectsTemp, mineshaftGen, sealevel, mineDepth, tempRate, hydrationRate, sanityRate, airRate, physics, filename);
+
+		// If item already exist and current file hasn't completely been loaded do this
+		if(EM_Settings.dimensionProperties.containsKey(id) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Dimension ID "+ id +" was already added from "+ EM_Settings.dimensionProperties.get(id).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
+
 		EM_Settings.dimensionProperties.put(id, entry);
 	}
 

@@ -35,6 +35,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 	public float sanityRate;
 	public float dehydrateRate;
 	public float airRate;
+	public String loadedFrom;
 	
 	public BiomeProperties(NBTTagCompound tags)
 	{
@@ -51,7 +52,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 		}
 	}
 
-	public BiomeProperties(int id, boolean biomeOveride, String waterQuality, float ambientTemp, float tempRate, float sanityRate, float dehydrateRate, float airRate)
+	public BiomeProperties(int id, boolean biomeOveride, String waterQuality, float ambientTemp, float tempRate, float sanityRate, float dehydrateRate, float airRate, String filename)
 	{
 		this.id = id;
 		this.biomeOveride = biomeOveride;
@@ -61,6 +62,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 		this.sanityRate = sanityRate;
 		this.dehydrateRate = dehydrateRate;
 		this.airRate = airRate;
+		this.loadedFrom = filename;
 	}
 	/**
 	 * <b>hasProperty(BiomeGenBase biome)</b><bR><br>
@@ -153,9 +155,11 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 		float sanRate = (float)config.get(category, BOName[5], 0.0).getDouble(0.0);
 		float dehyRate = (float)config.get(category, BOName[6], 0.0).getDouble(0.0);
 		float airRate = (float)config.get(category, BOName[7], 0.0).getDouble(0.0);
+		String filename = config.getConfigFile().getName();
 		
-		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate, airRate);
+		BiomeProperties entry = new BiomeProperties(id, biomeOveride, waterQ, ambTemp, tempRate, sanRate, dehyRate, airRate, filename);
 		
+		if(EM_Settings.biomeProperties.containsKey(id) && !EM_ConfigHandler.loadedConfigs.contains(filename)) EnviroMine.logger.log(Level.ERROR, "CONFIG DUPLICATE: Biome ID "+id +" was already added from "+ EM_Settings.biomeProperties.get(id).loadedFrom.toUpperCase() +" and will be overriden by "+ filename.toUpperCase());
 		EM_Settings.biomeProperties.put(id, entry);
 	}
 

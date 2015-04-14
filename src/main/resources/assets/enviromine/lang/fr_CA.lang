@@ -1,0 +1,185 @@
+language.name=Français canadien
+
+item.enviromine.badwater.name=Fiole d'eau sale
+item.enviromine.saltwater.name=Fiole d'eau salée
+item.enviromine.coldwater.name=Fiole d'eau froide
+item.enviromine.camelpack.name=Sac à eau
+item.enviromine.gasmask.name=Masque respiratoire
+item.enviromine.hardhat.name=Casque de mineur
+item.enviromine.airfilter.name=Filtre à air
+item.enviromine.rottenfood.name=Nourriture pourrie
+item.enviromine.spoiledmilk.name=Lait tourné
+
+potion.enviromine.frostbite=Gelure
+potion.enviromine.dehydration=Déshydratation
+potion.enviromine.insanity=Folie
+potion.enviromine.heatstroke=Coup de chaleur
+potion.enviromine.hypothermia=Hypothermie
+
+tile.enviromine.elevator_top.name=Haut d'ascenseur
+tile.enviromine.elevator_bottom.name=Bas d'ascenseur
+tile.enviromine.esky.name=Glacière
+tile.enviromine.freezer.name=Congélateur
+tile.enviromine.davy_lamp.name=Lampe de mineur
+tile.enviromine.gas.name=Gaz
+tile.enviromine.firegas.name=Gaz enflammé
+tile.enviromine.burningcoal.name=Charbon en flammes
+tile.enviromine.nophysblock.name=Bloc sans physique
+
+container.enviromine.esky=Glacière
+container.enviromine.freezer=Congélateur
+
+itemGroup.enviromine.enviroTab=EnviroMine
+
+achievement.enviromine.FunwaysFault=La faille de Funways
+achievement.enviromine.MindOverMatter=Un brin de folie
+achievement.enviromine.ProMiner=Mineur professionnel
+achievement.enviromine.HardBoiled=Tête brûlée
+achievement.enviromine.IronArmy=Armée de fer
+achievement.enviromine.TradingFavours=Échange de faveurs
+achievement.enviromine.INeededThat=J'ai besoin de ça
+achievement.enviromine.WinterIsComing=L'hiver approche
+achievement.enviromine.OhGodWhy=Oh mon dieu, pourquoi ?
+achievement.enviromine.SafetyFirst=La sécurité d'abord !
+achievement.enviromine.BoreToTheCore=Au centre de la terre
+achievement.enviromine.IntoTheDarkness=Dans les ténèbres
+achievement.enviromine.ThatJustHappened=Ça vient d'arriver
+achievement.enviromine.ItsPitchBlack=Noir d'encre
+achievement.enviromine.TenSecondRule=La règle des 10 secondes
+achievement.enviromine.MedicalMarvels=Merveilles médicales
+achievement.enviromine.SuckItUpPrincess=Faut tu t'y fasses
+achievement.enviromine.BreatheEasy=Un peu d'air pur
+
+achievement.enviromine.FunwaysFault.desc=Survivez à un effondrement.
+achievement.enviromine.MindOverMatter.desc=Tuez 5 mobs hostiles en état de Folie III.
+achievement.enviromine.ProMiner.desc=Minez durant un total d'une heure sans mourir (avec la physique et tous les effets).
+achievement.enviromine.HardBoiled.desc=Survivez un état de Coup de chaleur III.
+achievement.enviromine.IronArmy.desc=Nommez un golem de fer Siyliss.
+achievement.enviromine.TradingFavours.desc=Recevez de l'assistance d'un villageois.
+achievement.enviromine.INeededThat.desc=Récupérez un outil tombé en état de Gelure I.
+achievement.enviromine.WinterIsComing.desc=Survivez 7 jours dans la neige et le froid sans hypothermie.
+achievement.enviromine.OhGodWhy.desc=Jouez le disque 11.
+achievement.enviromine.SafetyFirst.desc=Fabriquez un casque de mineur.
+achievement.enviromine.BoreToTheCore.desc=Entrez dans la dimension de la caverne.
+achievement.enviromine.IntoTheDarkness.desc=Voyagez 1 km de l'entrée de la caverne et revenez en vie.
+achievement.enviromine.ThatJustHappened.desc=Survivez à du gaz enflammé.
+achievement.enviromine.ItsPitchBlack.desc=Voyagez 250 mètres dans l'obscurité totale dans la dimension de la caverne.
+achievement.enviromine.TenSecondRule.desc=Mangez de la nourriture pourrie.
+achievement.enviromine.MedicalMarvels.desc=Soignez n'importe quelle infection ou maladie.
+achievement.enviromine.SuckItUpPrincess.desc=Tuez un mob hostile tout en ayant un membre ou plus de cassé.
+achievement.enviromine.BreatheEasy.desc=Fabriquez un masque respiratoire.
+
+options.enviromine.on=Oui
+options.enviromine.off=Non
+options.enviromine.visible=Oui
+options.enviromine.hidden=Non
+options.enviromine.menu.title=Menu d'EnviroMine
+options.enviromine.guiMainmenu.title=Menu principal d'EnviroMine
+options.enviromine.guiSetting.title=Paramètres d'EnviroMine
+options.enviromine.guiBars.title=Paramètres des barres d'EnviroMine
+options.enviromine.configSetting.title=Paramètres de configuration d'Enviromine
+options.enviromine.guiBarPos.title=Positions des barres d'EnviroMine
+options.enviromine.adminOptions.title=Options d'administration
+options.enviromine.physics=Physique 
+options.enviromine.guiScaling=Échelle des barres 
+options.enviromine.guiOptions=Paramètres graphiques
+options.enviromine.configSettings=Paramètres de serveur
+options.enviromine.customEditor=Éditeur personnalisé
+options.enviromine.status=Texte des barres 
+options.enviromine.minBars=Affichage minimale 
+options.enviromine.tinting=Teinte d'écran 
+options.enviromine.sweatParticles=Particules de sueur 
+options.enviromine.insaneParticles=Particules de folie 
+options.enviromine.debug=Texte de débogage 
+options.enviromine.showIcons=Icônes des barres 
+options.enviromine.barPos=Positions des barres
+options.enviromine.tempScale=Température 
+options.enviromine.tempScale.f=Fahrenheit
+options.enviromine.tempScale.c=Celsius
+options.enviromine.barPos.hydration=Hydratation 
+options.enviromine.barPos.temprature=Température
+options.enviromine.barPos.sanity=Lucidité
+options.enviromine.barPos.airQuality=Qualité de l'air
+options.enviromine.guiSounds=Paramètres audio
+options.enviromine.physSound=Sons de physique 
+options.enviromine.breathVol=Volume de respiration 
+options.enviromine.newsPage=News Feed
+
+
+options.enviromine.hud.temperature=Température
+options.enviromine.hud.sanity=Lucidité
+options.enviromine.hud.hydration=Hydratation 
+options.enviromine.hud.air=Qualité de l'air
+options.enviromine.hud.resetDefault=Remettre par défaut
+options.enviromine.hud.resetDefault.desc=Réinitialiser tous les éléments des barres à leurs emplacements par défaut ?
+options.enviromine.hud.reposition=CLIC pour confirmer, ÉCHAP pour annuler, R pour réinitialiser
+options.enviromine.hud.alignment=Alignement :
+
+options.enviromine.supportUs=Aidez-nous
+options.enviromine.website=Notre site
+options.enviromine.website.YesNo=Cela va ouvrir une page dans votre navigateur web par défaut. Continuer ?
+
+deathmessage.enviromine.suffocate=%s a suffoqué jusqu'à ce que mort s'en suive
+deathmessage.enviromine.frostbite=%s est mort(e) d'hypothermie
+deathmessage.enviromine.dehydrate=%s est mort(e) de déshydratation
+deathmessage.enviromine.landslide=%s s'est fait ensevelir par un glissement de terrain
+deathmessage.enviromine.avalanche=%s s'est fait ensevelir par une avalanche
+deathmessage.enviromine.organfailure=%s est mort(e) de défaillance d'organe
+deathmessage.enviromine.heatstroke=%s a eu sa cervelle grillée par un coup de chaleur
+deathmessage.enviromine.bleedout=%s est mort(e) au bout de son sang
+deathmessage.enviromine.gasfire=%s a péri dans du gaz enflammé
+
+updatemsg.enviromine.available=La mise à jour %s d'EnviroMine est disponible
+updatemsg.enviromine.download=Téléchargement et changelog :
+updatemsg.enviromine.uptodate=La version %s d'EnviroMine est à jour
+updatemsg.enviromine.debug=La version %s d'EnviroMine est une version de débogage
+updatemsg.enviromine.error=Une erreur est survenue lors de l'analyse du fichier de version d'EnviroMine !
+
+news.enviromine.newpost=(Nouveau post)
+news.enviromine.button.news=News Feed
+news.enviromine.button.changelog=Changelog
+news.enviromine.button.version=Info version
+news.enviromine.version.current=Votre version actuelle est %s
+news.enviromine.news.changelog=Consultez le changelog pour les nouveautés
+news.enviromine.news.wiki=Téléchargez la nouvelle version sur notre wiki !
+
+auth.enviromine.1=EnviroMine %s a été authentifié avec succès !
+auth.enviromine.2=Merci d'utiliser la version officielle <3
+auth.enviromine.3=AVERTISSEMENT : Si vous avez besoin de réinstaller votre copie à une date ultérieure ou de
+auth.enviromine.4=l'inclure dans un modpack, vous aurez besoin de garder le fichier AUTH de votre dossier config
+auth.enviromine.5=Proudly supporting the %s campaign
+auth.enviromine.6=Cette version d'EnviroMine n'est pas authentique et sera désactivée !
+auth.enviromine.7=Si vous utilisez un modpack, veuillez informer le développeur qu'il a besoin
+auth.enviromine.8=d'inclure le fichier AUTH à jour pour cette version. Pour plus d'infos :
+
+keybinds.enviromine.reload=Recharger les configurations
+keybinds.enviromine.addremove=Ajouter/Enlever la config. perso.
+
+misc.enviromine.tooltip.filter=Filtres : %s (%s/%s)
+misc.enviromine.tooltip.water=Eau : %s (%s/%s)
+misc.enviromine.tooltip.rot=Pourriture : %s (Jour %s/%s)
+
+commands.enviromine.envirostat.add=add
+commands.enviromine.envirostat.set=set
+commands.enviromine.envirostat.temp=temp
+commands.enviromine.envirostat.sanity=sanity
+commands.enviromine.envirostat.water=water
+commands.enviromine.envirostat.air=air
+commands.enviromine.envirostat.noTracker=Cible non trouvée ou n'ayant pas de suivi !
+commands.enviromine.envirophysic.toggle=toggle
+commands.enviromine.envirophysic.status=status
+commands.enviromine.envirophysic.statusText=%s Statut de physique : %s
+commands.enviromine.envirophysic.physics= %s Physique %s
+commands.enviromine.enviroquake.length=length
+commands.enviromine.enviroquake.width=width
+commands.enviromine.enviroquake.rotation=rotation
+commands.enviromine.enviroquake.mode=mode
+commands.enviromine.enviroquake.stop=stop
+commands.enviromine.enviroquake.stoppedAll=Arrêt de tous les tremblements de terre
+commands.enviromine.enviroquake.error.tooMany=Vous n'avez pas la permissions de spawner plus d'un tremblement de terre à la fois !
+commands.enviromine.enviroquake.error.tooBig=Vous ne pouvez pas spawner un tremblement de terre au-delà de 4096 blocs !
+
+editor.enviromine.main.tooltip=Configuration principale
+editor.enviromine.cave.tooltip=Dimension de la caverne
+editor.enviromine.stability.tooltip=Types de stabilité
+editor.enviromine.custom.tooltip=Configurations personnalisées

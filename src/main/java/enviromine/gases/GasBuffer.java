@@ -169,7 +169,7 @@ public class GasBuffer
 				
 				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
 				
-				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
+				if(world == null || world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
 				{
 					continue;
 				} else if(EM_PhysManager.chunkDelay.containsKey(world.provider.dimensionId + "" + (entry[1] >> 4) + "," + (entry[3] >> 4)))
@@ -211,7 +211,7 @@ public class GasBuffer
 				
 				World world = MinecraftServer.getServer().worldServerForDimension(entry[0]);
 				
-				if(world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
+				if(world == null || world.getTotalWorldTime() < EM_PhysManager.worldStartTime + EM_Settings.worldDelay)
 				{
 					continue;
 				} else if(EM_PhysManager.chunkDelay.containsKey(world.provider.dimensionId + "" + (entry[1] >> 4) + "," + (entry[3] >> 4)))

@@ -5,6 +5,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MathHelper;
@@ -31,17 +32,25 @@ public class TeleportHandler extends Teleporter
 	private final List<Long> destinationCoordinateKeys = new ArrayList<Long>();
 	
 	static HashMap<WorldServer,TeleportHandler> instances = new HashMap<WorldServer,TeleportHandler>();
+	private boolean recall = false;
 	
 	public static TeleportHandler GetInstance(WorldServer world)
+	{
+		return GetInstance(world, false);
+	}
+	
+	public static TeleportHandler GetInstance(WorldServer world, boolean recall)
 	{
 		TeleportHandler tele = instances.get(world);
 		
 		if(tele != null)
 		{
+			tele.recall = recall;
 			return tele;
 		} else
 		{
 			tele = new TeleportHandler(world);
+			tele.recall = recall;
 			instances.put(world, tele);
 			return tele;
 		}
@@ -78,18 +87,25 @@ public class TeleportHandler extends Teleporter
 			if(entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer)entity;
-				ItemStack itemTop = new ItemStack(ObjectHandler.elevator, 1, 0);
-				ItemStack itemBot = new ItemStack(ObjectHandler.elevator, 1, 1);
-				if(!player.inventory.addItemStackToInventory(itemTop))
+				
+				if(!recall)
 				{
-					EntityItem entityitem = new EntityItem(this.worldServerInstance, player.posX, player.posY, player.posZ, itemTop);
-					this.worldServerInstance.spawnEntityInWorld(entityitem);
+					ItemStack itemTop = new ItemStack(ObjectHandler.elevator, 1, 0);
+					ItemStack itemBot = new ItemStack(ObjectHandler.elevator, 1, 1);
+					
+					if(!player.inventory.addItemStackToInventory(itemTop))
+					{
+						EntityItem entityitem = new EntityItem(this.worldServerInstance, player.posX, player.posY, player.posZ, itemTop);
+						this.worldServerInstance.spawnEntityInWorld(entityitem);
+					}
+					
+					if(!player.inventory.addItemStackToInventory(itemBot))
+					{
+						EntityItem entityitem = new EntityItem(this.worldServerInstance, player.posX, player.posY, player.posZ, itemBot);
+						this.worldServerInstance.spawnEntityInWorld(entityitem);
+					}
 				}
-				if(!player.inventory.addItemStackToInventory(itemBot))
-				{
-					EntityItem entityitem = new EntityItem(this.worldServerInstance, player.posX, player.posY, player.posZ, itemBot);
-					this.worldServerInstance.spawnEntityInWorld(entityitem);
-				}
+				
 				if(EM_Settings.caveRespawn)
 				{
 		            ChunkCoordinates chunkcoordinates = player.getPlayerCoordinates();
@@ -120,8 +136,6 @@ public class TeleportHandler extends Teleporter
 		double d4;
 		int k1;
 		
-		boolean breakLoop = false;
-		
 		if (this.destinationCoordinateCache.containsItem(j1))
 		{
 			PortalPosition portalposition = (PortalPosition)this.destinationCoordinateCache.getValueByKey(j1);
@@ -134,6 +148,7 @@ public class TeleportHandler extends Teleporter
 		}
 		else
 		{
+			brkAll:
 			for (k1 = l - short1; k1 <= l + short1; ++k1)
 			{
 				double d5 = (double)k1 + 0.5D - par1Entity.posX;
@@ -142,11 +157,22 @@ public class TeleportHandler extends Teleporter
 				{
 					double d6 = (double)l1 + 0.5D - par1Entity.posZ;
 					
-					for (int i2 = 127 - 1; i2 >= 0; --i2)
+					for (int i2 = 255 - 1; i2 >= 0; --i2)
 					{
-						if (this.worldServerInstance.getBlock(k1, i2, l1) == ObjectHandler.elevator && this.worldServerInstance.getBlockMetadata(k1, i2, l1) == 1 && this.worldServerInstance.getBlock(k1, i2 + 1, l1) == ObjectHandler.elevator && this.worldServerInstance.getBlockMetadata(k1, i2 + 1, l1) == 0)
+						if (this.worldServerInstance.getBlock(k1, i2, l1) == ObjectHandler.elevator && this.worldServerInstance.getBlock(k1, i2 + 1, l1) == ObjectHandler.elevator)
 						{
-							breakLoop = true;
+							if(this.worldServerInstance.getBlockMetadata(k1, i2, l1) == 1 && this.worldServerInstance.getBlockMetadata(k1, i2 + 1, l1) == 0)
+							{
+								// Normal elevator
+								//recall = false;
+							} else if(this.worldServerInstance.getBlockMetadata(k1, i2, l1) == 1 && this.worldServerInstance.getBlockMetadata(k1, i2 + 1, l1) == 0)
+							{
+								// Recall
+								recall = true;
+							} else
+							{
+								continue;
+							}
 							while (this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevator)
 							{
 								--i2;
@@ -162,23 +188,10 @@ public class TeleportHandler extends Teleporter
 								j = i2;
 								k = l1;
 							}
-						}
-						
-						if(breakLoop)
-						{
-							break;
+							
+							break brkAll;
 						}
 					}
-					
-					if(breakLoop)
-					{
-						break;
-					}
-				}
-				
-				if(breakLoop)
-				{
-					break;
 				}
 			}
 		}
@@ -313,5 +326,54 @@ public class TeleportHandler extends Teleporter
 				}
 			}
 		}
+	}
+	
+	public static boolean RecallElevator(int x, int y, int z, boolean invert)
+	{
+		WorldServer caveWorld = MinecraftServer.getServer().worldServerForDimension(EM_Settings.caveDimID);
+		WorldServer overWorld = MinecraftServer.getServer().worldServerForDimension(0);
+		
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		short short1 = 1;
+		boolean found = false;
+		
+		WorldServer checkWorld = invert? overWorld : caveWorld;
+		WorldServer recallWorld = invert? caveWorld : overWorld;
+		
+		brkAll:
+		for (i = x - short1; i <= x + short1; ++i)
+		{
+			for (k = z - short1; k <= z + short1; ++k)
+			{
+				for (j = 255 - 1; j >= 0; --j)
+				{
+					if (checkWorld.getBlock(i, j, k) == ObjectHandler.elevator && checkWorld.getBlockMetadata(i, j, k) == 1 && checkWorld.getBlock(i, j + 1, k) == ObjectHandler.elevator && checkWorld.getBlockMetadata(i, j + 1, k) == 0)
+					{
+						while (checkWorld.getBlock(i, j - 1, k) == ObjectHandler.elevator)
+						{
+							--j;
+						} 
+						
+						found = true;
+						break brkAll;
+					}
+				}
+			}
+		}
+		
+		if(found)
+		{
+			// Set recall blocks
+			checkWorld.setBlock(i, j, k, ObjectHandler.elevator, 3, 2);
+			checkWorld.setBlock(i, j + 1, k, ObjectHandler.elevator, 2, 2);
+			
+			// Set elevator blocks
+			recallWorld.setBlock(x, y, z, ObjectHandler.elevator, 1, 2);
+			recallWorld.setBlock(x, y + 1, z, ObjectHandler.elevator, 0, 2);
+		}
+		
+		return found;
 	}
 }

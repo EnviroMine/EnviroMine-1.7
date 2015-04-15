@@ -8,7 +8,7 @@ public class MaterialElevator extends Material
 	public MaterialElevator(MapColor colour)
 	{
 		super(colour);
-		this.setRequiresTool();
+		//this.setRequiresTool();
 	}
 	
 	@Override

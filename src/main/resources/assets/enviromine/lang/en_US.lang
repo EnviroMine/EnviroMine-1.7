@@ -180,4 +180,11 @@ commands.enviromine.enviroquake.error.tooMany=You are not permitted to spawn mor
 commands.enviromine.enviroquake.error.tooBig=You may not spawn an earthquake over 4096 blocks!
 
 
+editor.enviromine.changeprofile=Change Profile
+editor.enviromine.currentprofile=Current Profile
+editor.enviromine.global=Global Config
+editor.enviromine.cave=Cave Dimension
+editor.enviromine.stability=Stability Types
+editor.enviromine.custom=Custom Configs
+
 

@@ -42,7 +42,6 @@ public class Gui_EventManager
 	int width, height;
 	
 	//Render HUD
-	
 	//Render Player
 	
 	// Button Functions
@@ -139,7 +138,7 @@ public class Gui_EventManager
 			{
 				//Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
-			}
+			} 
 		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
 		{
 			tracker = null;
@@ -147,6 +146,7 @@ public class Gui_EventManager
 		{
 			
 			HudItem.blinkTick++;
+			
 			
 			// Render GasMask Overlays
 			if(UI_Settings.overlay)
@@ -158,13 +158,15 @@ public class Gui_EventManager
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_LIGHTING);
 	        GL11.glColor4f(1F, 1F, 1F, 1F);
+
 			for(HudItem huditem : HUDRegistry.getActiveHudItemList())
 			{
+				
 				if(mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative())
 				{
 					continue;
 				}
-				
+
 				if(mc.thePlayer.ridingEntity instanceof EntityLivingBase)
 				{
 					if(huditem.shouldDrawOnMount())

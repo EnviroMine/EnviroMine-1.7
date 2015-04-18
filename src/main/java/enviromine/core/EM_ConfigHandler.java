@@ -11,13 +11,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import org.apache.logging.log4j.Level;
 
+import enviromine.client.gui.Gui_EventManager;
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.BlockProperties;
@@ -30,16 +35,25 @@ import enviromine.trackers.properties.ItemProperties;
 import enviromine.trackers.properties.RotProperties;
 import enviromine.trackers.properties.StabilityType;
 import enviromine.trackers.properties.helpers.PropertyBase;
+import enviromine.world.EM_WorldData;
 
 public class EM_ConfigHandler
 {
 	// Dirs for Custom Files
 	public static String configPath = "config/enviromine/";
-	public static String customPath = configPath + "CustomProperties/";
+	public static String customPath = "CustomProperties/";
+	
+	public static String profilePath = configPath + "profiles/";
+	public static String defaultProfile = profilePath +"default/";
+	
+	
+	public static String loadedProfile = defaultProfile;
 	
 	static HashMap<String, PropertyBase> propTypes;
 	
-	public static List loadedConfigs = new ArrayList(); 
+	public static List loadedConfigs = new ArrayList();
+	
+	
 	
 	/**
 	 * Register all property types and their category names here. The rest is handled automatically.
@@ -58,15 +72,108 @@ public class EM_ConfigHandler
 		propTypes.put(EntityProperties.base.categoryName(), EntityProperties.base);
 		propTypes.put(ItemProperties.base.categoryName(), ItemProperties.base);
 		propTypes.put(RotProperties.base.categoryName(), RotProperties.base);
+		
+		
+		
 	}
 	
-	public static int initConfig()
+	public static void loadGlobalConfig(File file)
 	{
-		// Check for Data Directory 
-		CheckDir(new File(customPath));
+		Configuration config;
+		try
+		{
+			config = new Configuration(file, true);
+		} catch(Exception e)
+		{
+			EnviroMine.logger.log(Level.WARN, "Failed to load main configuration file!", e);
+			return;
+		}
 		
-		EnviroMine.logger.log(Level.INFO, "Loading configs...");
+		config.load();
 		
+
+		
+		config.get("Do not Edit", "Current Config Version", EM_Settings.Version).getString();
+
+		EM_Settings.updateCheck = config.get(Configuration.CATEGORY_GENERAL, "Check For Updates", true).getBoolean(true);
+		EM_Settings.noNausea = config.get(Configuration.CATEGORY_GENERAL, "Blindness instead of Nausea", false).getBoolean(false);
+		EM_Settings.keepStatus = config.get(Configuration.CATEGORY_GENERAL, "Keep statuses on death", false).getBoolean(false);
+		EM_Settings.renderGear = config.get(Configuration.CATEGORY_GENERAL, "Render Gear", true ,"Render 3d gear worn on player. Must reload game to take effect").getBoolean(true);
+		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
+		
+		// Physics Settings
+		String PhySetCat = "Physics";
+
+		int minPhysInterval = 6;
+		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
+		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128, "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
+		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval, "The number of ticks between physics update passes (must be " + minPhysInterval + " or more)"), minPhysInterval);
+		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
+		EM_Settings.chunkDelay = config.get(PhySetCat, "Chunk Physics Delay", 500, "How long until individual chunk's physics starts after loading (DO NOT SET TOO LOW)").getInt(500);
+		EM_Settings.physInterval = EM_Settings.physInterval >= 2 ? EM_Settings.physInterval : 2;
+		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
+	
+		// Potion ID's
+		EM_Settings.hypothermiaPotionID = -1;
+		EM_Settings.heatstrokePotionID = -1;
+		EM_Settings.frostBitePotionID = -1;
+		EM_Settings.dehydratePotionID = -1;
+		EM_Settings.insanityPotionID = -1;
+		
+		EM_Settings.hypothermiaPotionID = config.get("Potions", "Hypothermia", nextAvailPotion(27)).getInt(nextAvailPotion(27));
+		EM_Settings.heatstrokePotionID = config.get("Potions", "Heat Stroke", nextAvailPotion(28)).getInt(nextAvailPotion(28));
+		EM_Settings.frostBitePotionID = config.get("Potions", "Frostbite", nextAvailPotion(29)).getInt(nextAvailPotion(29));
+		EM_Settings.dehydratePotionID = config.get("Potions", "Dehydration", nextAvailPotion(30)).getInt(nextAvailPotion(30));
+		EM_Settings.insanityPotionID = config.get("Potions", "Insanity", nextAvailPotion(31)).getInt(nextAvailPotion(31));
+	
+		// Config Options
+		String ConSetCat = "Config";
+		Property genConfig = config.get(ConSetCat, "Generate Blank Configs", false, "Will attempt to find and generate blank configs for any custom items/blocks/etc loaded before EnviroMine. Pack developers are highly encouraged to enable this! (Resets back to false after use)");
+		if(!EM_Settings.genConfigs)
+		{
+			EM_Settings.genConfigs = genConfig.getBoolean(false);
+		}
+		genConfig.set(false);
+		
+		Property genDefault = config.get(ConSetCat, "Generate Defaults", true, "Generates EnviroMines initial default files");
+		if(!EM_Settings.genDefaults)
+		{
+			EM_Settings.genDefaults = genDefault.getBoolean(true);
+		}
+		genDefault.set(false);
+		
+		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
+		
+		
+		config.save();
+		
+	
+	}
+	
+	
+	public static void initProfile()
+	{	
+		EM_WorldData theWorldEM = EnviroMine.theWorldEM;
+		
+		String profile = theWorldEM.getProfile();
+		
+		File profileDir = new File(profilePath + profile +"/"+ customPath);
+
+		CheckDir(profileDir);
+		
+		if(!profileDir.exists())
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to load Profile:"+ profile +". Loading Default");	
+			profileDir = new File(defaultProfile + customPath);
+			loadedProfile = defaultProfile;
+		}else 
+		{
+			loadedProfile = profilePath + profile +"/";
+			EnviroMine.logger.log(Level.INFO, "Loading Profile: "+ profile);
+		}
+		
+		File ProfileSettings = new File(loadedProfile + profile +"_Settings.cfg");
+		loadGeneralConfig(ProfileSettings);
 		// load defaults
 		
 		//These must be run before the block configs generate/load
@@ -78,37 +185,52 @@ public class EM_ConfigHandler
 			loadDefaultProperties();
 		}
 		
+		
 		// Now load Files from "Custom Objects"
-		File[] customFiles = GetFileList(customPath);
-		for(int i = 0; i < customFiles.length; i++)
-		{
-			LoadCustomObjects(customFiles[i]);
-		}
-		
-		// Load Main Config File And this will go though changes
-		File configFile = new File(configPath + "EnviroMine.cfg");
-		
-		Iterator<PropertyBase> iterator = propTypes.values().iterator();
-		
-		// Load non standard property files
-		while(iterator.hasNext())
-		{
-			PropertyBase props = iterator.next();
+				File[] customFiles = GetFileList(loadedProfile + customPath);
+				for(int i = 0; i < customFiles.length; i++)
+				{
+					LoadCustomObjects(customFiles[i]);
+				}
+				
+				
 			
-			if(!props.useCustomConfigs())
-			{
-				props.customLoad();
-			}
-		}
+				
+				Iterator<PropertyBase> iterator = propTypes.values().iterator();
+				
+				// Load non standard property files
+				while(iterator.hasNext())
+				{
+					PropertyBase props = iterator.next();
+					
+					if(!props.useCustomConfigs())
+					{
+						props.customLoad();
+					}
+				}
+				
+	}	
+	
+	
+	public static int initConfig()
+	{
+		// Check for Data Directory 
+		//CheckDir(new File(customPath));
 		
-		loadGeneralConfig(configFile);
+		EnviroMine.logger.log(Level.INFO, "Loading configs...");
+		
+		
+		
+		// Load Global Configs
+		File configFile = new File(configPath + "Global_Settings.cfg");
+		loadGlobalConfig(configFile);
 		
 		int Total = EM_Settings.armorProperties.size() + EM_Settings.blockProperties.size() + EM_Settings.livingProperties.size() + EM_Settings.itemProperties.size() + EM_Settings.biomeProperties.size() + EM_Settings.dimensionProperties.size() + EM_Settings.caveGenProperties.size() + EM_Settings.caveSpawnProperties.size();
 		
 		return Total;
 	}
 	
-	public static void loadGeneralConfig(File file)
+	private static void loadGeneralConfig(File file)
 	{
 		Configuration config;
 		try
@@ -137,29 +259,16 @@ public class EM_ConfigHandler
 		EM_Settings.enableBodyTemp = config.get(Configuration.CATEGORY_GENERAL, "Allow Body Temperature", true).getBoolean(true);
 		EM_Settings.enableAirQ = config.get(Configuration.CATEGORY_GENERAL, "Allow Air Quality", true, "True/False to turn Enviromine Trackers for Sanity, Air Quality, Hydration, and Body Temperature.").getBoolean(true);
 		EM_Settings.trackNonPlayer = config.get(Configuration.CATEGORY_GENERAL, "Track NonPlayer entities", false, "Track enviromine properties on Non-player entities(mobs & animals)").getBoolean(false);
-		EM_Settings.updateCheck = config.get(Configuration.CATEGORY_GENERAL, "Check For Updates", true).getBoolean(true);
 		EM_Settings.villageAssist = config.get(Configuration.CATEGORY_GENERAL, "Enable villager assistance", true).getBoolean(true);
 		EM_Settings.foodSpoiling = config.get(Configuration.CATEGORY_GENERAL, "Enable food spoiling", true).getBoolean(true);
 		EM_Settings.foodRotTime = config.get(Configuration.CATEGORY_GENERAL, "Default spoil time (days)", 7).getInt(7);
 		EM_Settings.torchesBurn = config.get(Configuration.CATEGORY_GENERAL, "Torches burn", true).getBoolean(true);
 		EM_Settings.torchesGoOut = config.get(Configuration.CATEGORY_GENERAL, "Torches go out", true).getBoolean(true);
-		EM_Settings.finiteWater = config.get(Configuration.CATEGORY_GENERAL, "Finite Water", false).getBoolean(false);
-		EM_Settings.noNausea = config.get(Configuration.CATEGORY_GENERAL, "Blindness instead of Nausea", false).getBoolean(false);
-		EM_Settings.keepStatus = config.get(Configuration.CATEGORY_GENERAL, "Keep statuses on death", false).getBoolean(false);
-		EM_Settings.renderGear = config.get(Configuration.CATEGORY_GENERAL, "Render Gear", true ,"Render 3d gear worn on player. Must reload game to take effect").getBoolean(true);
 		
 		// Physics Settings
 		String PhySetCat = "Physics";
-		int minPhysInterval = 6;
-		EM_Settings.spreadIce = config.get(PhySetCat, "Large Ice Cracking", false, "Setting Large Ice Cracking to true can cause Massive Lag").getBoolean(false);
-		EM_Settings.updateCap = config.get(PhySetCat, "Consecutive Physics Update Cap", 128, "This will change maximum number of blocks that can be updated with physics at a time. - 1 = Unlimited").getInt(128);
-		EM_Settings.physInterval = getConfigIntWithMinInt(config.get(PhySetCat, "Physics Interval", minPhysInterval, "The number of ticks between physics update passes (must be " + minPhysInterval + " or more)"), minPhysInterval);
 		EM_Settings.stoneCracks = config.get(PhySetCat, "Stone Cracks Before Falling", true).getBoolean(true);
 		EM_Settings.defaultStability = config.get(PhySetCat, "Default Stability Type (BlockIDs > 175)", "loose").getString();
-		EM_Settings.worldDelay = config.get(PhySetCat, "World Start Delay", 1000, "How long after world start until the physics system kicks in (DO NOT SET TOO LOW)").getInt(1000);
-		EM_Settings.chunkDelay = config.get(PhySetCat, "Chunk Physics Delay", 500, "How long until individual chunk's physics starts after loading (DO NOT SET TOO LOW)").getInt(500);
-		EM_Settings.physInterval = EM_Settings.physInterval >= 2 ? EM_Settings.physInterval : 2;
-		EM_Settings.entityFailsafe = config.get(PhySetCat, "Physics entity fail safe level", 1, "0 = No action, 1 = Limit to < 100 per 8x8 block area, 2 = Delete excessive entities & Dump physics (EMERGENCY ONLY)").getInt(1);
 		
 		// Config Gas
 		EM_Settings.noGases = config.get("Gases", "Disable Gases", false, "Disables all gases and slowly deletes existing pockets").getBoolean(false);
@@ -169,19 +278,7 @@ public class EM_ConfigHandler
 		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", 2048, "How many gases can be processed in a single pass per chunk (-1 = infinite)").getInt(-1);
 		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", true, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(true);
 		
-		// Potion ID's
-		EM_Settings.hypothermiaPotionID = -1;
-		EM_Settings.heatstrokePotionID = -1;
-		EM_Settings.frostBitePotionID = -1;
-		EM_Settings.dehydratePotionID = -1;
-		EM_Settings.insanityPotionID = -1;
-		
-		EM_Settings.hypothermiaPotionID = config.get("Potions", "Hypothermia", nextAvailPotion(27)).getInt(nextAvailPotion(27));
-		EM_Settings.heatstrokePotionID = config.get("Potions", "Heat Stroke", nextAvailPotion(28)).getInt(nextAvailPotion(28));
-		EM_Settings.frostBitePotionID = config.get("Potions", "Frostbite", nextAvailPotion(29)).getInt(nextAvailPotion(29));
-		EM_Settings.dehydratePotionID = config.get("Potions", "Dehydration", nextAvailPotion(30)).getInt(nextAvailPotion(30));
-		EM_Settings.insanityPotionID = config.get("Potions", "Insanity", nextAvailPotion(31)).getInt(nextAvailPotion(31));
-		
+	
 		// Multipliers ID's
 		EM_Settings.tempMult = config.get("Speed Multipliers", "BodyTemp", 1.0D).getDouble(1.0D);
 		EM_Settings.hydrationMult = config.get("Speed Multipliers", "Hydration", 1.0D).getDouble(1.0D);
@@ -279,7 +376,7 @@ public class EM_ConfigHandler
 	//#          Get File List              #                 
 	//#This Grabs Directory List for Custom #
 	//#######################################
-	public static File[] GetFileList(String path)
+	private static File[] GetFileList(String path)
 	{
 		
 		// Will be used Auto Load Custom Objects from ??? Dir 
@@ -323,12 +420,15 @@ public class EM_ConfigHandler
 		
 		if(Dir.exists())
 		{
+			EnviroMine.logger.log(Level.INFO, "Dir already exist:"+ Dir.getName());
 			return;
 		}
 		
 		try
 		{
+			Dir.setWritable(true);
 			dirFlag = Dir.mkdirs();
+			EnviroMine.logger.log(Level.INFO, "Created new Folder "+ Dir.getName());
 		} catch(Exception e)
 		{
 			EnviroMine.logger.log(Level.ERROR, "Error occured while creating config directory: " + Dir.getAbsolutePath(), e);
@@ -345,7 +445,7 @@ public class EM_ConfigHandler
 	 * Used to Load Custom Blocks,Armor
 	 * Entitys, & Items from Custom Config Dir        
 	 */
-	public static void LoadCustomObjects(File customFiles)
+	private static void LoadCustomObjects(File customFiles)
 	{
 		boolean datFile = isCFGFile(customFiles);
 		
@@ -427,6 +527,45 @@ public class EM_ConfigHandler
 		}
 		
 		return category;
+	}
+	
+	public static String getProfileName()
+	{
+		return getProfileName(loadedProfile);
+	}
+	
+	public static String getProfileName(String profile)
+	{
+		return profile.substring(profilePath.length(),profile.length()-1).toUpperCase();		
+	}
+	
+	public static boolean ReloadConfig()
+	{
+		try
+		{
+			EM_Settings.armorProperties.clear();
+			EM_Settings.blockProperties.clear();
+			EM_Settings.itemProperties.clear();
+			EM_Settings.livingProperties.clear();
+			EM_Settings.stabilityTypes.clear();
+			EM_Settings.biomeProperties.clear();
+			EM_Settings.dimensionProperties.clear();
+			EM_Settings.rotProperties.clear();
+			EM_Settings.caveGenProperties.clear();
+			EM_Settings.caveSpawnProperties.clear();
+			
+			int Total = initConfig();
+			
+			initProfile();
+			
+			EnviroMine.caves.RefreshSpawnList();
+			
+			return true;
+		} //try
+		catch(NullPointerException e)
+		{
+			return false; 
+		}
 	}
 	
 	public static void loadDefaultProperties()

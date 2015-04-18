@@ -7,8 +7,10 @@ import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -34,6 +36,7 @@ import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
 import enviromine.utils.EnviroUtils;
+import enviromine.world.EM_WorldData;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
@@ -54,9 +57,12 @@ public class EnviroMine
 	
 	public SimpleNetworkWrapper network;
 	
+	public static EM_WorldData theWorldEM;	
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		//LegacyHandler.initCheck();
 		logger = event.getModLog();
 		
 		enviroTab = new EnviroTab("enviromine.enviroTab");

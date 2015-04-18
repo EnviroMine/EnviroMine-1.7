@@ -192,7 +192,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 			
 			String modID = ModIdentification.idFromObject(biome);
 			
-			File file = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
+			File file = new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
 			
 			if(!file.exists())
 			{
@@ -219,7 +219,7 @@ public class BiomeProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "Biomes.cfg");
+		return new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + "Biomes.cfg");
 	}
 
 	@Override

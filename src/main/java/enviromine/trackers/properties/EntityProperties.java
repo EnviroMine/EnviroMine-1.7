@@ -198,7 +198,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 			String modID = ModIdentification.idFromObject(clazz);
 			String eName = EntityList.getStringFromID(eID);
 			
-			File file = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
+			File file = new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
 			
 			if(!file.exists())
 			{
@@ -349,7 +349,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "Entities.cfg");
+		return new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + "Entities.cfg");
 	}
 
 	@Override

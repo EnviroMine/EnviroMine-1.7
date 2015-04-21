@@ -38,15 +38,15 @@ public class NameProfile extends GuiScreen
 	{
 	      Keyboard.enableRepeatEvents(true);
 	        this.buttonList.clear();
-	        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, I18n.format("editor.enviromine.createNew", new Object[0])));
+	        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, I18n.format("editor.enviromine.create", new Object[0])));
 	        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12, I18n.format("gui.cancel", new Object[0])));
 	        
         this.textFieldList = new GuiTextField(this.fontRendererObj, this.width / 2 - 100, 60, 200, 20);
         this.textFieldList.setFocused(true);
-        this.textFieldList.setText("Something");
+        this.textFieldList.setText(I18n.format("editor.enviromine.insertName"));
         
-        this.genModConfigs = new GuiCheckBox(2, this.width / 2 - 100, 90, "config.enviromine.genModConfigs", false);
-        this.genBasicConfigs =  new GuiCheckBox(3, this.width / 2 - 100, 110, "config.enviromine.genBasicConfigs", false);
+        this.genModConfigs = new GuiCheckBox(2, this.width / 2 - 100, 90, I18n.format("editor.enviromine.genModConfigs"), false);
+        this.genBasicConfigs =  new GuiCheckBox(3, this.width / 2 - 100, 110, I18n.format("editor.enviromine.genBasicConfigs"), false);
         
         this.buttonList.add(this.genModConfigs);
         this.buttonList.add(this.genBasicConfigs);
@@ -157,7 +157,7 @@ public class NameProfile extends GuiScreen
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj,  StatCollector.translateToLocal("ProfileMenu"), this.width / 2, 15, 16777215);
+		this.drawCenteredString(this.fontRendererObj, I18n.format("editor.enviromine.nameProfile"), this.width / 2, 15, 16777215);
 		
 
 	        this.textFieldList.drawTextBox();

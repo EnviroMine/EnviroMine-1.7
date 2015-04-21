@@ -38,9 +38,6 @@ public class ProfileListExtended extends GuiListExtended{
 		
 		
 		
-		int id=500;
-		
-		profileList.add(new ProfileListExtended.profileEntry(createNew));
 		for(File entry: profileDir)
 		{
 			
@@ -48,7 +45,6 @@ public class ProfileListExtended extends GuiListExtended{
 			{  
 				String profileName = entry.toString().substring(EM_ConfigHandler.profilePath.length()).toUpperCase();
 				profileList.add(new ProfileListExtended.profileEntry(profileName));
-				id++;
 			}
 		}
 		
@@ -111,12 +107,6 @@ public class ProfileListExtended extends GuiListExtended{
 
 		       if (this.bntProfile.mousePressed(ProfileListExtended.this.mc, p_148278_2_, p_148278_3_))
 	            {
-		    	   
-		    	   if(profileName == ProfileListExtended.createNew)
-		    	   {
-		    		   Minecraft.getMinecraft().displayGuiScreen(new NameProfile(profileMenu));
-		    		   return false;
-		    	   }
 		   			EnviroMine.theWorldEM.setProfile(profileName);
 
 		   			if(EM_ConfigHandler.ReloadConfig())

@@ -32,6 +32,7 @@ import enviromine.core.proxies.EM_CommonProxy;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
+import enviromine.handlers.Legacy.LegacyHandler;
 import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
@@ -62,10 +63,13 @@ public class EnviroMine
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		//LegacyHandler.initCheck();
+		
 		logger = event.getModLog();
 		
 		enviroTab = new EnviroTab("enviromine.enviroTab");
+		
+		LegacyHandler.init();
+		
 		proxy.preInit(event);
 		
 		ObjectHandler.initItems();

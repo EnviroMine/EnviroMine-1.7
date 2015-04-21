@@ -186,5 +186,20 @@ editor.enviromine.global=Global Config
 editor.enviromine.cave=Cave Dimension
 editor.enviromine.stability=Stability Types
 editor.enviromine.custom=Custom Configs
+editor.enviromine.createNewProfile=Create New Profile
+editor.enviromine.selectProfile=Select Profile
+editor.enviromine.genModConfigs=Generates Customs Configs for Mods Loaded.
+editor.enviromine.genBasicConfigs=Generates EnviroMines initial default files.
+editor.enviromine.create=Create
+editor.enviromine.nameProfile=New Profile
+editor.enviromine.insertName=Insert Name
+editor.enviromine.currentProfile=Current Profile
+editor.enviromine.global=Global Config
+editor.enviromine.settings=Profile Settings
+editor.enviromine.cave=Cave Dimension
+editor.enviromine.stability=Stability Types
+editor.enviromine.custom=Custom Configs
+
+
 
 

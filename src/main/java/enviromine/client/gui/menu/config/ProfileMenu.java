@@ -30,8 +30,10 @@ public class ProfileMenu extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		int doneWidth = Math.max(mc.fontRenderer.getStringWidth(I18n.format("gui.done")) + 20, 100);
-	    this.buttonList.add(new GuiButtonExt(2000, this.width / 2 - (doneWidth/2), this.height - 29, doneWidth, 20, I18n.format("gui.done")));
+		int doneWidth = Math.max(mc.fontRenderer.getStringWidth(I18n.format("gui.back")) + 20, 100);
+		int createWidth = Math.max(mc.fontRenderer.getStringWidth(I18n.format("editor.enviromine.createNewProfile")) + 20, 100);
+	    this.buttonList.add(new GuiButtonExt(200, 20, this.height - 29, doneWidth, 20, I18n.format("gui.back")));
+	    this.buttonList.add(new GuiButtonExt(201, this.width - createWidth - 20, this.height - 29, createWidth, 20, I18n.format("editor.enviromine.createNewProfile")));
 		this.profileList = new ProfileListExtended(this.mc, this.width, this.height, 32, this.height - 32, 30, this.parentGuiScreen);
 
 	}
@@ -48,12 +50,11 @@ public class ProfileMenu extends GuiScreen
 	@Override
 	public void actionPerformed(GuiButton par1GuiButton)
 	{
-		
-		System.out.println("Profile Menu: "+ par1GuiButton.id);
 		if (par1GuiButton.enabled)
 		{
-			if(par1GuiButton.id == 150)
+			if(par1GuiButton.id == 201)
 			{
+	    		   Minecraft.getMinecraft().displayGuiScreen(new NameProfile(this.parentGuiScreen));
 			}
 			else if (par1GuiButton.id == 200)
 			{
@@ -69,9 +70,6 @@ public class ProfileMenu extends GuiScreen
     {
             if (this.profileList.func_148179_a(p_73864_1_, p_73864_2_, p_73864_3_))
             {
-            	//this.drawDefaultBackground();
-            	//this.drawCenteredString(this.fontRendererObj,  "Reloading Configs...", this.width / 2, this.height/2 - 10, 16777215);
-            	//this.drawCenteredString(this.fontRendererObj,  "You May need to Restart Minecraft for all Changes!", this.width / 2, this.height/2 + 10, 16777215);
             	EM_ConfigHandler.ReloadConfig();
    				this.mc.displayGuiScreen(this.parentGuiScreen);
             }
@@ -85,12 +83,10 @@ public class ProfileMenu extends GuiScreen
 	{
 		this.drawDefaultBackground();		
 		   this.profileList.drawScreen(par1, par2, par3);
-			this.drawCenteredString(this.fontRendererObj,  "Select Profile", this.width / 2, 15, 16777215);
+			this.drawCenteredString(this.fontRendererObj,  I18n.format("editor.enviromine.selectProfile"), this.width / 2, 15, 16777215);
 			
 		super.drawScreen(par1, par2, par3);
 	}
-
-
 	
 }
 

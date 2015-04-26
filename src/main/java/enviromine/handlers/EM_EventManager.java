@@ -82,6 +82,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -102,6 +103,7 @@ import enviromine.trackers.properties.CaveSpawnProperties;
 import enviromine.trackers.properties.DimensionProperties;
 import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
+import enviromine.trackers.properties.RotProperties;
 import enviromine.utils.EnviroUtils;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
@@ -318,7 +320,7 @@ public class EM_EventManager
 		
 		Entity attacker = event.source.getEntity();
 		
-		if((event.source == DamageSource.fallingBlock || event.source == DamageSource.anvil) && event.entityLiving.getEquipmentInSlot(4) != null && event.entityLiving.getEquipmentInSlot(4).getItem() == ObjectHandler.hardHat)
+		if((event.source == DamageSource.fallingBlock || event.source == DamageSource.anvil || event.source == EnviroDamageSource.landslide || event.source == EnviroDamageSource.avalanche) && event.entityLiving.getEquipmentInSlot(4) != null && event.entityLiving.getEquipmentInSlot(4).getItem() == ObjectHandler.hardHat)
 		{
 			ItemStack hardHat = event.entityLiving.getEquipmentInSlot(4);
 			int dur = (hardHat.getMaxDamage() + 1) - hardHat.getItemDamage();
@@ -423,9 +425,16 @@ public class EM_EventManager
 			{
 				int adjCoords[] = EnviroUtils.getAdjacentBlockCoordsFromSide(event.x, event.y, event.z, event.face);
 				
-				if(item.getItem() == Item.getItemFromBlock(Blocks.torch))
+				if(item.getItem() == Item.getItemFromBlock(Blocks.torch) && (EM_Settings.torchesBurn || EM_Settings.torchesGoOut))
 				{
-					TorchReplaceHandler.ScheduleReplacement(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2]);
+					if(!event.world.getBlock(adjCoords[0], adjCoords[1], adjCoords[2]).getMaterial().isReplaceable())
+					{
+						event.setCanceled(true);
+						return;
+					} else
+					{
+						TorchReplaceHandler.ScheduleReplacement(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2]);
+					}
 				}
 				
 				EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2], true, "Normal");
@@ -1664,6 +1673,61 @@ public class EM_EventManager
 			EM_ConfigHandler.initConfig();
 			
 			EnviroMine.caves.RefreshSpawnList();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onCrafted(ItemCraftedEvent event) // Prevents exploit of making foods with almost rotten food to prolong total life of food supplies
+	{
+		if(event.player.worldObj.isRemote || event.crafting == null || event.crafting.getItem() == null)
+		{
+			return;
+		}
+		
+		RotProperties rotProps = null;
+		long rotTime = (long)(EM_Settings.foodRotTime * 24000L);
+		
+		if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(event.crafting.getItem())))
+		{
+			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(event.crafting.getItem()));
+			rotTime = (long)(rotProps.days * 24000L);
+		} else if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(event.crafting.getItem()) + "," + event.crafting.getItemDamage()))
+		{
+			rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(event.crafting.getItem()) + "," + event.crafting.getItemDamage());
+			rotTime = (long)(rotProps.days * 24000L);
+		}
+		
+		if(rotProps == null)
+		{
+			return; // Crafted item is not a rotting food
+		}
+		
+		long lowestDate = -1L;
+		
+		for(int i = 0; i < event.craftMatrix.getSizeInventory(); i++)
+		{
+			ItemStack stack = event.craftMatrix.getStackInSlot(i);
+			
+			if(stack == null || stack.getItem() == null || stack.getTagCompound() == null)
+			{
+				continue;
+			}
+			
+			if(stack.getTagCompound().hasKey("EM_ROT_DATE") && (lowestDate < 0 || stack.getTagCompound().getLong("EM_ROT_DATE") < lowestDate))
+			{
+				lowestDate = stack.getTagCompound().getLong("EM_ROT_DATE");
+			}
+		}
+		
+		if(lowestDate >= 0)
+		{
+			if(event.crafting.getTagCompound() == null)
+			{
+				event.crafting.setTagCompound(new NBTTagCompound());
+			}
+			
+			event.crafting.getTagCompound().setLong("EM_ROT_DATE", lowestDate);
+			event.crafting.getTagCompound().setLong("EM_ROT_TIME", rotTime);
 		}
 	}
 }

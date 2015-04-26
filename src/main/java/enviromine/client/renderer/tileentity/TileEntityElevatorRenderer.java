@@ -12,13 +12,15 @@ public class TileEntityElevatorRenderer extends TileEntitySpecialRenderer
 {
 	IModelCustom modelTop;
 	IModelCustom modelBottom;
-	ResourceLocation texture;
+	ResourceLocation mainTexture;
+	ResourceLocation recallTexture;
 	
 	public TileEntityElevatorRenderer()
 	{
 		modelTop = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/topblockelevator.obj"));
 		modelBottom = AdvancedModelLoader.loadModel(new ResourceLocation("enviromine", "models/bottomblockelevator.obj"));
-		texture = new ResourceLocation("enviromine", "textures/models/blocks/elevator_model.png");
+		mainTexture = new ResourceLocation("enviromine", "textures/models/blocks/elevator_model.png");
+		recallTexture = new ResourceLocation("enviromine", "textures/models/blocks/recall_model.png");
 	}
 	
 	@Override
@@ -26,7 +28,13 @@ public class TileEntityElevatorRenderer extends TileEntitySpecialRenderer
 	{
 		GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
-        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        if(tileentity.getBlockMetadata() >= 2)
+        {
+        	Minecraft.getMinecraft().renderEngine.bindTexture(recallTexture);
+        } else
+        {
+        	Minecraft.getMinecraft().renderEngine.bindTexture(mainTexture);
+        }
         if(tileentity.getBlockMetadata()%2 == 0)
         {
         	modelTop.renderAll();

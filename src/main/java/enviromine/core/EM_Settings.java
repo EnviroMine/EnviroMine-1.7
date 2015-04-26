@@ -75,7 +75,7 @@ public class EM_Settings
 	public static int gasTickRate = 32; //GasFires are 4x faster than this
 	public static int gasPassLimit = -1;
 	public static boolean gasWaterLike = true;
-	public static boolean slowGases; // Normal gases use random ticks to move
+	public static boolean slowGases = true; // Normal gases use random ticks to move
 	public static boolean noGases = false;
 	
 	//World Gen
@@ -118,8 +118,8 @@ public class EM_Settings
 	public static boolean genConfigs = false;
 	public static boolean genDefaults = false;
 	public static int physInterval;
-	public static int worldDelay;
-	public static int chunkDelay;
+	public static int worldDelay = 1000;
+	public static int chunkDelay = 1000;
 	public static int entityFailsafe;
 	public static boolean villageAssist;
 	public static boolean minimalHud;

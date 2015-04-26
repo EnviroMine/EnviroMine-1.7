@@ -3,15 +3,18 @@ package enviromine.client.gui.menu.config;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.client.gui.menu.EM_Gui_Menu;
 import enviromine.client.gui.menu.update.PostGuiList;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 
 @SideOnly(Side.CLIENT)
@@ -20,7 +23,7 @@ public class ProfileMenu extends GuiScreen
 	private GuiScreen parentGuiScreen;
 	private ProfileListExtended profileList;
     private GuiTextField textFieldList;
-	
+    
 	public ProfileMenu(GuiScreen par1GuiScreen)
 	{
 		this.parentGuiScreen = par1GuiScreen;
@@ -70,12 +73,12 @@ public class ProfileMenu extends GuiScreen
     {
             if (this.profileList.func_148179_a(p_73864_1_, p_73864_2_, p_73864_3_))
             {
-            	EM_ConfigHandler.ReloadConfig();
-   				this.mc.displayGuiScreen(this.parentGuiScreen);
+               	EM_ConfigHandler.ReloadConfig();
+               	mc.thePlayer.addChatMessage(new ChatComponentText("Loading "+ EM_ConfigHandler.getProfileName() +" Profile."));
+               	this.mc.displayGuiScreen((GuiScreen)null);
             }
             
             super.mouseClicked(p_73864_1_, p_73864_2_, p_73864_3_);
-
     }
     
 	@Override
@@ -84,9 +87,7 @@ public class ProfileMenu extends GuiScreen
 		this.drawDefaultBackground();		
 		   this.profileList.drawScreen(par1, par2, par3);
 			this.drawCenteredString(this.fontRendererObj,  I18n.format("editor.enviromine.selectProfile"), this.width / 2, 15, 16777215);
-			
 		super.drawScreen(par1, par2, par3);
-	}
+	}	
 	
 }
-

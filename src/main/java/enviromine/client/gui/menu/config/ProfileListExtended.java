@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.server.MinecraftServer;
 
 import com.google.common.collect.Lists;
 
@@ -107,12 +108,7 @@ public class ProfileListExtended extends GuiListExtended{
 
 		       if (this.bntProfile.mousePressed(ProfileListExtended.this.mc, p_148278_2_, p_148278_3_))
 	            {
-		   			EnviroMine.theWorldEM.setProfile(profileName);
-
-		   			if(EM_ConfigHandler.ReloadConfig())
-		   			{
-
-		   			}
+		   			EnviroMine.theWorldEM.setProfile(profileName);		   			
 	                return true;
 	            }
 		       else return false;

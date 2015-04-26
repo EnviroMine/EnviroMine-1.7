@@ -3,7 +3,9 @@ package enviromine.trackers.properties;
 import java.io.File;
 import java.util.Iterator;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
@@ -361,8 +363,10 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 			return;
 		}
 		
+		
 		int id = (Integer)obj;
-		String category = this.categoryName() + "." + EntityList.getStringFromID(id);
+		
+	    String category = this.categoryName() + "." + EntityList.getStringFromID(id);
 		
 		config.get(category, EPName[0], id).getInt(id);
 		config.get(category, EPName[1], false).getBoolean(false);

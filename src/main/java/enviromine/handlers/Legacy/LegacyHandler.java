@@ -1,31 +1,35 @@
 package enviromine.handlers.Legacy;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 public abstract class LegacyHandler 
 {
-	protected static List LegacyList = new ArrayList();
+	public final static HashMap<String, Object> LegacyList = new HashMap<String, Object>();
 	
 	public LegacyHandler()
 	{
 
 	}
+	/** Add Registered Legacys here
+	 * 
+	 */
+	public static void preInit()
+	{
+		RegisterLegacy("ConfigHandlerLegacy", new ConfigLegacy());
+	}
 	
 	public static void init()
-	{
-		
-		RegisterLegacy(new ConfigLegacy());
-		
-		
-		
-		Iterator it = LegacyList.iterator();
+	{				
+		Iterator it = LegacyList.entrySet().iterator();
 		
 		while(it.hasNext())
 		{
-			LegacyHandler legacyFile = (LegacyHandler) it.next();
+			Map.Entry pair = (Map.Entry)it.next();
 			
+			LegacyHandler legacyFile = (LegacyHandler) pair.getValue();
+		       			
 			if(legacyFile.initCheck())
 			{
 				legacyFile.runLegacy();
@@ -34,17 +38,30 @@ public abstract class LegacyHandler
 		}	
 	}
 	
-	public static void RegisterLegacy(LegacyHandler legacyFile)
+	public static void postInit()
 	{
-		if(!LegacyList.contains(legacyFile))
+		
+	}
+	
+	public static void RegisterLegacy(String key, LegacyHandler legacyFile)
+	{
+		if(!LegacyList.containsValue(legacyFile))
 		{
-			LegacyList.add(legacyFile);
+			LegacyList.put(key, legacyFile);
 		}
+	}
+	
+	public static LegacyHandler getByKey(String key)
+	{
+		return (LegacyHandler) LegacyList.get(key);
 	}
 	
 	public abstract boolean initCheck();
 	
+	//public abstract boolean runOrder();
+	
 	public abstract void runLegacy();
 	
+	public abstract boolean didRun();
 	
 }

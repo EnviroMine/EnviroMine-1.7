@@ -68,6 +68,7 @@ public class EnviroMine
 		
 		enviroTab = new EnviroTab("enviromine.enviroTab");
 		
+		LegacyHandler.preInit();
 		LegacyHandler.init();
 		
 		proxy.preInit(event);

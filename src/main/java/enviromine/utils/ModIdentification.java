@@ -56,11 +56,12 @@ public class ModIdentification
 		} else if(obj instanceof Item)
 		{
 			String tmpID = Item.itemRegistry.getNameForObject(obj);
-			return tmpID.isEmpty()? "unknown" : tmpID;
-		} else if(obj instanceof Block)
+			String[] split = tmpID.split(":");
+			return tmpID.isEmpty()? "unknown" : split[0];		} else if(obj instanceof Block)
 		{
 			String tmpID = Block.blockRegistry.getNameForObject(obj);
-			return tmpID.isEmpty()? "unknown" : tmpID;
+			String[] split = tmpID.split(":");
+			return tmpID.isEmpty()? "unknown" : split[0];
 		} else if(obj instanceof Entity || (obj instanceof Class && Entity.class.isAssignableFrom((Class)obj)))
 		{
 			Class clazz;
@@ -132,12 +133,13 @@ public class ModIdentification
 			//Removing the catch because we want to see if the Legacy identification method can find the ID
 			
 			//EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}", e);
-			EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}");
 			
 			if((obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()).toLowerCase().contains("net.minecraft"))
 			{
 				return "minecraft"; // Biome not registered through forge at all. Vanilla?
 			}
+			else EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}");
+
 			//return modName;
 		}
 		

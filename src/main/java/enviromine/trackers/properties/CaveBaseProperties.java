@@ -87,7 +87,7 @@ public class CaveBaseProperties implements PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.loadedProfile + "CaveDimension.cfg");
+		return new File(EM_ConfigHandler.configPath + "CaveDimension.cfg");
 	}
 
 	@Override

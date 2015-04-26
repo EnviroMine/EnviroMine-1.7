@@ -23,24 +23,26 @@ public class ConfigLegacy extends LegacyHandler
 	private static String configPath = "config/enviromine/";
 	private static String customPath = configPath + "CustomProperties/";
 	private static File configFile = new File(configPath + "EnviroMine.cfg");
-	private static Configuration config;	
+	private static Configuration config;
+	private static boolean didRun = false;
 	
 	@Override
 	public boolean initCheck() 
 	{
-		try
-		{
-			config = new Configuration(configFile, true);
-		} catch(Exception e)
-		{
-			EnviroMine.logger.log(Level.WARN, "Failed to load Legacy configuration file!", e);
-			return false;
-		}
-		
-		if(configFile.exists())
-		{		
-			EnviroMine.logger.log(Level.WARN, "Legacy: File Loaded");
 
+		if(configFile.exists() && !configFile.isDirectory())
+		{
+			try
+			{
+				config = new Configuration(configFile, true);
+				config.load();
+			} catch(Exception e)
+			{
+				EnviroMine.logger.log(Level.WARN, "Failed to load Legacy configuration file!", e);
+				return false;
+			}
+			
+		    EnviroMine.logger.log(Level.INFO, "Legacy: Config File Loaded");
 			return true;
 		}
 		else
@@ -52,17 +54,19 @@ public class ConfigLegacy extends LegacyHandler
 	@Override
 	public void runLegacy() 
 	{
+		// Version 0
 		loadGeneralConfig(configFile);
-		
-		// TODO Auto-generated method stub
 		MoveCustomProperties();
-		
-
-		
+		this.didRun = true;
 	}
 	
 	
-	
+	@Override
+	public boolean didRun() 
+	{
+		// TODO Auto-generated method stub
+		return this.didRun;
+	}
 	
 	private static void MoveCustomProperties()
 	{
@@ -93,9 +97,9 @@ public class ConfigLegacy extends LegacyHandler
 				
 				if(Stability.exists()) Files.move(Stability.toPath(), Paths.get(EM_ConfigHandler.defaultProfile).resolve("StabilityTypes.cfg"), options);
 				
-				File CaveDimension = new File(configPath + "CaveDimension.cfg");
+				//File CaveDimension = new File(configPath + "CaveDimension.cfg");
 				
-				if(CaveDimension.exists()) Files.move(CaveDimension.toPath(), Paths.get(EM_ConfigHandler.defaultProfile).resolve("CaveDimension.cfg"), options);				
+				//if(CaveDimension.exists()) Files.move(CaveDimension.toPath(), Paths.get(EM_ConfigHandler.defaultProfile).resolve("CaveDimension.cfg"), options);				
 				
 				//Files.move(source, target, options)
 				
@@ -115,11 +119,7 @@ public class ConfigLegacy extends LegacyHandler
 	 */
 	
 	private static void loadGeneralConfig(File file)
-	{
-
-		
-		config.load();
-		
+	{	
 		//World Generation
 		EM_Settings.shaftGen = config.get("World Generation", "Enable Village MineShafts", true, "Generates mineshafts in villages").getBoolean(true);
 		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", true, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(true);
@@ -193,19 +193,7 @@ public class ConfigLegacy extends LegacyHandler
 		
 		// Config Options
 		String ConSetCat = "Config";
-		Property genConfig = config.get(ConSetCat, "Generate Blank Configs", false, "Will attempt to find and generate blank configs for any custom items/blocks/etc loaded before EnviroMine. Pack developers are highly encouraged to enable this! (Resets back to false after use)");
-		if(!EM_Settings.genConfigs)
-		{
-			EM_Settings.genConfigs = genConfig.getBoolean(false);
-		}
-		genConfig.set(false);
-		
-		Property genDefault = config.get(ConSetCat, "Generate Defaults", true, "Generates EnviroMines initial default files");
-		if(!EM_Settings.genDefaults)
-		{
-			EM_Settings.genDefaults = genDefault.getBoolean(true);
-		}
-		genDefault.set(false);
+
 		
 		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", false, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(false);
 		
@@ -274,4 +262,6 @@ public class ConfigLegacy extends LegacyHandler
 		
 		return startID;
 	}
+
+
 }

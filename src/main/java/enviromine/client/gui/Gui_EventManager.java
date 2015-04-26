@@ -1,12 +1,8 @@
 package enviromine.client.gui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +15,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import scala.collection.Iterator;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,6 +22,7 @@ import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.client.gui.hud.items.GasMaskHud;
+import enviromine.client.gui.menu.EM_Button;
 import enviromine.client.gui.menu.EM_Gui_Menu;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -62,7 +58,8 @@ public class Gui_EventManager
 			try
 			{
 				byte b0 = -16;
-				enviromine = new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
+				//enviromine = new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
+				enviromine = new EM_Button(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") , newPost);
 				event.buttonList.set(1, new GuiButton(4, width / 2 - 100, height / 4 + 0 + b0, I18n.format("menu.returnToGame", new Object[0])));
 				event.buttonList.add(enviromine);
 			} catch(Exception e)

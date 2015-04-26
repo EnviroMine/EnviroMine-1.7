@@ -153,7 +153,7 @@ auth.enviromine.7=If you are using a modpack please inform the dev to that they 
 auth.enviromine.8=include the up-to-date AUTH file for this version. More info at:
 
 keybinds.enviromine.reload=Reload Configs
-keybinds.enviromine.addremove=Add/Remove Custom Config
+keybinds.enviromine.addremove=Add Custom Config
 
 misc.enviromine.tooltip.filter=Filters: %s (%s/%s)
 misc.enviromine.tooltip.water=Water: %s (%s/%s)
@@ -199,7 +199,11 @@ editor.enviromine.settings=Profile Settings
 editor.enviromine.cave=Cave Dimension
 editor.enviromine.stability=Stability Types
 editor.enviromine.custom=Custom Configs
-
+editor.enviromine.GuiAdd.title=Add %s:
+editor.enviromine.GuiAdd.title.fail=Error occurred. Check log for details.
+editor.enviromine.GuiAdd.item=Add as Item
+editor.enviromine.GuiAdd.block=Add as Block
+editor.enviromine.GuiAdd.both=Add Both
 
 
 

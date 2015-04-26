@@ -213,7 +213,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		config.get(category, IPName[10], effTempCap).getDouble(effTempCap);
 		config.get(category, IPName[11], camelFill).getInt(camelFill);
 		config.get(category, IPName[12], fillReturnItem).getString();
-		config.get(category, IPName[13], camelFill).getInt(camelFill);
+		config.get(category, IPName[13], fillReturnMeta).getInt(fillReturnMeta);
 	}
 
 	@Override

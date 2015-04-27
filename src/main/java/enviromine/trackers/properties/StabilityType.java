@@ -157,7 +157,7 @@ public class StabilityType implements PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.configPath + "StabilityTypes.cfg");
+		return new File(EM_ConfigHandler.loadedProfile +"StabilityTypes.cfg");		
 	}
 
 	@Override

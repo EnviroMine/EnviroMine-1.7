@@ -3,11 +3,15 @@ package enviromine.utils;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.HashMap;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -52,11 +56,12 @@ public class ModIdentification
 		} else if(obj instanceof Item)
 		{
 			String tmpID = Item.itemRegistry.getNameForObject(obj);
-			return tmpID.isEmpty()? "unknown" : tmpID;
-		} else if(obj instanceof Block)
+			String[] split = tmpID.split(":");
+			return tmpID.isEmpty()? "unknown" : split[0];		} else if(obj instanceof Block)
 		{
 			String tmpID = Block.blockRegistry.getNameForObject(obj);
-			return tmpID.isEmpty()? "unknown" : tmpID;
+			String[] split = tmpID.split(":");
+			return tmpID.isEmpty()? "unknown" : split[0];
 		} else if(obj instanceof Entity || (obj instanceof Class && Entity.class.isAssignableFrom((Class)obj)))
 		{
 			Class clazz;
@@ -108,7 +113,10 @@ public class ModIdentification
 			fullPath = clazz.getResource("").toString();
 			int tmpIndex = fullPath.indexOf("file:/");
 			fullPath = URLDecoder.decode(fullPath.substring(tmpIndex + "file:/".length()), "UTF-8");
+		
 			file = new File(fullPath);
+			
+			//EnviroMine.logger.log(Level.INFO, "ModID lookup Success for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}");
 			
 			for(File s : modSource_ID.keySet())
 			{
@@ -118,11 +126,20 @@ public class ModIdentification
 					break;
 				}
 			}
+			
+
 		} catch(Exception e)
 		{
 			//Removing the catch because we want to see if the Legacy identification method can find the ID
 			
 			//EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}", e);
+			
+			if((obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()).toLowerCase().contains("net.minecraft"))
+			{
+				return "minecraft"; // Biome not registered through forge at all. Vanilla?
+			}
+			else EnviroMine.logger.log(Level.INFO, "ModID lookup failed for: " + (obj instanceof Class? ((Class)obj).getName() : obj.getClass().getName()) + " {" + fullPath + "}");
+
 			//return modName;
 		}
 		
@@ -130,14 +147,15 @@ public class ModIdentification
 		{
 			modName = OldIdentificationMethod(clazz);
 		}
-		
-		if(modName.equals("unknown"))
-		{
-			EnviroMine.logger.log(Level.WARN, "Unable to find matching ModID for " + clazz.getSimpleName());
-		} else if (modName.equals("Forge") || modName.equals("FML") || modName.equals("mcp"))
+
+		if (modName.equals("Forge") || modName.equals("FML") || modName.equals("mcp"))
 		{
 			modName = "minecraft";
 		}
+		else if(modName.equals("unknown"))
+		{
+			EnviroMine.logger.log(Level.WARN, "Unable to find matching ModID for " + clazz.getSimpleName());
+		} 
 		return modName;
 	}
 	
@@ -173,11 +191,13 @@ public class ModIdentification
 			}
 		}
 		
+		
 		return modName;
 	}
 	
 	static
 	{
+
 		for(ModContainer mod : Loader.instance().getModList())
 		{
 			modID_Name.put(mod.getModId(), mod.getName());

@@ -104,9 +104,9 @@ public class EM_Settings
 	@ShouldOverride({String.class, RotProperties.class})
 	public static HashMap<String,RotProperties> rotProperties = new HashMap<String,RotProperties>();
 	
-	public static int updateCap;
-	public static boolean stoneCracks;
-	public static String defaultStability;
+	public static int updateCap = 128;
+	public static boolean stoneCracks = true;
+	public static String defaultStability = "loose";
 	
 	public static double sanityMult = 1.0D;
 	public static double hydrationMult = 1.0D;
@@ -117,16 +117,18 @@ public class EM_Settings
 	//public static boolean useDefaultConfig = true;
 	public static boolean genConfigs = false;
 	public static boolean genDefaults = false;
-	public static int physInterval;
+	
+	public static int physInterval = 6;
 	public static int worldDelay = 1000;
 	public static int chunkDelay = 1000;
-	public static int entityFailsafe;
-	public static boolean villageAssist;
+	public static int entityFailsafe = 1;
+	public static boolean villageAssist = true;
+	
 	public static boolean minimalHud;
 	public static boolean limitCauldron;
-	public static boolean allowTinting;
-	public static boolean torchesBurn;
-	public static boolean torchesGoOut;
+	public static boolean allowTinting = true;
+	public static boolean torchesBurn = true;
+	public static boolean torchesGoOut = true;
 	
 	public static int caveDimID = -3;
 	public static int caveBiomeID = 23;
@@ -166,16 +168,6 @@ public class EM_Settings
 	
 	
 	public static boolean voxelMenuExists = false;
-	
-	public static float convertToFarenheit(float num)
-	{
-		return((num * (9 / 5)) + 32F);
-	}
-	
-	public static float convertToCelcius(float num)
-	{
-		return((num - 32F) * (5 / 9));
-	}
 	
 	/**
 	 * Tells the server that this field should be sent to the client to overwrite<br>

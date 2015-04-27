@@ -3,7 +3,9 @@ package enviromine.trackers.properties;
 import java.io.File;
 import java.util.Iterator;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
@@ -198,7 +200,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 			String modID = ModIdentification.idFromObject(clazz);
 			String eName = EntityList.getStringFromID(eID);
 			
-			File file = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
+			File file = new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(modID) + ".cfg");
 			
 			if(!file.exists())
 			{
@@ -349,7 +351,7 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "Entities.cfg");
+		return new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + "Entities.cfg");
 	}
 
 	@Override
@@ -361,8 +363,10 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 			return;
 		}
 		
+		
 		int id = (Integer)obj;
-		String category = this.categoryName() + "." + EntityList.getStringFromID(id);
+		
+	    String category = this.categoryName() + "." + EntityList.getStringFromID(id);
 		
 		config.get(category, EPName[0], id).getInt(id);
 		config.get(category, EPName[1], false).getBoolean(false);

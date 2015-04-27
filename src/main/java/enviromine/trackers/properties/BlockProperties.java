@@ -281,7 +281,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 				continue;
 			}
 			
-			File blockFile = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
+			File blockFile = new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
 			
 			if(!blockFile.exists())
 			{
@@ -480,7 +480,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "Blocks.cfg");
+		return new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + "Blocks.cfg");
 	}
 
 	@Override

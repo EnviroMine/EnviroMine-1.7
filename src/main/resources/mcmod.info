@@ -12,5 +12,19 @@
   "logoFile": "title.png",
   "screenshots": [],
   "dependencies": ["mod_MinecraftForge"]
+},
+{
+  "modid": "envirotemp",
+  "name": "EnviroMine-Temperature",
+  "description": "EnviroMine temperature module",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://enviromine.wordpress.com/",
+  "updateUrl": "",
+  "authorList": ["Funwayguy", "TimbuckTato", "GenDeathrow", "thislooksfun"],
+  "credits": "",
+  "logoFile": "title.png",
+  "screenshots": [],
+  "dependencies": ["enviromine"]
 }
 ]

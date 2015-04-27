@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.client.gui.UpdateNotification;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.utils.RenderAssist;
 
 @SideOnly(Side.CLIENT)
@@ -60,17 +61,17 @@ public class PostGuiList extends GuiListExtended
 	@SuppressWarnings("unused")
 	public void EnviromineVersions(Minecraft mc)
 	{
-		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
+		if(EnviroMine.Version == "FWG_" + "EM" + "_VER")
 		{
 			addLine(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!");
 			return;
 		}
 		
-		int verStat = UpdateNotification.compareVersions(EM_Settings.Version, UpdateNotification.version);
+		int verStat = UpdateNotification.compareVersions(EnviroMine.Version, UpdateNotification.version);
 		
 		if(verStat == -1)
 		{
-			addLine(StatCollector.translateToLocalFormatted("news.enviromine.version.current", EM_Settings.Version));
+			addLine(StatCollector.translateToLocalFormatted("news.enviromine.version.current", EnviroMine.Version));
 			addBlankLines(1);
 			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.available", UpdateNotification.version));
 			addBlankLines(1);
@@ -83,10 +84,10 @@ public class PostGuiList extends GuiListExtended
 			addLine("https://enviromine.wordpress.com/");
 		} else if(verStat == 0)
 		{
-			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EM_Settings.Version));
+			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EnviroMine.Version));
 		} else if(verStat == 1)
 		{
-			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EM_Settings.Version));
+			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EnviroMine.Version));
 		} else if(verStat == -2)
 		{
 			addLine(StatCollector.translateToLocalFormatted("updatemsg.enviromine.error"));

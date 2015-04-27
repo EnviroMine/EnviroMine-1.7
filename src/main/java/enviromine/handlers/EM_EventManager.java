@@ -1652,7 +1652,7 @@ public class EM_EventManager
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
-		if(event.modID.equals(EM_Settings.ModID))
+		if(event.modID.equals(EnviroMine.ModID))
 		{
 			for(Configuration config : EM_ConfigMenu.tempConfigs)
 			{

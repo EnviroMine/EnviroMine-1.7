@@ -90,7 +90,7 @@ public class UpdateNotification
 		
 		// File link: http://bit.ly/1r4JJt3;
 		// DO NOT CHANGE THIS!
-		if(EM_Settings.Version == "FWG_" + "EM" + "_VER")
+		if(EnviroMine.Version == "FWG_" + "EM" + "_VER")
 		{
 			event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "THIS COPY OF ENIVROMINE IS NOT FOR PUBLIC USE!"));
 			return;
@@ -117,7 +117,7 @@ public class UpdateNotification
 			
 			String http = data[0].trim();
 			
-			int verStat = compareVersions(EM_Settings.Version, version);
+			int verStat = compareVersions(EnviroMine.Version, version);
 			
 			if(verStat == -1)
 			{
@@ -137,10 +137,10 @@ public class UpdateNotification
 				}
 			} else if(verStat == 0)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EM_Settings.Version)));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("updatemsg.enviromine.uptodate", EnviroMine.Version)));
 			} else if(verStat == 1)
 			{
-				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EM_Settings.Version)));
+				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.debug", EnviroMine.Version)));
 			} else if(verStat == -2)
 			{
 				event.player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted("updatemsg.enviromine.error")));

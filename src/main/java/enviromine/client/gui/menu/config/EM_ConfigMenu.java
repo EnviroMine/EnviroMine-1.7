@@ -13,6 +13,7 @@ import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.CaveBaseProperties;
 import enviromine.trackers.properties.StabilityType;
 
@@ -22,7 +23,7 @@ public class EM_ConfigMenu extends GuiConfig
 	
 	public EM_ConfigMenu(GuiScreen parentScreen)
 	{
-		super(parentScreen, getMainElements(), EM_Settings.ModID, false, false, EM_Settings.Name);
+		super(parentScreen, getMainElements(), EnviroMine.ModID, false, false, EnviroMine.Name);
 	}
 	
     /*@Override

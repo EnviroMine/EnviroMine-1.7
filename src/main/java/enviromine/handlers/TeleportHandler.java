@@ -165,7 +165,7 @@ public class TeleportHandler extends Teleporter
 							{
 								// Normal elevator
 								//recall = false;
-							} else if(this.worldServerInstance.getBlockMetadata(k1, i2, l1) == 1 && this.worldServerInstance.getBlockMetadata(k1, i2 + 1, l1) == 0)
+							} else if(this.worldServerInstance.getBlockMetadata(k1, i2, l1) == 2 && this.worldServerInstance.getBlockMetadata(k1, i2 + 1, l1) == 3)
 							{
 								// Recall
 								recall = true;
@@ -173,6 +173,7 @@ public class TeleportHandler extends Teleporter
 							{
 								continue;
 							}
+							
 							while (this.worldServerInstance.getBlock(k1, i2 - 1, l1) == ObjectHandler.elevator)
 							{
 								--i2;

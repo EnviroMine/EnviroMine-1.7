@@ -203,7 +203,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 				continue;
 			}
 			
-			File armorFile = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
+			File armorFile = new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
 			
 			if(!armorFile.exists())
 			{
@@ -312,7 +312,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "Armor.cfg");
+		return new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + "Armor.cfg");
 	}
 
 	@Override

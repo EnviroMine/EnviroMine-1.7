@@ -7,8 +7,10 @@ import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -30,10 +32,12 @@ import enviromine.core.proxies.EM_CommonProxy;
 import enviromine.handlers.EnviroAchievements;
 import enviromine.handlers.EnviroShaftCreationHandler;
 import enviromine.handlers.ObjectHandler;
+import enviromine.handlers.Legacy.LegacyHandler;
 import enviromine.network.packet.PacketAutoOverride;
 import enviromine.network.packet.PacketEnviroMine;
 import enviromine.network.packet.PacketServerOverride;
 import enviromine.utils.EnviroUtils;
+import enviromine.world.EM_WorldData;
 import enviromine.world.WorldProviderCaves;
 import enviromine.world.biomes.BiomeGenCaves;
 import enviromine.world.features.WorldFeatureGenerator;
@@ -54,12 +58,19 @@ public class EnviroMine
 	
 	public SimpleNetworkWrapper network;
 	
+	public static EM_WorldData theWorldEM;	
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		
 		logger = event.getModLog();
 		
 		enviroTab = new EnviroTab("enviromine.enviroTab");
+		
+		LegacyHandler.preInit();
+		LegacyHandler.init();
+		
 		proxy.preInit(event);
 		
 		ObjectHandler.initItems();
@@ -123,17 +134,6 @@ public class EnviroMine
 		ObjectHandler.LoadIgnitionSources();
 
 		EM_ConfigHandler.initConfig(); // Second pass for object initialized after pre-init
-
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.stabilityTypes.size() + " stability types");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.armorProperties.size() + " armor properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.blockProperties.size() + " block properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.livingProperties.size() + " entity properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.itemProperties.size() + " item properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.rotProperties.size() + " rot properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.biomeProperties.size() + " biome properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.dimensionProperties.size() + " dimension properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.caveGenProperties.size() + " cave ore properties");
-		EnviroMine.logger.log(Level.INFO, "Loaded " + EM_Settings.caveSpawnProperties.size() + " cave entity properties");
 	}
 	
 	@EventHandler

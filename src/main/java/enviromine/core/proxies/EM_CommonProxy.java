@@ -15,6 +15,7 @@ import enviromine.handlers.crafting.CamelPackIntegrationHandler;
 import enviromine.handlers.crafting.CamelPackRefillHandler;
 import enviromine.handlers.crafting.GaskMaskRefillHandler;
 import enviromine.handlers.crafting.LampLightingHandler;
+import enviromine.world.EM_WorldData;
 
 public class EM_CommonProxy
 {
@@ -74,6 +75,6 @@ public class EM_CommonProxy
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+	
 	}
 }

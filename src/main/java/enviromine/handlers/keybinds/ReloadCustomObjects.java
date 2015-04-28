@@ -29,26 +29,13 @@ public class ReloadCustomObjects
 			
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			{
-				try
+				
+				mc.thePlayer.addChatMessage(new ChatComponentText("Reloading Configs..."));
+			
+				if(EM_ConfigHandler.ReloadConfig())
 				{
-					mc.thePlayer.addChatMessage(new ChatComponentText("Reloading Configs..."));
-					EM_Settings.armorProperties.clear();
-					EM_Settings.blockProperties.clear();
-					EM_Settings.itemProperties.clear();
-					EM_Settings.livingProperties.clear();
-					EM_Settings.stabilityTypes.clear();
-					EM_Settings.biomeProperties.clear();
-					EM_Settings.dimensionProperties.clear();
-					EM_Settings.rotProperties.clear();
-					EM_Settings.caveGenProperties.clear();
-					EM_Settings.caveSpawnProperties.clear();;
-					
-					int Total = EM_ConfigHandler.initConfig();
-					EnviroMine.caves.RefreshSpawnList();
-					mc.thePlayer.addChatMessage(new ChatComponentText("Loaded " + Total +" objects and " + EM_Settings.stabilityTypes.size() + " stability types"));
-					
-				} //try
-				catch(NullPointerException e)
+					mc.thePlayer.addChatMessage(new ChatComponentText("Loaded objects and " + EM_Settings.stabilityTypes.size() + " stability types"));
+				}else
 				{
 					mc.thePlayer.addChatMessage(new ChatComponentText("Failed to Load Custom Objects Files."));
 				}

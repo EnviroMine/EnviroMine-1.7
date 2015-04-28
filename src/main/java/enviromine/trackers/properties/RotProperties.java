@@ -151,7 +151,7 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 				continue;
 			}
 			
-			File itemFile = new File(EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
+			File itemFile = new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + EnviroUtils.SafeFilename(regName[0]) + ".cfg");
 			
 			if(!itemFile.exists())
 			{
@@ -215,7 +215,7 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 	@Override
 	public File GetDefaultFile()
 	{
-		return new File(EM_ConfigHandler.customPath + "Spoiling.cfg");
+		return new File(EM_ConfigHandler.loadedProfile + EM_ConfigHandler.customPath + "Spoiling.cfg");
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -77,8 +78,10 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -105,6 +108,7 @@ import enviromine.trackers.properties.EntityProperties;
 import enviromine.trackers.properties.ItemProperties;
 import enviromine.trackers.properties.RotProperties;
 import enviromine.utils.EnviroUtils;
+import enviromine.world.EM_WorldData;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
 
@@ -1334,12 +1338,24 @@ public class EM_EventManager
 		}
 	}
 	
+	private static boolean firstload = false;
 	@SubscribeEvent
 	public void onWorldLoad(Load event)
 	{
+		
 		if(event.world.isRemote)
 		{
 			return;
+		}
+		
+		
+		
+		//Load Custom Configs
+		if (!firstload) 
+		{
+			EnviroMine.theWorldEM = EM_WorldData.get(event.world);
+			EM_ConfigHandler.initProfile(); 
+			firstload = true;
 		}
 		
 		if(EM_PhysManager.worldStartTime < 0)
@@ -1409,7 +1425,7 @@ public class EM_EventManager
 	
 	@SubscribeEvent
 	public void onWorldSave(Save event)
-	{
+	{		
 		EM_StatusManager.saveAllWorldTrackers(event.world);
 		if(EM_Settings.worldDir != null && event.world.provider.dimensionId == 0)
 		{
@@ -1659,20 +1675,7 @@ public class EM_EventManager
 				config.save();
 			}
 			
-			EM_Settings.armorProperties.clear();
-			EM_Settings.blockProperties.clear();
-			EM_Settings.itemProperties.clear();
-			EM_Settings.livingProperties.clear();
-			EM_Settings.stabilityTypes.clear();
-			EM_Settings.biomeProperties.clear();
-			EM_Settings.dimensionProperties.clear();
-			EM_Settings.rotProperties.clear();
-			EM_Settings.caveGenProperties.clear();
-			EM_Settings.caveSpawnProperties.clear();;
-			
-			EM_ConfigHandler.initConfig();
-			
-			EnviroMine.caves.RefreshSpawnList();
+			EM_ConfigHandler.ReloadConfig();
 		}
 	}
 	

@@ -1,16 +1,16 @@
 package enviromine.client.gui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -19,7 +19,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import scala.collection.Iterator;
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,6 +28,7 @@ import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.hud.HudItem;
 import enviromine.client.gui.hud.items.Debug_Info;
 import enviromine.client.gui.hud.items.GasMaskHud;
+import enviromine.client.gui.menu.EM_Button;
 import enviromine.client.gui.menu.EM_Gui_Menu;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -42,7 +44,6 @@ public class Gui_EventManager
 	int width, height;
 	
 	//Render HUD
-	
 	//Render Player
 	
 	// Button Functions
@@ -63,7 +64,8 @@ public class Gui_EventManager
 			try
 			{
 				byte b0 = -16;
-				enviromine = new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
+				//enviromine = new GuiButton(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") + newPost);
+				enviromine = new EM_Button(1348, width / 2 - 100, height / 4 + 24 + b0, StatCollector.translateToLocal("options.enviromine.menu.title") , newPost);
 				event.buttonList.set(1, new GuiButton(4, width / 2 - 100, height / 4 + 0 + b0, I18n.format("menu.returnToGame", new Object[0])));
 				event.buttonList.add(enviromine);
 			} catch(Exception e)
@@ -139,7 +141,7 @@ public class Gui_EventManager
 			{
 				//Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("NO ENVIRONMENT DATA", xPos, (height - yPos) - 8, 16777215);
 				tracker = EM_StatusManager.lookupTrackerFromUsername(this.mc.thePlayer.getCommandSenderName());
-			}
+			} 
 		} else if(tracker.isDisabled || !EM_StatusManager.trackerList.containsValue(tracker))
 		{
 			tracker = null;
@@ -147,6 +149,7 @@ public class Gui_EventManager
 		{
 			
 			HudItem.blinkTick++;
+			
 			
 			// Render GasMask Overlays
 			if(UI_Settings.overlay)
@@ -158,13 +161,15 @@ public class Gui_EventManager
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_LIGHTING);
 	        GL11.glColor4f(1F, 1F, 1F, 1F);
+
 			for(HudItem huditem : HUDRegistry.getActiveHudItemList())
 			{
+				
 				if(mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative())
 				{
 					continue;
 				}
-				
+
 				if(mc.thePlayer.ridingEntity instanceof EntityLivingBase)
 				{
 					if(huditem.shouldDrawOnMount())
@@ -222,5 +227,32 @@ public class Gui_EventManager
 		}
 		
 	}
+	
+	//TODO Was used for Debugging Gui
+	/*@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event)
+	{
+		if(event == null) return;
+		if(event.gui == null) return;
+		System.out.println(event.gui.getClass().getSimpleName().toString());
+		if(event.gui instanceof GuiConfig)
+		{
+			GuiConfig guiConfig = (GuiConfig) event.gui;
+			
+			System.out.println("configID:"+guiConfig.configID +" modID:"+ guiConfig.modID);
+			
+			Iterator<IConfigElement> elements = guiConfig.configElements.iterator();
+			
+			while(elements.hasNext())
+			{
+				IConfigElement element = elements.next();
+				
+				
+				System.out.println("element name:"+ element.getName() +" Type:"+ element.getType() + " QNamed:"+element.getQualifiedName());
+				
+			}
+			
+		}
+	}*/
 	
 }

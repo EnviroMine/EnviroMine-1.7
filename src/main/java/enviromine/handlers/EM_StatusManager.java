@@ -270,7 +270,7 @@ public class EM_StatusManager
 							}
 							else
 							{
-								surBiomeTemps += EnviroUtils.getBiomeTemp(x, y, z, checkBiome);
+								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
 							}
 							
 							biomeTempChecks += 1;

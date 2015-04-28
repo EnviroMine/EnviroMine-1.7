@@ -40,7 +40,6 @@ public class GuiAddCustom extends GuiScreen
 				
 				if(obj instanceof ItemArmor)
 				{
-					System.out.println("ItemArmor");
 					this.objArmor = (ItemArmor)obj;
 				}
 				else

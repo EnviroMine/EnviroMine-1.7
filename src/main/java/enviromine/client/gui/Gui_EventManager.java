@@ -228,7 +228,8 @@ public class Gui_EventManager
 		
 	}
 	
-	@SubscribeEvent
+	//TODO Was used for Debugging Gui
+	/*@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event)
 	{
 		if(event == null) return;
@@ -252,6 +253,6 @@ public class Gui_EventManager
 			}
 			
 		}
-	}
+	}*/
 	
 }

@@ -46,12 +46,9 @@ public class EM_ConfigMenu extends GuiConfig
 	
 	public EM_ConfigMenu(List<IConfigElement> list, Configuration config)
 	{
-
 		super(null, list, EM_Settings.ModID, false, false, EM_Settings.Name, " ");
 		tempConfigs.clear();
 		tempConfigs.add(config);
-	
-		System.out.println("Config:"+ config.getConfigFile().getName() +" TempFigCnt:"+ tempConfigs.size() +" <--");
 	}
 	
     @Override

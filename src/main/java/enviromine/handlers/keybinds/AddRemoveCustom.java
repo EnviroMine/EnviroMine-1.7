@@ -74,7 +74,6 @@ public class AddRemoveCustom
 
 						} else if(item instanceof Item)
 						{
-							EnviroMine.logger.log(Level.INFO, Block.blockRegistry.getNameForObject(Block.getBlockFromItem(item)) + "<--------------------------------");
 							if(Block.getBlockFromItem(item) != Blocks.air)
 							{
 								Minecraft.getMinecraft().displayGuiScreen(new GuiAddCustom(item));
@@ -90,7 +89,6 @@ public class AddRemoveCustom
 					}
 					
 					MovingObjectType type = Minecraft.getMinecraft().objectMouseOver.typeOfHit;
-					//System.out.println(type.name());
 					if(type.name() == "ENTITY")
 					{
 						Entity lookingAt = Minecraft.getMinecraft().objectMouseOver.entityHit;

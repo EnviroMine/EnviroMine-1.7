@@ -1670,8 +1670,6 @@ public class EM_EventManager
 	{
 		if(event.modID.equals(EM_Settings.ModID))
 		{
-			 System.out.println(EM_ConfigMenu.tempConfigs.size()+" ---- size");
-			 
 			for(Configuration config : EM_ConfigMenu.tempConfigs)
 			{
 				config.save();

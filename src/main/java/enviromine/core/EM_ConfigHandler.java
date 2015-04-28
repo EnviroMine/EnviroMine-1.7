@@ -665,25 +665,14 @@ public class EM_ConfigHandler
 		}
 
 		config.load();
-	/*			
-		String cat = ArmorProperties.base.categoryName()+"."+ armor.getUnlocalizedName().replace(".", "_");
-		if(config.hasCategory(cat))
-		{
-			ConfigCategory catconfig = config.getCategory(cat);
-			ConfigElement test = new ConfigElement(catconfig);
-			
-			
-			configElements.add(test);
-			mc.displayGuiScreen(new EM_ConfigMenu(configElements, config));
-		}
-*/
+
 		String returnValue = "";
 		
 		if(obj instanceof Block)
 		{
 			
 			BlockProperties.base.generateEmpty(config, obj);
-				returnValue = "(Block) Saved to "+ ModID + ".cfg on Profile "+ getProfileName();
+			returnValue = "(Block) Saved to "+ ModID + ".cfg on Profile "+ getProfileName();
 
 		} else if(obj instanceof Entity)
 		{		

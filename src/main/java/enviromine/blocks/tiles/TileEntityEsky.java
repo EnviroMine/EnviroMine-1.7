@@ -3,13 +3,15 @@ package enviromine.blocks.tiles;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-
 import enviromine.blocks.BlockEsky;
+import enviromine.core.EM_Settings;
+import enviromine.trackers.properties.RotProperties;
 
 public class TileEntityEsky extends TileEntity implements IInventory
 {
@@ -111,7 +113,38 @@ public class TileEntityEsky extends TileEntity implements IInventory
 			{
 				ItemStack stack = this.getStackInSlot(i);
 				
-				if(stack != null && stack.getItem() instanceof ItemFood)
+				if(stack == null)
+				{
+					continue;
+				}
+				
+				RotProperties rotProps = null;
+				long rotTime = (long)(EM_Settings.foodRotTime * 24000L);
+				
+				if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem())))
+				{
+					rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(stack.getItem()));
+					rotTime = (long)(rotProps.days * 24000L);
+				} else if(EM_Settings.rotProperties.containsKey("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage()))
+				{
+					rotProps = EM_Settings.rotProperties.get("" + Item.itemRegistry.getNameForObject(stack.getItem()) + "," + stack.getItemDamage());
+					rotTime = (long)(rotProps.days * 24000L);
+				}
+				
+				if(!EM_Settings.foodSpoiling || (rotProps == null && !(stack.getItem() instanceof ItemFood)) || rotTime < 0)
+				{
+					if(stack.getTagCompound() != null)
+					{
+						if(stack.getTagCompound().hasKey("EM_ROT_DATE"))
+						{
+							stack.getTagCompound().removeTag("EM_ROT_DATE");
+						}
+						if(stack.getTagCompound().hasKey("EM_ROT_TIME"))
+						{
+							stack.getTagCompound().removeTag("EM_ROT_TIME");
+						}
+					}
+				} else
 				{
 					if(stack.getTagCompound() == null)
 					{

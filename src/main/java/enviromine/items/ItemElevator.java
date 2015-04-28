@@ -19,7 +19,7 @@ public class ItemElevator extends ItemBlock
 	@Override
 	public int getMetadata(int damageValue)
 	{
-		return damageValue%2;
+		return damageValue%4;
 	}
 	
 	@Override

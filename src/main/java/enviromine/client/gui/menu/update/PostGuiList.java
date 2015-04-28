@@ -18,6 +18,7 @@ import enviromine.client.gui.UpdateNotification;
 import enviromine.core.EM_Settings;
 import enviromine.utils.RenderAssist;
 
+@SideOnly(Side.CLIENT)
 public class PostGuiList extends GuiListExtended
 {
 	

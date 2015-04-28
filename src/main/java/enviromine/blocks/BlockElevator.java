@@ -1,5 +1,6 @@
 package enviromine.blocks;
 
+import java.util.ArrayList;
 import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -66,6 +67,43 @@ public class BlockElevator extends Block implements ITileEntityProvider
 		}
 		
 		int meta = world.getBlockMetadata(i, j, k)%2;
+		int meta1 = world.getBlockMetadata(i, j, k)%4;
+		
+		if(meta1 > 1) // Recall type
+		{
+			if(meta1 == 2 && (world.getBlock(i, j - 1, k) != ObjectHandler.elevator || world.getBlockMetadata(i, j - 1, k) != 3))
+			{
+				player.addChatMessage(new ChatComponentText("Can't recall an elevator. Incomplete frame"));
+			} else if(meta1 == 3 && (world.getBlock(i, j + 1, k) != ObjectHandler.elevator || world.getBlockMetadata(i, j + 1, k) != 2))
+			{
+				player.addChatMessage(new ChatComponentText("Can't recall an elevator. Incomplete frame"));
+			} else
+			{
+				if(world.provider.dimensionId == 0)
+				{
+					if(TeleportHandler.RecallElevator(i, j + meta - 1, k, false))
+					{
+						player.addChatMessage(new ChatComponentText("Elevator recalled!"));
+					} else
+					{
+						player.addChatMessage(new ChatComponentText("Unable to find elevator to recall"));
+					}
+				} else if(world.provider.dimensionId == EM_Settings.caveDimID)
+				{
+					if(TeleportHandler.RecallElevator(i, j + meta - 1, k, false))
+					{
+						player.addChatMessage(new ChatComponentText("Elevator recalled!"));
+					} else
+					{
+						player.addChatMessage(new ChatComponentText("Unable to find elevator to recall"));
+					}
+				} else
+				{
+					player.addChatMessage(new ChatComponentText("Can't recall an elevator from this dimension"));
+				}
+			}
+			return true;
+		}
 		
 		if(!(meta == 0 && world.getBlock(i, j - 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j - 1, k) == 1) && !(meta == 1 && world.getBlock(i, j + 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j + 1, k) == 0))
 		{
@@ -104,13 +142,17 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			}
 			
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, TeleportHandler.GetInstance(playerMP.mcServer.worldServerForDimension(0)));
-			world.setBlockToAir(i, j, k);
+			//world.setBlockToAir(i, j, k);
 			if(meta == 0)
 			{
-				world.setBlockToAir(i, j - 1, k);
+				world.setBlockMetadataWithNotify(i, j, k, 2, 2);
+				world.setBlockMetadataWithNotify(i, j - 1, k, 3, 2);
+				//world.setBlockToAir(i, j - 1, k);
 			} else
 			{
-				world.setBlockToAir(i, j + 1, k);
+				world.setBlockMetadataWithNotify(i, j, k, 3, 2);
+				world.setBlockMetadataWithNotify(i, j + 1, k, 2, 2);
+				//world.setBlockToAir(i, j + 1, k);
 			}
 		} else if(player.dimension == 0)
 		{
@@ -118,13 +160,17 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			player.addStat(EnviroAchievements.boreToTheCore, 1);
 			player.getEntityData().setIntArray("EM_CAVE_DIST", new int[]{i, j, k, 0});
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, EM_Settings.caveDimID, TeleportHandler.GetInstance(playerMP.mcServer.worldServerForDimension(EM_Settings.caveDimID)));
-			world.setBlockToAir(i, j, k);
+			//world.setBlockToAir(i, j, k);
 			if(meta == 0)
 			{
-				world.setBlockToAir(i, j - 1, k);
+				world.setBlockMetadataWithNotify(i, j, k, 2, 2);
+				world.setBlockMetadataWithNotify(i, j - 1, k, 3, 2);
+				//world.setBlockToAir(i, j - 1, k);
 			} else
 			{
-				world.setBlockToAir(i, j + 1, k);
+				world.setBlockMetadataWithNotify(i, j, k, 3, 2);
+				world.setBlockMetadataWithNotify(i, j + 1, k, 2, 2);
+				//world.setBlockToAir(i, j + 1, k);
 			}
 		} else
 		{
@@ -148,7 +194,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void getSubBlocks(Item item, CreativeTabs tab, List tabList)
 	{
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
 			tabList.add(new ItemStack(item, 1, i));
 		}
@@ -159,6 +205,18 @@ public class BlockElevator extends Block implements ITileEntityProvider
 	{
 		return meta;
 	}
+	
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+    {
+        if(metadata >= 2)
+        {
+        	return new ArrayList<ItemStack>(); // This is the recall block and shouldn't drop anything
+        } else
+        {
+        	return super.getDrops(world, x, y, z, metadata, fortune);
+        }
+    }
 	
 	//You don't want the normal render type, or it wont render properly.
 	@Override

@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.client.gui.menu.config.EM_ConfigMenu;
 import enviromine.handlers.Legacy.LegacyHandler;
 import enviromine.trackers.properties.ArmorProperties;
@@ -123,6 +124,8 @@ public class EM_ConfigHandler
 		loadProfileConfig(ProfileSettings);
 		// load defaults
 		
+		loadHudItems();
+		
 		//These must be run before the block configs generate/load
 		StabilityType.base.GenDefaults();
 		StabilityType.base.customLoad();
@@ -171,6 +174,26 @@ public class EM_ConfigHandler
 				
 	}	
 	
+	// HardCoded for now
+	public static void loadHudItems()
+	{
+		if(EM_Settings.enableAirQ == false && HUDRegistry.isActiveHudItem(HUDRegistry.getHudItemByID(3)))
+		{
+			HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(3));
+		}
+		if(EM_Settings.enableBodyTemp == false && HUDRegistry.isActiveHudItem(HUDRegistry.getHudItemByID(0)))
+		{
+			HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(0));
+		}
+		if(EM_Settings.enableHydrate == false && HUDRegistry.isActiveHudItem(HUDRegistry.getHudItemByID(1)))
+		{
+			HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(1));
+		}
+		if(EM_Settings.enableSanity == false && HUDRegistry.isActiveHudItem(HUDRegistry.getHudItemByID(2)))
+		{
+			HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(2));
+		}
+	}
 	
 	public static int initConfig()
 	{
@@ -362,8 +385,7 @@ public class EM_ConfigHandler
 		String eggCat = "Easter Eggs";
 		EM_Settings.thingChance = config.getFloat("Cave Dimension Grue", eggCat, 0.000001F, 0F, 1F, "Chance the (extremely rare) grue in the cave dimension will attack in the dark (ignored on Halloween or Friday 13th)");
 			
-		config.save();
-
+		config.save();	
 	}
 	
 	/**

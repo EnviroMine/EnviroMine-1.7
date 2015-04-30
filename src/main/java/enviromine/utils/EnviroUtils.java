@@ -1,41 +1,26 @@
 package enviromine.utils;
 
-import java.awt.Color;
+import enviromine.core.EM_Settings;
+import enviromine.core.EnviroMine;
+import enviromine.handlers.ObjectHandler;
+import enviromine.trackers.properties.StabilityType;
+
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.potion.Potion;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockEndPortal;
-import net.minecraft.block.BlockEndPortalFrame;
-import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockGlowstone;
-import net.minecraft.block.BlockGravel;
-import net.minecraft.block.BlockLadder;
-import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.BlockMobSpawner;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.BlockPortal;
-import net.minecraft.block.BlockSign;
-import net.minecraft.block.BlockWeb;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.potion.Potion;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import org.apache.logging.log4j.Level;
-
-import enviromine.core.EM_Settings;
-import enviromine.core.EnviroMine;
-import enviromine.handlers.ObjectHandler;
-import enviromine.trackers.properties.StabilityType;
 
 public class EnviroUtils
 {
@@ -175,7 +160,16 @@ public class EnviroUtils
 		return((num - 32F) * (5 / 9));
 	}
 	
+	
 	public static double getBiomeTemp(BiomeGenBase biome)
+	{
+		return getBiomeTemp(biome.temperature);
+	}
+	public static double getBiomeTemp(int x, int y, int z, BiomeGenBase biome)
+	{
+		return getBiomeTemp(biome.getFloatTemperature(x, y, z));
+	}
+	private static double getBiomeTemp(float biomeTemp)
 	{
 		// You can calibrate temperatures using these
 		// This does not take into account the time of day (These are the midday maximums)
@@ -183,7 +177,7 @@ public class EnviroUtils
 		float minTemp = -15F;
 		
 		// CALCULATE!
-		return biome.temperature >= 0? Math.sin(Math.toRadians(biome.temperature*45F))*maxTemp : Math.sin(Math.toRadians(biome.temperature*45F))*minTemp;
+		return biomeTemp >= 0? Math.sin(Math.toRadians(biomeTemp*45F))*maxTemp : Math.sin(Math.toRadians(biomeTemp*45F))*minTemp;
 	}
 	
 	/*

@@ -407,16 +407,14 @@ public class EM_EventManager
 			{
 				int adjCoords[] = EnviroUtils.getAdjacentBlockCoordsFromSide(event.x, event.y, event.z, event.face);
 				
-				if(item.getItem() == Item.getItemFromBlock(Blocks.torch) && (EM_Settings.torchesBurn || EM_Settings.torchesGoOut))
+				if(item.getItem() == Item.getItemFromBlock(Blocks.torch) && (EM_Settings.torchesBurn || EM_Settings.torchesGoOut)) // Redirect torch placement to our own
 				{
-					if(!event.world.getBlock(adjCoords[0], adjCoords[1], adjCoords[2]).getMaterial().isReplaceable())
-					{
-						event.setCanceled(true);
-						return;
-					} else
-					{
-						TorchReplaceHandler.ScheduleReplacement(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2]);
-					}
+					Vec3 lookVec = event.entityPlayer.getLookVec();
+					ItemBlock torchItem = (ItemBlock)Item.getItemFromBlock(ObjectHandler.fireTorch);
+					torchItem.onItemUse(item, event.entityPlayer, event.world, event.x, event.y, event.z, event.face, (float)lookVec.xCoord, (float)lookVec.yCoord, (float)lookVec.zCoord);
+					
+					event.setCanceled(true);
+					return;
 				}
 				
 				EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2], true, "Normal");

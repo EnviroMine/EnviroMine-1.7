@@ -9,8 +9,9 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import enviromine.core.managers.PropertyManager;
-import enviromine.core.managers.PropertyManager.PropertyTracker;
+import enviromine.core.api.PropertyRegistry;
+import enviromine.core.api.PropertyTracker;
+import enviromine.core.api.PropertyType;
 
 public class PacketEnviroProperty implements IMessage
 {
@@ -46,14 +47,18 @@ public class PacketEnviroProperty implements IMessage
 		public IMessage onMessage(PacketEnviroProperty message, MessageContext ctx)
 		{
 			Entity entity = Minecraft.getMinecraft().theWorld.getEntityByID(message.tags.getInteger("EntityID"));
+			NBTTagCompound trackerData = message.tags.getCompoundTag("Properties");
 			
 			if(entity != null && entity instanceof EntityLivingBase)
 			{
-				PropertyTracker tracker = PropertyManager.GetTracker((EntityLivingBase)entity);
-				
-				if(tracker != null)
+				for(PropertyType propType : PropertyRegistry.getAllTypes())
 				{
-					tracker.readFromNBT(message.tags.getCompoundTag("Properties"));
+					PropertyTracker tracker = propType.getTracker((EntityLivingBase)entity);
+					
+					if(tracker != null)
+					{
+						tracker.loadNBTData(trackerData);
+					}
 				}
 			}
 			

@@ -17,7 +17,6 @@ import enviromine.utils.EnviroUtils;
 import enviromine.world.EM_WorldData;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
-
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -64,6 +63,7 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -87,6 +87,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -156,6 +157,21 @@ public class EM_EventManager
 				} else
 				{
 					tracker.trackedEntity = (EntityLivingBase)event.entity;
+				}
+				
+				//TODO this is for updating clients gui
+				if (event.entity instanceof EntityPlayerMP && !event.world.isRemote) 
+				{
+					NBTTagCompound pData = new NBTTagCompound();
+					pData.setInteger("id", 4);
+					pData.setString("player", event.entity.getCommandSenderName());
+					pData.setBoolean("enableAirQ", EM_Settings.enableAirQ);
+					pData.setBoolean("enableBodyTemp", EM_Settings.enableBodyTemp);
+					pData.setBoolean("enableHydrate", EM_Settings.enableHydrate);
+					pData.setBoolean("enableSanity", EM_Settings.enableSanity);
+					
+					EnviroMine.instance.network.sendTo(new PacketEnviroMine(pData), (EntityPlayerMP) event.entity);
+			
 				}
 			}
 		} else if(event.entity instanceof EntityFallingBlock && !(event.entity instanceof EntityPhysicsBlock) && !event.world.isRemote && event.world.getTotalWorldTime() > EM_PhysManager.worldStartTime + EM_Settings.worldDelay && chunkPhys)

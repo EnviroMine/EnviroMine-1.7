@@ -6,11 +6,15 @@ package enviromine.network.packet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
 import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import enviromine.client.gui.hud.HUDRegistry;
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.handlers.EM_EventManager;
 import enviromine.handlers.EM_StatusManager;
@@ -79,6 +83,21 @@ public class PacketEnviroMine implements IMessage
 			} else if(id == 3)
 			{
 				this.registerQuake(packet.tags);
+			} else if(id == 4)
+			{
+				//TODO this will need to be updated onthe Teardown
+				if(packet.tags.getBoolean("enableAirQ") == false) HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(3));
+				else HUDRegistry.enableHudItem(HUDRegistry.getHudItemByID(3));
+				
+				if(packet.tags.getBoolean("enableBodyTemp") == false) HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(0));
+				else HUDRegistry.enableHudItem(HUDRegistry.getHudItemByID(0));
+
+				if(packet.tags.getBoolean("enableHydrate") == false) HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(1));
+				else HUDRegistry.enableHudItem(HUDRegistry.getHudItemByID(1));
+
+				if(packet.tags.getBoolean("enableSanity") == false) HUDRegistry.disableHudItem(HUDRegistry.getHudItemByID(2));
+				else HUDRegistry.enableHudItem(HUDRegistry.getHudItemByID(2));
+				
 			} else
 			{
 				EnviroMine.logger.log(Level.ERROR, "Received invalid packet on clientside!");

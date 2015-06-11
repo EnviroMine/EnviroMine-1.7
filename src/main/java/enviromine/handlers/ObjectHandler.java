@@ -2,6 +2,7 @@ package enviromine.handlers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -14,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enviromine.EntityPhysicsBlock;
@@ -265,16 +269,35 @@ public class ObjectHandler
 		camelStack2.getTagCompound().setInteger("camelPackFill", 25);
 		GameRegistry.addRecipe(camelStack2, "xxx", "xyx", "xxx", 'x', new ItemStack(Items.leather), 'y', new ItemStack(Items.potionitem, 1, 0));
 	}
-	
-	public static void LoadIgnitionSources()
+
+	public static String[] DefaultIgnitionSources()
 	{
-		igniteList.put(Blocks.flowing_lava, new ArrayList<Integer>());
-		igniteList.put(Blocks.lava, new ArrayList<Integer>());
-		igniteList.put(Blocks.torch, new ArrayList<Integer>());
-		igniteList.put(Blocks.lit_furnace, new ArrayList<Integer>());
-		igniteList.put(Blocks.fire, new ArrayList<Integer>());
-		igniteList.put(ObjectHandler.fireGasBlock, new ArrayList<Integer>());
-		igniteList.put(ObjectHandler.fireTorch, new ArrayList<Integer>());
-		igniteList.put(ObjectHandler.burningCoal, new ArrayList<Integer>());
+		String[] list = new String[]{Block.blockRegistry.getNameForObject(Blocks.flowing_lava), 
+			Block.blockRegistry.getNameForObject(Blocks.lava),
+			Block.blockRegistry.getNameForObject(Blocks.torch),
+			Block.blockRegistry.getNameForObject(Blocks.lit_furnace),
+			Block.blockRegistry.getNameForObject(Blocks.fire),
+			Block.blockRegistry.getNameForObject(ObjectHandler.fireGasBlock),
+			Block.blockRegistry.getNameForObject(ObjectHandler.fireTorch),
+			Block.blockRegistry.getNameForObject(ObjectHandler.burningCoal)};
+		
+		return list;
+	}	
+	
+	public static void LoadIgnitionSources(String[] listIn)
+	{
+		for(String source : listIn)
+		{
+			try
+			{
+				Block sBlock = Block.getBlockFromName(source);
+				igniteList.put(sBlock, new ArrayList<Integer>());
+				EnviroMine.logger.log(Level.INFO, "Registered "+ sBlock.getLocalizedName() +"("+source+") as an ignition source.");
+			}catch(NullPointerException e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Could not find "+ source);
+			}
+			
+		}
 	}
 }

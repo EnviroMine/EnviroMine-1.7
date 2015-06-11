@@ -371,7 +371,7 @@ public class EnviroDataTracker
 			// Heat Temp Checks
 			if(!trackedEntity.isPotionActive(Potion.fireResistance))
 			{
-				if(bodyTemp >= 39F && enableHeat && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
+				if(bodyTemp >= 39F && enableHeat && EM_Settings.enableHeatstrokeGlobal && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
 				{
 					if(bodyTemp >= 43F)
 					{
@@ -390,7 +390,7 @@ public class EnviroDataTracker
 			}
 			
 			//Cold Temp Checks
-			if(bodyTemp <= 35F && enableFrostbite && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
+			if(bodyTemp <= 35F && enableFrostbite && EM_Settings.enableHypothermiaGlobal && (enviroData[6] == 1 || !(trackedEntity instanceof EntityAnimal)))
 			{
 				if(bodyTemp <= 30F)
 				{
@@ -412,7 +412,7 @@ public class EnviroDataTracker
 				}
 			}
 			
-			if(enableFrostbite && (timeBelow10 >= 120 || (frostbiteLevel >= 1 && frostIrreversible)))
+			if(enableFrostbite && EM_Settings.enableFrostbiteGlobal && (timeBelow10 >= 120 || (frostbiteLevel >= 1 && frostIrreversible)))
 			{
 				if(timeBelow10 >= 240 || frostbiteLevel >= 2)
 				{
@@ -433,7 +433,7 @@ public class EnviroDataTracker
 				}
 				
 				// If frostbite is treated before this time then you can save your limbs!
-				if(timeBelow10 > 360 && !frostIrreversible)
+				if(timeBelow10 > 360 && !frostIrreversible && EM_Settings.enableFrostbiteGlobal)
 				{
 					frostIrreversible = true;
 					
@@ -448,12 +448,12 @@ public class EnviroDataTracker
 				if (this.side.isClient()) {
 					playSoundWithTimeCheck(1700, "enviromine:chill",  UI_Settings.breathVolume, 1.0F);
 				}
-			} else if(!frostIrreversible || !enableFrostbite)
+			} else if(!frostIrreversible || !enableFrostbite || !EM_Settings.enableFrostbiteGlobal)
 			{
 				frostbiteLevel = 0;
 			}
 			
-			if(bodyTemp >= 45F && enviroData[2] == 1)
+			if((bodyTemp >= 45F && enviroData[2] == 1 )|| bodyTemp >= 50F)
 			{
 				trackedEntity.setFire(10);
 			}

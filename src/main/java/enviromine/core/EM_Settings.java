@@ -70,6 +70,10 @@ public class EM_Settings
 	public static int dehydratePotionID = 30;
 	public static int insanityPotionID = 31;
 	
+	public static boolean enableHypothermiaGlobal = true;
+	public static boolean enableHeatstrokeGlobal = true;
+	public static boolean enableFrostbiteGlobal = true;
+	
 	//Gases
 	public static boolean renderGases = false;
 	public static int gasTickRate = 32; //GasFires are 4x faster than this

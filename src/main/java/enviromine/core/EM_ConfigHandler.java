@@ -10,27 +10,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.client.gui.hud.HUDRegistry;
-import enviromine.client.gui.menu.config.EM_ConfigMenu;
+import enviromine.handlers.ObjectHandler;
 import enviromine.handlers.Legacy.LegacyHandler;
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
@@ -44,7 +37,6 @@ import enviromine.trackers.properties.ItemProperties;
 import enviromine.trackers.properties.RotProperties;
 import enviromine.trackers.properties.StabilityType;
 import enviromine.trackers.properties.helpers.PropertyBase;
-import enviromine.utils.EnviroUtils;
 import enviromine.utils.ModIdentification;
 import enviromine.world.EM_WorldData;
 
@@ -282,6 +274,10 @@ public class EM_ConfigHandler
 			EM_Settings.dehydratePotionID = config.get("Potions", "Dehydration", EM_Settings.dehydratePotionID).getInt(EM_Settings.dehydratePotionID);
 			EM_Settings.insanityPotionID = config.get("Potions", "Insanity", EM_Settings.insanityPotionID).getInt(EM_Settings.insanityPotionID);
 
+			EM_Settings.enableFrostbiteGlobal = config.get("Potions", "Enable Frostbite", EM_Settings.enableFrostbiteGlobal).getBoolean();;
+			EM_Settings.enableHeatstrokeGlobal = config.get("Potions", "Enable Heat Stroke", EM_Settings.enableHeatstrokeGlobal).getBoolean();;
+			EM_Settings.enableHypothermiaGlobal = config.get("Potions", "Enable Hypothermia", EM_Settings.enableHypothermiaGlobal).getBoolean();
+			
 		// Config Options
 
 		String ConSetCat = "Config";
@@ -294,8 +290,10 @@ public class EM_ConfigHandler
 		EM_Settings.gasTickRate = config.get("Gases", "Gas Tick Rate", EM_Settings.gasTickRate, "How many ticks between gas updates. Gas fires are 1/4 of this.").getInt(EM_Settings.gasTickRate);
 		EM_Settings.gasPassLimit = config.get("Gases", "Gas Pass Limit", EM_Settings.gasPassLimit, "How many gases can be processed in a single pass per chunk (-1 = infinite)").getInt(EM_Settings.gasPassLimit);
 		EM_Settings.gasWaterLike = config.get("Gases", "Water like spreading", EM_Settings.gasWaterLike, "Whether gases should spread like water (faster) or even out as much as possible (realistic)").getBoolean(EM_Settings.gasWaterLike);
-		
-	
+
+		// Custom ignite list
+		String[] igniteList = config.getStringList("Ignite List", "Gases", ObjectHandler.DefaultIgnitionSources(), "List of Blocks that will ignite flamable gasses.");
+		ObjectHandler.LoadIgnitionSources(igniteList);
 		config.save();
 		
 	

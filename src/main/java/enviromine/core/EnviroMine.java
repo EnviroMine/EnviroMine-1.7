@@ -131,7 +131,8 @@ public class EnviroMine
 	{
 		proxy.postInit(event);
 		
-		ObjectHandler.LoadIgnitionSources();
+		//TODO Moved inside of Config Handler.general config to add in custom list
+		//ObjectHandler.LoadIgnitionSources();
 
 		EM_ConfigHandler.initConfig(); // Second pass for object initialized after pre-init
 	}

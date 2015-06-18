@@ -190,7 +190,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		float temperature = (float)config.get(category, BPName[6], 0.00).getDouble(0.00);
 		float airQuality = (float)config.get(category, BPName[7], 0.00).getDouble(0.00);
 		float sanity = (float)config.get(category, BPName[8], 0.00).getDouble(0.00);
-		String stability = config.get(category, BPName[9], "loose").getString();
+		String stability = config.get(category, BPName[9], EM_Settings.defaultStability).getString();
 		boolean slides = config.get(category, BPName[10], false).getBoolean(false);
 		boolean wetSlides = config.get(category, BPName[11], false).getBoolean(false);
 		String filename = config.getConfigFile().getName();

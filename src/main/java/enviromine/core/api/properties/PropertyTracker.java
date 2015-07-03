@@ -1,4 +1,4 @@
-package enviromine.core.api;
+package enviromine.core.api.properties;
 
 import java.util.UUID;
 import net.minecraft.entity.Entity;
@@ -20,10 +20,22 @@ public abstract class PropertyTracker implements IExtendedEntityProperties
 	}
 	
 	@Override
-	public abstract void saveNBTData(NBTTagCompound compound);
+	public final void saveNBTData(NBTTagCompound compound) // Forwards main tracker tag onto a property specific tag
+	{
+		NBTTagCompound propTags = new NBTTagCompound();
+		this.saveNBT(propTags);
+		compound.setTag("ENVIROMINE_" + type.getTrackerID(), propTags);
+	}
 	
 	@Override
-	public abstract void loadNBTData(NBTTagCompound compound);
+	public final void loadNBTData(NBTTagCompound compound) // Forwards main tracker tag onto a property specific tag
+	{
+		this.loadNBT(compound.getCompoundTag("ENVIROMINE_" + type.getTrackerID()));
+	}
+	
+	public abstract void saveNBT(NBTTagCompound tags);
+	
+	public abstract void loadNBT(NBTTagCompound tags);
 	
 	@Override
 	public void init(Entity entity, World world)

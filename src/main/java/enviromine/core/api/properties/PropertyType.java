@@ -1,9 +1,11 @@
-package enviromine.core.api;
+package enviromine.core.api.properties;
 
 import java.util.HashMap;
 import java.util.UUID;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.core.api.properties.PropertyRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public abstract class PropertyType
@@ -19,14 +21,6 @@ public abstract class PropertyType
 	}
 	
 	/**
-	 * @return An integer representing the interval in ticks between each update pass
-	 */
-	public int TickInterval()
-	{
-		return 20;
-	}
-	
-	/**
 	 * Requires client-server property sync (sync will use tracker NBT data)
 	 */
 	public boolean SyncClient()
@@ -34,30 +28,14 @@ public abstract class PropertyType
 		return false;
 	}
 	
-	public boolean doScan()
-	{
-		return false;
-	}
-	
 	/**
-	 * Scans the given location for blocks that could influence this property<br>
-	 * <b>NOTES:</b><br>
-	 * - This runs multiple times per tick and will loop back around when loopIdx reaches (<b><i>scanRange</i></b>*2)^3<br>
-	 * - Relative position is NOT static between passes and should not be assumed to be so<br>
-	 * - Averaging the values obtained from the scan loop is up to the module creator<br>
-	 * - Ticks may be skipped if TPS drops too low
+	 * NOTE: Do not re-instantiate a new renderer every time this is called.
+	 * @return
 	 */
-	public void scanLocation(PropertyTracker tracker, World world, int x, int y, int z, int loopIdx)
+	@SideOnly(Side.CLIENT)
+	public PropertyRenderer getGuiRenderer()
 	{
-	}
-	
-	/**
-	 * How far does this property scan? (radius)<br>
-	 * Keep low to prevent TPS latency
-	 */
-	public byte scanRange()
-	{
-		return 5;
+		return null;
 	}
 	
 	public abstract boolean isTrackable(EntityLivingBase entityLiving);

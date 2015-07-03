@@ -1,4 +1,4 @@
-package enviromine.core.api;
+package enviromine.core.api.properties;
 
 import java.util.ArrayList;
 import java.util.HashMap;

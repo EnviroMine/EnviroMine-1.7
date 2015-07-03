@@ -1,18 +1,47 @@
-package enviromine.core.api;
+package enviromine.core.api.properties;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EnviroMine;
+import enviromine.core.api.helpers.IPropScanner;
 import enviromine.core.network.PacketEnviroProperty;
 
 public class PropertyManager
 {
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onGuiRender(RenderGameOverlayEvent.Post event)
+	{
+		if(event.isCanceled() || event.type != RenderGameOverlayEvent.ElementType.HELMET)
+		{
+			return;
+		}
+		
+		for(PropertyType propType : PropertyRegistry.getAllTypes())
+		{
+			PropertyRenderer renderer = propType.getGuiRenderer();
+			PropertyTracker tracker = propType.getTracker(Minecraft.getMinecraft().thePlayer);
+			
+			if(renderer == null)
+			{
+				continue;
+			}
+			
+			renderer.drawGui(tracker);
+		}
+	}
+	
 	@SubscribeEvent
 	public void onConstruct(EntityConstructing event)
 	{
@@ -83,15 +112,41 @@ public class PropertyManager
 		{
 			PropertyTracker tracker = propType.getTracker(event.entityLiving);
 			
-			if(tracker != null)
+			if(tracker == null)
 			{
-				tracker.onLivingUpdate();
+				continue;
+			}
+			
+			if(tracker instanceof IPropScanner)
+			{
+				IPropScanner scanner = (IPropScanner)tracker;
+				int d = scanner.ScanDiameter();
+				int r = d/2;
 				
-				if(!event.entityLiving.worldObj.isRemote && propType.SyncClient())
+				int i = 0;
+				while(i < scanner.ScansPerTick())
 				{
-					tracker.saveNBTData(syncData);
-					flag = true;
+					int pass = (tracker.entityLiving.ticksExisted * scanner.ScansPerTick() + i)%(d * d * d);
+					
+					int x = pass%d;
+					int y = pass/(d * d);
+					int z = pass%(d * d)/d;
+					
+					x += MathHelper.floor_double(tracker.entityLiving.posX) - r;
+					y += MathHelper.floor_double(tracker.entityLiving.posY) - r;
+					z += MathHelper.floor_double(tracker.entityLiving.posZ) - r;
+					
+					scanner.DoScan(x, y, z, pass);
+					i++;
 				}
+			}
+			
+			tracker.onLivingUpdate();
+			
+			if(!event.entityLiving.worldObj.isRemote && propType.SyncClient())
+			{
+				tracker.saveNBTData(syncData);
+				flag = true;
 			}
 		}
 		

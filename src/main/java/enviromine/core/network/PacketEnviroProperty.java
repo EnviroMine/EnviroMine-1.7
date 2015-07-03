@@ -9,9 +9,9 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import enviromine.core.api.PropertyRegistry;
-import enviromine.core.api.PropertyTracker;
-import enviromine.core.api.PropertyType;
+import enviromine.core.api.properties.PropertyRegistry;
+import enviromine.core.api.properties.PropertyTracker;
+import enviromine.core.api.properties.PropertyType;
 
 public class PacketEnviroProperty implements IMessage
 {
@@ -55,9 +55,9 @@ public class PacketEnviroProperty implements IMessage
 				{
 					PropertyTracker tracker = propType.getTracker((EntityLivingBase)entity);
 					
-					if(tracker != null)
+					if(tracker != null && trackerData.hasKey("ENVIROMINE_" + propType.getTrackerID()))
 					{
-						tracker.loadNBTData(trackerData);
+						tracker.loadNBTData(trackerData.getCompoundTag("ENVIROMINE_" + propType.getTrackerID()));
 					}
 				}
 			}

@@ -202,16 +202,9 @@ public class ConfigLegacy extends LegacyHandler
 		EM_Settings.enableQuakes = config.get(EarSetCat, "Enable Earthquakes", true).getBoolean(true);
 		EM_Settings.quakePhysics = config.get(EarSetCat, "Triggers Physics", true, "Can cause major lag at times (Requires main physics to be enabled)").getBoolean(true);
 		EM_Settings.quakeRarity = config.get(EarSetCat, "Rarity", 100).getInt(100);
-		EM_Settings.quakeMode = config.get(EarSetCat, "Mode", 2, "Changes how quakes are created (-1 = random, 0 = wave normal, 1 = centre normal, 2 = centre tear, 3 = wave tear)").getInt(2);
-		EM_Settings.quakeDelay = config.get(EarSetCat, "Tick delay", 10).getInt(10);
-		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", 2, "How many layers of rock it can eat through at a time").getInt(2);
 		if(EM_Settings.quakeRarity < 0)
 		{
 			EM_Settings.quakeRarity = 0;
-		}
-		if(EM_Settings.quakeSpeed <= 0)
-		{
-			EM_Settings.quakeSpeed = 1;
 		}
 		
 		// Easter Eggs!

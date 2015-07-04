@@ -160,9 +160,6 @@ public class EM_Settings
 	public static boolean enableQuakes = true;
 	public static boolean quakePhysics = true;
 	public static int quakeRarity = 100;
-	public static int quakeDelay = 10;
-	public static int quakeMode = 2;
-	public static int quakeSpeed = 2;
 	
 	public static boolean finiteWater = false;
 	public static float thingChance = 0.000001F;

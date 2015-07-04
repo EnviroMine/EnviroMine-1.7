@@ -8,19 +8,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-
 import org.apache.logging.log4j.Level;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.client.gui.hud.HUDRegistry;
 import enviromine.handlers.ObjectHandler;
@@ -367,16 +363,9 @@ public class EM_ConfigHandler
 		EM_Settings.enableQuakes = config.get(EarSetCat, "Enable Earthquakes", EM_Settings.enableQuakes).getBoolean(EM_Settings.enableQuakes);
 		EM_Settings.quakePhysics = config.get(EarSetCat, "Triggers Physics", EM_Settings.quakePhysics, "Can cause major lag at times (Requires main physics to be enabled)").getBoolean(EM_Settings.quakePhysics);
 		EM_Settings.quakeRarity = config.get(EarSetCat, "Rarity", EM_Settings.quakeRarity).getInt(EM_Settings.quakeRarity);
-		EM_Settings.quakeMode = config.get(EarSetCat, "Mode", EM_Settings.quakeMode, "Changes how quakes are created (-1 = random, 0 = wave normal, 1 = centre normal, 2 = centre tear, 3 = wave tear)").getInt(EM_Settings.quakeMode);
-		EM_Settings.quakeDelay = config.get(EarSetCat, "Tick delay", EM_Settings.quakeDelay).getInt(EM_Settings.quakeDelay);
-		EM_Settings.quakeSpeed = config.get(EarSetCat, "Speed", EM_Settings.quakeSpeed, "How many layers of rock it can eat through at a time").getInt(EM_Settings.quakeSpeed);
 		if(EM_Settings.quakeRarity < 0)
 		{
 			EM_Settings.quakeRarity = 0;
-		}
-		if(EM_Settings.quakeSpeed <= 0)
-		{
-			EM_Settings.quakeSpeed = 1;
 		}
 		
 		// Easter Eggs!

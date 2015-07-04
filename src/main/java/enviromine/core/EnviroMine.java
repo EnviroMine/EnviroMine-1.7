@@ -46,6 +46,8 @@ public class EnviroMine
 		network.registerMessage(PacketEnviroProperty.HandleClientPacket.class, PacketEnviroProperty.class, 0, Side.CLIENT);
 		
 		proxy.registerHandlers();
+		
+		ConfigLoader.LoadConfigs();
 	}
 	
 	@EventHandler

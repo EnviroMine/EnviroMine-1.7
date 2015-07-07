@@ -1,4 +1,4 @@
-package enviromine.core.api.attributes;
+package enviromine.core.api.config;
 
 import net.minecraftforge.common.config.Configuration;
 

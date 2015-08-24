@@ -93,6 +93,13 @@ public class EM_ConfigHandler
 		
 		String profile = theWorldEM.getProfile();
 		
+		// if profile is overriden than switch profiles
+		if(EM_Settings.profileOverride) 
+		{
+			profile = EM_Settings.profileSelected;
+			theWorldEM.setProfile(profile);
+		}
+		
 		File profileDir = new File(profilePath + profile +"/"+ customPath);
 
 		CheckDir(profileDir);
@@ -229,7 +236,7 @@ public class EM_ConfigHandler
 
 		//World Generation
 		EM_Settings.shaftGen = config.get("World Generation", "Enable Village MineShafts", EM_Settings.shaftGen, "Generates mineshafts in villages").getBoolean(EM_Settings.shaftGen);
-		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", EM_Settings.oldMineGen, "Generates massive abandoned mineshafts (size doesn't cause lag)").getBoolean(EM_Settings.oldMineGen);
+		EM_Settings.oldMineGen = config.get("World Generation", "Enable New Abandoned Mineshafts", EM_Settings.oldMineGen, "Generates massive abandoned mineshafts (size doesn't cause lag) (This Overrides all Dimensions. Check Custom Dimension properties if you want to set it only for certain Dimensions.)").getBoolean(EM_Settings.oldMineGen);
 		EM_Settings.gasGen = config.get("World Generation", "Generate Gases", EM_Settings.gasGen).getBoolean(EM_Settings.gasGen);
 		//EM_Settings.disableCaves = config.get("World Generation", "Disable Cave Dimension", false).getBoolean(false); // Moved to CaveBaseProperties
 		//EM_Settings.limitElevatorY = config.get("World Generation", "Limit Elevator Height", true).getBoolean(true); // Moved to CaveBaseProperties
@@ -277,6 +284,10 @@ public class EM_ConfigHandler
 		// Config Options
 
 		String ConSetCat = "Config";
+		
+		//Default Profile Override
+		EM_Settings.profileSelected = config.get(ConSetCat, "Profile", EM_Settings.profileSelected).getString();
+		EM_Settings.profileOverride = config.get(ConSetCat, "Override Profile", EM_Settings.profileOverride,  "Override Profile. It Can be used for servers to force profiles on servers or modpack. This Overrides any world loaded up. Name is Case Sensitive!").getBoolean(false);
 		EM_Settings.enableConfigOverride = config.get(ConSetCat, "Client Config Override (SMP)", EM_Settings.enableConfigOverride, "[DISABLED][WIP] Temporarily overrides client configurations with the server's (NETWORK INTESIVE!)").getBoolean(EM_Settings.enableConfigOverride);
 		
 		// Config Gas
@@ -289,6 +300,7 @@ public class EM_ConfigHandler
 
 		// Custom ignite list
 		String[] igniteList = config.getStringList("Ignite List", "Gases", ObjectHandler.DefaultIgnitionSources(), "List of Blocks that will ignite flamable gasses.");
+		
 		ObjectHandler.LoadIgnitionSources(igniteList);
 		config.save();
 		

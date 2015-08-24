@@ -1,18 +1,20 @@
 package enviromine.world;
 
-import org.apache.logging.log4j.Level;
-
-import enviromine.core.EnviroMine;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
+
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enviromine.core.EnviroMine;
 
 public class EM_WorldData extends WorldSavedData {
 
 	private static final String IDENTIFIER = "EM_WorldData";
 	
-	private String profile = "Default";
+	private String profile = "default";
 
 	public static EM_WorldData theWorldEM;		
 	

@@ -38,7 +38,7 @@ public class WorldFeatureGenerator implements IWorldGenerator
 		}
 		
 		DimensionProperties dimensionProp = null;
-		boolean allowMines = EM_Settings.oldMineGen;
+		boolean allowMines = true;
 		
 		if(EM_Settings.dimensionProperties.containsKey(world.provider.dimensionId))
 		{ 
@@ -46,7 +46,7 @@ public class WorldFeatureGenerator implements IWorldGenerator
 			allowMines = dimensionProp.mineshaftGen;
 		}
 		
-		if(allowMines)
+		if(allowMines && EM_Settings.oldMineGen)
 		{
 			if(!disableMineScan)
 			{

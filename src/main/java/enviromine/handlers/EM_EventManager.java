@@ -17,6 +17,7 @@ import enviromine.utils.EnviroUtils;
 import enviromine.world.EM_WorldData;
 import enviromine.world.Earthquake;
 import enviromine.world.features.mineshaft.MineshaftBuilder;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -388,15 +389,6 @@ public class EM_EventManager
 					{
 						tracker.bodyTemp += livingProps.hitTemp;
 					}
-				} else if(attacker instanceof EntityEnderman || attacker.getCommandSenderName().toLowerCase().contains("ender"))
-				{
-					tracker.sanity -= 5F;
-				} else if(attacker instanceof EntityLivingBase)
-				{
-					if(((EntityLivingBase)attacker).isEntityUndead())
-					{
-						tracker.sanity -= 1F;
-					}
 				}
 			}
 		}
@@ -419,6 +411,7 @@ public class EM_EventManager
 		
 		if(event.getResult() != Result.DENY && event.action == Action.RIGHT_CLICK_BLOCK && item != null)
 		{
+			
 			if(item.getItem() instanceof ItemBlock && !event.entityPlayer.worldObj.isRemote)
 			{
 				int adjCoords[] = EnviroUtils.getAdjacentBlockCoordsFromSide(event.x, event.y, event.z, event.face);
@@ -426,11 +419,21 @@ public class EM_EventManager
 				if(item.getItem() == Item.getItemFromBlock(Blocks.torch) && (EM_Settings.torchesBurn || EM_Settings.torchesGoOut)) // Redirect torch placement to our own
 				{
 					Vec3 lookVec = event.entityPlayer.getLookVec();
-					ItemBlock torchItem = (ItemBlock)Item.getItemFromBlock(ObjectHandler.fireTorch);
-					torchItem.onItemUse(item, event.entityPlayer, event.world, event.x, event.y, event.z, event.face, (float)lookVec.xCoord, (float)lookVec.yCoord, (float)lookVec.zCoord);
 					
-					event.setCanceled(true);
+		            Block block = event.world.getBlock(event.x, event.y, event.z);
+					if(block.onBlockActivated(event.world, event.x, event.y, event.y, event.entityPlayer, event.face, 0F, 0F, 0F))
+					{
+						event.useItem = Result.DENY;
+						event.useBlock = Result.ALLOW;
+					}else
+					{
+						event.useItem = Result.ALLOW;
+						ItemBlock torchItem = (ItemBlock)Item.getItemFromBlock(ObjectHandler.fireTorch);
+						//event.setCanceled(true);
+					}
+					//event.setCanceled(true);
 					return;
+
 				}
 				
 				EM_PhysManager.schedulePhysUpdate(event.entityPlayer.worldObj, adjCoords[0], adjCoords[1], adjCoords[2], true, "Normal");
@@ -551,6 +554,7 @@ public class EM_EventManager
 	
 	public static void fillBottle(World world, EntityPlayer player, int x, int y, int z, ItemStack item, PlayerInteractEvent event)
 	{
+		
 		MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, player, true);
 		
 		if(movingobjectposition == null)
@@ -589,7 +593,6 @@ public class EM_EventManager
 				if(isWater || isValidCauldron)
 				{
 					Item newItem = Items.potionitem;
-					
 					switch(getWaterType(world, i, j, k))
 					{
 						case 0:
@@ -635,11 +638,13 @@ public class EM_EventManager
 						item.stackSize = 1;
 						item.setItemDamage(0);
 						player.setCurrentItemOrArmor(0, item);
-					} else if (!player.inventory.addItemStackToInventory(new ItemStack(newItem)))
+					} else if(!player.inventory.addItemStackToInventory( new ItemStack(newItem,1,0)))
 					{
-						player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
+        					 player.dropPlayerItemWithRandomChoice(new ItemStack(newItem, 1, 0), false);
 					}
-					
+
+    				//NEEDED TO RESYNC THE PLAYER CONTAINER
+    				player.inventoryContainer.detectAndSendChanges();
 					event.setCanceled(true);
 				}
 			}
@@ -680,7 +685,7 @@ public class EM_EventManager
 				
 				boolean isWater;
 				
-				if(entityPlayer.worldObj.getBlock(i, j, k) == Blocks.flowing_water || entityPlayer.worldObj.getBlock(i, j, k) == Blocks.water)
+				if((entityPlayer.worldObj.getBlock(i, j, k) == Blocks.flowing_water && !EM_Settings.finiteWater) || entityPlayer.worldObj.getBlock(i, j, k) == Blocks.water)
 				{
 					isWater = true;
 				} else

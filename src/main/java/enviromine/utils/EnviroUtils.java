@@ -244,7 +244,7 @@ public class EnviroUtils
 			type = EM_Settings.stabilityTypes.get("average");
 		} else
 		{
-			type = EM_Settings.stabilityTypes.get("loose");
+			type = EM_Settings.stabilityTypes.get(EM_Settings.defaultStability);
 		}
 		
 		if(type == null)

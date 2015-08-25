@@ -424,6 +424,7 @@ public class EM_StatusManager
 		if(lightLev > 1 && !entityLiving.worldObj.provider.hasNoSky)
 		{
 			quality = 2F;
+			sanityRate = 0.5F;
 		} else if(sanityRate <= sanityStartRate && sanityRate > -0.1F && blockLightLev <= 1 && entityLiving.getActivePotionEffect(Potion.nightVision) == null)
 		{
 			sanityRate = -0.1F;

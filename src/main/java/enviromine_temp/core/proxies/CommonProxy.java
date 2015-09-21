@@ -1,7 +1,7 @@
-package enviromine_temp.proxies;
+package enviromine_temp.core.proxies;
 
 import enviromine.core.api.properties.PropertyRegistry;
-import enviromine_temp.EnviroTemp;
+import enviromine_temp.core.EnviroTemp;
 import enviromine_temp.properties.PropertyTemp;
 
 public class CommonProxy

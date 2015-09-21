@@ -1,4 +1,4 @@
-package enviromine_temp.proxies;
+package enviromine_temp.core.proxies;
 
 public class ClientProxy extends CommonProxy
 {

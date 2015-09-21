@@ -4,8 +4,12 @@ import net.minecraftforge.common.config.Configuration;
 
 public abstract class Attribute
 {
-	protected Attribute(Object obj)
+	public ConfigKey baseKey;
+	
+	public Attribute(ConfigKey baseKey)
 	{
+		this.baseKey = baseKey;
+		
 		this.GenDefaults();
 	}
 	

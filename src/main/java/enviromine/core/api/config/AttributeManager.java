@@ -1,6 +1,7 @@
 package enviromine.core.api.config;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public abstract class AttributeManager
 {
@@ -13,17 +14,43 @@ public abstract class AttributeManager
 		cache.clear();
 	}
 	
+	/**
+	 * Gets an existing attribute if it has been cached or creates a new one as a wildcard
+	 */
 	public final Attribute getAttribute(ConfigKey key)
 	{
-		if(cache.containsKey(key))
+		if(key == null)
 		{
-			return cache.get(key);
-		} else
-		{
-			Attribute att = this.createAttribute(key);
-			cache.put(key, att);
-			return att;
+			return null;
 		}
+		
+		ConfigKey wildKey = key.copy();
+		wildKey.setWildcard();
+		
+		Attribute att = GetCacheKey(key); // Get specific
+		att = att != null? att : GetCacheKey(wildKey); // Get wildcard if no specific entry exists
+		
+		if(att == null) // Still can't be found
+		{
+			att = this.createAttribute(wildKey);
+			cache.put(wildKey, att);
+			System.out.println("Cache size is now " + cache.size());
+		}
+		
+		return att;
+	}
+	
+	public Attribute GetCacheKey(ConfigKey key)
+	{
+		for(Entry<ConfigKey,Attribute> entry : cache.entrySet())
+		{
+			if(entry.getKey().equals(key))
+			{
+				return entry.getValue();
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -31,5 +58,10 @@ public abstract class AttributeManager
 	 * <b>NOTE:</b> This method should pass the key values onto a purpose built handler
 	 * if multiple types are being handled.
 	 */
-	protected abstract Attribute createAttribute(ConfigKey config);
+	public abstract Attribute createAttribute(ConfigKey config);
+	
+	/**
+	 * Load all the default attributes into the cache
+	 */
+	public abstract void LoadDefaults();
 }

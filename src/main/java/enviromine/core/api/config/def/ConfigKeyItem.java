@@ -29,9 +29,12 @@ public class ConfigKeyItem extends ConfigKey
 			return false;
 		}
 		
-		if(damages.length <= 0 && iKey.damages.length <= 0) // Matching wildcard
+		if(iKey.isWildcard()) // Requeste is wildcard
 		{
 			return true;
+		} else if(this.isWildcard()) // Request is for specifics only
+		{
+			return false;
 		}
 		
 		toploop:
@@ -50,5 +53,22 @@ public class ConfigKeyItem extends ConfigKey
 		
 		return true;
 	}
+
+	@Override
+	public boolean isWildcard()
+	{
+		return damages.length <= 0;
+	}
+
+	@Override
+	public void setWildcard()
+	{
+		damages = new int[]{};
+	}
 	
+	@Override
+	public ConfigKey copy()
+	{
+		return new ConfigKeyItem(item, damages);
+	}
 }

@@ -4,7 +4,7 @@ import enviromine.core.api.config.ConfigKey;
 
 public class ConfigKeyEntity extends ConfigKey
 {
-	String entityID;
+	public String entityID;
 	
 	public ConfigKeyEntity(String entityID)
 	{
@@ -23,5 +23,21 @@ public class ConfigKeyEntity extends ConfigKey
 		
 		return entityID.equalsIgnoreCase(eKey.entityID);
 	}
+
+	@Override
+	public boolean isWildcard()
+	{
+		return true;
+	}
+
+	@Override
+	public void setWildcard()
+	{
+	}
 	
+	@Override
+	public ConfigKey copy()
+	{
+		return new ConfigKeyEntity(entityID);
+	}
 }

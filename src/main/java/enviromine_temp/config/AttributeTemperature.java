@@ -3,12 +3,20 @@ package enviromine_temp.config;
 import net.minecraftforge.common.config.Configuration;
 import enviromine.core.api.config.Attribute;
 import enviromine.core.api.config.ConfigKey;
+import enviromine.core.api.config.def.ConfigKeyBlock;
+import enviromine_temp.core.TempUtils;
 
 public class AttributeTemperature extends Attribute
 {
-	public boolean enabled = true;
-	public float ambTemp = 37F;
+	public float ambTemp = 25F;
 	public float effTemp = 0F;
+	
+	public AttributeTemperature(ConfigKey key, float ambTemp, float effTemp)
+	{
+		this(key);
+		this.ambTemp = ambTemp;
+		this.effTemp = effTemp;
+	}
 	
 	public AttributeTemperature(ConfigKey baseKey)
 	{
@@ -18,12 +26,16 @@ public class AttributeTemperature extends Attribute
 	@Override
 	public void GenDefaults()
 	{
+		if(this.baseKey instanceof ConfigKeyBlock)
+		{
+			ConfigKeyBlock key = (ConfigKeyBlock)this.baseKey;
+			ambTemp = TempUtils.GetBlockTemp(key.block, -1);
+		}
 	}
 	
 	@Override
 	public void loadFromConfig(Configuration config, String category)
 	{
-		enabled = config.getBoolean("Enable Temp", category, true, "Enable temperature effects on this object");
 		ambTemp = config.getFloat("Ambient Temperature", category, 37F, Float.MIN_VALUE, Float.MAX_VALUE, "");
 		effTemp = config.getFloat("Effect Temperature", category, 0F, Float.MIN_VALUE, Float.MAX_VALUE, "Temperature effect consuming/touching this object will cause");
 	}

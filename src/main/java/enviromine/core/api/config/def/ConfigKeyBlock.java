@@ -29,9 +29,12 @@ public class ConfigKeyBlock extends ConfigKey
 			return false;
 		}
 		
-		if(metadata.length <= 0 && bKey.metadata.length <= 0) // Matching wildcard
+		if(bKey.isWildcard()) // Request is a wildcard, metadata is ignored
 		{
 			return true;
+		} else if(this.isWildcard()) // This is a wildcard, request is for specific only
+		{
+			return false;
 		}
 		
 		toploop:
@@ -51,4 +54,21 @@ public class ConfigKeyBlock extends ConfigKey
 		return true;
 	}
 	
+	@Override
+	public boolean isWildcard()
+	{
+		return metadata.length <= 0;
+	}
+	
+	@Override
+	public void setWildcard()
+	{
+		metadata = new int[]{};
+	}
+	
+	@Override
+	public ConfigKey copy()
+	{
+		return new ConfigKeyBlock(block, metadata);
+	}
 }

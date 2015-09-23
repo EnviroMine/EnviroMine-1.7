@@ -52,6 +52,7 @@ public class ConfigRegistry
 			for(AttributeManager entry : list)
 			{
 				entry.ResetCache();
+				entry.LoadDefaults();
 			}
 		}
 	}

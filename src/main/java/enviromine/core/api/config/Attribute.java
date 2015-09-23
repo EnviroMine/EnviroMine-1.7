@@ -10,10 +10,15 @@ public abstract class Attribute
 	{
 		this.baseKey = baseKey;
 		
-		this.GenDefaults();
+		GenDefaults();
 	}
 	
-	public abstract void GenDefaults();
+	/**
+	 * Generates default values
+	 */
+	public void GenDefaults()
+	{
+	}
 	
 	public abstract void loadFromConfig(Configuration config, String category);
 }

@@ -12,6 +12,7 @@ import net.minecraftforge.common.config.Configuration;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
 import enviromine.core.EM_ConfigHandler;
 import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
@@ -55,6 +56,32 @@ public class EntityProperties implements SerialisableProperty, PropertyBase
 		{
 			throw new IllegalStateException();
 		}
+	}
+	
+	public boolean hasProperty(Entity entity)
+	{
+		return EM_Settings.livingProperties.containsKey(getID(entity));
+	}
+	
+	public EntityProperties getProperty(Entity entity)
+	{
+		return EM_Settings.livingProperties.get(getID(entity));
+	}
+	
+	private int getID(Entity entity)
+	{
+		int entityid = 0;
+		
+		if(EntityList.getEntityID(entity) > 0)
+		{
+			entityid = EntityList.getEntityID(entity);
+		}
+		else if(EntityRegistry.instance().lookupModSpawn(entity.getClass(), false) != null)
+		{
+			entityid = EntityRegistry.instance().lookupModSpawn(entity.getClass(), false).getModEntityId() + 128;
+		}
+		
+		return entityid;
 	}
 	
 	public EntityProperties(int id, boolean track, boolean dehydration, boolean bodyTemp, boolean airQ, boolean immuneToFrost, boolean immuneToHeat, float aSanity, float hSanity, float aTemp, float hTemp, float aAir, float hAir, float aHyd, float hHyd, String fileName)

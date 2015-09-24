@@ -220,7 +220,7 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 			Configuration config = new Configuration(armorFile, true);
 			config.load();
 			
-			String catName = this.categoryName() + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName());
+			String catName = this.categoryName() + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName() +"_"+ regName[1]);
 			
 			if(armor == Items.diamond_helmet || armor == Items.diamond_chestplate || armor == Items.diamond_leggings || armor == Items.diamond_boots || (armor.getArmorMaterial() == ArmorMaterial.DIAMOND && EM_Settings.genConfigs))
 			{
@@ -326,7 +326,15 @@ public class ArmorProperties implements SerialisableProperty, PropertyBase
 		
 		ItemArmor armor = (ItemArmor)obj;
 		
-		String catName = this.categoryName() + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName());
+		String[] regName = Item.itemRegistry.getNameForObject(armor).split(":");
+		
+		if(regName.length <= 0)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + armor.getUnlocalizedName());
+			return;
+		}
+		
+		String catName = this.categoryName() + "." + EnviroUtils.replaceULN(armor.getUnlocalizedName() +"_"+ regName);
 		
 		config.addCustomCategoryComment(catName, "");
 		config.get(catName, APName[0], Item.itemRegistry.getNameForObject(armor)).getString();

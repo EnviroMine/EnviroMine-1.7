@@ -2,6 +2,7 @@ package enviromine.trackers;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +19,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.EnviroDamageSource;
@@ -265,24 +267,33 @@ public class EnviroDataTracker
 		boolean enableHydrate = true;
 		boolean enableFrostbite = true;
 		boolean enableHeat = true;
-		if(EntityList.getEntityID(trackedEntity) > 0)
+		int id = 0;
+
+//		if(EntityList.getEntityID(trackedEntity) > 0)
+//		{
+//			id = EntityList.getEntityID(trackedEntity);
+//		}
+//		else if(EntityRegistry.instance().lookupModSpawn(trackedEntity.getClass(), false) != null)
+//		{
+//			id = EntityRegistry.instance().lookupModSpawn(trackedEntity.getClass(), false).getModEntityId() + 128;
+//		}
+		
+		if(EntityProperties.base.hasProperty(trackedEntity))
 		{
-			if(EM_Settings.livingProperties.containsKey(EntityList.getEntityID(trackedEntity)))
-			{
-				EntityProperties livingProps = EM_Settings.livingProperties.get(EntityList.getEntityID(trackedEntity));
-				enableHydrate = livingProps.dehydration;
-				enableBodyTemp = livingProps.bodyTemp;
-				enableAirQ = livingProps.airQ;
-				enableFrostbite = !livingProps.immuneToFrost;
-				enableHeat = !livingProps.immuneToHeat;
-			} else if((trackedEntity instanceof EntitySheep) || (trackedEntity instanceof EntityWolf))
-			{
-				enableFrostbite = false;
-			} else if(trackedEntity instanceof EntityChicken)
-			{
-				enableHeat = false;
-			}
+			EntityProperties livingProps = EntityProperties.base.getProperty(trackedEntity);
+			enableHydrate = livingProps.dehydration;
+			enableBodyTemp = livingProps.bodyTemp;
+			enableAirQ = livingProps.airQ;
+			enableFrostbite = !livingProps.immuneToFrost;
+			enableHeat = !livingProps.immuneToHeat;
+		} else if((trackedEntity instanceof EntitySheep) || (trackedEntity instanceof EntityWolf))
+		{
+			enableFrostbite = false;
+		} else if(trackedEntity instanceof EntityChicken)
+		{
+			enableHeat = false;
 		}
+		
 		
 		//Reset Disabled Values
 		if(!EM_Settings.enableAirQ || !enableAirQ)
@@ -536,9 +547,9 @@ public class EnviroDataTracker
 	{
 		String name = EntityList.getEntityString(entity);
 		
-		if(EM_Settings.livingProperties.containsKey(EntityList.getEntityID(entity)))
+		if(EntityProperties.base.hasProperty(entity))
 		{
-			return EM_Settings.livingProperties.get(EntityList.getEntityID(entity)).shouldTrack;
+			return EntityProperties.base.getProperty(entity).shouldTrack;
 		}
 		
 		if(entity.isEntityUndead() || entity instanceof EntityMob)

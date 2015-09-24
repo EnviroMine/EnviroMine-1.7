@@ -26,6 +26,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -269,6 +270,8 @@ public class EM_EventManager
 		if(event.entityLiving instanceof EntityMob && event.source.getEntity() != null && event.source.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.source.getEntity();
+			EnviroDataTracker tracker = EM_StatusManager.lookupTracker(player);
+
 			
 			if(player.isPotionActive(EnviroPotion.insanity) && player.getActivePotionEffect(EnviroPotion.insanity).getAmplifier() >= 2)
 			{
@@ -280,6 +283,14 @@ public class EM_EventManager
 					player.addStat(EnviroAchievements.mindOverMatter, 1);
 				}
 			}
+
+			// If player kill mob give some sanity back
+			if(tracker != null && tracker.sanity < 100 && !(event.entityLiving instanceof EntityAnimal))
+			{
+				tracker.sanity += event.entityLiving.worldObj.rand.nextInt(5);
+			}
+			
+
 		}
 	}
 	
@@ -393,9 +404,9 @@ public class EM_EventManager
 				
 				if(EntityList.getEntityString(attacker) != null)
 				{
-					if(EM_Settings.livingProperties.containsKey(EntityList.getEntityString(attacker).toLowerCase()))
+					if(EntityProperties.base.hasProperty(attacker))
 					{
-						livingProps = EM_Settings.livingProperties.get(EntityList.getEntityString(attacker).toLowerCase());
+						livingProps = EntityProperties.base.getProperty(attacker);
 					}
 				}
 				
@@ -447,11 +458,11 @@ public class EM_EventManager
 						event.useBlock = Result.ALLOW;
 					}else
 					{
-						event.useItem = Result.ALLOW;
+//						event.useItem = Result.DENY;
 						ItemBlock torchItem = (ItemBlock)Item.getItemFromBlock(ObjectHandler.fireTorch);
-						//event.setCanceled(true);
+						torchItem.onItemUse(item, event.entityPlayer, event.world, event.x, event.y, event.z, event.face, (float)lookVec.xCoord, (float)lookVec.yCoord, (float)lookVec.zCoord);
+						event.setCanceled(true);
 					}
-					//event.setCanceled(true);
 					return;
 
 				}

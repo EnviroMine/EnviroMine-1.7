@@ -147,7 +147,7 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 			
 			if(regName.length <= 0)
 			{
-				EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + item.getUnlocalizedName());
+				EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + item.getUnlocalizedName() +"_"+ regName[1]);
 				continue;
 			}
 			
@@ -160,14 +160,14 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 					itemFile.createNewFile();
 				} catch(Exception e)
 				{
-					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + item.getUnlocalizedName(), e);
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + item.getUnlocalizedName() +"_"+ regName[1], e);
 					continue;
 				}
 			}
 			
 			Configuration config = new Configuration(itemFile, true);
 			
-			String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName());
+			String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName() +"_"+ regName[1]);
 			
 			config.load();
 			
@@ -229,7 +229,15 @@ public class RotProperties implements SerialisableProperty, PropertyBase
 		
 		Item item = (Item)obj;
 		
-		String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName());
+		String[] regName = Item.itemRegistry.getNameForObject(item).split(":");
+		
+		if(regName.length <= 0)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + item.getUnlocalizedName() +"_"+ regName[1]);
+			return;
+		}
+		
+		String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName() +"_"+ regName[1]);
 		
 		config.get(category, RPName[0], Item.itemRegistry.getNameForObject(item)).getString();
 		config.get(category, RPName[1], -1).getInt(-1);

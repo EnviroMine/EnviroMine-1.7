@@ -9,7 +9,6 @@ import enviromine.network.packet.PacketEnviroMine;
 import enviromine.trackers.EnviroDataTracker;
 import enviromine.trackers.properties.*;
 import enviromine.utils.EnviroUtils;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
@@ -45,9 +44,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.base.Stopwatch;
+
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraftforge.common.EnumPlantType;
+
 import org.apache.logging.log4j.Level;
 
 public class EM_StatusManager
@@ -270,7 +271,8 @@ public class EM_StatusManager
 							}
 							else
 							{
-								surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
+								//surBiomeTemps += EnviroUtils.getBiomeTemp(checkBiome);
+								surBiomeTemps += EnviroUtils.getBiomeTemp((i + x),(j + y), (k + z), checkBiome);
 							}
 							
 							biomeTempChecks += 1;
@@ -532,19 +534,25 @@ public class EM_StatusManager
 			EnviroDataTracker mobTrack = lookupTracker((EntityLivingBase)mob);
 			EntityProperties livingProps = null;
 			
-			if(EntityList.getEntityID(mob) > 0)
+			
+			if(EntityProperties.base.hasProperty(mob))
 			{
-				if(EM_Settings.livingProperties.containsKey(EntityList.getEntityID(mob)))
-				{
-					livingProps = EM_Settings.livingProperties.get(EntityList.getEntityID(mob));
-				}
-			} else if(EntityRegistry.instance().lookupModSpawn(mob.getClass(), false) != null)
-			{
-				if(EM_Settings.livingProperties.containsKey(EntityRegistry.instance().lookupModSpawn(mob.getClass(), false).getModEntityId() + 128))
-				{
-					livingProps = EM_Settings.livingProperties.get(EntityRegistry.instance().lookupModSpawn(mob.getClass(), false).getModEntityId() + 128);
-				}
+				livingProps = EntityProperties.base.getProperty(mob);
 			}
+			
+//			if(EntityList.getEntityID(mob) > 0)
+//			{
+//				if(EM_Settings.livingProperties.containsKey(EntityList.getEntityID(mob)))
+//				{
+//					livingProps = EM_Settings.livingProperties.get(EntityList.getEntityID(mob));
+//				}
+//			} else if(EntityRegistry.instance().lookupModSpawn(mob.getClass(), false) != null)
+//			{
+//				if(EM_Settings.livingProperties.containsKey(EntityRegistry.instance().lookupModSpawn(mob.getClass(), false).getModEntityId() + 128))
+//				{
+//					livingProps = EM_Settings.livingProperties.get(EntityRegistry.instance().lookupModSpawn(mob.getClass(), false).getModEntityId() + 128);
+//				}
+//			}
 			
 			if(mob instanceof EntityVillager && entityLiving instanceof EntityPlayer && entityLiving.canEntityBeSeen(mob) && EM_Settings.villageAssist)
 			{
@@ -618,25 +626,27 @@ public class EM_StatusManager
 				}
 				
 				dehydrateBonus -= livingProps.ambHydration;
-			} else if(mob instanceof EntityBat && entityLiving instanceof EntityPlayer && entityLiving.canEntityBeSeen(mob))
-			{
-				if(sanityRate <= sanityStartRate && sanityRate > -0.01F)
-				{
-					sanityRate = -0.01F;
-				}
-			} else if(mob.getCommandSenderName().toLowerCase().contains("ender") && entityLiving instanceof EntityPlayer && entityLiving.canEntityBeSeen(mob))
-			{
-				if(sanityRate <= sanityStartRate && sanityRate > -0.1F)
-				{
-					sanityRate = -0.1F;
-				}
-			} else if(((EntityLivingBase)mob).getCreatureAttribute() == EnumCreatureAttribute.UNDEAD && entityLiving.canEntityBeSeen(mob))
-			{
-				if(sanityRate <= sanityStartRate && sanityRate > -0.01F)
-				{
-					sanityRate = -0.01F;
-				}
 			}
+			
+//			else if(mob instanceof EntityBat && entityLiving instanceof EntityPlayer && entityLiving.canEntityBeSeen(mob))
+//			{
+//				if(sanityRate <= sanityStartRate && sanityRate > -0.01F)
+//				{
+//					sanityRate = -0.01F;
+//				}
+//			} else if(mob.getCommandSenderName().toLowerCase().contains("ender") && entityLiving instanceof EntityPlayer && entityLiving.canEntityBeSeen(mob))
+//			{
+//				if(sanityRate <= sanityStartRate && sanityRate > -0.1F)
+//				{
+//					sanityRate = -0.1F;
+//				}
+//			} else if(((EntityLivingBase)mob).getCreatureAttribute() == EnumCreatureAttribute.UNDEAD && entityLiving.canEntityBeSeen(mob))
+//			{
+//				if(sanityRate <= sanityStartRate && sanityRate > -0.01F)
+//				{
+//					sanityRate = -0.01F;
+//				}
+//			}
 			
 			if(mobTrack != null)
 			{

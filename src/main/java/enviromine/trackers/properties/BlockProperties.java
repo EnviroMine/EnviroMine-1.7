@@ -290,7 +290,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 					blockFile.createNewFile();
 				} catch(Exception e)
 				{
-					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + block.getUnlocalizedName(), e);
+					EnviroMine.logger.log(Level.ERROR, "Failed to create file for " + regName[1], e);
 					continue;
 				}
 			}
@@ -299,7 +299,7 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 			
 			config.load();
 			
-			String category = this.categoryName() + "." + EnviroUtils.replaceULN(block.getUnlocalizedName());
+			String category = this.categoryName() + "." + EnviroUtils.replaceULN(block.getUnlocalizedName() +"_"+ regName[1]);
 			StabilityType defStability = EnviroUtils.getDefaultStabilityType(block);
 			
 			if(block == Blocks.lava || block == Blocks.flowing_lava || block == ObjectHandler.fireGasBlock || (EM_Settings.genConfigs && block.getMaterial() == Material.lava))
@@ -494,7 +494,15 @@ public class BlockProperties implements SerialisableProperty, PropertyBase
 		
 		Block block = (Block)obj;
 		
-		String category = this.categoryName() + "." + EnviroUtils.replaceULN(block.getUnlocalizedName());
+		String[] regName = Block.blockRegistry.getNameForObject(block).split(":");
+		
+		if(regName.length <= 0)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + block.getUnlocalizedName() +"_"+ regName[1]);
+			return;
+		}
+		
+		String category = this.categoryName() + "." + EnviroUtils.replaceULN(block.getUnlocalizedName() +"_"+ regName[1]);
 		StabilityType defStability = EnviroUtils.getDefaultStabilityType(block);
 		
 		config.get(category, BPName[0], Block.blockRegistry.getNameForObject(block)).getString();

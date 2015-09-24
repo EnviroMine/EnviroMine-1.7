@@ -261,7 +261,7 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 			
 			Configuration config = new Configuration(itemFile, true);
 			
-			String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName());
+			String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName() +"_"+ regName[1]);
 			
 			config.load();
 			
@@ -450,7 +450,15 @@ public class ItemProperties implements SerialisableProperty, PropertyBase
 		
 		Item item = (Item)obj;
 		
-		String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName());
+		String[] regName = Item.itemRegistry.getNameForObject(item).split(":");
+		
+		if(regName.length <= 0)
+		{
+			EnviroMine.logger.log(Level.ERROR, "Failed to get correctly formatted object name for " + item.getUnlocalizedName() +"_"+ regName[1]);
+			return;
+		}
+		
+		String category = this.categoryName() + "." + EnviroUtils.replaceULN(item.getUnlocalizedName() +"_"+ regName[1]);
 		
 		config.get(category, IPName[0], Item.itemRegistry.getNameForObject(item)).getString();
 		config.get(category, IPName[1], -1).getInt(-1);

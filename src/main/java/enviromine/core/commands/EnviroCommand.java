@@ -1,15 +1,17 @@
 package enviromine.core.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.StatCollector;
 import enviromine.handlers.EM_StatusManager;
 import enviromine.trackers.EnviroDataTracker;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EnviroCommand extends CommandBase
 {
@@ -49,7 +51,9 @@ public class EnviroCommand extends CommandBase
 			return;
 		}
 		
-		String target = astring[0];
+		EntityPlayerMP player = getPlayer(sender, astring[0]);
+		
+		String target = player.getCommandSenderName();
 		
 		EnviroDataTracker tracker = EM_StatusManager.lookupTrackerFromUsername(target);
 		

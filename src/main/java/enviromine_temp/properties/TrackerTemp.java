@@ -20,7 +20,13 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 	/**
 	 * Player's body temperature in Celcius
 	 */
-	public float bodyTemp = 37F;
+	public float skinTemp = 32F;
+	public float coreTemp = 37F;
+    public int rateOfChange = 100;
+
+    
+    
+	//public float bodyTemp = 37F;
 	/**
 	 * Cached for GUI
 	 */
@@ -42,14 +48,35 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 		
 		if(this.entityLiving.ticksExisted%20 == 0)
 		{
-			float airTemp = GetAirTemp();
 			
-			float relTemp = airTemp + 12F; // Offset temperature of air to body to maintain (25C Air = 37C Body)
-			float diff = relTemp - bodyTemp;
-			float speed = Math.abs(diff)/10F * Math.signum(diff) * 0.01F;// Temp loss/gain rate
-			float prevTemp = bodyTemp;
-			bodyTemp += speed;
-			changeRate = bodyTemp - prevTemp;
+			float airTemp = GetAirTemp();			
+			
+	        // New Temperature Code // Give Credit to Fokson
+			float skinAirDiff = skinTemp - (airTemp + 12);
+	        float coreSkinDiff = coreTemp - (skinTemp + 5);
+	        float thermCoreDiff = 37.0F - coreTemp;
+
+	        skinTemp = (skinTemp - (skinAirDiff / (3 * rateOfChange))) + (coreSkinDiff / rateOfChange);
+	        coreTemp = (coreTemp - (coreSkinDiff / (3 * rateOfChange))) + (thermCoreDiff / rateOfChange);
+
+	        /*
+	            Air temperature is determined by surroundings.
+	            Skin temperature drifts towards the average between air and core temp, biased towards core.
+	            Core temperature drifts towards the average between skin temp and 37c, biased towards 37c.
+	            At 20c air temperature (room temperature), skin temp will settle on 32c and core temp will settle on 37c.
+	            rateOfChange determines how fast everything moves; right now it's constant but you can work in the config option.
+	        */
+
+	        //////////////////////////
+	        
+
+	// OLD CODE		
+//			float relTemp = airTemp + 12F; // Offset temperature of air to body to maintain (25C Air = 37C Body)
+//			float diff = relTemp - bodyTemp;
+//			float speed = Math.abs(diff)/10F * Math.signum(diff) * 0.01F;// Temp loss/gain rate
+//			float prevTemp = bodyTemp;
+//			bodyTemp += speed;
+//			changeRate = bodyTemp - prevTemp;
 		}
 	}
 	
@@ -109,12 +136,14 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 	@Override
 	public void saveNBT(NBTTagCompound compound)
 	{
-		compound.setFloat("bodyTemp", bodyTemp);
+		compound.setFloat("coreTemp", coreTemp);
+		compound.setFloat("skinTemp", skinTemp);
 	}
 	
 	@Override
 	public void loadNBT(NBTTagCompound compound)
 	{
-		//bodyTemp = compound.hasKey("bodyTemp")? compound.getFloat("bodyTemp") : 37F;
+		//bodyTemp = compound.hasKey("coreTemp")? compound.getFloat("coreTemp") : 37F;
+		//skinTemp = compound.hasKey("skinTemp")? compound.getFloat("skinTemp") : 32F;
 	}
 }

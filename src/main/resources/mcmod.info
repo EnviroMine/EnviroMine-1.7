@@ -22,7 +22,7 @@
   "url": "https://enviromine.wordpress.com/",
   "updateUrl": "",
   "authorList": ["Funwayguy", "TimbuckTato", "GenDeathrow", "thislooksfun"],
-  "credits": "",
+  "credits": "Fokson for supplying the new thermoregulation algorithm ",
   "logoFile": "title.png",
   "screenshots": [],
   "dependencies": ["enviromine"]

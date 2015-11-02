@@ -15,9 +15,10 @@ public class RendererTemp extends PropertyRenderer
 	public void drawGui(PropertyTracker tracker)
 	{
 		TrackerTemp tempTrack = (TrackerTemp)tracker;
-		RenderAssist.drawString("Body Temp: " + tempTrack.bodyTemp, posX, posY, Color.WHITE, true);
-		RenderAssist.drawString("Air Temp: " + tempTrack.GetAirTemp(), posX, posY + 12, Color.WHITE, true);
-		RenderAssist.drawString("Rate: " + tempTrack.changeRate, posX, posY + 24, Color.WHITE, true);
+		RenderAssist.drawString("Air Temp: " + tempTrack.GetAirTemp(), posX, posY + 24, Color.WHITE, true);
+		RenderAssist.drawString("Core Temp: " + tempTrack.coreTemp, posX, posY, Color.WHITE, true);
+		RenderAssist.drawString("Skin Temp: " + tempTrack.skinTemp, posX, posY + 12, Color.WHITE, true);
+
 	}
 	
 	@Override

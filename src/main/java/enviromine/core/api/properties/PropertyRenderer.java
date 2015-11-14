@@ -23,5 +23,5 @@ public abstract class PropertyRenderer
 	}
 	
 	public abstract void LoadConfigurables(Configuration config);
-	public abstract void drawGui(PropertyTracker tracker);
+	public abstract void drawGui(PropertyTracker tracker, int width, int height);
 }

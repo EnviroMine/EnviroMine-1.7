@@ -1,6 +1,7 @@
 package enviromine.core.api.properties;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -30,15 +31,17 @@ public class PropertyManager
 		
 		for(PropertyType propType : PropertyRegistry.getAllTypes())
 		{
+			Minecraft mc = Minecraft.getMinecraft();
 			PropertyRenderer renderer = propType.getGuiRenderer();
-			PropertyTracker tracker = propType.getTracker(Minecraft.getMinecraft().thePlayer);
+			PropertyTracker tracker = mc == null? null : propType.getTracker(mc.thePlayer);
 			
 			if(renderer == null)
 			{
 				continue;
 			}
 			
-			renderer.drawGui(tracker);
+            ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+			renderer.drawGui(tracker, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
 		}
 	}
 	

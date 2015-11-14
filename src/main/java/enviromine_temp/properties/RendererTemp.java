@@ -12,7 +12,7 @@ import enviromine.core.utils.RenderAssist;
 public class RendererTemp extends PropertyRenderer
 {
 	@Override
-	public void drawGui(PropertyTracker tracker)
+	public void drawGui(PropertyTracker tracker, int width, int height)
 	{
 		TrackerTemp tempTrack = (TrackerTemp)tracker;
 		RenderAssist.drawString("Air Temp: " + tempTrack.GetAirTemp(), posX, posY + 24, Color.WHITE, true);

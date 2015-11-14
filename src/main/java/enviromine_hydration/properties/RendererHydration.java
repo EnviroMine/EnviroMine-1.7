@@ -12,7 +12,7 @@ public class RendererHydration extends PropertyRenderer
 	}
 	
 	@Override
-	public void drawGui(PropertyTracker tracker)
+	public void drawGui(PropertyTracker tracker, int width, int height)
 	{
 	}
 }

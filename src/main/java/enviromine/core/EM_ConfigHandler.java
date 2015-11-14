@@ -1,7 +1,6 @@
 package enviromine.core;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,15 +8,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-
 import org.apache.logging.log4j.Level;
-
 import enviromine.trackers.properties.ArmorProperties;
 import enviromine.trackers.properties.BiomeProperties;
 import enviromine.trackers.properties.BlockProperties;
@@ -39,7 +35,7 @@ public class EM_ConfigHandler
 	
 	static HashMap<String, PropertyBase> propTypes;
 	
-	public static List loadedConfigs = new ArrayList(); 
+	public static List<String> loadedConfigs = new ArrayList<String>(); 
 	
 	/**
 	 * Register all property types and their category names here. The rest is handled automatically.

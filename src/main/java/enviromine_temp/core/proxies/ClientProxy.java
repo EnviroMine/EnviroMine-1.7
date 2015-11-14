@@ -1,5 +1,8 @@
 package enviromine_temp.core.proxies;
 
+import enviromine.core.api.hud.HUDRegistry;
+import enviromine_temp.client.gui.hud.HudTemperature;
+
 public class ClientProxy extends CommonProxy
 {
 	@Override
@@ -11,6 +14,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void registerHandlers()
 	{
+		HUDRegistry.registerHudItem(new HudTemperature());
 		super.registerHandlers();
 	}
 }

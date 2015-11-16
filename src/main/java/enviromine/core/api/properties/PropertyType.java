@@ -2,9 +2,6 @@ package enviromine.core.api.properties;
 
 import java.util.HashMap;
 import java.util.UUID;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.core.api.properties.PropertyRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
@@ -26,16 +23,6 @@ public abstract class PropertyType
 	public boolean SyncClient()
 	{
 		return false;
-	}
-	
-	/**
-	 * NOTE: Do not re-instantiate a new renderer every time this is called.
-	 * @return
-	 */
-	@SideOnly(Side.CLIENT)
-	public PropertyRenderer getGuiRenderer()
-	{
-		return null;
 	}
 	
 	public abstract boolean isTrackable(EntityLivingBase entityLiving);

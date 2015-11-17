@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +16,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.api.hud.HudItem.Align;
+import enviromine.core.utils.RenderAssist;
 
 public class HUDRegistry
 {
@@ -83,14 +85,32 @@ public class HUDRegistry
             }
 		}
 		
-		//for(Entry<ResourceLocation,Color> entry : overlayList.entrySet())
+		// --- DRAW TINT OVERLAYS ---
+		
+		float scaleX = scaledRes.getScaledWidth()/256F;
+		float scaleY = scaledRes.getScaledHeight()/256F;
+		
+		GL11.glPushMatrix();
+		
+		GL11.glScalef(scaleX, scaleY, 1F);
+		
+		for(Entry<ResourceLocation,Color> entry : overlayList.entrySet())
 		{
-			/* 
-			 * TODO: Draw overlays
-			 * Draw overlays here. Overlay alpha has been mixed into the alpha channel of the color
-			 * Use scaledRes to get the size of the area to stretch the texture over
-			 */
+			Color c = entry.getValue();
+			ResourceLocation r = entry.getKey();
+			
+			if(c == null || r == null || c.getAlpha() <= 0)
+			{
+				continue;
+			}
+			
+			RenderAssist.bindTexture(r);
+			GL11.glColor4f(c.getRed()/255F, c.getGreen()/255F, c.getBlue()/255F, c.getAlpha()/255F);
+			RenderAssist.drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		}
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		
+		GL11.glPopMatrix();
 	}
 	
 	public static ArrayList<HudItem> getAllHudItems()

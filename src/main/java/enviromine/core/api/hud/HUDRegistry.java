@@ -14,7 +14,7 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.utils.Alignment;
+import enviromine.core.api.hud.HudItem.Align;
 
 public class HUDRegistry
 {
@@ -56,12 +56,12 @@ public class HUDRegistry
 		
 		for(HudItem hud : hudItemList.values())
 		{
-			if(hud == null || hud.isEnabled())
+			if(hud == null || !hud.isEnabled() || !hud.canRenderOnLayer(event.type))
 			{
 				continue;
 			}
 			
-            hud.renderHud(event.type, scaledRes.getScaledWidth(), scaledRes.getScaledHeight());
+            hud.preRenderHud(event.type, scaledRes.getScaledWidth(), scaledRes.getScaledHeight());
             
             if(hud instanceof IOverlay && event.type == RenderGameOverlayEvent.ElementType.HELMET)
             {
@@ -83,7 +83,7 @@ public class HUDRegistry
             }
 		}
 		
-		for(Entry<ResourceLocation,Color> entry : overlayList.entrySet())
+		//for(Entry<ResourceLocation,Color> entry : overlayList.entrySet())
 		{
 			/* 
 			 * TODO: Draw overlays
@@ -93,9 +93,24 @@ public class HUDRegistry
 		}
 	}
 	
-	public static ArrayList<HudItem> getHudItems()
+	public static ArrayList<HudItem> getAllHudItems()
 	{
 		return new ArrayList<HudItem>(hudItemList.values());
+	}
+	
+	public static ArrayList<HudItem> getActiveHudItems()
+	{
+		ArrayList<HudItem> list = new ArrayList<HudItem>();
+		
+		for(HudItem hud : hudItemList.values())
+		{
+			if(hud != null && hud.isEnabled())
+			{
+				list.add(hud);
+			}
+		}
+		
+		return list;
 	}
 	
 	// This can be toggled through the item specific configuration screen or programmatically using 'isEnabled'
@@ -120,9 +135,9 @@ public class HUDRegistry
 			if(huditem instanceof IRotate)
 				((IRotate)huditem).setRotated(false);
 			
-			huditem.alignment = Alignment.TOPLEFT;//huditem.getDefaultAlignment();
-			huditem.posX = 16;//huditem.getDefaultPosX();
-			huditem.posY = 16;//huditem.getDefaultPosY();
+			huditem.alignment = Align.TOP_LEFT;//huditem.getDefaultAlignment();
+			huditem.offsetX = 16;//huditem.getDefaultPosX();
+			huditem.offsetY = 16;//huditem.getDefaultPosY();
 		}
 	}
 	

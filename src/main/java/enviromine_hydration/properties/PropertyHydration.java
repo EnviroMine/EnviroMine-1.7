@@ -1,14 +1,11 @@
 package enviromine_hydration.properties;
 
 import net.minecraft.entity.EntityLivingBase;
-import enviromine.core.api.properties.PropertyRenderer;
 import enviromine.core.api.properties.PropertyTracker;
 import enviromine.core.api.properties.PropertyType;
 
 public class PropertyHydration extends PropertyType
 {
-	RendererHydration renderer = new RendererHydration();
-	
 	@Override
 	public boolean isTrackable(EntityLivingBase entityLiving)
 	{
@@ -31,11 +28,5 @@ public class PropertyHydration extends PropertyType
 	public boolean SyncClient()
 	{
 		return true;
-	}
-	
-	@Override
-	public PropertyRenderer getGuiRenderer()
-	{
-		return renderer;
 	}
 }

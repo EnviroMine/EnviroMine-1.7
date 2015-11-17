@@ -1,37 +1,30 @@
 package enviromine.core.api.hud;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.utils.Alignment;
 
 @SideOnly(Side.CLIENT)
 public abstract class HudItem
 {
 	public final String ID;
 	public boolean enabled = true;
-	public Alignment alignment = Alignment.TOPLEFT;
+	public Align alignment = Align.TOP_LEFT;
 	public float scale = 1F;
-	public int posX = 16;
-	public int posY = 16;
+	public float rotation = 0F;
+	public int offsetX = 16;
+	public int offsetY = 16;
 	
 	public HudItem(String ID)
 	{
 		this.ID = ID;
 	}
 	
-	/**
-	 * Unique name for the HudItem, only used for NBT saving/loading <br>
-	 * Or getting {@link HudItem} from HudRegistry
-	 * @return String value for unique identifier of the {@link HudItem}
-	 */
 	public abstract String getUnlocalizedName();
 	
 	public String getLocalizedName()
@@ -40,19 +33,11 @@ public abstract class HudItem
 	}
 	
 	/**
-	 * Should add button to the Enviromine Menu
-	 * @return
+	 * Should this add button to the Enviromine Menu
 	 */
-	public abstract boolean isInMenu();
-	
-	/**
-	 * Display name for the HudItem in config screen. If you use make sure <br>
-	 * {@link HudItem}.isInMenu() to true
-	 * @return String value for display name of the {@link HudItem}
-	 */
-	public String getButtonLabel() // This could probably be removed
+	public boolean isInMenu()
 	{
-		return this.getLocalizedName();
+		return true; // Override if you really want to change this value
 	}
 	
 	public abstract int getWidth();
@@ -67,178 +52,135 @@ public abstract class HudItem
 		return layer == RenderGameOverlayEvent.ElementType.HELMET;
 	}
 	
-	public abstract ResourceLocation getResource(String type);
-	
 	/**
-	 * Render {@link HudItem} on screen 
+	 * Called before rendering the actual HUD. This offsets, rotates and scales before calling the true render method
 	 */
-	//public abstract void render();
-	
-	/**
-	 * Render a screen Overlay when certain condition are meet.
-	 * @param displayHeight 
-	 * @param displayWidth 
-	 * @param type 
-	 * 
-	 * @param scaledwidth
-	 * @param scaledheight
-	 */
-	/*public void renderScreenOverlay(int scaledwidth, int scaledheight)
+	public final void preRenderHud(ElementType layer, int dispWidth, int dispHeight)
 	{
-	}*/
-	
-	public void renderHud(ElementType layer, int dispWidth, int dispHeight)
-	{
+		GL11.glPushMatrix();
 		
-	}
-	
-	/** 
-	 * Find out if your {@link HudItem} is on the left or right side of the screen. <br>
-	 * Use this if you have a different way to render your {@link HudItem}, Mesured from <br>
-	 * center of the screen.
-	 * 
-	 * @return {@link boolean}
-	 */
-	/*public boolean isLeftSide()
-	{
-		boolean Side = false;
+		/* Debug stuffs for testing the UI
+		Align alignment = Align.BOT_CENTER_R;
+		int offsetX = 0;
+		int offsetY = 0;
+		float rotation = -30F;
+		float scale = 1F;
+		*/
 		
-		int ScreenHalf = HUDRegistry.screenWidth / 2;
-		int BarPos = (getWidth() / 2) + posX;
+		int ox = alignment.OffsetX(offsetX, getWidth(), dispWidth);
+		int oy = alignment.OffsetY(offsetY, getHeight(), dispHeight);
 		
-		if(BarPos <= ScreenHalf)
-			Side = true;
+		if(alignment.hFlip) // Correct rotation origin when flipped
+		{
+			Vec3 v = Vec3.createVectorHelper(getWidth(), 0F, 0F);
+			v.rotateAroundZ((float)Math.toRadians(rotation));
+			ox -= Math.round(v.xCoord) - getWidth();
+			oy -= Math.round(v.yCoord);
+		}
 		
-		return Side;
-	}*/
-	
-	/**
-	 * Called upon .updateTick(). If you use this, make sure you set<br>
-	 * {@link HudItem}.needsTick() to true.
-	 */
-	/*public void tick() // Not sure why you would need to tick a renderer
-	{
+		GL11.glTranslatef(ox, oy, 0F);
+		GL11.glRotatef(rotation * (alignment.hFlip? -1F : 1F), 0F, 0F, 1F);
+		GL11.glScalef(scale, scale, scale);
 		
-	}*/
-	
-	/**
-	 * Set this to true if you require the {@link HudItem}.tick() method to run<br>
-	 */
-	/*public boolean needsTick()
-	{
-		return false;
-	}*/
-	
-	/**
-	 * @deprecated This should always be true as we cannot guarantee an arbitrary number of items will automatically fit
-	 */
-	@Deprecated
-	public boolean isMoveable()
-	{
-		return true;
+		this.renderHud(layer, dispWidth, dispHeight);
+		
+		GL11.glPopMatrix();
 	}
 	
 	/**
-	 * @deprecated The default value(s) should be set in the constructor
+	 * Draws the HUD on the given layer.<br>
+	 * <b>NOTE:</b> Offsets, rotations and scaling has already been pre-applied!
 	 */
-	@Deprecated
-	public boolean isEnabledByDefault()
-	{
-		return true;
-	}
+	public abstract void renderHud(ElementType layer, int dispWidth, int dispHeight);
 	
 	/**
-	 * @deprecated Use a modified 'isEnabled' to determine this
+	 * Used to determine whether this UI should render. Modify this if it is necessary to disable/enable it in specific cases such as riding entities
 	 */
-	@Deprecated
-	public boolean isRenderedInCreative()
-	{
-		return true;
-	}
-	
-	/**
-	 * @deprecated Use a modified 'isEnabled' to determine this
-	 */
-	@Deprecated
-	public boolean shouldDrawOnMount()
-	{
-		return true;
-	}
-	
-	/**
-	 * @deprecated Use a modified 'isEnabled' to determine this
-	 */
-	@Deprecated
-	public boolean shouldDrawAsPlayer()
-	{
-		return true;
-	}
-	
 	public boolean isEnabled()
 	{
 		return enabled;
 	}
 	
-	/**
-	 * Ensures that the HudItem will never be off the screen
-	 */
-	public void clampToScreen()
-	{
-		Minecraft mc = Minecraft.getMinecraft();
-		ScaledResolution scaledRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-		posX = MathHelper.clamp_int(posX, 0, scaledRes.getScaledWidth() - MathHelper.ceiling_float_int(getWidth() * scale));
-		posY = MathHelper.clamp_int(posY, 0, scaledRes.getScaledHeight() - MathHelper.ceiling_float_int(getHeight() * scale));
-	}
-	
 	public void loadFromNBT(NBTTagCompound nbt)
 	{
-		if(nbt.hasKey("posX"))
-		{
-			posX = nbt.getInteger("posX");
-		} else
-		{
-			posX = 16;
-		}
-		if(nbt.hasKey("posY"))
-		{
-			posY = nbt.getInteger("posY");
-		} else
-		{
-			posY = 16;
-		}
-		if(nbt.hasKey("alignment"))
-		{
-			alignment = Alignment.fromString(nbt.getString("alignment"));
-		} else
-		{
-			alignment = Alignment.TOPLEFT;
-		}
-		
-		if(this instanceof IRotate)
-		{
-			IRotate rotate = (IRotate)this;
-			
-			if(nbt.hasKey("rotated"))
-			{
-				rotate.setRotated(nbt.getBoolean("rotated"));
-			} else
-			{
-				rotate.setRotated(false);
-			}
-		}
+		offsetX = nbt.hasKey("offX")? nbt.getInteger("offX") : 16;
+		offsetX = nbt.hasKey("offX")? nbt.getInteger("offX") : 16;
+		scale = nbt.hasKey("scale")? nbt.getFloat("scale") : 1F;
+		rotation = nbt.getFloat("rotation")%360F;
+		alignment = Align.valueOf(nbt.getString("alignment").toString().toUpperCase());
+		alignment = alignment != null? alignment : Align.TOP_LEFT;
 	}
 	
 	public void saveToNBT(NBTTagCompound nbt)
 	{
-		nbt.setInteger("posX", posX);
-		nbt.setInteger("posY", posY);
+		nbt.setInteger("offX", offsetX);
+		nbt.setInteger("offY", offsetY);
+		nbt.setFloat("scale", scale);
+		nbt.setFloat("rotation", rotation);
 		nbt.setString("alignment", alignment.toString());
+	}
+	
+	/**
+	 * A rewritten version of the original Alignment enumerator types
+	 */
+	public static enum Align
+	{
+		TOP_LEFT		(0F, 0F, false),
+		TOP_CENTER_L	(0.5F, 0F, true),
+		TOP_CENTER_R	(0.5F, 0F, false),
+		TOP_RIGHT		(1F, 0F, true),
 		
-		if(this instanceof IRotate)
+		MID_LEFT		(0F, 0.5F, false),
+		//MID_CENTER_L	(0.5F, 0.5F, true),  // Using these two alignments would
+		//MID_CENTER_R	(0.5F, 0.5F, false), // just make things look terrible
+		MID_RIGHT		(1F, 0.5F, true),
+		
+		BOT_LEFT		(0F, 1F, false),
+		BOT_CENTER_L	(0.5F, 1F, true),
+		BOT_CENTER_R	(0.5F, 1F, false),
+		BOT_RIGHT		(1F, 1F, true);
+		/**
+		 * A number between 0 and 1 representing anchor X position
+		 */
+		public final float dx;
+		
+		/**
+		 * A number between 0 and 1 representing anchor Y position
+		 */
+		public final float dy;
+		
+		/**
+		 * Flips the offset to be relative to the right side of the element
+		 */
+		public final boolean hFlip;
+		
+		Align(float dx, float dy, boolean hFlip)
 		{
-			IRotate rotate = (IRotate)this;
-			
-			nbt.setBoolean("rotated", rotate.isRotated());
+			this.dx = dx;
+			this.dy = dy;
+			this.hFlip = hFlip;
+		}
+		
+		public int OffsetX(int offset, int sizeX, int width)
+		{
+			if(hFlip)
+			{
+				return Math.round(width * dx) - (offset + sizeX);
+			} else
+			{
+				return Math.round(width * dx) + offset;
+			}
+		}
+		
+		public int OffsetY(int offset, int sizeY, int height)
+		{
+			if(dy > 0.5F)
+			{
+				return height - (offset + sizeY);
+			} else
+			{
+				return Math.round(height * dy) + offset;
+			}
 		}
 	}
 }

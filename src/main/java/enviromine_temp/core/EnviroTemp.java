@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import enviromine_temp.core.proxies.CommonProxy;
+import enviromine_temp.properties.PropertyTemp;
 
 @Mod(modid = EnviroTemp.MODID, name = EnviroTemp.NAME, version = EnviroTemp.VERSION)
 public class EnviroTemp
@@ -17,6 +18,7 @@ public class EnviroTemp
 	public static final String PROXY = "enviromine_temp.core.proxies";
 	
 	public static Logger logger;
+	public static PropertyTemp tempProperty = new PropertyTemp();
 	
 	@Instance(MODID)
 	public static EnviroTemp instance;

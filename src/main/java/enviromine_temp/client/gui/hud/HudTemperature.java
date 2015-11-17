@@ -1,27 +1,25 @@
 package enviromine_temp.client.gui.hud;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import enviromine.client.gui.hud.HUDRegistry;
+import java.awt.Color;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import enviromine.core.api.hud.HudItem;
-import enviromine.core.api.hud.IRotate;
-import enviromine.utils.Alignment;
+import enviromine.core.utils.RenderAssist;
+import enviromine_temp.core.EnviroTemp;
+import enviromine_temp.properties.TrackerTemp;
 
-public class HudTemperature extends HudItem implements IRotate
+public class HudTemperature extends HudItem
 {
-	private boolean rotated = false;
-	
-	
-	@Override
-	public String getUnLocolizedName() 
+	public HudTemperature(String ID)
 	{
-		return "EMTemperature";
+		super(ID);
 	}
 
 	@Override
-	public String getLocalizedName() 
+	public String getUnlocalizedName() 
 	{
-		return StatCollector.translateToLocal("enviromine.property.temp.name");
+		return "enviromine.property.temp.name";
 	}
 
 	@Override
@@ -31,81 +29,26 @@ public class HudTemperature extends HudItem implements IRotate
 	}
 
 	@Override
-	public String getButtonLabel() 
-	{
-		return StatCollector.translateToLocal("enviromine.property.temp.button");
-	}
-
-	@Override
-	public Alignment getDefaultAlignment() 
-	{
-		return Alignment.BOTTOMLEFT;
-	}
-
-	@Override
-	public int getDefaultPosX() 
-	{
-		return 8;
-	}
-
-	@Override
-	public int getDefaultPosY() 
-	{
-		return (HUDRegistry.screenHeight - 30);
-	}
-
-	@Override
 	public int getWidth() 
 	{
-		return !rotated ? 0 : 64;
+		return 108;
 	}
 
 	@Override
 	public int getHeight() 
 	{
-		return 8;
+		return 32;
 	}
 
 	@Override
-	public boolean isEnabledByDefault()
+	public void renderHud(ElementType layer, int dispWidth, int dispHeight)
 	{
-		return true;
+		// You can query the rotation value from the inheriting class if you need to glRotatef any icons, etc.
+		RenderAssist.drawRect(0F, 0F, this.getWidth(), this.getHeight(), Color.BLACK);
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		TrackerTemp tempTrack = (TrackerTemp)EnviroTemp.tempProperty.getTracker(player);
+		RenderAssist.drawString("Air Temp: " + tempTrack.GetAirTemp(), 0, 24, Color.WHITE, true);
+		RenderAssist.drawString("Core Temp: " + tempTrack.coreTemp, 0, 0, Color.WHITE, true);
+		RenderAssist.drawString("Skin Temp: " + tempTrack.skinTemp, 0, 12, Color.WHITE, true);
 	}
-	
-	@Override
-	public ResourceLocation getResource(String type) 
-	{
-		return null;
-	}
-
-	@Override
-	public int getDefaultID() 
-	{
-		return 0;
-	}
-
-	@Override
-	public void render() 
-	{
-		
-	}
-
-	@Override
-	public boolean canRotate() 
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isRotated() 
-	{
-		return this.rotated;
-	}
-
-	@Override
-	public void setRotated(boolean value) 
-	{
-		this.rotated = value;
-	}
-
 }

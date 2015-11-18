@@ -133,31 +133,55 @@ public class HUDRegistry
 		return list;
 	}
 	
-	// This can be toggled through the item specific configuration screen or programmatically using 'isEnabled'
-	/*public static void enableHudItem(HudItem hudItem) 
-	{
-	    if (hudItemList.contains(hudItem) && !hudItemListActive.contains(hudItem)) 
-	    {
-	    	//System.out.println(hudItem.getName() +" is Active now");
-	        hudItemListActive.add(hudItem);
-	    }
-	}*/
-	
 	public static HudItem getHudItemByID(int id)
 	{
 		return hudItemList.get(id);
 	}
 	
+	/**
+	 * Arranges all HUD items in the bottom corners of the screen
+	 */
+	public static void autoArrange()
+	{
+		int i = 0;
+		
+		int[] y = new int[]{16, 16};
+		
+		for(HudItem hud : hudItemList.values())
+		{
+			if(hud == null)
+			{
+				continue;
+			}
+			
+			if(i%2 == 0)
+			{
+				hud.offsetX = 16;
+				hud.offsetY = y[0];
+				hud.alignment = Align.BOT_LEFT;
+				y[0] += hud.getHeight() + 4;
+			} else
+			{
+				hud.offsetX = 16;
+				hud.offsetY = y[1];
+				hud.alignment = Align.BOT_RIGHT;
+				y[1] += hud.getHeight() + 4;
+			}
+			
+			i++;
+		}
+	}
+	
 	public static void resetAllDefaults()
 	{
-		for(HudItem huditem : hudItemList.values())
+		for(HudItem hud : hudItemList.values())
 		{
-			if(huditem instanceof IRotate)
-				((IRotate)huditem).setRotated(false);
+			if(hud == null)
+			{
+				continue;
+			}
 			
-			huditem.alignment = Align.TOP_LEFT;//huditem.getDefaultAlignment();
-			huditem.offsetX = 16;//huditem.getDefaultPosX();
-			huditem.offsetY = 16;//huditem.getDefaultPosY();
+			hud.resetDefault();
 		}
 	}
 	

@@ -23,6 +23,7 @@ public abstract class HudItem
 	public HudItem(String ID)
 	{
 		this.ID = ID;
+		this.resetDefault();
 	}
 	
 	public abstract String getUnlocalizedName();
@@ -39,6 +40,11 @@ public abstract class HudItem
 	{
 		return true; // Override if you really want to change this value
 	}
+	
+	/**
+	 * Reset this item to its default values
+	 */
+	public abstract void resetDefault();
 	
 	public abstract int getWidth();
 	
@@ -103,12 +109,29 @@ public abstract class HudItem
 	
 	public void loadFromNBT(NBTTagCompound nbt)
 	{
-		offsetX = nbt.hasKey("offX")? nbt.getInteger("offX") : 16;
-		offsetX = nbt.hasKey("offX")? nbt.getInteger("offX") : 16;
-		scale = nbt.hasKey("scale")? nbt.getFloat("scale") : 1F;
-		rotation = nbt.getFloat("rotation")%360F;
-		alignment = Align.valueOf(nbt.getString("alignment").toString().toUpperCase());
-		alignment = alignment != null? alignment : Align.TOP_LEFT;
+		resetDefault();
+		
+		if(nbt.hasKey("offX") && nbt.hasKey("offY"))
+		{
+			offsetX = nbt.getInteger("offX");
+			offsetY = nbt.getInteger("offY");
+		}
+		
+		if(nbt.hasKey("scale"))
+		{
+			scale = nbt.getFloat("scale");
+		}
+		
+		if(nbt.hasKey("rotation"))
+		{
+			rotation = nbt.getFloat("rotation")%360F;
+		}
+		
+		if(nbt.hasKey("alignment"))
+		{
+			Align tmp = Align.valueOf(nbt.getString("alignment").toString().toUpperCase());
+			alignment = tmp != null? tmp : alignment;
+		}
 	}
 	
 	public void saveToNBT(NBTTagCompound nbt)

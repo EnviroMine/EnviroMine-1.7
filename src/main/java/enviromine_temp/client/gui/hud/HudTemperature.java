@@ -51,4 +51,9 @@ public class HudTemperature extends HudItem
 		RenderAssist.drawString("Core Temp: " + tempTrack.coreTemp, 0, 0, Color.WHITE, true);
 		RenderAssist.drawString("Skin Temp: " + tempTrack.skinTemp, 0, 12, Color.WHITE, true);
 	}
+
+	@Override
+	public void resetDefault()
+	{
+	}
 }

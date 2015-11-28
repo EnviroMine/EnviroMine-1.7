@@ -1,14 +1,10 @@
 package enviromine.core.api.properties;
 
-import java.util.HashMap;
-import java.util.UUID;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public abstract class PropertyType
 {
-	public HashMap<UUID, PropertyTracker> persistMap = new HashMap<UUID, PropertyTracker>();
-	
 	/**
 	 * Is this property persistent through deaths (does not apply to hard resets or non-player entities)
 	 */

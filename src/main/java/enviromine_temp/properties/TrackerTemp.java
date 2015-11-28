@@ -146,4 +146,9 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 		//bodyTemp = compound.hasKey("coreTemp")? compound.getFloat("coreTemp") : 37F;
 		//skinTemp = compound.hasKey("skinTemp")? compound.getFloat("skinTemp") : 32F;
 	}
+
+	@Override
+	public void Reset()
+	{
+	}
 }

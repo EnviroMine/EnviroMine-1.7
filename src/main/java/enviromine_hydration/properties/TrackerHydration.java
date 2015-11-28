@@ -21,4 +21,9 @@ public class TrackerHydration extends PropertyTracker
 	public void loadNBT(NBTTagCompound tags)
 	{
 	}
+
+	@Override
+	public void Reset()
+	{
+	}
 }

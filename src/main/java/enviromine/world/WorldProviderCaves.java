@@ -40,7 +40,7 @@ public class WorldProviderCaves extends WorldProvider
 	@Override
 	public Vec3 getFogColor(float par1, float par2)
 	{
-        float f2 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+        float f2 = 1F;//MathHelper.cos(1F * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
 
         if (f2 < 0.0F)
         {
@@ -67,7 +67,7 @@ public class WorldProviderCaves extends WorldProvider
 	@Override
 	protected void generateLightBrightnessTable()
 	{
-		float f = 0.0F;
+		float f = 0F;
 		
 		for (int i = 0; i <= 15; ++i)
 		{
@@ -85,7 +85,7 @@ public class WorldProviderCaves extends WorldProvider
 	 */
 	public double getVoidFogYFactor()
 	{
-		return 0D;
+		return 0.000000000001D;
 	}
 	
 	/**

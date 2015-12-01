@@ -84,7 +84,8 @@ public class EM_ConfigMenu extends GuiConfig
 		File mainFile = new File(EM_ConfigHandler.configPath + "Global_Settings.cfg");
 		list.add(new DummyCategoryElement("Global Config", "editor.enviromine.global", getConfigElements(mainFile)));
 		
-		File profilSettings = new File(EM_ConfigHandler.loadedProfile + EnviroMine.theWorldEM.getProfile()+"_Settings.cfg");
+		//File profilSettings = new File(EM_ConfigHandler.loadedProfile + EnviroMine.theWorldEM.getProfile()+"_Settings.cfg");
+		File profilSettings = new File(EM_ConfigHandler.loadedProfile + EM_Settings.profileSelected + "_Settings.cfg");
 		list.add(new DummyCategoryElement("Profile Settings", "editor.enviromine.settings", getConfigElements(profilSettings)));
 	
 		File caveFile = CaveBaseProperties.base.GetDefaultFile();

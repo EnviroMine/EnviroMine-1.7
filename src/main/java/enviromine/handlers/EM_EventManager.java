@@ -1395,7 +1395,7 @@ public class EM_EventManager
 		//Load Custom Configs
 		if (!firstload) 
 		{
-			EnviroMine.theWorldEM = EM_WorldData.get(event.world);
+			//EnviroMine.theWorldEM = EM_WorldData.get(event.world);
 			EM_ConfigHandler.initProfile(); 
 			firstload = true;
 		}

@@ -2,20 +2,18 @@ package enviromine.client.gui.menu.config;
 
 import java.io.File;
 import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.server.MinecraftServer;
-
 import com.google.common.collect.Lists;
-
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enviromine.core.EM_ConfigHandler;
+import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.world.EM_WorldData;
 
@@ -108,7 +106,8 @@ public class ProfileListExtended extends GuiListExtended{
 
 		       if (this.bntProfile.mousePressed(ProfileListExtended.this.mc, p_148278_2_, p_148278_3_))
 	            {
-		   			EnviroMine.theWorldEM.setProfile(profileName);		   			
+		   			//EnviroMine.theWorldEM.setProfile(profileName);		   			
+		    	   EM_Settings.profileSelected = profileName;
 	                return true;
 	            }
 		       else return false;

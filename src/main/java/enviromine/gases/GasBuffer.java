@@ -156,7 +156,12 @@ public class GasBuffer
 			}
 		}
 		
-		if(curTick%(EM_Settings.gasTickRate/4) == 0)
+		if(gasBuffer.size() == 0 && fireBuffer.size() == 0)
+		{
+			return;
+		}
+		
+		if(curTick%Math.max(1, EM_Settings.gasTickRate/4) == 0)
 		{
 			for(int i = 0; i < fireBuffer.size(); i++)
 			{
@@ -198,7 +203,7 @@ public class GasBuffer
 			}
 		}
 		
-		if(curTick%EM_Settings.gasTickRate == 0)
+		if(curTick%Math.max(1, EM_Settings.gasTickRate) == 0)
 		{
 			for(int i = 0; i < gasBuffer.size(); i++)
 			{

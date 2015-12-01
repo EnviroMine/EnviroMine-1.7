@@ -89,7 +89,7 @@ public class EM_ConfigHandler
 	
 	public static void initProfile()
 	{	
-		EM_WorldData theWorldEM = EnviroMine.theWorldEM;
+		/*EM_WorldData theWorldEM = EnviroMine.theWorldEM;
 		
 		String profile = theWorldEM.getProfile();
 		
@@ -98,11 +98,20 @@ public class EM_ConfigHandler
 		{
 			profile = EM_Settings.profileSelected;
 			theWorldEM.setProfile(profile);
-		}
+		}*/
+		
+		String profile = EM_Settings.profileSelected;
+		
+		System.out.println("LOADING PROFILE: " + profile);
 		
 		File profileDir = new File(profilePath + profile +"/"+ customPath);
 
-		CheckDir(profileDir);
+		//CheckDir(profileDir);
+		
+		if(!profileDir.exists())
+		{
+			
+		}
 		
 		if(!profileDir.exists())
 		{

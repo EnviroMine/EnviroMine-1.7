@@ -69,7 +69,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 		int meta = world.getBlockMetadata(i, j, k)%2;
 		int meta1 = world.getBlockMetadata(i, j, k)%4;
 		
-		if(meta1 > 1) // Recall type
+		/*if(meta1 > 1) // Recall type
 		{
 			if(meta1 == 2 && (world.getBlock(i, j - 1, k) != ObjectHandler.elevator || world.getBlockMetadata(i, j - 1, k) != 3))
 			{
@@ -103,9 +103,9 @@ public class BlockElevator extends Block implements ITileEntityProvider
 				}
 			}
 			return true;
-		}
+		}*/
 		
-		if(!(meta == 0 && world.getBlock(i, j - 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j - 1, k) == 1) && !(meta == 1 && world.getBlock(i, j + 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j + 1, k) == 0))
+		if(!(meta == 0 && world.getBlock(i, j - 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j - 1, k)%2 == 1) && !(meta == 1 && world.getBlock(i, j + 1, k) == ObjectHandler.elevator && world.getBlockMetadata(i, j + 1, k)%2 == 0))
 		{
 			player.addChatMessage(new ChatComponentText("Elevator is incomplete!"));
 			return true;
@@ -143,7 +143,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, 0, TeleportHandler.GetInstance(playerMP.mcServer.worldServerForDimension(0)));
 			//world.setBlockToAir(i, j, k);
-			if(meta == 0)
+			/*if(meta == 0)
 			{
 				world.setBlockMetadataWithNotify(i, j, k, 2, 2);
 				world.setBlockMetadataWithNotify(i, j - 1, k, 3, 2);
@@ -153,7 +153,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 				world.setBlockMetadataWithNotify(i, j, k, 3, 2);
 				world.setBlockMetadataWithNotify(i, j + 1, k, 2, 2);
 				//world.setBlockToAir(i, j + 1, k);
-			}
+			}*/
 		} else if(player.dimension == 0)
 		{
 			player.setLocationAndAngles((double)i + 0.5D, j - 1 + meta, (double)k + 0.5D, player.rotationYaw, player.rotationPitch);
@@ -161,7 +161,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 			player.getEntityData().setIntArray("EM_CAVE_DIST", new int[]{i, j, k, 0});
 			playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, EM_Settings.caveDimID, TeleportHandler.GetInstance(playerMP.mcServer.worldServerForDimension(EM_Settings.caveDimID)));
 			//world.setBlockToAir(i, j, k);
-			if(meta == 0)
+			/*if(meta == 0)
 			{
 				world.setBlockMetadataWithNotify(i, j, k, 2, 2);
 				world.setBlockMetadataWithNotify(i, j - 1, k, 3, 2);
@@ -171,7 +171,7 @@ public class BlockElevator extends Block implements ITileEntityProvider
 				world.setBlockMetadataWithNotify(i, j, k, 3, 2);
 				world.setBlockMetadataWithNotify(i, j + 1, k, 2, 2);
 				//world.setBlockToAir(i, j + 1, k);
-			}
+			}*/
 		} else
 		{
 			player.addChatMessage(new ChatComponentText("You cannot use the elevator from here!"));

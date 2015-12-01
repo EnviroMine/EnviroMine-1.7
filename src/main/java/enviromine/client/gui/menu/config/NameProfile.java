@@ -101,7 +101,7 @@ public class NameProfile extends GuiScreen
 	            		if(this.genModConfigs.isChecked()) EM_Settings.genConfigs = true;
 	            		if(this.genBasicConfigs.isChecked()) EM_Settings.genDefaults = true;
 	            		
-			   			EnviroMine.theWorldEM.setProfile(newProfile);
+			   			//EnviroMine.theWorldEM.setProfile(newProfile);
 
 			   			if(EM_ConfigHandler.ReloadConfig())
 			   			{

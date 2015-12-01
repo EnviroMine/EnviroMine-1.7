@@ -58,7 +58,7 @@ public class EnviroMine
 	
 	public SimpleNetworkWrapper network;
 	
-	public static EM_WorldData theWorldEM;	
+	//public static EM_WorldData theWorldEM;	
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

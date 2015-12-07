@@ -110,7 +110,13 @@ public class EM_ConfigHandler
 		
 		if(!profileDir.exists())
 		{
-			
+			try
+			{
+				profileDir.mkdirs();
+			} catch(Exception e)
+			{
+				EnviroMine.logger.log(Level.ERROR, "Unable to create directories for profile", e);
+			}
 		}
 		
 		if(!profileDir.exists())
@@ -439,6 +445,7 @@ public class EM_ConfigHandler
 		// Will be used Auto Load Custom Objects from ??? Dir 
 		File f = new File(path);
 		File[] list = f.listFiles();
+		list = list != null? list : new File[0];
 		
 		return list;
 	}

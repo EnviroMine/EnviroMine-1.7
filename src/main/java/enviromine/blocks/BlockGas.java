@@ -214,7 +214,12 @@ public class BlockGas extends Block implements ITileEntityProvider
 	{
 		return true;
 	}
-	
+
+	@Override
+	public boolean isAir(IBlockAccess world, int x, int y, int z) {
+		return true;
+	}
+
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess blockAccess, int i, int j, int k, int side)
 	{

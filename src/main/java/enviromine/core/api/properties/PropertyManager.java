@@ -7,6 +7,7 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import enviromine.core.EnviroMine;
@@ -126,6 +127,33 @@ public class PropertyManager
 		if(flag && event.entityLiving.ticksExisted%20 == 0) // Sync once a second if necessary
 		{
 			SyncTrackers(syncData, event.entityLiving);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onClone(PlayerEvent.Clone event)
+	{
+		for(PropertyType propType : PropertyRegistry.getAllTypes())
+		{
+			PropertyTracker track1 = propType.getTracker(event.entityLiving);
+			PropertyTracker track2 = propType.getTracker(event.original);
+			
+			if(track1 == null || track2 == null)
+			{
+				continue;
+			}
+			
+			if(!event.wasDeath || propType.isPersistent())
+			{
+				NBTTagCompound tags = new NBTTagCompound();
+				track2.saveNBT(tags);
+				track1.loadNBT(tags);
+			} else
+			{
+				track1.Reset();
+			}
+			
+			track2.onClone(event.original, event.entityPlayer);
 		}
 	}
 	

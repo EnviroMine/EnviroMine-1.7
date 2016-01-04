@@ -23,13 +23,13 @@ public abstract class PropertyTracker implements IExtendedEntityProperties
 	{
 		NBTTagCompound propTags = new NBTTagCompound();
 		this.saveNBT(propTags);
-		compound.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setTag("ENVIROMINE_" + type.getTrackerID(), propTags);
+		compound.setTag("ENVIROMINE_" + type.getTrackerID(), propTags);
 	}
 	
 	@Override
 	public final void loadNBTData(NBTTagCompound compound) // Forwards main tracker tag onto a property specific tag
 	{
-		this.loadNBT(compound.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("ENVIROMINE_" + type.getTrackerID()));
+		this.loadNBT(compound.getCompoundTag("ENVIROMINE_" + type.getTrackerID()));
 	}
 	
 	public abstract void saveNBT(NBTTagCompound tags);
@@ -41,11 +41,6 @@ public abstract class PropertyTracker implements IExtendedEntityProperties
 	{
 		if(entity instanceof EntityLivingBase)
 		{
-			if(entityLiving != entity)
-			{
-				this.onClone(entityLiving, entity);
-			}
-			
 			this.entityLiving = (EntityLivingBase)entity;
 		} else
 		{
@@ -59,16 +54,12 @@ public abstract class PropertyTracker implements IExtendedEntityProperties
 	{
 	}
 	
-	public void onClone(Entity oldEntity, Entity newEntity)
+	public void onClone(EntityPlayer oldPlayer, EntityPlayer newPlayer)
 	{
 	}
 	
 	public void onDeath()
 	{
-		if(!type.isPersistent())
-		{
-			this.Reset();
-		}
 	}
 	
 	public void onLivingUpdate()

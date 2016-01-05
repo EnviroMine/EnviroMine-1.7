@@ -7,6 +7,8 @@ import enviromine.core.api.properties.PropertyType;
 
 public class TrackerHydration extends PropertyTracker
 {
+	public float hydration = 100F;
+	
 	public TrackerHydration(PropertyType type, EntityLivingBase entityLiving)
 	{
 		super(type, entityLiving);
@@ -25,5 +27,6 @@ public class TrackerHydration extends PropertyTracker
 	@Override
 	public void Reset()
 	{
+		hydration = 100F;
 	}
 }

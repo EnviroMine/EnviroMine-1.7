@@ -30,6 +30,7 @@ public class AttributeTemperature extends Attribute
 		{
 			ConfigKeyBlock key = (ConfigKeyBlock)this.baseKey;
 			ambTemp = TempUtils.GetBlockTemp(key.block, -1);
+			System.out.println("Setting block " + key.block.getLocalizedName() + " to default temperature: " + ambTemp);
 		}
 	}
 	

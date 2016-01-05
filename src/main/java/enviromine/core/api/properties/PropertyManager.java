@@ -119,7 +119,9 @@ public class PropertyManager
 			
 			if(!event.entityLiving.worldObj.isRemote && propType.SyncClient())
 			{
-				tracker.saveNBTData(syncData);
+				NBTTagCompound trackTags = new NBTTagCompound();
+				tracker.saveNBTData(trackTags);
+				syncData.setTag("ENVIROMINE_" + propType.getTrackerID(), trackTags);
 				flag = true;
 			}
 		}

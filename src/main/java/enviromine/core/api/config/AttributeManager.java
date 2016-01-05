@@ -34,7 +34,6 @@ public abstract class AttributeManager
 		{
 			att = this.createAttribute(wildKey);
 			cache.put(wildKey, att);
-			System.out.println("Cache size is now " + cache.size());
 		}
 		
 		return att;

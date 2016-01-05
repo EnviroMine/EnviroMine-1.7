@@ -5,6 +5,7 @@ import java.util.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 import enviromine.core.api.config.def.ConfigKeyBlock;
@@ -23,10 +24,7 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 	public float skinTemp = 32F;
 	public float coreTemp = 37F;
     public int rateOfChange = 100;
-
     
-    
-	//public float bodyTemp = 37F;
 	/**
 	 * Cached for GUI
 	 */
@@ -114,6 +112,12 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 			if(attribute != null)
 			{
 				// Distance falloff
+				if(block == Blocks.lava || block == Blocks.flowing_lava)
+				{
+					ConfigKeyBlock bKey = (ConfigKeyBlock)attribute.baseKey;
+					System.out.println("Found attribute for " + block.getLocalizedName() + "(" + meta + "): " + bKey.block.getUnlocalizedName());
+					System.out.println("Block " + block.getLocalizedName() + "(" + meta + ") Temp: " + attribute.ambTemp);
+				}
 				temp = temp + TempUtils.GetTempFalloff(attribute.ambTemp - temp, (float)entityLiving.getDistance(x, y, z), ScanDiameter());
 			}
 		}
@@ -143,8 +147,8 @@ public class TrackerTemp extends PropertyTracker implements IPropScanner
 	@Override
 	public void loadNBT(NBTTagCompound compound)
 	{
-		//bodyTemp = compound.hasKey("coreTemp")? compound.getFloat("coreTemp") : 37F;
-		//skinTemp = compound.hasKey("skinTemp")? compound.getFloat("skinTemp") : 32F;
+		coreTemp = compound.hasKey("coreTemp")? compound.getFloat("coreTemp") : 37F;
+		skinTemp = compound.hasKey("skinTemp")? compound.getFloat("skinTemp") : 32F;
 	}
 
 	@Override

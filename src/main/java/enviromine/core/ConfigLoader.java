@@ -42,7 +42,7 @@ public class ConfigLoader
 				for(ConfigCategory subCat : config.getCategory(km.CategoryName()).getChildren())
 				{
 					ConfigKey key = km.getKey(config, subCat);
-							
+					
 					for(AttributeManager am : ConfigRegistry.getList_AM(km))
 					{
 						Attribute att = am.getAttribute(key);

@@ -37,22 +37,16 @@ public class AMTemperature extends AttributeManager
 	
 	protected AttributeTemperature createBlockAttribute(ConfigKeyBlock config)
 	{
-		System.out.println("Creating attribute for Block: " + config.block.getUnlocalizedName());
-		
 		return new AttributeTemperature(config);
 	}
 	
 	protected AttributeTemperature createEntityAttribute(ConfigKeyEntity config)
 	{
-		System.out.println("Creating attribute for Entity: " + config.entityID);
-		
 		return null;
 	}
 	
 	protected AttributeTemperature createItemAttribute(ConfigKeyItem config)
 	{
-		System.out.println("Creating attribute for Item: " + config.item.getUnlocalizedName());
-		
 		return null;
 	}
 

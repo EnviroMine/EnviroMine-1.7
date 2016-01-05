@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import enviromine_hydration.core.proxies.CommonProxy;
+import enviromine_hydration.properties.PropertyHydration;
 
 @Mod(modid = EnviroHydration.MODID, name = EnviroHydration.NAME, version = EnviroHydration.VERSION)
 public class EnviroHydration
@@ -17,6 +18,7 @@ public class EnviroHydration
 	public static final String PROXY = "enviromine_hydration.core.proxies";
 	
 	public static Logger logger;
+	public static PropertyHydration hydrationProperty = new PropertyHydration();
 	
 	@Instance(MODID)
 	public static EnviroHydration instance;

@@ -1,4 +1,4 @@
-package enviromine_temp.client.gui.hud;
+package enviromine_hydration.client.gui.hud;
 
 import java.awt.Color;
 import net.minecraft.client.Minecraft;
@@ -6,12 +6,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import enviromine.core.api.hud.HudItem;
 import enviromine.core.utils.RenderAssist;
-import enviromine_temp.core.EnviroTemp;
-import enviromine_temp.properties.TrackerTemp;
+import enviromine_hydration.core.EnviroHydration;
+import enviromine_hydration.properties.TrackerHydration;
 
-public class HudTemperature extends HudItem
+public class HudHydration extends HudItem
 {
-	public HudTemperature(String ID)
+	public HudHydration(String ID)
 	{
 		super(ID);
 	}
@@ -19,7 +19,7 @@ public class HudTemperature extends HudItem
 	@Override
 	public String getUnlocalizedName() 
 	{
-		return "enviro_temp.property.temp.name";
+		return "enviro_hydration.property.hydration.name";
 	}
 
 	@Override
@@ -46,10 +46,8 @@ public class HudTemperature extends HudItem
 		// You can query the rotation value from the inheriting class if you need to glRotatef any icons, etc.
 		RenderAssist.drawRect(0F, 0F, this.getWidth(), this.getHeight(), Color.BLACK);
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		TrackerTemp tempTrack = (TrackerTemp)EnviroTemp.tempProperty.getTracker(player);
-		RenderAssist.drawString("Air Temp: " + tempTrack.GetAirTemp(), 0, 24, Color.WHITE, true);
-		RenderAssist.drawString("Core Temp: " + tempTrack.coreTemp, 0, 0, Color.WHITE, true);
-		RenderAssist.drawString("Skin Temp: " + tempTrack.skinTemp, 0, 12, Color.WHITE, true);
+		TrackerHydration tempTrack = (TrackerHydration)EnviroHydration.hydrationProperty.getTracker(player);
+		RenderAssist.drawString("Hydration: " + tempTrack.hydration, 0, 24, Color.WHITE, true);
 	}
 
 	@Override

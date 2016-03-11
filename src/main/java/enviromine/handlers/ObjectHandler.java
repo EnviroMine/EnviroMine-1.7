@@ -17,7 +17,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enviromine.EntityPhysicsBlock;
-import enviromine.blocks.BlockBurningCoal;
 import enviromine.blocks.BlockDavyLamp;
 import enviromine.blocks.BlockElevator;
 import enviromine.blocks.BlockEsky;
@@ -28,7 +27,6 @@ import enviromine.blocks.BlockGas;
 import enviromine.blocks.BlockNoPhysics;
 import enviromine.blocks.materials.MaterialElevator;
 import enviromine.blocks.materials.MaterialGas;
-import enviromine.blocks.tiles.TileEntityBurningCoal;
 import enviromine.blocks.tiles.TileEntityDavyLamp;
 import enviromine.blocks.tiles.TileEntityElevator;
 import enviromine.blocks.tiles.TileEntityEsky;
@@ -163,7 +161,6 @@ public class ObjectHandler
 		davyLamp = new ItemDavyLamp(davyLampBlock).setUnlocalizedName("enviromine.davylamp").setCreativeTab(EnviroMine.enviroTab);
 		
 		flammableCoal = new BlockFlammableCoal();
-		burningCoal = new BlockBurningCoal(Material.rock).setBlockName("enviromine.burningcoal").setCreativeTab(EnviroMine.enviroTab);
 		fireTorch = new BlockFireTorch(true).setTickRandomly(true).setBlockName("torch").setBlockTextureName("torch_on").setLightLevel(0.9375F).setCreativeTab(EnviroMine.enviroTab);
 		offTorch = new BlockFireTorch(false).setTickRandomly(false).setBlockName("torch").setBlockTextureName("torch_on").setLightLevel(0F).setCreativeTab(EnviroMine.enviroTab);
 		esky = new BlockEsky(Material.iron).setBlockName("enviromine.esky").setCreativeTab(EnviroMine.enviroTab);
@@ -205,7 +202,6 @@ public class ObjectHandler
 		EntityRegistry.registerGlobalEntityID(EntityPhysicsBlock.class, "EnviroPhysicsBlock", physID);
 		EntityRegistry.registerModEntity(EntityPhysicsBlock.class, "EnviroPhysicsEntity", physID, EnviroMine.instance, 64, 1, true);
 		GameRegistry.registerTileEntity(TileEntityGas.class, "enviromine.tile.gas");
-		GameRegistry.registerTileEntity(TileEntityBurningCoal.class, "enviromine.tile.burningcoal");
 		GameRegistry.registerTileEntity(TileEntityEsky.class, "enviromine.tile.esky");
 		GameRegistry.registerTileEntity(TileEntityFreezer.class, "enviromine.tile.freezer");
 		

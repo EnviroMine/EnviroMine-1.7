@@ -12,7 +12,6 @@ import cpw.mods.fml.client.config.DummyConfigElement.DummyCategoryElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
 import enviromine.core.EM_ConfigHandler;
-import enviromine.core.EM_Settings;
 import enviromine.core.EnviroMine;
 import enviromine.trackers.properties.CaveBaseProperties;
 import enviromine.trackers.properties.StabilityType;
@@ -51,6 +50,7 @@ public class EM_ConfigMenu extends GuiConfig
 		list.add(new DummyCategoryElement("Stability Types", "editor.enviromine.stability", getConfigElements(stabFile)));
 		
 		File[] customFiles = new File(EM_ConfigHandler.customPath).listFiles();
+		customFiles = customFiles != null? customFiles : new File[0];
 		
 		list.add(new DummyCategoryElement("Custom Configs", "editor.enviromine.custom", getConfigElements(customFiles)));
 		

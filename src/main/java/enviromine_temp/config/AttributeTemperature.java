@@ -1,9 +1,10 @@
 package enviromine_temp.config;
 
-import net.minecraftforge.common.config.Configuration;
+import com.google.gson.JsonObject;
 import enviromine.core.api.config.Attribute;
 import enviromine.core.api.config.ConfigKey;
 import enviromine.core.api.config.def.ConfigKeyBlock;
+import enviromine.core.api.helpers.JsonHelper;
 import enviromine_temp.core.TempUtils;
 
 public class AttributeTemperature extends Attribute
@@ -35,9 +36,9 @@ public class AttributeTemperature extends Attribute
 	}
 	
 	@Override
-	public void loadFromConfig(Configuration config, String category)
+	public void loadFromConfig(JsonObject json)
 	{
-		ambTemp = config.getFloat("Ambient Temperature", category, 37F, Float.MIN_VALUE, Float.MAX_VALUE, "");
-		effTemp = config.getFloat("Effect Temperature", category, 0F, Float.MIN_VALUE, Float.MAX_VALUE, "Temperature effect consuming/touching this object will cause");
+		ambTemp = JsonHelper.GetNumber(json, "ambientTemp", 37F).floatValue();
+		effTemp = JsonHelper.GetNumber(json, "effectTemp", 0F).floatValue();
 	}
 }

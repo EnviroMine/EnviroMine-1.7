@@ -1,6 +1,6 @@
 package enviromine_hydration.config;
 
-import net.minecraftforge.common.config.Configuration;
+import com.google.gson.JsonObject;
 import enviromine.core.api.config.Attribute;
 import enviromine.core.api.config.ConfigKey;
 
@@ -12,7 +12,7 @@ public class AttributeHydration extends Attribute
 	}
 	
 	@Override
-	public void loadFromConfig(Configuration config, String category)
+	public void loadFromConfig(JsonObject json)
 	{
 	}
 }

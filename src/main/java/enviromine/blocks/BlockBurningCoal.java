@@ -8,28 +8,26 @@ import static net.minecraftforge.common.util.ForgeDirection.UP;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 import java.util.Random;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enviromine.blocks.tiles.TileEntityBurningCoal;
-import enviromine.blocks.tiles.TileEntityGas;
-import enviromine.core.EM_Settings;
-import enviromine.gases.EnviroGasDictionary;
-import enviromine.handlers.ObjectHandler;
 
-public class BlockBurningCoal extends Block implements ITileEntityProvider
+public class BlockBurningCoal extends Block
 {
-	public BlockBurningCoal(Material mat)
+	public BlockBurningCoal()
 	{
-		super(mat);
-		this.setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setBlockTextureName("enviromine:burning_coal").setLightLevel(0.625F).setTickRandomly(true);
+		super(Material.rock);
+		this.setHardness(3.0F);
+		this.setResistance(5.0F);
+		this.setStepSound(Block.soundTypeStone);
+		this.setBlockTextureName("enviromine:burning_coal");
+		this.setLightLevel(0.625F);
+		this.setTickRandomly(true);
 	}
 
     /**
@@ -72,8 +70,6 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
 		{
 			return;
 		}
-        
-        TileEntityBurningCoal coalTile = (TileEntityBurningCoal)world.getTileEntity(x, y, z);
 
         int l = world.getBlockMetadata(x, y, z);
 		boolean flag1 = world.isBlockHighHumidity(x, y, z);
@@ -84,7 +80,7 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
             b0 = -50;
         }
         
-        for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++)
+        /*for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++)
         {
         	ForgeDirection fDir = ForgeDirection.VALID_DIRECTIONS[i];
         	int xOff = fDir.offsetX + x;
@@ -124,13 +120,14 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         		world.setBlock(x, y, z, Blocks.air, 0, 2);
         		return;
         	}
-        }
-        /*this.tryCatchFire(world, x + 1, y, z, 300 + b0, rand, l, WEST );
+        }*/
+        
+        this.tryCatchFire(world, x + 1, y, z, 300 + b0, rand, l, WEST );
         this.tryCatchFire(world, x - 1, y, z, 300 + b0, rand, l, EAST );
         this.tryCatchFire(world, x, y - 1, z, 250 + b0, rand, l, UP   );
         this.tryCatchFire(world, x, y + 1, z, 250 + b0, rand, l, DOWN );
         this.tryCatchFire(world, x, y, z - 1, 300 + b0, rand, l, SOUTH);
-        this.tryCatchFire(world, x, y, z + 1, 300 + b0, rand, l, NORTH);*/
+        this.tryCatchFire(world, x, y, z + 1, 300 + b0, rand, l, NORTH);
 
         for (int i1 = x - 1; i1 <= x + 1; ++i1)
         {
@@ -179,14 +176,6 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
     	world.setBlock(x, y, z, Blocks.fire);
-		/*TileEntity tile = world.getTileEntity(x, y, z);
-		
-		if(tile != null && tile instanceof TileEntityGas)
-		{
-			TileEntityGas gasTile = (TileEntityGas)tile;
-			gasTile.addGas(0, 10); // Fire
-			gasTile.updateRender();
-		}*/
     }
 	
     private void tryCatchFire(World world, int x, int y, int z, int p_149841_5_, Random random, int chance, ForgeDirection face)
@@ -295,10 +284,4 @@ public class BlockBurningCoal extends Block implements ITileEntityProvider
         world.spawnParticle("smoke", (double)(f + rf1 - 0.5F), (double)f1 + 1.2F, (double)(f2 + rf3 - 0.5F), 0.0D, 0.0D, 0.0D);
         world.spawnParticle("flame", (double)(f + rf1 - 0.5F), (double)f1 + 1.2F, (double)(f2 + rf3 - 0.5F), 0.0D, 0.0D, 0.0D);
     }
-
-	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
-	{
-		return new TileEntityBurningCoal();
-	}
 }

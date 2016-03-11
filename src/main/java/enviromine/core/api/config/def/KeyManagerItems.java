@@ -1,18 +1,36 @@
 package enviromine.core.api.config.def;
 
+import java.util.ArrayList;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import enviromine.core.api.config.ConfigKey;
 import enviromine.core.api.config.ConfigKeyManager;
+import enviromine.core.api.helpers.JsonHelper;
 
 public class KeyManagerItems extends ConfigKeyManager
 {
 	@Override
-	public ConfigKey getKey(Configuration config, ConfigCategory category)
+	public ConfigKey getKey(JsonObject json)
 	{
-		String itemID = config.getString("Item ID", category.getQualifiedName(), "minecraft:stone", "Full item ID including mod ID prefix");
-		int[] dmgList = config.get(category.getQualifiedName(), "Damage", new int[]{}).getIntList();
+		String itemID = JsonHelper.GetString(json, "itemID", "minecraft:stone");
+		
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		for(JsonElement je : JsonHelper.GetArray(json, "damage"))
+		{
+			if(je == null || !je.isJsonPrimitive() || !je.getAsJsonPrimitive().isNumber())
+			{
+				continue;
+			}
+			
+			tmp.add(je.getAsInt());
+		}
+		
+		int[] dmgList = new int[tmp.size()];
+		for(int i = 0; i < tmp.size(); i++)
+		{
+			dmgList[i] = tmp.get(i);
+		}
 		
 		Item item = (Item)Item.itemRegistry.getObject(itemID);
 		

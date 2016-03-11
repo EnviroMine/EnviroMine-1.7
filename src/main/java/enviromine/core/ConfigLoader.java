@@ -2,13 +2,15 @@ package enviromine.core;
 
 import java.io.File;
 import java.util.ArrayList;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import enviromine.core.api.config.Attribute;
 import enviromine.core.api.config.AttributeManager;
 import enviromine.core.api.config.ConfigKey;
 import enviromine.core.api.config.ConfigKeyManager;
 import enviromine.core.api.config.ConfigRegistry;
+import enviromine.core.api.helpers.JsonHelper;
 
 public class ConfigLoader
 {
@@ -20,7 +22,7 @@ public class ConfigLoader
 		
 		config.load();
 		
-		config.getString("Config Profile", Configuration.CATEGORY_GENERAL, "default", "The custom config profile directory to use");
+		Settings.profile = config.getString("Config Profile", Configuration.CATEGORY_GENERAL, "default", "The custom config profile directory to use");
 		
 		config.save();
 		
@@ -31,27 +33,28 @@ public class ConfigLoader
 	{
 		ConfigRegistry.ResetAllAttributes();
 		
-		ArrayList<Configuration> configList = getConfigList(rootDir);
+		ArrayList<JsonObject> configList = getConfigList(rootDir);
 		
-		for(Configuration config : configList)
+		for(JsonObject config : configList)
 		{
-			config.load();
-			
 			for(ConfigKeyManager km : ConfigRegistry.getList_KM())
 			{
-				for(ConfigCategory subCat : config.getCategory(km.CategoryName()).getChildren())
+				for(JsonElement subCat : JsonHelper.GetArray(config, km.CategoryName()))
 				{
-					ConfigKey key = km.getKey(config, subCat);
+					if(subCat == null || !subCat.isJsonObject())
+					{
+						continue;
+					}
+					
+					ConfigKey key = km.getKey(subCat.getAsJsonObject());
 					
 					for(AttributeManager am : ConfigRegistry.getList_AM(km))
 					{
 						Attribute att = am.getAttribute(key);
-						att.loadFromConfig(config, subCat + Configuration.CATEGORY_SPLITTER + am.getConfigID());
+						att.loadFromConfig(JsonHelper.GetObject(subCat.getAsJsonObject(), am.getConfigID()));
 					}
 				}
 			}
-			
-			config.save();
 		}
 	}
 	
@@ -67,9 +70,9 @@ public class ConfigLoader
 		return profDir;
 	}
 	
-	public static ArrayList<Configuration> getConfigList(File dir)
+	public static ArrayList<JsonObject> getConfigList(File dir)
 	{
-		ArrayList<Configuration> configs = new ArrayList<Configuration>();
+		ArrayList<JsonObject> configs = new ArrayList<JsonObject>();
 		File[] list = dir.listFiles();
 		
 		if(list == null)
@@ -79,9 +82,9 @@ public class ConfigLoader
 		
 		for(File f : list)
 		{
-			if(f.getName().endsWith(".cfg"))
+			if(f.getName().endsWith(".json"))
 			{
-				configs.add(new Configuration(f, true));
+				configs.add(JsonHelper.ReadObjectFromFile(f));
 			}
 		}
 		

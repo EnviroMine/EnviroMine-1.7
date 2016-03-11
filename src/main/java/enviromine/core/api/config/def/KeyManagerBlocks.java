@@ -1,18 +1,36 @@
 package enviromine.core.api.config.def;
 
+import java.util.ArrayList;
 import net.minecraft.block.Block;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import enviromine.core.api.config.ConfigKey;
 import enviromine.core.api.config.ConfigKeyManager;
+import enviromine.core.api.helpers.JsonHelper;
 
 public class KeyManagerBlocks extends ConfigKeyManager
 {
 	@Override
-	public ConfigKey getKey(Configuration config, ConfigCategory category)
+	public ConfigKey getKey(JsonObject json)
 	{
-		String blockID = config.getString("Block ID", category.getQualifiedName(), "minecraft:stone", "Full block ID including mod ID prefix");
-		int[] metaList = config.get(category.getQualifiedName(), "Metadata", new int[]{-1}).getIntList();
+		String blockID = JsonHelper.GetString(json, "blockID", "minecraft:stone");
+		
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		for(JsonElement je : JsonHelper.GetArray(json, "meta"))
+		{
+			if(je == null || !je.isJsonPrimitive() || !je.getAsJsonPrimitive().isNumber())
+			{
+				continue;
+			}
+			
+			tmp.add(je.getAsInt());
+		}
+		
+		int[] metaList = new int[tmp.size()];
+		for(int i = 0; i < tmp.size(); i++)
+		{
+			metaList[i] = tmp.get(i);
+		}
 		
 		Block block = (Block)Block.blockRegistry.getObject(blockID);
 		

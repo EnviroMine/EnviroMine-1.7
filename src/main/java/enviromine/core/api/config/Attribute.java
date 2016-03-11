@@ -1,6 +1,6 @@
 package enviromine.core.api.config;
 
-import net.minecraftforge.common.config.Configuration;
+import com.google.gson.JsonObject;
 
 public abstract class Attribute
 {
@@ -20,5 +20,5 @@ public abstract class Attribute
 	{
 	}
 	
-	public abstract void loadFromConfig(Configuration config, String category);
+	public abstract void loadFromConfig(JsonObject json);
 }

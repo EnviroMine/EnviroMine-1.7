@@ -215,7 +215,7 @@ public class Earthquake
 							
 							if(yy == y)
 							{
-								if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
+								if(EM_Settings.enablePhysics && EM_Settings.quakePhysics && (world.rand.nextInt(100) < EM_Settings.quakeRarity))
 								{
 									EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
 								}
@@ -234,7 +234,7 @@ public class Earthquake
 							
 							if(yy == y)
 							{
-								if(EM_Settings.enablePhysics && EM_Settings.quakePhysics)
+								if(EM_Settings.enablePhysics && EM_Settings.quakePhysics && (world.rand.nextInt(100) < EM_Settings.quakeRarity))
 								{
 									EM_PhysManager.schedulePhysUpdate(world, x, yy, z, false, "Quake");
 								}

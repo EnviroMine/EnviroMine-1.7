@@ -8,6 +8,7 @@ item.enviromine.gasmask.name=Maschera antigas
 item.enviromine.hardhat.name=Casco di sicurezza
 item.enviromine.airfilter.name=Filtro d'aria
 item.enviromine.rottenfood.name=Cibo marcio
+item.enviromine.spoiledmilk.name=Latte avariato
 
 potion.enviromine.frostbite=Congelamento
 potion.enviromine.dehydration=Disidratazione
@@ -19,6 +20,14 @@ tile.enviromine.elevator_top.name=Ascensore superiore
 tile.enviromine.elevator_bottom.name=Ascensore inferiore
 tile.enviromine.esky.name=Esky
 tile.enviromine.freezer.name=Freezer
+tile.enviromine.davy_lamp.name=Lampada di Davy
+tile.enviromine.gas.name=Gas
+tile.enviromine.firegas.name=Incendio da gas
+tile.enviromine.burningcoal.name=Carbone in fiamme
+tile.enviromine.nophysblock.name=Blocco senza fisica
+
+container.enviromine.esky=Esky
+container.enviromine.freezer=Freezer
 
 itemGroup.enviromine.enviroTab=EnviroMine
 
@@ -39,6 +48,7 @@ achievement.enviromine.ItsPitchBlack=Nero come il carbone
 achievement.enviromine.TenSecondRule=Regola dei 10 secondi
 achievement.enviromine.MedicalMarvels=Mircoli medici
 achievement.enviromine.SuckItUpPrincess=Smettila di piagnucolare
+achievement.enviromine.BreatheEasy=Respira facilmente
 
 achievement.enviromine.FunwaysFault.desc=Sopravvivi in una caverna in
 achievement.enviromine.MindOverMatter.desc=Uccidi 5 mobs ostili con Pazzia III
@@ -51,17 +61,18 @@ achievement.enviromine.WinterIsComing.desc=Sopravvivi 7 giorni nella neve senza 
 achievement.enviromine.OhGodWhy.desc=Gioca 11
 achievement.enviromine.SafetyFirst.desc=Crea un Casco di sicurezza
 achievement.enviromine.BoreToTheCore.desc=Entra nella Dimensione caverna
-achievement.enviromine.IntoTheDarkness.desc=Viaggia 1 Km nella Dimensione caverna e ritorna vivo
+achievement.enviromine.IntoTheDarkness.desc=Viaggia 1 Km dall'entrata della Dimensione caverna e ritorna vivo
 achievement.enviromine.ThatJustHappened.desc=Sopravvivi un fuoco causato da gas
-achievement.enviromine.ItsPitchBlack.desc=???
+achievement.enviromine.ItsPitchBlack.descViaggia 250 blocchi nella totale oscurità nella Dimensione caverna
 achievement.enviromine.TenSecondRule.desc=Mangia del cibo marcio
 achievement.enviromine.MedicalMarvels.desc=Cura un'infezione o una malattia
 achievement.enviromine.SuckItUpPrincess.desc=Uccidi un mob con uno o più arti rotti
+achievement.enviromine.BreatheEasy.desc=Crea una maschera antigas
 
 options.enviromine.on=On
 options.enviromine.off=Off
-+options.enviromine.visible=Mostra
-+options.enviromine.hidden=Nascondi
+options.enviromine.visible=Mostra
+options.enviromine.hidden=Nascondi
 options.enviromine.menu.title=Enviromine Menu
 options.enviromine.guiMainmenu.title=EnviroMine Menu principale
 options.enviromine.guiSetting.title=EnviroMine Grafica
@@ -89,17 +100,82 @@ options.enviromine.barPos.hydration=Barra idratazione
 options.enviromine.barPos.temprature=Barra temperatura
 options.enviromine.barPos.sanity=Barra sanità
 options.enviromine.barPos.airQuality=Barra qualità dell'aria
+options.enviromine.guiSounds=Opzioni audio
+options.enviromine.physSound=Suoni fisica
+options.enviromine.breathVol=Volume respiro
+options.enviromine.newsPage=Novità
+
+options.enviromine.hud.temperature=Temperatura
+options.enviromine.hud.sanity=ASanità
+options.enviromine.hud.hydration=Idratazione
+options.enviromine.hud.air=Qualità aria
+options.enviromine.hud.resetDefault=Ripristina le opzioni
+options.enviromine.hud.resetDefault.desc=Ripristina tutti gli oggeti del Hud alla loro pozizione predefinita
+
+options.enviromine.hud.reposition=CLIC per confermare, ESCAPE per cancellare, R per ripristinare
+options.enviromine.hud.alignment=Allineamento:
+
+options.enviromine.supportUs=Support Us
+options.enviromine.website=Our Website
+options.enviromine.website.YesNo=This will open up a page in your Default web browser. Continue? 
 
 deathmessage.enviromine.suffocate=%s è soffocato
 deathmessage.enviromine.frostbite=%s è congelato fino alla morte
 deathmessage.enviromine.dehydrate=%s è morto di sete
-deathmessage.enviromine.landslide=%s è morto in una frana
+deathmessage.enviromine.avalanche=%s è morto in una frana
 deathmessage.enviromine.organfailure=%s è morto d'infarto
 deathmessage.enviromine.heatstroke=Il cervello di %s è cotto da un colpo di calore von einem Hitzschlag gebraten
 deathmessage.enviromine.bleedout=%s è morto dissanguato
 deathmessage.enviromine.gasfire=%s è morto in un incendio
 
-updatemsg.enviromine.avalible=E' avviabile l'aggiornamento % di EnviroMine
+updatemsg.enviromine.available=E' avviabile l'aggiornamento % di EnviroMine
 updatemsg.enviromine.download=[Download]
 updatemsg.enviromine.changelog=[Changelog]
-updatemsg.enviromine.otherlinks=[Other links]
+updatemsg.enviromine.otherlinks=[Altri link]
+updatemsg.enviromine.uptodate=EnviroMine %s è aggiornato
+updatemsg.enviromine.debug=EnviroMine %s è una versione debug
+updatemsg.enviromine.error=C'è stato un errore durante l'analisi della versione di EnviroMine!
+
+news.enviromine.newpost=(Nuovo post)
+news.enviromine.button.news=Novità
+news.enviromine.button.changelog=Changelog
+news.enviromine.button.version=Informazioni versione
+news.enviromine.version.current=La tua versione corrente è %s
+news.enviromine.news.changelog=Controlla il changelog per scoprire le novità
+news.enviromine.news.wiki=Scarica la nuova versione dalla nostra wiki!
+
+auth.enviromine.1=EnviroMine %s è stato autenticato con successo!
+auth.enviromine.2=Grazie per usare la versione ufficiale <3
+auth.enviromine.3=ATTENZIONE: Se devi ri-installare la tua copia in una data a venire o includerla
+auth.enviromine.4=in una modpack dovrai tenere fuori il file AUTH dalla tua cartella delle configurazioni
+auth.enviromine.5=Supportando la campagna %s con orgoglio
+auth.enviromine.6=Questa versione di EnviroMine non è stata autentificata ed è ora disabilitata!
+auth.enviromine.7=Se stai usando una modpack per favore informa il dev che devono includere
+auth.enviromine.8=un file AUTH aggiornato per questa versione. Più informazioni a:
+
+keybinds.enviromine.reload=Ricarica le configurazioni
+keybinds.enviromine.addremove=Aggiungi/rimuovi configurazioni personalizzate
+
+misc.enviromine.tooltip.filter=Filtri: %s (%s/%s)
+misc.enviromine.tooltip.water=Acqua: %s (%s/%s)
+misc.enviromine.tooltip.rot=Marcio: %s (giorni%s/%s)
+
+commands.enviromine.envirostat.add=aggiungi
+commands.enviromine.envirostat.set=seleziona
+commands.enviromine.envirostat.temp=temperatura
+commands.enviromine.envirostat.sanity=sanità
+commands.enviromine.envirostat.water=acqua
+commands.enviromine.envirostat.air=aria
+commands.enviromine.envirostat.noTracker=Obiettivo non trovato o non ha un enviro tracker!
+commands.enviromine.envirophysic.toggle=attiva
+commands.enviromine.envirophysic.status=stato
+commands.enviromine.envirophysic.statusText=%s stato fisiche: %s
+commands.enviromine.envirophysic.physics= %s Physics %s
+commands.enviromine.enviroquake.length=lunghezza
+commands.enviromine.enviroquake.width=larghezza
+commands.enviromine.enviroquake.rotation=rotazione
+commands.enviromine.enviroquake.mode=modalità
+commands.enviromine.enviroquake.stop=ferma
+commands.enviromine.enviroquake.stoppedAll=Fermati tutti i terremoti
+commands.enviromine.enviroquake.error.tooMany=Non puoi generare più di un terremoto alla volta!
+commands.enviromine.enviroquake.error.tooBig=Non puoi generare terremoti superiori di 4096 blocchi!

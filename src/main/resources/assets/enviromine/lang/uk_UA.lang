@@ -1,0 +1,206 @@
+language.name=Ukrainian
+
+item.enviromine.badwater.name=Пляшка з Брудною Водою
+item.enviromine.saltwater.name=Пляшка з Солоною Водою
+item.enviromine.coldwater.name=Пляшка з Холодною Водою
+item.enviromine.camelpack.name=Бурдюк
+item.enviromine.gasmask.name=Респіратор
+item.enviromine.hardhat.name=Каска
+item.enviromine.airfilter.name=Повітряний фільтер
+item.enviromine.rottenfood.name=Гнила Їжа
+item.enviromine.spoiledmilk.name=Прокисле Молоко
+
+potion.enviromine.frostbite=Обмороження
+potion.enviromine.dehydration=Обезводження
+potion.enviromine.insanity=Несповна розуму
+potion.enviromine.heatstroke=Сонячний удар
+potion.enviromine.hypothermia=Гіпотермія
+
+tile.enviromine.elevator_top.name=Верхня Частина Ліфту
+tile.enviromine.elevator_bottom.name=Нижня Частина Ліфту
+tile.enviromine.esky.name=Портативний Холодильник
+tile.enviromine.freezer.name=Морозильник
+tile.enviromine.davy_lamp.name=Лампа Деві
+tile.enviromine.gas.name=Газ
+tile.enviromine.firegas.name=Вогненебезпечний газ
+tile.enviromine.burningcoal.name=Палаюче Вугілля
+tile.enviromine.nophysblock.name=Блок без Фізики
+
+container.enviromine.esky=Портативний Холодильник
+container.enviromine.freezer=Морозильник
+
+itemGroup.enviromine.enviroTab=EnviroMine
+
+achievement.enviromine.FunwaysFault=Помилка Фанвея
+achievement.enviromine.MindOverMatter=Розум понад Матерією
+achievement.enviromine.ProMiner=Професіональний Шахтар
+achievement.enviromine.HardBoiled=Зварений вкруту
+achievement.enviromine.IronArmy=Залізна Армія
+achievement.enviromine.TradingFavours=Поступки у продажі
+achievement.enviromine.INeededThat=Мені було це потрібно
+achievement.enviromine.WinterIsComing=Зима близько
+achievement.enviromine.OhGodWhy=Боже, чому
+achievement.enviromine.SafetyFirst=Безпека понад все
+achievement.enviromine.BoreToTheCore=Копаймо до ядра
+achievement.enviromine.IntoTheDarkness=До темряви
+achievement.enviromine.ThatJustHappened=Це щойно сталося
+achievement.enviromine.ItsPitchBlack=Кромішня темрява
+achievement.enviromine.TenSecondRule=Правило десяти секунд
+achievement.enviromine.MedicalMarvels=Медичні дива
+achievement.enviromine.SuckItUpPrincess=Ось тобі, принцессо!
+achievement.enviromine.BreatheEasy=Легше дихай
+
+achievement.enviromine.FunwaysFault.desc=Переживіть знаходження у печері
+achievement.enviromine.MindOverMatter.desc=Вбийте 5 ворожих мобів під ефектом Несповна Розуму ІІІ
+achievement.enviromine.ProMiner.desc=Копайте 1 годину у шахті (з фізикою блоків та всіма ефектами)
+achievement.enviromine.HardBoiled.desc=Переживіть ефект Зварений Вкруту ІІІ
+achievement.enviromine.IronArmy.desc=Назвіть Залізного Голема "Siyliss"
+achievement.enviromine.TradingFavours.desc=Отримайти допомогу від селянина
+achievement.enviromine.INeededThat.desc=Наткніться на іструмент під ефектом Обмороження І
+achievement.enviromine.WinterIsComing.desc=Переживіть 7 днів у сніжному біомі без гіпотермії
+achievement.enviromine.OhGodWhy.desc=Зіграйте 11
+achievement.enviromine.SafetyFirst.desc=Зкрафтіть каску
+achievement.enviromine.BoreToTheCore.desc=Увійдіть до печерного виміру
+achievement.enviromine.IntoTheDarkness.desc=Пройдіть 1 км у печерному вимірі та поверніться живим
+achievement.enviromine.ThatJustHappened.desc=Переживіть газову пожежу
+achievement.enviromine.ItsPitchBlack.desc=Пройдіть 250 блоків у печерному вимірі у повній темряві
+achievement.enviromine.TenSecondRule.desc=З'їжте гнилу їжу
+achievement.enviromine.MedicalMarvels.desc=Вилікуйте будь-яку інфекцію або хворобу
+achievement.enviromine.SuckItUpPrincess.desc=Вбийте ворожого моба з однією або більше зламаними кінцівками
+achievement.enviromine.BreatheEasy.desc=Зкрафтіть респіратор
+
+options.enviromine.on=Вмк.
+options.enviromine.off=Вимк.
+options.enviromine.visible=Показувати
+options.enviromine.hidden=Сховати
+options.enviromine.menu.title=Меню Enviromine 
+options.enviromine.guiMainmenu.title=Головне Меню EnviroMine
+options.enviromine.guiSetting.title=Налаштування Відео EnviroMine 
+options.enviromine.guiBars.title=Налаштування Інтерфейсу EnviroMine 
+options.enviromine.configSetting.title=Налаштування Конфігурацій Enviromine 
+options.enviromine.guiBarPos.title=Позиції елементів інтерфейсу EnviroMine 
+options.enviromine.adminOptions.title=Опції Адміни
+options.enviromine.physics=Фізика блоків
+options.enviromine.guiScaling=Розмір Інтерфейсу
+options.enviromine.guiOptions=Відеоналаштувння
+options.enviromine.configSettings=Налаштування Серверу
+options.enviromine.customEditor=Налаштування користувача
+options.enviromine.status=Текст статусу Інтерфейсу
+options.enviromine.minBars=Мінімалістичний Інтерфейс
+options.enviromine.tinting=Тонування Екрану
+options.enviromine.sweatParticles=Часточки поту
+options.enviromine.insaneParticles=Часточки розсудку
+options.enviromine.debug=Текст для дебаггінґу
+options.enviromine.showIcons=Іконки Інтерфейсу
+options.enviromine.barPos=Позиції показників
+options.enviromine.tempScale=Температурна шкала
+options.enviromine.tempScale.f=Фаренгейти
+options.enviromine.tempScale.c=Цельсії
+options.enviromine.barPos.hydration=Показник рівня води
+options.enviromine.barPos.temprature=Показник температури
+options.enviromine.barPos.sanity=Показник рівня розсудку
+options.enviromine.barPos.airQuality=Показник чистоти повітря
+options.enviromine.guiSounds=Налаштування звуку
+options.enviromine.physSound=Звуки фізики
+options.enviromine.breathVol=Гучність дихання
+options.enviromine.newsPage=Новини
+
+
+options.enviromine.hud.temperature=Температура
+options.enviromine.hud.sanity=Розсудок
+options.enviromine.hud.hydration=Рівень води
+options.enviromine.hud.air=Чистота повітря
+options.enviromine.hud.resetDefault=Скинути налаштування до початкових
+options.enviromine.hud.resetDefault.desc=Повернути всі елементи інтерфейсу на початкові позиції
+options.enviromine.hud.reposition=Клікніть для продовження, ESCAPE для відміни та R для скиднення
+options.enviromine.hud.alignment=Центрівка:
+
+options.enviromine.supportUs=Підтримайте нас
+options.enviromine.website=Наш вебсайт
+options.enviromine.website.YesNo=Це відкриє веб-сторінку у вашому браузері за замовчуванням. Продовжити? 
+
+deathmessage.enviromine.suffocate=%s задихнувся
+deathmessage.enviromine.frostbite=%s змерз
+deathmessage.enviromine.dehydrate=%s помер через зневоднення
+deathmessage.enviromine.landslide=%s помер через зсув ґрунту
+deathmessage.enviromine.avalanche=%s помер у сніговій лавині
+deathmessage.enviromine.organfailure=%s помер через відмову органів
+deathmessage.enviromine.heatstroke=Мізок %s було підсмажено сонцем
+deathmessage.enviromine.bleedout=%s втратив забагато крові
+deathmessage.enviromine.gasfire=%s згорів через газ
+
+updatemsg.enviromine.available=Оновлення EnviroMine %s доступне
+updatemsg.enviromine.download=Скачування і журнал змін:
+updatemsg.enviromine.uptodate=EnviroMine %s має найновішу версію
+updatemsg.enviromine.debug=EnviroMine %s - версія для дебаггінґу
+updatemsg.enviromine.error=Помилка при розборі файлів EnviroMine!
+
+news.enviromine.newpost=(Нове повідомлення)
+news.enviromine.button.news=Список новин
+news.enviromine.button.changelog=Журнал змін
+news.enviromine.button.version=Інформація щодо версій
+news.enviromine.version.current=Ваша версія: %s
+news.enviromine.news.changelog=Перевірте журнал змін щоб побачити що змінилося!
+news.enviromine.news.wiki=Завантажте нову версію на нашій вікі!
+
+auth.enviromine.1=EnviroMine %s успішно пройшов перевірку аутентифікації!
+auth.enviromine.2=Дякуємо за використання офіціальної версії <3
+auth.enviromine.3=УВАГА: Якщо ви колись захочете перевстановити копію моду або включити
+auth.enviromine.4=it її до модпаку, вам потрібно зберегти файл AUTH з директорії "config"
+auth.enviromine.5=Гордо підтримую кампанію %s
+auth.enviromine.6=Ця версія EnviroMine не аутентифікована, а тому відключена!
+auth.enviromine.7=Якщо ви використовуєте цю модифікацію у модпаці, то вам потрібно проінформувати автора,
+auth.enviromine.8=щоб він додав найновіший AUTH файл. Більше інформації:
+
+keybinds.enviromine.reload=Перезавантажити файл конфігурації
+keybinds.enviromine.addremove=Додати користувацький файл конфігурації
+
+misc.enviromine.tooltip.filter=Фільтри: %s (%s/%s)
+misc.enviromine.tooltip.water=Вода: %s (%s/%s)
+misc.enviromine.tooltip.rot=Гнилість: %s (Day %s/%s)
+
+commands.enviromine.envirostat.add=додати
+commands.enviromine.envirostat.set=встановити
+commands.enviromine.envirostat.temp=температура
+commands.enviromine.envirostat.sanity=розсудок
+commands.enviromine.envirostat.water=вода
+commands.enviromine.envirostat.air=повітря
+commands.enviromine.envirostat.noTracker=Ціль не знайдена або не має енвіротрекера!
+commands.enviromine.envirophysic.toggle=перемкнути
+commands.enviromine.envirophysic.status=статус
+commands.enviromine.envirophysic.statusText=%s Статус фізики блоків: %s
+commands.enviromine.envirophysic.physics= %s Фізика блоків %s
+commands.enviromine.enviroquake.length=довжина
+commands.enviromine.enviroquake.width=ширина
+commands.enviromine.enviroquake.rotation=поворот
+commands.enviromine.enviroquake.mode=режим
+commands.enviromine.enviroquake.stop=стоп
+commands.enviromine.enviroquake.stoppedAll=всі землетруси зупинено
+commands.enviromine.enviroquake.error.tooMany=Ви не можете накликати більш ніж один землетрус за раз!
+commands.enviromine.enviroquake.error.tooBig=Ви не можете накликати землетрус над висотою у 4096 блоків!
+
+
+editor.enviromine.changeprofile=Змінити профіль
+editor.enviromine.currentprofile=Нинішній профіль
+editor.enviromine.global=Глобальна конфігурація
+editor.enviromine.cave=Печерний вимір
+editor.enviromine.stability=Типи стабільності
+editor.enviromine.custom=Користувацькі конфігураціонні файли
+editor.enviromine.createNewProfile=Створити новий профіль
+editor.enviromine.selectProfile=Вибрати профіль
+editor.enviromine.genModConfigs=Генерує користувацькі конфігураціонні файли для доступних модів.
+editor.enviromine.genBasicConfigs=Генерує внутрішні файли EnviroMine.
+editor.enviromine.create=Створити
+editor.enviromine.nameProfile=Новий профіль
+editor.enviromine.insertName=Назвіть профіль
+editor.enviromine.currentProfile=Нинішній профіль
+editor.enviromine.global=Глобальна конфігурація
+editor.enviromine.settings=Налаштування профілю
+editor.enviromine.cave=Печерний вимір
+editor.enviromine.stability=Типи стабільності
+editor.enviromine.custom=Користувацькі конфігураціонні файли
+editor.enviromine.GuiAdd.title=Додати %s:
+editor.enviromine.GuiAdd.title.fail=Відбулася помилка. Продивіться лоґ для деталей.
+editor.enviromine.GuiAdd.item=Додати як предмет
+editor.enviromine.GuiAdd.block=Додати як блок
+editor.enviromine.GuiAdd.both=Додати як обидва
